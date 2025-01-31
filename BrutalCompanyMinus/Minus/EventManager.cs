@@ -586,17 +586,39 @@ namespace BrutalCompanyMinus.Minus
             Manager.scrapValueMultiplier *= MEvent.Scale.Compute(Configuration.scrapValueMultiplier);
             Manager.scrapAmountMultiplier *= MEvent.Scale.Compute(Configuration.scrapAmountMultiplier);
 
-            // Choose any apply events
-            if (!Configuration.useCustomWeights.Value) UpdateAllEventWeights();
-
             List<MEvent> additionalEvents = new List<MEvent>();
-            List<MEvent> currentEvents = ChooseEvents(out additionalEvents);
+            List<MEvent> currentEvents = new List<MEvent>();
 
-            foreach (MEvent e in currentEvents) Log.LogInfo("Event chosen: " + e.Name()); // Log Chosen events
-            foreach (MEvent e in additionalEvents) Log.LogInfo("Additional events: " + e.Name());
+            string moonsToIgnore = Configuration.MoonsToIgnore.GetSerializedValue();
+            string[] ignoredMoons = string.IsNullOrEmpty(moonsToIgnore)
+                ? new string[0]
+                : moonsToIgnore.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                              .Select(moon => moon.Trim())
+                              .ToArray();
 
-            ApplyEvents(currentEvents);
-            ApplyEvents(additionalEvents);
+            bool skipEventActivation = false;
+
+            foreach (string moon in ignoredMoons) {
+                if (newLevel.PlanetName == moon) {
+                    skipEventActivation = true;
+                    Log.LogInfo("Moon is on list of moons to ignore events. Skipping");
+                    break;
+                }
+            }
+
+            if (skipEventActivation)
+            {
+                // Choose any apply events
+                if (!Configuration.useCustomWeights.Value) UpdateAllEventWeights();
+
+                currentEvents = ChooseEvents(out additionalEvents);
+
+                foreach (MEvent e in currentEvents) Log.LogInfo("Event chosen: " + e.Name()); // Log Chosen events
+                foreach (MEvent e in additionalEvents) Log.LogInfo("Additional events: " + e.Name());
+
+                ApplyEvents(currentEvents);
+                ApplyEvents(additionalEvents);
+            }
 
             foreach(MEvent forcedEvent in forcedEvents)
             {
