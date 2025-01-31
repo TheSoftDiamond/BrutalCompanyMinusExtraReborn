@@ -589,6 +589,11 @@ namespace BrutalCompanyMinus.Minus
             List<MEvent> additionalEvents = new List<MEvent>();
             List<MEvent> currentEvents = new List<MEvent>();
 
+            if (newLevel.PlanetName != null)
+            {
+                Log.LogInfo("Moon name is " + newLevel.PlanetName);
+            }
+
             string moonsToIgnore = Configuration.MoonsToIgnore.GetSerializedValue();
             string[] ignoredMoons = string.IsNullOrEmpty(moonsToIgnore)
                 ? new string[0]
@@ -601,12 +606,12 @@ namespace BrutalCompanyMinus.Minus
             foreach (string moon in ignoredMoons) {
                 if (newLevel.PlanetName == moon) {
                     skipEventActivation = true;
-                    Log.LogInfo("Moon is on list of moons to ignore events. Skipping");
+                    Log.LogInfo("Moon is on list of moons to ignore events. Skipping Events");
                     break;
                 }
             }
 
-            if (skipEventActivation)
+            if (!skipEventActivation)
             {
                 // Choose any apply events
                 if (!Configuration.useCustomWeights.Value) UpdateAllEventWeights();
