@@ -30,7 +30,6 @@ Status: Planned --> In Progress [x] --> Success[x]
 
 ShibaEnemy
 Prerequisite: ShibaEnemy
-Potential Descriptions: Who's a good boy (May conflict with DOGS event)|Awww he's so cute|BONK!|It's always the good boys
 Type: Bad
 Status: Planned --> In Progress [x] --> Success[x]
 
