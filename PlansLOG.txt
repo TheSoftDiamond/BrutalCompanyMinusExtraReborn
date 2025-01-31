@@ -32,10 +32,16 @@ ShibaEnemy
 Prerequisite: ShibaEnemy
 Potential Descriptions: Who's a good boy (May conflict with DOGS event)|Awww he's so cute|BONK!|It's always the good boys
 Type: Bad
-Status: Planned
+Status: Planned --> In Progress [x] --> Success[x]
 
 BigEyes
 Prequisite: BigEyes Mod
 Potential Descriptions: You are being watched|It can see you|Don't keep eyesight with it
 Type: Bad (May be VeryBad depending on if the enemy can be killed or not and more testing needed)
 Status: Planned
+
+Janaury 30, 2025:
+TO DO: Fix ShipInventory issue with landing when mod not present.
+TO DO: Investigate and add compat to galetry moons by Wesley, may also occur with other moons deemed "safe".
+TO DO: Add player scaling
+TO DO: Add event item scaling for scrap amount and scrap value
