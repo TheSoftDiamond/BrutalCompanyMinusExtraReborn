@@ -1,0 +1,41 @@
+Project Definition Sheet
+This sheet summarizes the progress of various items and events within the project, based on the provided logs.
+
+Key:
+Success: Implemented and functional.
+Aborted: Implementation halted and abandoned.
+Halted: Implementation paused, potentially to be revisited.
+Removed: Item or event deleted from the project.
+Pending: Implementation awaiting action.
+Incompatible: Item or event cannot be integrated with the current system.
+Done: Task completed.
+In progress: Task partially completed. Being worked on.
+Planned: Planned to being worked on, or considered.
+
+January 15, 2025
+-----
+Moai Enemy
+Prerequites: MOaiEnemy Mod
+Status: Planned --> In progress [x] --> Success [x]
+
+Kidnapper Fox
+Prerequisite - YesFox
+Status: Planned
+
+January 16, 2025
+
+Baldi
+Prerequisite: Baldi
+Status: Planned --> In Progress [x] --> Success[x]
+
+ShibaEnemy
+Prerequisite: ShibaEnemy
+Potential Descriptions: Who's a good boy (May conflict with DOGS event)|Awww he's so cute|BONK!|It's always the good boys
+Type: Bad
+Status: Planned
+
+BigEyes
+Prequisite: BigEyes Mod
+Potential Descriptions: You are being watched|It can see you|Don't keep eyesight with it
+Type: Bad (May be VeryBad depending on if the enemy can be killed or not and more testing needed)
+Status: Planned
