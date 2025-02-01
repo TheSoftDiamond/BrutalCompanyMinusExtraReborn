@@ -41,7 +41,8 @@ namespace BrutalCompanyMinus
         public static ConfigEntry<float> goodEventIncrementMultiplier, badEventIncrementMultiplier;
         public static float[] weightsForExtraEvents;
         public static Scale[] eventTypeScales = new Scale[6];
-        //public static Scale[] scrapByEventTypeScales = new Scale[12];
+        public static Dictionary<EventType, Scale> scrapValueByEventTypeScale = new Dictionary<EventType, Scale>();
+        public static Dictionary<EventType, Scale> scrapAmountByEventTypeScale = new Dictionary<EventType, Scale>();
         public static EventManager.DifficultyTransition[] difficultyTransitions;
         public static ConfigEntry<bool> enableQuotaChanges;
         public static ConfigEntry<int> deadLineDaysAmount, startingCredits, startingQuota, baseIncrease, increaseSteepness;
@@ -139,21 +140,15 @@ namespace BrutalCompanyMinus
             goodEventIncrementMultiplier = difficultyConfig.Bind("Difficulty", "Global multiplier for increment value on good and veryGood eventTypes.", 1.0f);
             badEventIncrementMultiplier = difficultyConfig.Bind("Difficulty", "Global multiplier for increment value on bad and veryBad eventTypes.", 1.0f);
 
-            /*scrapByEventTypeScales = new Scale[12]
+            Scale bindEventTypeScrapAmountMultiplier(EventType difficulty)
+                => getScale(difficultyConfig.Bind("_EventType Scrap Multipliers", difficulty + " scrap amount scale", "1, 0.0, 1, 1", scaleDescription).Value);
+            Scale bindEventTypeScrapValueMultiplier(EventType difficulty)
+                => getScale(difficultyConfig.Bind("_EventType Scrap Multipliers", difficulty + " scrap value scale", "1, 0.0, 1, 1", scaleDescription).Value);
+            foreach (EventType difficulty in (EventType[])Enum.GetValues(typeof(EventType)))
             {
-                getScale(difficultyConfig.Bind("_EventType Scrap Multipliers", "VeryBad scrap amount scale", "1, 0.0, 1, 1", scaleDescription).Value),
-                getScale(difficultyConfig.Bind("_EventType Scrap Multipliers", "VeryBad scrap value scale", "1, 0.0, 1, 1", scaleDescription).Value),
-                getScale(difficultyConfig.Bind("_EventType Scrap Multipliers", "Bad scrap amount scale", "1, 0.0, 1, 1", scaleDescription).Value),
-                getScale(difficultyConfig.Bind("_EventType Scrap Multipliers", "Bad scrap value scale", "1, 0.0, 1, 1", scaleDescription).Value),
-                getScale(difficultyConfig.Bind("_EventType Scrap Multipliers", "Neutral scrap amount scale", "1, 0.0, 1, 1", scaleDescription).Value),
-                getScale(difficultyConfig.Bind("_EventType Scrap Multipliers", "Neutral scrap value scale", "1, 0.0, 1, 1", scaleDescription).Value),
-                getScale(difficultyConfig.Bind("_EventType Scrap Multipliers", "Good scrap amount scale", "1, 0.0, 1, 1", scaleDescription).Value),
-                getScale(difficultyConfig.Bind("_EventType Scrap Multipliers", "Good scrap value scale", "1, 0.0, 1, 1", scaleDescription).Value),
-                getScale(difficultyConfig.Bind("_EventType Scrap Multipliers", "VeryGood scrap amount scale", "1, 0.0, 1, 1", scaleDescription).Value),
-                getScale(difficultyConfig.Bind("_EventType Scrap Multipliers", "VeryGood scrap value scale", "1, 0.0, 1, 1", scaleDescription).Value),
-                getScale(difficultyConfig.Bind("_EventType Scrap Multipliers", "Remove scrap amount scale", "1, 0.0, 1, 1", scaleDescription).Value),
-                getScale(difficultyConfig.Bind("_EventType Scrap Multipliers", "Remove scrap value scale", "1, 0.0, 1 , 1", scaleDescription).Value)
-            };*/
+                scrapAmountByEventTypeScale.Add(difficulty, bindEventTypeScrapAmountMultiplier(difficulty));
+                scrapValueByEventTypeScale.Add(difficulty, bindEventTypeScrapValueMultiplier(difficulty));
+            }
 
             // Custom scrap settings
             nutSlayerLives = customAssetsConfig.Bind("NutSlayer", "Lives", 5, "If hp reaches zero or below, decrement lives and reset hp until 0 lives.");
