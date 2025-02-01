@@ -601,8 +601,7 @@ namespace BrutalCompanyMinus.Minus
                               .Select(moon => moon.Trim())
                               .ToArray();
 
-            Log.LogInfo(moonsToIgnore);
-            Log.LogInfo(ignoredMoons);
+            //Log.LogInfo(moonsToIgnore); //Current list of moons that are ignored
 
             bool skipEventActivation = false;
 
