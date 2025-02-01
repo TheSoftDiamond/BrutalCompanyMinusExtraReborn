@@ -503,7 +503,7 @@ Location: `BrutalCompanyMinus\Difficulty_Settings.cfg`
 
 #### Moons Settings
 
-`Moons to Not Spawn Events On` : Seperated by comma, the list of moons you do not want events to spawn on. Uses newLevel.PlanetName flag but other values for names are being added. Example: `41 Experimentation, 56 Vow` would prevent Experimentation and Vow from recieving events.
+`Moons to Not Spawn Events On` : Seperated by comma, the list of moons you do not want events to spawn on. Uses *newLevel.PlanetName* flag but other name flags are being looked into being added. Example: `41 Experimentation, 56 Vow` would prevent Experimentation and Vow from recieving events.
 
 ## Weather config
 Location: `BrutalCompanyMinus\Weather_Settings.cfg`
