@@ -42,8 +42,10 @@ namespace BrutalCompanyMinus.Minus.Events
           //  EventsToRemove = new List<string>() { nameof(NoMantitoil) };
 
         }
-        
-      //  public override bool AddEventIfOnly() => Compatibility.NonShippingAuthorisationPresent;
+
+        //  public override bool AddEventIfOnly() => Compatibility.NonShippingAuthorisationPresent;
+
+        public override bool AddEventIfOnly() => !Compatibility.SuperEclipsePresent;
 
         public override void Execute()
         {

@@ -41,35 +41,37 @@ namespace BrutalCompanyMinus.Minus.Events
                 nameof(LeverFailure), nameof(ManualCameraFailure), nameof(TeleporterFailure), nameof(TerminalFailure), nameof(WalkieFailure) };
 
         }
-        
-      //  public override bool AddEventIfOnly() => Compatibility.NonShippingAuthorisationPresent;
 
-    /*    public override void Execute()
-        {
-          //  ExecuteAllMonsterEvents();
-          //  com.github.zehsteam.ToilHead.Api.forceMantiToilSpawns = true;
-            // com.github.zehsteam.ToilHead.Api.forceSpawns = true;
-            // Manager.RemoveSpawn(Assets.EnemyName.CoilHead); 
-            // Manager.RemoveSpawn(Assets.antiCoilHead.enemyName = "Spring");
-            DoorActive = false;
-        }
-        public override void OnShipLeave()
-        {
-            //  ExecuteAllMonsterEvents();
-            //  com.github.zehsteam.ToilHead.Api.forceMantiToilSpawns = true;
-            // com.github.zehsteam.ToilHead.Api.forceSpawns = true;
-            // Manager.RemoveSpawn(Assets.EnemyName.CoilHead); 
-            // Manager.RemoveSpawn(Assets.antiCoilHead.enemyName = "Spring");
-            DoorActive = true;
-        }
-        public override void OnGameStart()
-        {
-            //  ExecuteAllMonsterEvents();
-            //  com.github.zehsteam.ToilHead.Api.forceMantiToilSpawns = true;
-            // com.github.zehsteam.ToilHead.Api.forceSpawns = true;
-            // Manager.RemoveSpawn(Assets.EnemyName.CoilHead); 
-            // Manager.RemoveSpawn(Assets.antiCoilHead.enemyName = "Spring");
-            DoorActive = true;
-        } */
+        public override bool AddEventIfOnly() => !Compatibility.SuperEclipsePresent;
+
+        //  public override bool AddEventIfOnly() => Compatibility.NonShippingAuthorisationPresent;
+
+        /*    public override void Execute()
+            {
+              //  ExecuteAllMonsterEvents();
+              //  com.github.zehsteam.ToilHead.Api.forceMantiToilSpawns = true;
+                // com.github.zehsteam.ToilHead.Api.forceSpawns = true;
+                // Manager.RemoveSpawn(Assets.EnemyName.CoilHead); 
+                // Manager.RemoveSpawn(Assets.antiCoilHead.enemyName = "Spring");
+                DoorActive = false;
+            }
+            public override void OnShipLeave()
+            {
+                //  ExecuteAllMonsterEvents();
+                //  com.github.zehsteam.ToilHead.Api.forceMantiToilSpawns = true;
+                // com.github.zehsteam.ToilHead.Api.forceSpawns = true;
+                // Manager.RemoveSpawn(Assets.EnemyName.CoilHead); 
+                // Manager.RemoveSpawn(Assets.antiCoilHead.enemyName = "Spring");
+                DoorActive = true;
+            }
+            public override void OnGameStart()
+            {
+                //  ExecuteAllMonsterEvents();
+                //  com.github.zehsteam.ToilHead.Api.forceMantiToilSpawns = true;
+                // com.github.zehsteam.ToilHead.Api.forceSpawns = true;
+                // Manager.RemoveSpawn(Assets.EnemyName.CoilHead); 
+                // Manager.RemoveSpawn(Assets.antiCoilHead.enemyName = "Spring");
+                DoorActive = true;
+            } */
     }
 }
