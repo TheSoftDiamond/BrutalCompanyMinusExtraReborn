@@ -28,7 +28,7 @@ namespace BrutalCompanyMinus.Minus.Events
                 new SpawnableItemWithRarity() { spawnableItem = Assets.GetItem("Saint"), rarity = 4 },
                 new SpawnableItemWithRarity() { spawnableItem = Assets.GetItem("Chronos"), rarity = 10 },
                 new SpawnableItemWithRarity() { spawnableItem = Assets.GetItem("Rusty"), rarity = 45 },
-                new SpawnableItemWithRarity() { spawnableItem = Assets.GetItem("MysteryDiceItem"), rarity = 25 },
+                new SpawnableItemWithRarity() { spawnableItem = Assets.GetItem("GamblerItem"), rarity = 25 },
                 new SpawnableItemWithRarity() { spawnableItem = Assets.GetItem("Sacrificer"), rarity = 16 }
             );
 
