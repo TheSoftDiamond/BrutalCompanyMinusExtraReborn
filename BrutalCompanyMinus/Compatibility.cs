@@ -234,9 +234,8 @@ namespace BrutalCompanyMinus
             SurfacedPresent = IsModPresent("Surfaced", "Surfaced Detected");
             VarietyPresent = IsModPresent("TestAccount666.TestAccountVariety", "Test Account Variety Detected");
             CodeRebirthPresent = IsModPresent("CodeRebirth", "CodeRebirth Detected");
-            SuperEclipsePresent = IsModPresent("Millie.SuperEclipse", "Super Eclipse Detected")
+            SuperEclipsePresent = IsModPresent("Millie.SuperEclipse", "Super Eclipse Detected");
             ShipInventoryPresent = IsModPresent("ShipInventory", "Ship Inventory Detected. Including in inventory checks");
-
         }
 
         private static Assembly GetAssembly(string name)
