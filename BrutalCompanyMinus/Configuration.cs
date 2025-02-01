@@ -43,6 +43,8 @@ namespace BrutalCompanyMinus
         public static Scale[] eventTypeScales = new Scale[6];
         public static Dictionary<EventType, Scale> scrapValueByEventTypeScale = new Dictionary<EventType, Scale>();
         public static Dictionary<EventType, Scale> scrapAmountByEventTypeScale = new Dictionary<EventType, Scale>();
+        public static ConfigEntry<string> MoonsToIgnore;
+
         public static EventManager.DifficultyTransition[] difficultyTransitions;
         public static ConfigEntry<bool> enableQuotaChanges;
         public static ConfigEntry<int> deadLineDaysAmount, startingCredits, startingQuota, baseIncrease, increaseSteepness;
@@ -149,6 +151,8 @@ namespace BrutalCompanyMinus
                 scrapAmountByEventTypeScale.Add(difficulty, bindEventTypeScrapAmountMultiplier(difficulty));
                 scrapValueByEventTypeScale.Add(difficulty, bindEventTypeScrapValueMultiplier(difficulty));
             }
+
+            MoonsToIgnore = difficultyConfig.Bind("Moons Settings", "Moons to Not Spawn Events On", "", "Events will not spawn on these moons. Seperate by comma for each moon name.");
 
             // Custom scrap settings
             nutSlayerLives = customAssetsConfig.Bind("NutSlayer", "Lives", 5, "If hp reaches zero or below, decrement lives and reset hp until 0 lives.");
