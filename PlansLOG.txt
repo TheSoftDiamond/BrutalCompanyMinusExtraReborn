@@ -39,8 +39,6 @@ Potential Descriptions: You are being watched|It can see you|Don't keep eyesight
 Type: Bad (May be VeryBad depending on if the enemy can be killed or not and more testing needed)
 Status: Planned
 
-Janaury 30, 2025:
+Janaury 31, 2025:
 TO DO: Fix ShipInventory issue with landing when mod not present.
-TO DO: Investigate and add compat to galetry moons by Wesley, may also occur with other moons deemed "safe".
 TO DO: Add player scaling
-TO DO: Add event item scaling for scrap amount and scrap value

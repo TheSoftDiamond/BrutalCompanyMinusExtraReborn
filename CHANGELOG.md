@@ -1,6 +1,15 @@
 # ChangeLog
 
 <details>
+  <summary>0.21.7</summary>
+
+## Additions
+
+   - You can blacklist moons from causing events, see the readme for more info.
+   - Multipliers for scrap amount and value based on Event Types active are added. *Thank you bmnr for the assistance there!*
+
+</details>
+<details>
   <summary>0.21.6</summary>
 
 ## Changes
