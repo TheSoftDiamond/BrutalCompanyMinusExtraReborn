@@ -1,5 +1,13 @@
-# ChangeLog
+# Changelog
 
+<details>
+  <summary>0.21.8</summary>
+
+## Changes
+
+   - Apparently the Bad Dice and regular Dice event was broken, but it has been fixed. If you previously have generated files from BCMER, you will need to either delete the Modded Events Config File, or manually change the MysteryDiceItem to GamblerItem for changes to reflect.
+
+</details>
 <details>
   <summary>0.21.7</summary>
 
