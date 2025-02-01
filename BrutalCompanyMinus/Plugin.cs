@@ -1,20 +1,9 @@
-﻿using System;
-using HarmonyLib;
+﻿using HarmonyLib;
 using BepInEx;
 using UnityEngine;
 using System.Reflection;
-using System.Collections;
-using BrutalCompanyMinus.Minus;
-using System.Collections.Generic;
 using BrutalCompanyMinus.Minus.Handlers;
-using UnityEngine.Diagnostics;
-using GameNetcodeStuff;
-using Unity.Netcode;
-using UnityEngine.InputSystem.HID;
-using Discord;
-using System.Diagnostics;
 using BepInEx.Configuration;
-using System.Globalization;
 using static BrutalCompanyMinus.Configuration;
 
 namespace BrutalCompanyMinus
@@ -25,7 +14,7 @@ namespace BrutalCompanyMinus
     {
         private const string GUID = "SoftDiamond.BrutalCompanyMinusExtraReborn";
         private const string NAME = "BrutalCompanyMinusExtraReborn";
-        private const string VERSION = "0.21.6";
+        private const string VERSION = "0.21.9";
         private static readonly Harmony harmony = new Harmony(GUID);
 
         void Awake()
