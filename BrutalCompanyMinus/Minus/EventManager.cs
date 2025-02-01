@@ -621,7 +621,12 @@ namespace BrutalCompanyMinus.Minus
 
                 currentEvents = ChooseEvents(out additionalEvents);
 
-                foreach (MEvent e in currentEvents) Log.LogInfo("Event chosen: " + e.Name()); // Log Chosen events
+                foreach (MEvent e in currentEvents)
+                {
+                    Log.LogInfo("Event chosen: " + e.Name()); // Log Chosen events
+                    Manager.scrapValueMultiplier *= MEvent.Scale.Compute(Configuration.scrapValueByEventTypeScale[e.Type]);
+                    Manager.scrapAmountMultiplier *= MEvent.Scale.Compute(Configuration.scrapAmountByEventTypeScale[e.Type]);
+                }
                 foreach (MEvent e in additionalEvents) Log.LogInfo("Additional events: " + e.Name());
 
                 ApplyEvents(currentEvents);
