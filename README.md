@@ -397,7 +397,7 @@ The formula used to compute the **scale** is `Base + (DaysPassed * Increment)`.
 ## Difficulty Config 
 Location: `BrutalCompanyMinus\Difficulty_Settings.cfg`
 
-#### Difficulty
+#### Event Settings
 
 `Use custom weights`: By default mod will use event type weights.
 
@@ -407,11 +407,25 @@ Location: `BrutalCompanyMinus\Difficulty_Settings.cfg`
 
 `Display events in chat`: Display events in chat?
 
+#### Event Type Scrap Multipliers
+
+`VeryBad Scrap Amount Scale` : The amount multiplier **scale** for **VeryBad** events that are active during the moon.
+
+`VeryBad Scrap Value Scale` : The value multiplier **scale** for **VeryBad** events that are active during the moon.
+
+**...**
+
+`Remove Scrap Value Scale` : The value multiplier **scale** for **Remove** events that are active during the moon.
+
+#### Event Type Weights
+
 `Very Good Weight scale`: The weight **scale** for **VeryGood** event to be chosen
 
 **...**
 
 `Very Bad Weight scale`: The weight **scale** for **VeryBad** event to be chosen
+
+#### Difficulty
 
 `Spawn Chance Multiplier`: A **scale** that multiplys the spawn rate.
 
@@ -486,6 +500,10 @@ Location: `BrutalCompanyMinus\Difficulty_Settings.cfg`
 `Base Increase`: Quota scaling
 
 `Increase Steepness`: Quota scaling
+
+#### Moons Settings
+
+`Moons to Not Spawn Events On` : Seperated by comma, the list of moons you do not want events to spawn on. Uses *newLevel.PlanetName* flag but other name flags are being looked into being added. Example: `41 Experimentation, 56 Vow` would prevent Experimentation and Vow from recieving events.
 
 ## Weather config
 Location: `BrutalCompanyMinus\Weather_Settings.cfg`
