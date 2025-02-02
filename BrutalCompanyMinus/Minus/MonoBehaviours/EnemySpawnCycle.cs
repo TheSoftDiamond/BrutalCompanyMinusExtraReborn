@@ -63,7 +63,16 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
         [HarmonyPatch(typeof(StartOfRound), nameof(StartOfRound.openingDoorsSequence))]
         private static void OnGameStart()
         {
-            Active = true;
+            if (EventManager.IsIgnoredMoon(StartOfRound.Instance.currentLevel.PlanetName))
+            {
+                Active = false;
+            } 
+            else
+            {
+                Active = true;
+            }
+            Log.LogInfo("Active State: " + Active);
+
             Instance.spawnCycles.Clear();
             foreach (SpawnCycle cycle in Instance.spawnCycles)
             {
@@ -77,7 +86,14 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
         [HarmonyPatch(typeof(RoundManager), nameof(RoundManager.LoadNewLevel))]
         private static void OnLoadNewLevel()
         {
-            Active = true;
+            if (EventManager.IsIgnoredMoon(StartOfRound.Instance.currentLevel.PlanetName))
+            {
+                Active = false;
+            }
+            else
+            {
+                Active = true;
+            }
         }
 
         public enum SpawnLocation
