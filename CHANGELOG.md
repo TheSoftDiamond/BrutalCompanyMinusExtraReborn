@@ -1,6 +1,16 @@
 # Changelog
 
 <details>
+  <summary>0.21.9</summary>
+
+## Changes
+
+   - Spawn cycle fix on Ignored Moons
+   - If Super Eclipse mod is present, the game should no longer roll ShipCoreFailure/LeverFailure Events
+
+</details>
+
+<details>
   <summary>0.21.8</summary>
 
 ## Changes
