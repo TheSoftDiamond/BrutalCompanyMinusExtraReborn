@@ -345,6 +345,7 @@
 | Baldi | Baldi will chase you throughout the facility |
 | YeetBomb | Prpulsion Mines Everywhere |
 | Seamine | Seamines... EVERYWHERE outside |
+| SkullEnemy | The floating skull chases you.. |
   </details>
 
   <details>
@@ -368,6 +369,7 @@
 | GokuBracken | Something is very powerful and its everywhere... |
 | MoaiEnemy | Spawns a lot of Moai enemies. Good luck will be needed. |
 | Bertha | Big Bertha Mines... EVERYWHERE outside |
+| ManStalker | Spawns Man Stalker to chase you.. Avoid at all costs |
 
   </details>
   

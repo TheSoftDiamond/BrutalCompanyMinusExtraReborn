@@ -195,6 +195,7 @@ namespace BrutalCompanyMinus.Minus
             new Events.Seamine(),
             new Events.Bertha(),
             new Events.YeetBomb(),
+            new Events.ManStalker(),
 
             //Very Bad
             new Events.Mantitoil(),
@@ -213,6 +214,7 @@ namespace BrutalCompanyMinus.Minus
             new Events.GokuBracken(),
             new Events.MoaiEnemy(),
             new Events.Meltdown(),
+            new Events.SkullEnemy(),
 
             //No Enemy
             new Events.NoMantitoil(),
@@ -247,6 +249,8 @@ namespace BrutalCompanyMinus.Minus
         internal static float[] eventTypeCount = new float[] { };
 
         internal static float[] eventTypeRarities = new float[] { };
+
+
 
         /// <summary>
         /// This must be called before save load, will generate the config in Custom_Events.cfg
@@ -556,7 +560,7 @@ namespace BrutalCompanyMinus.Minus
             if (!RoundManager.Instance.IsHost || newLevel.levelID == 3) return;
 
             LevelModifications.ResetValues(StartOfRound.Instance);
-            
+
             // Apply weather multipliers
             foreach (Weather e in Net.Instance.currentWeatherMultipliers)
             {
@@ -569,7 +573,7 @@ namespace BrutalCompanyMinus.Minus
 
             // Apply level properties
             LevelProperties properties = Configuration.levelProperties.GetValueOrDefault(newLevel.levelID);
-            if(properties != null)
+            if (properties != null)
             {
                 Manager.scrapValueMultiplier *= properties.GetScrapValueMultiplier();
                 Manager.scrapAmountMultiplier *= properties.GetScrapAmountMultiplier();
@@ -594,24 +598,7 @@ namespace BrutalCompanyMinus.Minus
                 Log.LogInfo("Moon name is " + newLevel.PlanetName);
             }
 
-            string moonsToIgnore = Configuration.MoonsToIgnore.GetSerializedValue();
-            string[] ignoredMoons = string.IsNullOrEmpty(moonsToIgnore)
-                ? new string[0]
-                : moonsToIgnore.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                              .Select(moon => moon.Trim())
-                              .ToArray();
-
-            //Log.LogInfo(moonsToIgnore); //Current list of moons that are ignored
-
-            bool skipEventActivation = false;
-
-            foreach (string moon in ignoredMoons) {
-                if (newLevel.PlanetName == moon) {
-                    skipEventActivation = true;
-                    Log.LogInfo("Moon is on list of moons to ignore events. Skipping Events");
-                    break;
-                }
-            }
+            bool skipEventActivation = IsIgnoredMoon(newLevel.PlanetName);
 
             if (!skipEventActivation)
             {
@@ -632,11 +619,11 @@ namespace BrutalCompanyMinus.Minus
                 ApplyEvents(additionalEvents);
             }
 
-            foreach(MEvent forcedEvent in forcedEvents)
+            foreach (MEvent forcedEvent in forcedEvents)
             {
                 forcedEvent.Execute();
 
-                foreach(string additionalEvent in forcedEvent.EventsToSpawnWith)
+                foreach (string additionalEvent in forcedEvent.EventsToSpawnWith)
                 {
                     MEvent.GetEvent(additionalEvent).Execute();
                 }
@@ -650,7 +637,7 @@ namespace BrutalCompanyMinus.Minus
             if (Configuration.showEventsInChat.Value && !Configuration.DisplayUIAfterShipLeaves.Value)
             {
                 HUDManager.Instance.AddTextToChatOnServer("<color=#FFFFFF>Events:</color>");
-                foreach(string eventDescription in currentEventDescriptions)
+                foreach (string eventDescription in currentEventDescriptions)
                 {
                     HUDManager.Instance.AddTextToChatOnServer(eventDescription);
                 }
@@ -681,6 +668,32 @@ namespace BrutalCompanyMinus.Minus
             foreach (Keyframe key in newLevel.outsideEnemySpawnChanceThroughDay.keys) Log.LogInfo($"Time:{key.time} + $Value:{key.value}");
             Log.LogInfo("Daytime Spawn Curve");
             foreach (Keyframe key in newLevel.daytimeEnemySpawnChanceThroughDay.keys) Log.LogInfo($"Time:{key.time} + $Value:{key.value}");
+        }
+
+        internal static bool IsIgnoredMoon(string moonName)
+        {
+            string moonsToIgnore = Configuration.MoonsToIgnore.GetSerializedValue();
+            string[] ignoredMoons = string.IsNullOrEmpty(moonsToIgnore)
+                ? new string[0]
+                : moonsToIgnore.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                              .Select(moon => moon.Trim())
+                              .ToArray();
+
+            //Log.LogInfo(moonsToIgnore); //Current list of moons that are ignored
+
+            bool skipEventActivation = false;
+
+            foreach (string moon in ignoredMoons)
+            {
+                if (moonName == moon)
+                {
+                    skipEventActivation = true;
+                    Log.LogInfo("Moon is on list of moons to ignore events. Skipping Events");
+                    break;
+                }
+            }
+
+            return skipEventActivation;
         }
     }
 }
