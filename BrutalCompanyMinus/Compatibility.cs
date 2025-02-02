@@ -63,6 +63,8 @@ namespace BrutalCompanyMinus
             CodeRebirthPresent = false,
             ShipInventoryPresent = false,
             SuperEclipsePresent = false,
+            SkullEnemyPresent = false,
+            ManStalkerPresent = false,
             FacilityMeltdownPresent = false;
 
 
@@ -234,7 +236,9 @@ namespace BrutalCompanyMinus
             SurfacedPresent = IsModPresent("Surfaced", "Surfaced Detected");
             VarietyPresent = IsModPresent("TestAccount666.TestAccountVariety", "Test Account Variety Detected");
             CodeRebirthPresent = IsModPresent("CodeRebirth", "CodeRebirth Detected");
-            SuperEclipsePresent = IsModPresent("Millie.SuperEclipse", "Super Eclipse Detected")
+            SuperEclipsePresent = IsModPresent("Millie.SuperEclipse", "Super Eclipse Detected");
+            ManStalkerPresent = IsModPresent("menstalker_yaboiduckisnickerbar", "Man Stalker Detected");
+            SkullEnemyPresent = IsModPresent("SkullEnemy", "Skull Enemy Detected");
             ShipInventoryPresent = IsModPresent("ShipInventory", "Ship Inventory Detected. Including in inventory checks");
 
         }
