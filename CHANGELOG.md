@@ -3,6 +3,11 @@
 <details>
   <summary>0.21.9</summary>
 
+## Additions
+
+   - SkullEnemy Event
+   - ManStalker Event
+
 ## Changes
 
    - Spawn cycle fix on Ignored Moons
