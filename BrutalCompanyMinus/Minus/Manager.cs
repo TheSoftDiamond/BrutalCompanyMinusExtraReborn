@@ -36,7 +36,7 @@ namespace BrutalCompanyMinus.Minus
         {
             get
             {
-                if(StartOfRound.Instance != null) return StartOfRound.Instance.gameStats.daysSpent;
+                if (StartOfRound.Instance != null) return StartOfRound.Instance.gameStats.daysSpent;
                 return 0;
             }
         }
@@ -56,14 +56,14 @@ namespace BrutalCompanyMinus.Minus
         private static GameObject _terrainObject;
         internal static GameObject terrainObject
         {
-            get 
+            get
             {
                 if (_terrainObject == null) SampleMap();
                 return _terrainObject;
             }
-            private set 
-            { 
-                _terrainObject = value; 
+            private set
+            {
+                _terrainObject = value;
             }
         }
         internal static List<Vector3> outsideObjectSpawnNodes = new List<Vector3>();
@@ -146,7 +146,7 @@ namespace BrutalCompanyMinus.Minus
             /// <summary>
             /// This is not safe to be used inside of Execute(), this will spawn client side objects.
             /// </summary>
-            public static void DoSpawnOutsideObjects(int count, float radius, Vector3 offset, GameObject obj) 
+            public static void DoSpawnOutsideObjects(int count, float radius, Vector3 offset, GameObject obj)
             {
                 for (int i = 0; i < count; i++)
                 {
@@ -236,14 +236,14 @@ namespace BrutalCompanyMinus.Minus
             /// This is to be used inside of Execute(), will add to a list to spawn scrap outside safely.
             /// </summary>
             public static void OutsideScrap(int Amount) => randomItemsToSpawnOutsideCount += Amount;
-            
+
             /// <summary>
             /// This is not safe to be used inside of Execute(), will spawn the enemie(s) using outsideAINodes.
             /// </summary>
             /// <returns>Returns EnemyAI scripts after spawned.</returns>
             public static List<EnemyAI> DoSpawnOutsideEnemies()
             {
-                if(Events.SafeOutside.Active)
+                if (Events.SafeOutside.Active)
                 {
                     Log.LogInfo("Outside spawning prevented by OutsideSafe");
                     return new List<EnemyAI>();
@@ -348,13 +348,13 @@ namespace BrutalCompanyMinus.Minus
                     GrabbableObject grabbableObject = obj.GetComponent<GrabbableObject>();
                     grabbableObject.transform.rotation = Quaternion.Euler(grabbableObject.itemProperties.restingRotation);
                     grabbableObject.fallTime = 0.0f;
-                    ScrapValues.Add((int)(UnityEngine.Random.Range(ScrapToSpawn[i].minValue, ScrapToSpawn[i].maxValue + 1) * r.scrapValueMultiplier * scrapValueMultiplier));  
+                    ScrapValues.Add((int)(UnityEngine.Random.Range(ScrapToSpawn[i].minValue, ScrapToSpawn[i].maxValue + 1) * r.scrapValueMultiplier * scrapValueMultiplier));
                     grabbableObject.scrapValue = ScrapValues[ScrapValues.Count - 1];
                     NetworkObject netObj = obj.GetComponent<NetworkObject>();
                     netObj.Spawn();
                     ScrapSpawnsNet.Add(netObj);
                 }
-                
+
                 return new ScrapSpawnInfo(ScrapSpawnsNet.ToArray(), ScrapValues.ToArray());
             }
 
@@ -362,7 +362,7 @@ namespace BrutalCompanyMinus.Minus
             /// This is not safe to be used inside of Execute(), this will spawn scrap inside using randomScrapSpawn.
             /// </summary>
             /// <returns>Returns all NetworkObjectReferences and ScrapValues</returns>
-            public static ScrapSpawnInfo DoSpawnScrapInside(int Amount) 
+            public static ScrapSpawnInfo DoSpawnScrapInside(int Amount)
             {
                 if (Amount <= 0) return new ScrapSpawnInfo(new NetworkObjectReference[] { }, new int[] { });
 
@@ -386,15 +386,15 @@ namespace BrutalCompanyMinus.Minus
                         continue;
                     }
                     List<RandomScrapSpawn> scrapSpawnPositions = ((ScrapToSpawn[i].spawnPositionTypes != null && ScrapToSpawn[i].spawnPositionTypes.Count != 0) ? source.Where((RandomScrapSpawn x) => ScrapToSpawn[i].spawnPositionTypes.Contains(x.spawnableItems) && !x.spawnUsed).ToList() : source.ToList());
-                    if(scrapSpawnPositions.Count <= 0)
+                    if (scrapSpawnPositions.Count <= 0)
                     {
                         Log.LogError("No positions to spawn scrap: " + ScrapToSpawn[i].itemName);
                         continue;
                     }
-                    if(usedSpawns.Count > 0 && scrapSpawnPositions.Contains(randomScrapSpawn))
+                    if (usedSpawns.Count > 0 && scrapSpawnPositions.Contains(randomScrapSpawn))
                     {
                         scrapSpawnPositions.RemoveAll((RandomScrapSpawn x) => usedSpawns.Contains(x));
-                        if(scrapSpawnPositions.Count <= 0)
+                        if (scrapSpawnPositions.Count <= 0)
                         {
                             usedSpawns.Clear();
                             i--;
@@ -406,11 +406,12 @@ namespace BrutalCompanyMinus.Minus
                     usedSpawns.Add(randomScrapSpawn);
 
                     Vector3 pos;
-                    if(randomScrapSpawn.spawnedItemsCopyPosition)
+                    if (randomScrapSpawn.spawnedItemsCopyPosition)
                     {
                         randomScrapSpawn.spawnUsed = true;
                         pos = randomScrapSpawn.transform.position;
-                    } else
+                    }
+                    else
                     {
                         pos = r.GetRandomNavMeshPositionInBoxPredictable(randomScrapSpawn.transform.position, randomScrapSpawn.itemSpawnRange, r.navHit, rng) + Vector3.up * ScrapToSpawn[i].verticalOffset;
                     }
@@ -509,13 +510,13 @@ namespace BrutalCompanyMinus.Minus
 
         internal static int GetLevelIndex()
         {
-            for(int i = 0; i < StartOfRound.Instance.levels.Length; i++)
+            for (int i = 0; i < StartOfRound.Instance.levels.Length; i++)
             {
                 if (StartOfRound.Instance.levels[i].name == RoundManager.Instance.currentLevel.name) return i;
             }
             return 0;
         }
-        
+
         /// <summary>
         /// Adds to enemy hp.
         /// </summary>
@@ -554,12 +555,12 @@ namespace BrutalCompanyMinus.Minus
                     difficulty += moonGradeDifficulty;
                 }
             }
-            if(Configuration.scaleByQuota.Value)
+            if (Configuration.scaleByQuota.Value)
             {
                 quotaDifficulty = Mathf.Clamp(TimeOfDay.Instance.profitQuota * Configuration.quotaDifficultyMultiplier.Value, 0.0f, Configuration.quotaDifficultyCap.Value);
                 difficulty += quotaDifficulty;
             }
-            if(Configuration.scaleByWeather.Value)
+            if (Configuration.scaleByWeather.Value)
             {
                 weatherDifficulty = Configuration.weatherAdditives.GetValueOrDefault(StartOfRound.Instance.currentLevel.currentWeather, 0.0f);
                 difficulty += weatherDifficulty;
@@ -614,7 +615,7 @@ namespace BrutalCompanyMinus.Minus
             //        Console.WriteLine("ShipInventory types not found.");
             //    }
             //}
-     
+
             return count;
         }
 
@@ -629,7 +630,7 @@ namespace BrutalCompanyMinus.Minus
             OuterPoints = Helper.ComputeConvexHull(OuterPoints).ToList();
 
             // Get outside spawn nodes
-            if(OuterPoints.Count > 0)
+            if (OuterPoints.Count > 0)
             {
                 float xSum = 0.0f, ySum = 0.0f;
                 foreach (Vector2 outerPoint in OuterPoints)
@@ -750,21 +751,24 @@ namespace BrutalCompanyMinus.Minus
             try
             {
                 amountRemoved += RoundManager.Instance.currentLevel.Enemies.RemoveAll(x => x.enemyType.name.ToUpper() == Name.ToUpper());
-            } catch
+            }
+            catch
             {
                 Log.LogError("RemoveAll() on insideEnemies failed");
             }
             try
             {
                 amountRemoved += RoundManager.Instance.currentLevel.OutsideEnemies.RemoveAll(x => x.enemyType.name.ToUpper() == Name.ToUpper());
-            } catch
+            }
+            catch
             {
                 Log.LogError("RemoveAll() on outsideEnemies failed");
             }
             try
             {
                 amountRemoved += RoundManager.Instance.currentLevel.DaytimeEnemies.RemoveAll(x => x.enemyType.name.ToUpper() == Name.ToUpper());
-            } catch
+            }
+            catch
             {
                 Log.LogError("RemoveAll() on daytimeEnemies failed");
             }
@@ -786,21 +790,24 @@ namespace BrutalCompanyMinus.Minus
             try
             {
                 if (RoundManager.Instance.currentLevel.Enemies.Exists(x => x.enemyType.name == name)) return true;
-            } catch
+            }
+            catch
             {
                 Log.LogError("Exists() on insideEnemies failed");
             }
             try
             {
                 if (RoundManager.Instance.currentLevel.OutsideEnemies.Exists(x => x.enemyType.name == name)) return true;
-            } catch
+            }
+            catch
             {
                 Log.LogError("Exists() on outsideEnemies failed");
             }
             try
             {
                 if (RoundManager.Instance.currentLevel.DaytimeEnemies.Exists(x => x.enemyType.name == name)) return true;
-            } catch
+            }
+            catch
             {
                 Log.LogError("Exists() on daytimeEnemies failed");
             }
@@ -882,7 +889,7 @@ namespace BrutalCompanyMinus.Minus
         [HarmonyPatch(typeof(TimeOfDay), nameof(TimeOfDay.MoveGlobalTime))]
         private static void OnMoveGlobaTime(ref TimeOfDay __instance, ref float ___timeUntilDeadline, ref float ___globalTime)
         {
-            if(moveTime)
+            if (moveTime)
             {
                 ___timeUntilDeadline -= moveTimeAmount;
                 ___globalTime += moveTimeAmount;
@@ -953,7 +960,7 @@ namespace BrutalCompanyMinus.Minus
             spawnedAI.AddRange(Spawn.DoSpawnInsideEnemies());
             spawnedAI.AddRange(Spawn.DoSpawnOutsideEnemies());
         }
-        
+
         internal struct ObjectInfo
         {
             public int count;

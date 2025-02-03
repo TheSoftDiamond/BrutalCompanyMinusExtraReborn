@@ -1,7 +1,25 @@
 # Changelog
 
 <details>
+  <summary>0.21.10</summary>
+
+## Additions
+
+   - Nightmare Foxy Event
+
+## Changes
+
+   - Apparently Football Event pointed to wrong dependency
+
+</details>
+
+<details>
   <summary>0.21.9</summary>
+
+## Additions
+
+   - SkullEnemy Event
+   - ManStalker Event
 
 ## Changes
 

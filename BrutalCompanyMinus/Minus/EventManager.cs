@@ -196,6 +196,7 @@ namespace BrutalCompanyMinus.Minus
             new Events.Bertha(),
             new Events.YeetBomb(),
             new Events.ManStalker(),
+            new Events.Foxy(),
 
             //Very Bad
             new Events.Mantitoil(),
