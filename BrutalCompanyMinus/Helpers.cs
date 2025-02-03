@@ -345,6 +345,32 @@ namespace BrutalCompanyMinus
             return hull;
         }
 
+        internal static SpawnableItemWithRarity? GetChosenScrap(Func<SpawnableItemWithRarity, bool> scrapSelector)
+            // i'd rather make TransmuteScrapEvent class and inherit it in TransmuteScrapSmall.cs and TrnasmuteScrapBig.cs,
+            // but this may break something and also make confusions, since it'll be a bit different from other events in this
+            // mod, best practice is to rewrite all events, but since I'm only making pull requests, I don't have much time for that.
+            // these two events are basically copy paste and that hurts my eyes D:
+        {
+            var oneHandedItems = RoundManager.Instance.currentLevel.spawnableScrap
+                .Where(scrapSelector)
+                .ToList();
+            var sumRarity = oneHandedItems.Sum(i => i.rarity);
+            var randomValue = UnityEngine.Random.Range(0, sumRarity);
+
+            var currentRarity = 0;
+            foreach (var item in oneHandedItems)
+            {
+                currentRarity += item.rarity;
+
+                if (currentRarity > randomValue)
+                    return item;
+            }
+
+            // Code should never reach this point
+            Log.LogError("Get chosen scrap could not find a random scrap to choose. Transmute events will not work.");
+            return null;
+        }
+
         private static Vector2 Sub(this Vector2 a, Vector2 b)
         {
             return a - b;
