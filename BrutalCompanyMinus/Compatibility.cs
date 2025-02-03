@@ -65,6 +65,7 @@ namespace BrutalCompanyMinus
             SuperEclipsePresent = false,
             SkullEnemyPresent = false,
             ManStalkerPresent = false,
+            FoxyPresent = false,
             FacilityMeltdownPresent = false;
 
 
@@ -239,6 +240,7 @@ namespace BrutalCompanyMinus
             SuperEclipsePresent = IsModPresent("Millie.SuperEclipse", "Super Eclipse Detected");
             ManStalkerPresent = IsModPresent("menstalker_yaboiduckisnickerbar", "Man Stalker Detected");
             SkullEnemyPresent = IsModPresent("SkullEnemy", "Skull Enemy Detected");
+            FoxyPresent = IsModPresent("NightmareFoxy", "NightmareFoxy Detected");
             ShipInventoryPresent = IsModPresent("ShipInventory", "Ship Inventory Detected. Including in inventory checks");
 
         }

@@ -278,7 +278,7 @@
   <summary><b>Modded Event List</b></summary>
   
   - These events will only appear with said mods installed
-  - Currently supported mods are Lethalthings, Diversity, Scopophobia, HerobrineMod, SirenHead, RollingGiant, TheFiend, Lockers, TheGiantSpecimens, Football, Mimics, LCGoldScrapMod, Toilhead, Moonswept, ShockwaveDrones, FacelessStalker, EmergencyDice, GokuBracken, MoaiEnemy, BaldiEnemy, TestAccountVariety, Surfaced, Peepers...
+  - Currently supported mods include Lethalthings, Diversity, Scopophobia, HerobrineMod, SirenHead, RollingGiant, TheFiend, Lockers, TheGiantSpecimens, Football, Mimics, LCGoldScrapMod, Toilhead, Moonswept, ShockwaveDrones, FacelessStalker, EmergencyDice, GokuBracken, MoaiEnemy, BaldiEnemy, TestAccountVariety, Surfaced, Peepers, NightmareFoxy, Man Stalker, Skull Enemy, ...
   
   <details>
     <summary><b>Very Good</b></summary>
@@ -346,6 +346,7 @@
 | YeetBomb | Prpulsion Mines Everywhere |
 | Seamine | Seamines... EVERYWHERE outside |
 | SkullEnemy | The floating skull chases you.. |
+| Foxy | Nightmare Foxy chases... |
   </details>
 
   <details>
