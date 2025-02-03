@@ -52,7 +52,9 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
 
                 Net.Instance.GenerateAndSyncTerminalCodeServerRpc(__instance.NetworkObject, rng.Next(RoundManager.Instance.possibleCodesForBigDoors.Length));
 
-                Net.Instance.SyncScrapValueServerRpc(netObject, (int)(UnityEngine.Random.Range(Assets.grabbableTurret.minValue, Assets.grabbableTurret.maxValue + 1) * RoundManager.Instance.scrapValueMultiplier));
+                int scrapValue = UnityEngine.Random.Range(Assets.grabbableTurret.minValue, Assets.grabbableTurret.maxValue + 1);
+                int multipliedScrapValue = Mathf.RoundToInt(scrapValue * RoundManager.Instance.scrapValueMultiplier * Manager.scrapValueMultiplier);
+                Net.Instance.SyncScrapValueServerRpc(netObject, multipliedScrapValue);
 
                 yield return new WaitForSeconds(5.0f);
 

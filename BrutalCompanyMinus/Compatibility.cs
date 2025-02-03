@@ -242,7 +242,6 @@ namespace BrutalCompanyMinus
             SkullEnemyPresent = IsModPresent("SkullEnemy", "Skull Enemy Detected");
             FoxyPresent = IsModPresent("NightmareFoxy", "NightmareFoxy Detected");
             ShipInventoryPresent = IsModPresent("ShipInventory", "Ship Inventory Detected. Including in inventory checks");
-
         }
 
         private static Assembly GetAssembly(string name)

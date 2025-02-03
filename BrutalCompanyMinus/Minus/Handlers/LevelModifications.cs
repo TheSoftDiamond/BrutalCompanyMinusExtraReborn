@@ -128,9 +128,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
                 Log.LogInfo($"Removing {amountRemoved} scrap.");
                 for (int i = spawnedScrap.Length - 1; i >= spawnedScrap.Length - amountRemoved; i--)
                 {
-                    NetworkObject netObject = null;
-                    spawnedScrap[i].TryGet(out netObject);
-                    if(netObject != null)
+                    if (spawnedScrap[i].TryGet(out NetworkObject netObject))
                     {
                         netObject.Despawn(destroy: true);
                     }
@@ -159,7 +157,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
             spawnedScrap = newSpawnedScrapList.ToArray();
             scrapValues = newScrapValuesList.ToArray();
 
-
+            IncreaseApparaticeScrapValue();
 
             if (!Manager.transmuteScrap) return;
             if(Manager.ScrapToTransmuteTo.Count == 0)
@@ -239,6 +237,38 @@ namespace BrutalCompanyMinus.Minus.Handlers
             // Replace spawnedScrap, scrapValues
             spawnedScrap = newNetObjects.ToArray();
             scrapValues = newScrapValues.ToArray();
+        }
+
+        private static void IncreaseApparaticeScrapValue()
+        {
+            if (!Net.Instance.IsServer) return;
+
+            var apparatices = UnityEngine.Object.FindObjectsOfType<LungProp>();
+
+            if (apparatices.Length == 0 && (RoundManager.Instance.currentDungeonType == 0 || RoundManager.Instance.currentDungeonType == 3))
+                Log.LogWarning("Could not find apparatice in facility interior to increase it's scrap value multiplier.");
+
+            foreach (var apparatice in apparatices)
+            {
+                Log.LogDebug($"LungProp stats: [isScrap: {apparatice.itemProperties.isScrap}] [isLungDocked: {apparatice.isLungDocked}] " +
+                    $"[isLungPowered: {apparatice.isLungPowered}] [hasBeenHeld: {apparatice.hasBeenHeld}] [isInShipRoom: {apparatice.isInShipRoom}] " +
+                    $"[isInElevator: {apparatice.isInElevator}] [name: {apparatice.name}] [scrapname: {apparatice.itemProperties.itemName}] " +
+                    $"[currentDungeonType: {RoundManager.Instance.currentDungeonType}]");
+                if (apparatice.itemProperties.isScrap && apparatice.isLungDocked && apparatice.isLungPowered
+                    && !apparatice.hasBeenHeld && !apparatice.isInShipRoom && !apparatice.isInElevator)
+                {
+                    var scanNode = apparatice.gameObject.GetComponentInChildren<ScanNodeProperties>();
+                    var showsUnknownValue = scanNode.subText.Contains("???");
+
+                    var networkObject = apparatice.GetComponent<NetworkObject>();
+                    Net.Instance.SyncScrapValueServerRpc(networkObject, Mathf.RoundToInt(apparatice.scrapValue * Manager.scrapValueMultiplier));
+
+                    if (showsUnknownValue) // this check is needed in case the host has a mod to show apparatice actual scrap value
+                    {
+                        scanNode.subText = "Value: ???";
+                    }
+                }
+            }
         }
     }
 }
