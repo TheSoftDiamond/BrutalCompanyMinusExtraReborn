@@ -44,16 +44,16 @@ namespace BrutalCompanyMinus.Minus.Events
         {
             Manager.scrapAmountMultiplier *= Getf(ScaleType.ScrapAmount);
 
-            List<SpawnableItemWithRarity> SmallScrapList = new List<SpawnableItemWithRarity>();
-            foreach (SpawnableItemWithRarity item in RoundManager.Instance.currentLevel.spawnableScrap)
-            {
-                if (!item.spawnableItem.twoHanded) SmallScrapList.Add(item);
-            }
+            SpawnableItemWithRarity? chosenScrap = Helper.GetChosenScrap(ss => !ss.spawnableItem.twoHanded);
+            if (chosenScrap is null) return;
 
-            SpawnableItemWithRarity chosenScrap = SmallScrapList[UnityEngine.Random.Range(0, SmallScrapList.Count)];
             chosenScrap.spawnableItem = Assets.GetItem(chosenScrap.spawnableItem.name);
 
-            Manager.TransmuteScrap(Getf(ScaleType.Percentage), new SpawnableItemWithRarity() { spawnableItem = chosenScrap.spawnableItem, rarity = 100 });
+            Manager.TransmuteScrap(Getf(ScaleType.Percentage), new SpawnableItemWithRarity()
+            {
+                spawnableItem = chosenScrap.spawnableItem,
+                rarity = 100
+            });
 
             // Scale scrap amount abit more
             float scrapValue = (chosenScrap.spawnableItem.minValue + chosenScrap.spawnableItem.maxValue) * 0.25f; // Intentionally
