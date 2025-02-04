@@ -18,12 +18,6 @@ Moai Enemy
 Prerequites: MOaiEnemy Mod
 Status: Planned --> In progress [x] --> Success [x]
 
-Kidnapper Fox
-Prerequisite - YesFox
-Status: Planned
-
-January 16, 2025
-
 Baldi
 Prerequisite: Baldi
 Status: Planned --> In Progress [x] --> Success[x]
@@ -33,11 +27,15 @@ Prerequisite: ShibaEnemy
 Type: Bad
 Status: Planned --> In Progress [x] --> Success[x]
 
-BigEyes
-Prequisite: BigEyes Mod
-Potential Descriptions: You are being watched|It can see you|Don't keep eyesight with it
-Type: Bad (May be VeryBad depending on if the enemy can be killed or not and more testing needed)
+Kidnapper Fox
+Prerequisite - YesFox
 Status: Planned
 
-Janaury 31, 2025:
-TO DO: Add player scaling
+February 4, 2025: 
+TO DO: Add player amount scaling for difficulty
+TO DO: Fix up Tree events (either by LOD, lowering tree amount, etc)
+SUGGESTION: Dust pan should not be a neutral event. May make more rare, or move to bad possibly.
+Unknown if Fixed; ShipLightsFailure/ShipCoreFailure seem to cause crash on older BCM(E) mods.
+Unknown if fixed: Lingering events (was present in BCM. Not sure if present in BCMER too)
+Unknown if fixed: Scrap transmutation weight bug. Was present in BCM, may or may not be in BCMER.
+TO DO: Better custom event system
