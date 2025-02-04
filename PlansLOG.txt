@@ -39,3 +39,5 @@ Unknown if Fixed; ShipLightsFailure/ShipCoreFailure seem to cause crash on older
 Unknown if fixed: Lingering events (was present in BCM. Not sure if present in BCMER too)
 Unknown if fixed: Scrap transmutation weight bug. Was present in BCM, may or may not be in BCMER.
 TO DO: Better custom event system
+SUGGESTION: Custom weather events from some of the weather mods.
+SUGGESTION: LethalPlaytime event(s)
