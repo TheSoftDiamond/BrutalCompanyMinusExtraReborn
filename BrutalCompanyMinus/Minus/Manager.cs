@@ -25,6 +25,7 @@ using BrutalCompanyMinus.Minus.Events;
 using Unity.Collections;
 using BrutalCompanyMinus;
 using System.Linq.Expressions;
+using BrutalCompanyMinus.Minus.Handlers.Modded;
 
 
 namespace BrutalCompanyMinus.Minus
@@ -593,28 +594,11 @@ namespace BrutalCompanyMinus.Minus
             }
             //else Log.LogDebug("No cruiser found");
 
-            //if (Compatibility.ShipInventoryPresent)
-            //{
-            //    try
-            //    {
-            //        int siCount = 0;
-
-            //        //Getting inventory from ship inventory
-            //        foreach (ShipInventory.Objects.ItemData data in ShipInventory.Helpers.ItemManager.GetItems())
-            //        {
-            //            Item item = data.GetItem();
-            //            if (item.isScrap)
-            //            {
-            //                siCount += data.SCRAP_VALUE;
-            //            }
-            //        }
-            //        count += siCount;
-            //    }
-            //    catch (Exception)
-            //    {
-            //        Console.WriteLine("ShipInventory types not found.");
-            //    }
-            //}
+            if (Compatibility.ShipInventoryPresent)
+            {
+                count += ShipInventoryCompat.GetShipInventoryScrapValue();
+            }
+        
 
             return count;
         }
