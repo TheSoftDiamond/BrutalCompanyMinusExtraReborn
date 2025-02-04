@@ -40,5 +40,4 @@ Type: Bad (May be VeryBad depending on if the enemy can be killed or not and mor
 Status: Planned
 
 Janaury 31, 2025:
-TO DO: Fix ShipInventory issue with landing when mod not present.
 TO DO: Add player scaling

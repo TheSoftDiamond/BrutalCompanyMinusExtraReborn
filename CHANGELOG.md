@@ -1,6 +1,19 @@
 # Changelog
 
 <details>
+  <summary>0.22.0</summary>
+
+## Additions
+
+   - ShipInventory support for difficulty. (It should no longer softlock if the mod is not present)
+
+## Changes
+
+   - ScrapValue applies to more scrap. Bee Hives, Grabbable Turrets, Grabbable Landmines, Apparatice will properly scale with ScrapValue multiplier state. Thanks bmnr!
+   - TransmuteScrapBig.cs and TransmuteScrapSmall.cs will pick an item based on rarity instead of an at randomly picking them from list of items. For example, With LCGoldScrap mod, it kept picking gold scrap all the time, because there are a lot of scrap variations, though they're very rare.
+
+</details>
+<details>
   <summary>0.21.10</summary>
 
 ## Additions
@@ -12,7 +25,6 @@
    - Apparently Football Event pointed to wrong dependency
 
 </details>
-
 <details>
   <summary>0.21.9</summary>
 
