@@ -1,7 +1,7 @@
 # Changelog
 
 <details>
-  <summary>NEXT UPDATE</summary>
+  <summary>0.22.1</summary>
 
 ## Additions
 
