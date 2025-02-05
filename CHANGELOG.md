@@ -1,6 +1,19 @@
 # Changelog
 
 <details>
+  <summary>NEXT UPDATE</summary>
+
+## Additions
+
+   - Player scaling difficulty. See readme for more info. This should support mods that expand player lobbies by default.
+   - Lethal Playtime Events were added.
+
+## Changes
+
+   - Dust pans were put under bad but are treated as slightly bad and rare.
+
+</details>
+<details>
   <summary>0.22.0</summary>
 
 ## Additions
