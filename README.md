@@ -71,10 +71,33 @@
 | Moon Grade | D:-8, C:-8, B:-4, A:+5, S:+10, S+:+15, S++:+20, S+++:+30, Other:+10 | None | True |
 | Quota | x0.005 | 100 | False |
 | Weather | None:+0, Rainy:+2, Flooded:+4, Foggy:+4, Stormy:+7, Eclipsed:+7 | None | True |
+| Player Scaling | 1x | None | False |
 
   - All events scale off of difficulty, event type chances scale off of difficulty and alot more.
-  - This is what can be shown in the UI
 
+### Player Scaling
+
+The player scaling function is turned off by default. It is a powerful tool that can make Brutal Company more easier or harder depending on the amount of players. You can control:
+- **Base Player Amount**
+  - Formulas work off this number. Keep this number to the expected ideal amount of players you'd want as the base amount of players, where more or less players will cause a change in difficulty. 
+- **Player Scaling Multiplier/Factor**
+  - Below 1: Lower player counts become harder, while higher player counts become easier
+  - Above 1: Lower player counts become easier, while higher player counts become harder
+- **Linear** or **Exponential** Growth on the formula
+  - Linear grows at a constant smooth rate, useful for smooth changes in difficulty.
+  - Exponential grows at a steeper rate, useful for steep changes in difficulty.
+
+Calculating Player Delta:
+![Screenshot](https://softdiamond.net/BCMERAssets/playerDelta.png)
+
+Linear Function:
+![Screenshot](https://softdiamond.net/BCMERAssets/Linear.png)
+
+Exponential Function:
+![Screenshot](https://softdiamond.net/BCMERAssets/equation.png)
+
+
+  - This is what can be shown in the UI
 ![Screenshot](https://softdiamond.net/BCMERAssets/Difficulty.png)
 </details>
 
