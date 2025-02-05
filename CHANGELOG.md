@@ -8,6 +8,7 @@
    - Player scaling difficulty. See readme for more info. This should support mods that expand player lobbies by default.
    - Lethal Playtime Events were added. Critters, PlaytimeBig, ItsPlaytime.
    - GiantsOutside. Basically GiantShowdown for those without the mod that adds more Giants.
+   - Two surfaced Events. Bellcrab, and Nemo.
 
 ## Changes
 
