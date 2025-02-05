@@ -15,7 +15,7 @@ namespace BrutalCompanyMinus
     {
         private const string GUID = "SoftDiamond.BrutalCompanyMinusExtraReborn";
         private const string NAME = "BrutalCompanyMinusExtraReborn";
-        private const string VERSION = "0.22.0";
+        private const string VERSION = "0.22.1";
         private static readonly Harmony harmony = new Harmony(GUID);
 
         void Awake()
