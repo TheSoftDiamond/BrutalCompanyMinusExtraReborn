@@ -181,9 +181,7 @@ namespace BrutalCompanyMinus
                     $"<br> -Factory Size: x{RoundManager.Instance.currentLevel.factorySizeMultiplier:F2}" +
                     $"<br> -Spawn Chance: x{Manager.spawnChanceMultiplier:F2}" +
                     $"<br> -Spawn Cap: x{Manager.spawncapMultipler:F2}" +
-                    $"<br> -Bonus enemy hp: {plusMinus(Manager.bonusEnemyHp)}" //+
-                    //$"<br> -Global Scrap Amount: x{Manager.spawncapMultipler:F2}" +
-                    //$"<br> -Global Scrap Value: x{Manager.spawncapMultipler:F2}"
+                    $"<br> -Bonus enemy hp: {plusMinus(Manager.bonusEnemyHp)}"
                     ;
             }
 
