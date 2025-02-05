@@ -26,6 +26,7 @@ using Unity.Collections;
 using BrutalCompanyMinus;
 using System.Linq.Expressions;
 using BrutalCompanyMinus.Minus.Handlers.Modded;
+using com.github.zehsteam.TakeyPlush;
 
 
 namespace BrutalCompanyMinus.Minus
@@ -566,6 +567,25 @@ namespace BrutalCompanyMinus.Minus
                 weatherDifficulty = Configuration.weatherAdditives.GetValueOrDefault(StartOfRound.Instance.currentLevel.currentWeather, 0.0f);
                 difficulty += weatherDifficulty;
             }
+            if (Configuration.enablePlayerScaling.Value)
+            {
+                float scalingFactor = Configuration.playerScalingMultiplier.Value;
+                int BasePlayerAmount = Math.Max(1, Configuration.basePlayerAmount.Value);
+                int PlayersOnline = StartOfRound.Instance.allPlayerScripts.Where(x => x.isPlayerDead || x.isPlayerControlled).Count(); //It just works
+
+                if (Configuration.playerScalingType.Value.ToLower() == "linear")
+                {
+                    int playerDelta = (PlayersOnline - BasePlayerAmount);
+                    difficulty *= 1 + (playerDelta * (scalingFactor - 1));
+                }
+                else if (Configuration.playerScalingType.Value.ToLower() == "exponential")
+                {
+                    int playerDelta = (PlayersOnline - BasePlayerAmount);
+                    difficulty *= Mathf.Pow(scalingFactor, playerDelta);
+                }
+            }
+
+
             difficulty = Mathf.Clamp(difficulty, 0.0f, Configuration.difficultyMaxCap.Value);
         }
 
