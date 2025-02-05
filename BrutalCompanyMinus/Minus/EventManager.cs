@@ -49,7 +49,6 @@ namespace BrutalCompanyMinus.Minus
            /* new Events.ToilPlayerEv(),*/  //Does not work
             // Neutral
             new Events.Nothing(),
-            new Events.Dustpans(),
             new Events.Locusts(),
             new Events.Birds(),
             new Events.Trees(),
@@ -73,6 +72,7 @@ namespace BrutalCompanyMinus.Minus
             new Events.GarbageLid(),
             // Bad
             new Events.HoardingBugs(),
+            new Events.Dustpans(),
             new Events.Bees(),
             new Events.ShipLightsFailure(),
             new Events.Landmines(),
