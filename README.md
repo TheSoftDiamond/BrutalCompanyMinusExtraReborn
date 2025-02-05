@@ -2,9 +2,11 @@
 ![Screenshot](https://softdiamond.net/images/smalllogoBCMER.png)
 
 <details>
-  <summary><b>An important note</b></summary>
+  <summary><b>Special Thanks to</b></summary>
   
-  - As with permission from UnloadedHangar, I will be continuing this project and its development from now on.
+  - UnloadedHangar, for allowing me to continue the project and help develop on it.
+  - bmnr2819, for their contributions and help with testing.
+  - KanoliAvali, for their contribution and help with testing
 
 </details>
 
