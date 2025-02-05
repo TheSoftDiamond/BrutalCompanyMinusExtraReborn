@@ -92,10 +92,10 @@ Calculating Player Delta:
 ![Screenshot](https://softdiamond.net/BCMERAssets/playerDelta.png)
 
 Linear Function:
-![Screenshot](https://softdiamond.net/BCMERAssets/Linear.png)
+![Screenshot](https://softdiamond.net/BCMERAssets/theLinear.png)
 
 Exponential Function:
-![Screenshot](https://softdiamond.net/BCMERAssets/equation.png)
+![Screenshot](https://softdiamond.net/BCMERAssets/theequation.png)
 
 
   - This is what can be shown in the UI
