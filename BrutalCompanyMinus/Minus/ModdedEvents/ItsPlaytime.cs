@@ -26,6 +26,6 @@ namespace BrutalCompanyMinus.Minus.Events
             EventsToSpawnWith = new List<string>() { nameof(PlaytimeBig), nameof(Critters) };
         }
 
-        public override bool AddEventIfOnly() => Compatibility.PlaytimePresent;
+        public override bool AddEventIfOnly() => Compatibility.PlaytimePresent && Compatibility.CrittersPresent;
     }
 }
