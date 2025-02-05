@@ -13,6 +13,7 @@
 ## Changes
 
    - Dust pans were put under bad but are treated as slightly bad and rare.
+   - Reduced Amount of Tree spawns to half the amount. As well as their weight a bit.
 
 </details>
 <details>
