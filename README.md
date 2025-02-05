@@ -81,6 +81,7 @@ The player scaling function is turned off by default. It is a powerful tool that
 - **Base Player Amount**
   - Formulas work off this number. Keep this number to the expected ideal amount of players you'd want as the base amount of players, where more or less players will cause a change in difficulty. 
 - **Player Scaling Multiplier/Factor**
+  - Recommended to keep around 1, but depends on how your configs are set.
   - Below 1: Lower player counts become harder, while higher player counts become easier
   - Above 1: Lower player counts become easier, while higher player counts become harder
 - **Linear** or **Exponential** Growth on the formula
@@ -514,6 +515,16 @@ Location: `BrutalCompanyMinus\Difficulty_Settings.cfg`
 **...**
 
 `Eclipsed weather difficulty?`: Difficulty added if eclipsed weather.
+
+#### Player Scaling
+
+`Enable Player Scaling`: Should the amount of players affect the difficulty.
+
+`Plaayer scaling type`: Linear or Exponential functions _(see Difficulty Scaling under Features for how formulas work)_
+
+`Player Scaling Factor/Multiplier`: Multiplier for player scaling
+
+`Base player amount`: Formulas work off of this as it is considered the _default_ value for how player scaling works.
 
 #### Quota Settings
 
