@@ -180,6 +180,7 @@ namespace BrutalCompanyMinus.Minus
             new Events.CityOfGold(),
             //Good
             new Events.Dice(),
+            new Events.Nemo(),
             //Bad
             new Events.Lockers(),
             new Events.TakeyGokuBracken(),
@@ -198,6 +199,7 @@ namespace BrutalCompanyMinus.Minus
             new Events.YeetBomb(),
             new Events.ManStalker(),
             new Events.Foxy(),
+            new Events.Bellcrab(),
 
             //Very Bad
             new Events.Mantitoil(),
