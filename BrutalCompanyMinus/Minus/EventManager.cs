@@ -125,6 +125,7 @@ namespace BrutalCompanyMinus.Minus
             new Events.Dogs(),
             new Events.VeryLateShip(),
             new Events.TeleportIn(),
+            new Events.GiantsOutside(),
           //  new Events.MaskedHorde(),
             new Events.Jester(),
             new Events.LittleGirl(),
@@ -216,6 +217,9 @@ namespace BrutalCompanyMinus.Minus
             new Events.MoaiEnemy(),
             new Events.Meltdown(),
             new Events.SkullEnemy(),
+            new Events.Critters(),
+            new Events.PlaytimeBig(),
+            new Events.ItsPlaytime(),
 
             //No Enemy
             new Events.NoMantitoil(),

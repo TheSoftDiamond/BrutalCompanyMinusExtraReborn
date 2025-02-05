@@ -46,6 +46,7 @@ namespace BrutalCompanyMinus.Minus.Events
                 new Scale(4.0f, 0.04f, 4.0f, 8.0f),
                 new Scale(4.0f, 0.04f, 4.0f, 8.0f))
             };
+            EventsToRemove = new List<string>() { nameof(GiantsOutside) };
         }
 
         public override bool AddEventIfOnly() => Compatibility.theGiantSpecimensPresent;
