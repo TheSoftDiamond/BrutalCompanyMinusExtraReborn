@@ -83,7 +83,7 @@ namespace BrutalCompanyMinus.Minus.Events
             };
         }
 
-        public override bool AddEventIfOnly() => Compatibility.PlaytimePresent;
+        public override bool AddEventIfOnly() => Compatibility.CrittersPresent;
 
         public override void Execute() => ExecuteAllMonsterEvents();
     }
