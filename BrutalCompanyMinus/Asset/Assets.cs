@@ -119,8 +119,6 @@ namespace BrutalCompanyMinus
             teleportAudio = (GameObject)customAssetBundle.LoadAsset("TeleportAudioSource");
             bloodRain = (GameObject)customAssetBundle.LoadAsset("BloodRainParticleContainer");
 
-            
-
             RegisterNetworkPrefabs(antiCoilHead.enemyPrefab, nutSlayer.enemyPrefab, kamikazieBug.enemyPrefab, slayerShotgun.spawnPrefab, grabbableTurret.spawnPrefab, grabbableLandmine.spawnPrefab, artillerySirens, bunkerEntrance, bunkerEscape);
         }
 
