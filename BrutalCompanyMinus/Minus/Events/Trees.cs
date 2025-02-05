@@ -19,7 +19,7 @@ namespace BrutalCompanyMinus.Minus.Events
         {
             Instance = this;
 
-            Weight = 8;
+            Weight = 4;
             Descriptions = new List<string>() { "Trees", "More trees", "The trees look like trees" };
             ColorHex = "#FFFFFF";
             Type = EventType.Neutral;
@@ -34,7 +34,7 @@ namespace BrutalCompanyMinus.Minus.Events
         {
             if (LeaflessTrees.Instance.Executed || LeaflessBrownTrees.Instance.Executed) return;
 
-            Net.Instance.outsideObjectsToSpawn.Add(new OutsideObjectsToSpawn(UnityEngine.Random.Range(Getf(ScaleType.MinDensity), Getf(ScaleType.MaxDensity)), (int)Assets.ObjectName.Tree));
+            Net.Instance.outsideObjectsToSpawn.Add(new OutsideObjectsToSpawn(UnityEngine.Random.Range(Getf(ScaleType.MinDensity) * 0.5f, Getf(ScaleType.MaxDensity) * 0.5f), (int)Assets.ObjectName.Tree));
         }
     }
 }
