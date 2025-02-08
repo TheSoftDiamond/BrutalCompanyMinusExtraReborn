@@ -5,6 +5,7 @@ using System.Reflection;
 using BrutalCompanyMinus.Minus.Handlers;
 using BepInEx.Configuration;
 using static BrutalCompanyMinus.Configuration;
+using BrutalCompanyMinus.Minus.Handlers.CustomEvents;
 
 namespace BrutalCompanyMinus
 {
@@ -51,6 +52,7 @@ namespace BrutalCompanyMinus
             customEventConfig = new ConfigFile(Paths.ConfigPath + "\\BrutalCompanyMinusExtraReborn\\CustomEvents.cfg", true);
             allEnemiesConfig = new ConfigFile(Paths.ConfigPath + "\\BrutalCompanyMinusExtraReborn\\AllEnemies.cfg", true);
             levelPropertiesConfig = new ConfigFile(Paths.ConfigPath + "\\BrutalCompanyMinusExtraReborn\\LevelProperties.cfg", true);
+            CorePropertiesConfig = new ConfigFile(Paths.ConfigPath + "\\BrutalCompanyMinusExtraReborn\\CoreProperties.cfg", true);
             //  extensiveSettingsConfig = new ConfigFile(Paths.ConfigPath + "\\BrutalCompanyMinusExtraReborn\\ExtensiveOptions.cfg", true);
 
             uiConfig.SaveOnConfigSet = false;
@@ -62,7 +64,8 @@ namespace BrutalCompanyMinus
             customEventConfig.SaveOnConfigSet = false;
             allEnemiesConfig.SaveOnConfigSet = false;
             levelPropertiesConfig.SaveOnConfigSet = false;
-         //   extensiveSettingsConfig.SaveOnConfigSet = false;
+            CorePropertiesConfig.SaveOnConfigSet = false;
+            //   extensiveSettingsConfig.SaveOnConfigSet = false;
 
             // Patch all
             harmony.PatchAll();

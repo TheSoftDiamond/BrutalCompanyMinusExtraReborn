@@ -584,7 +584,7 @@ namespace BrutalCompanyMinus.Minus
                     difficulty *= Mathf.Pow(scalingFactor, playerDelta);
                 }
             }
-
+            
 
             difficulty = Mathf.Clamp(difficulty, 0.0f, Configuration.difficultyMaxCap.Value);
         }
