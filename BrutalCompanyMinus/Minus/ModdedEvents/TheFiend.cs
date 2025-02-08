@@ -34,7 +34,7 @@ namespace BrutalCompanyMinus.Minus.Events
             };
         }
 
-        public override bool AddEventIfOnly() => Compatibility.scopophobiaPresent;
+        public override bool AddEventIfOnly() => Compatibility.theFiendPresent;
 
         public override void Execute() => ExecuteAllMonsterEvents();
     }
