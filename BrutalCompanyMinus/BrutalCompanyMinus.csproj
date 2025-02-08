@@ -122,6 +122,7 @@
   <ItemGroup>
     <PackageReference Include="HarmonyX" Version="2.10.2" />
 	<PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.2" PrivateAssets="all" />
+	<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 	  <Publicize Include="I:\Repos\BrutalLCMinus\BrutalCompanyMinus\libs\com.github.zehsteam.ZombiesPlush.dll" />
   </ItemGroup>
 
