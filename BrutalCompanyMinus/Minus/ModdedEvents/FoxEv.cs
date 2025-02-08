@@ -36,7 +36,7 @@ namespace BrutalCompanyMinus.Minus.Events
             ScaleList.Add(ScaleType.OutsideEnemyRarity, new Scale(10f, 0.5f, 5f, 15f));
         }
 
-      //  public override bool AddEventIfOnly() => Compatibility.scopophobiaPresent;
+      //  public override bool AddEventIfOnly() => Compatibility.yesFoxPresent;
 
         public override void Execute() => ExecuteAllMonsterEvents();
     }
