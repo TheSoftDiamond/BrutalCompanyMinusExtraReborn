@@ -267,9 +267,6 @@ namespace BrutalCompanyMinus
                         eventsToRemove.Add(ListToStrings(toConfig.Bind(e.Name(), "Events To Remove", StringsToList(e.EventsToRemove, ", "), "Will prevent said event(s) from occuring.").Value));
                         eventsToSpawnWith.Add(ListToStrings(toConfig.Bind(e.Name(), "Events To Spawn With", StringsToList(e.EventsToSpawnWith, ", "), "Will spawn said events(s).").Value));
                         
-                        //Custom Events TODO
-                        
-
                         // Monster events
                         List<MonsterEvent> newMonsterEvents = new List<MonsterEvent>();
                         for (int i = 0; i < e.monsterEvents.Count; i++)
@@ -304,13 +301,13 @@ namespace BrutalCompanyMinus
             }
 
             // Custom enemy events
-            int customEventCount = customEventConfig.Bind("_Temp Custom Monster Event Count", "How many events to generate in config?", 3, "This is temporary for the time being.").Value;
+            /*int customEventCount = customEventConfig.Bind("_Temp Custom Monster Event Count", "How many events to generate in config?", 3, "This is temporary for the time being.").Value;
             for (int i = 0; i < customEventCount; i++)
             {
                 MEvent e = new Minus.CustomEvents.CustomMonsterEvent();
                 e.Initalize();
                 EventManager.customEvents.Add(e);
-            }
+            }*/
             
             RegisterEvents(eventConfig, EventManager.vanillaEvents);
             RegisterEvents(moddedEventConfig, EventManager.moddedEvents);
