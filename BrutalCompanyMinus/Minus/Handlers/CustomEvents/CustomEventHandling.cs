@@ -11,7 +11,7 @@ namespace BrutalCompanyMinus.Minus.Handlers.CustomEvents
 {
     internal class CustomEventHandling
     {
-        public void ReadFile(string path)
+        public static EventData? ReadFile(string path)
         {
             // Parse JSON data to an EventData object
             string json = System.IO.File.ReadAllText(path);
@@ -24,8 +24,7 @@ namespace BrutalCompanyMinus.Minus.Handlers.CustomEvents
             {
                 if (data.Count > 0)
                 {
-                    // Make the event here
-                    return;
+                    return data[0];
                 }
                 else
                 {
@@ -36,6 +35,18 @@ namespace BrutalCompanyMinus.Minus.Handlers.CustomEvents
             {
                 Console.WriteLine("No data was read from the file");
             }
+
+            return null;
+        }
+
+        public static MEvent.Scale ArrayToScale(float[] array)
+        {
+            if (array.Length == 4)
+            {
+                return new MEvent.Scale(array[0], array[1], array[2], array[3]);
+            }
+            
+            throw new ArgumentException($"ArrayToScale expected length of 4, got {array.Length}");
         }
 
         public class EventData
@@ -60,7 +71,7 @@ namespace BrutalCompanyMinus.Minus.Handlers.CustomEvents
         public struct ItemData
         {
             public string Name;
-            public int[] Rarity;
+            public int Rarity;
             public float[] ScrapAmount;
             public float[] ScrapValue;
         }
