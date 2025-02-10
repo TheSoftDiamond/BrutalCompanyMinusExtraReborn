@@ -17,29 +17,49 @@ namespace BrutalCompanyMinus.Minus.Handlers.CustomEvents
             string json = System.IO.File.ReadAllText(path);
 
             CustomEventSerializer serializer = new CustomEventSerializer();
-
-            List<EventData>? data = JsonConvert.DeserializeObject<List<EventData>>(json, serializer);
+            List<EventData>? data = null;
+            
+            try
+            {
+                data = JsonConvert.DeserializeObject<List<EventData>>(json, serializer);
+            }
+            catch (JsonReaderException e)
+            {
+                Log.LogError($"An error occurred while parsing event file: {path} Message: {e.Message}");
+                return null;
+            }
 
             if (data != null)
             {
                 if (data.Count > 0)
                 {
+                    Log.LogInfo($"Adding custom event {data[0].Name}");
                     return data[0];
                 }
                 else
                 {
-                    Console.WriteLine("File was read, but no events were found");
+                    Log.LogInfo("File was read, but no events were found");
                 }
             }
             else
             {
-                Console.WriteLine("No data was read from the file");
+                Log.LogInfo("No data was read from the file");
             }
 
             return null;
         }
 
         public static MEvent.Scale ArrayToScale(float[] array)
+        {
+            if (array.Length == 4)
+            {
+                return new MEvent.Scale(array[0], array[1], array[2], array[3]);
+            }
+            
+            throw new ArgumentException($"ArrayToScale expected length of 4, got {array.Length}");
+        }
+
+        public static MEvent.Scale ArrayToScale(int[] array)
         {
             if (array.Length == 4)
             {
@@ -57,8 +77,8 @@ namespace BrutalCompanyMinus.Minus.Handlers.CustomEvents
             public string Color;
             public List<string> Descriptions;
             public bool Enabled;
-            public List<string> AddEventIfOnly;
-            public List<ItemData>? Items;
+            public List<string>? AddEventIfOnly;
+            public ItemEventData? Items;
             public List<EnemyData>? Enemies;
 
             [JsonConverter(typeof(HazardConverter))]
@@ -68,12 +88,18 @@ namespace BrutalCompanyMinus.Minus.Handlers.CustomEvents
             public List<string>? EventsToSpawnWith;
         }
 
+        public class ItemEventData
+        {
+            public float[] TransmuteAmount;
+            public float[] ScrapAmount;
+            public float[] ScrapValue;
+            public List<ItemData> Items;
+        }
+
         public struct ItemData
         {
             public string Name;
             public int Rarity;
-            public float[] ScrapAmount;
-            public float[] ScrapValue;
         }
 
         public struct EnemyData

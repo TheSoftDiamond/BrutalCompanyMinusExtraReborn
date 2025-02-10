@@ -21,12 +21,14 @@ namespace BrutalCompanyMinus.Minus.CustomEvents
         public GeneralCustomEvent(string path)
         {
             eventData = CustomEventHandling.ReadFile(path);
+            hazardEvents = new List<HazardEvent>();
         }
 
         public override string Name() => name;
 
         public override void Initalize()
         {
+            Log.LogInfo("Running Custom Event Initialization");
             if (eventData != null)
             {
                 name = eventData.Name;
@@ -38,10 +40,24 @@ namespace BrutalCompanyMinus.Minus.CustomEvents
                 
                 if (eventData.Items != null)
                 {
-                    foreach (CustomEventHandling.ItemData item in eventData.Items)
+                    Scale transmuteAmount = CustomEventHandling.ArrayToScale(eventData.Items.TransmuteAmount);
+                    Scale scrapAmount = CustomEventHandling.ArrayToScale(eventData.Items.ScrapAmount);
+                    Scale scrapValue = CustomEventHandling.ArrayToScale(eventData.Items.ScrapValue);
+
+                    List<SpawnableItemWithRarity> items = new List<SpawnableItemWithRarity>();
+
+                    foreach (CustomEventHandling.ItemData item in eventData.Items.Items)
                     {
-                        // TODO: Need to add transmutation amount scale to item data to process correctly
+                        items.Add(new SpawnableItemWithRarity() {
+                            spawnableItem = Assets.GetItem(item.Name),
+                            rarity = item.Rarity
+                        });
                     }
+
+                    scrapTransmutationEvent = new ScrapTransmutationEvent(transmuteAmount, items.ToArray());
+
+                    ScaleList.Add(ScaleType.ScrapAmount, scrapAmount);
+                    ScaleList.Add(ScaleType.ScrapValue, scrapValue);
                 }
                 
                 if (eventData.Enemies != null)
@@ -65,11 +81,25 @@ namespace BrutalCompanyMinus.Minus.CustomEvents
                     {
                         if (hazard is OutsideHazardData)
                         {
-                            
+                            OutsideHazardData outsideHazard = (OutsideHazardData) hazard;
+                            Scale minDensity = CustomEventHandling.ArrayToScale(outsideHazard.MinDensity);
+                            Scale maxDensity = CustomEventHandling.ArrayToScale(outsideHazard.MaxDensity);
+                            hazardEvents.Add(new HazardEvent(hazard.PrefabName, minDensity, maxDensity));
                         }
                         else if (hazard is InsideHazardData)
                         {
+                            InsideHazardData insideHazard = (InsideHazardData) hazard;
+                            Scale minAmount = CustomEventHandling.ArrayToScale(insideHazard.MinSpawn);
+                            Scale maxAmount = CustomEventHandling.ArrayToScale(insideHazard.MaxSpawn);
 
+                            hazardEvents.Add(new HazardEvent(hazard.PrefabName, minAmount, maxAmount,
+                                insideHazard.SpawnOptions.FacingAwayFromWall,
+                                insideHazard.SpawnOptions.FacingWall,
+                                insideHazard.SpawnOptions.BackToWall,
+                                insideHazard.SpawnOptions.BackFlushWithWall,
+                                insideHazard.SpawnOptions.RequireDistanceBetween,
+                                insideHazard.SpawnOptions.DisallowNearEntrances
+                            ));
                         }
                     }
                 }
@@ -83,6 +113,13 @@ namespace BrutalCompanyMinus.Minus.CustomEvents
                 {
                     EventsToSpawnWith = eventData.EventsToSpawnWith;
                 }
+
+                Log.LogInfo($"{name} event initialized");
+            }
+            else
+            {
+                Enabled = false;
+                Log.LogInfo("No event data received. Check if your event files are valid JSON");
             }
         }
 
@@ -90,10 +127,24 @@ namespace BrutalCompanyMinus.Minus.CustomEvents
         {
             if (eventData == null) return false; // Force event off if it's missing data
 
-            foreach (string evt in eventData.AddEventIfOnly)
+            // Check event's requirements
+            if (eventData.AddEventIfOnly != null)
             {
-                if (!Chainloader.PluginInfos.ContainsKey(evt)) return false;
+                foreach (string evt in eventData.AddEventIfOnly)
+                {
+                    Log.LogInfo($"{name} contains {evt}: {Chainloader.PluginInfos.ContainsKey(evt)}");
+                    if (!Chainloader.PluginInfos.ContainsKey(evt)) return false;
+                }
             }
+
+            // Check if other item transmutations are active if this event adds items
+            if (eventData.Items != null)
+            {
+                if (Manager.transmuteScrap) return false;
+
+                Manager.transmuteScrap = true;
+            }
+
             return true;
         }
 
@@ -103,15 +154,12 @@ namespace BrutalCompanyMinus.Minus.CustomEvents
             //Enemy
             ExecuteAllMonsterEvents();
 
-            // Old Enemy code to remove eventually
-            EnemyType enemy = Assets.GetEnemy(enemyName.Value);
-            Manager.AddEnemyToPoolWithRarity(ref RoundManager.Instance.currentLevel.Enemies, enemy, Get(ScaleType.InsideEnemyRarity));
-            Manager.AddEnemyToPoolWithRarity(ref RoundManager.Instance.currentLevel.OutsideEnemies, enemy, Get(ScaleType.OutsideEnemyRarity));
-
-            Manager.Spawn.OutsideEnemies(enemy, UnityEngine.Random.Range(Get(ScaleType.MinOutsideEnemy), Get(ScaleType.MaxOutsideEnemy) + 1));
-            Manager.Spawn.InsideEnemies(enemy, UnityEngine.Random.Range(Get(ScaleType.MinInsideEnemy), Get(ScaleType.MaxInsideEnemy) + 1));
-
             //Items
+            if (eventData.Items != null)
+            {
+                Manager.scrapAmountMultiplier *= Getf(ScaleType.ScrapAmount);
+                scrapTransmutationEvent.Execute();
+            }
 
             //Hazards
             foreach (HazardEvent hazard in hazardEvents)
@@ -131,7 +179,7 @@ namespace BrutalCompanyMinus.Minus.CustomEvents
 
             public Scale minDensity, maxDensity;
 
-            public bool facingAwayFromWall, facingWall, backToWall, backFlushWithWall, requireDisanceBetween, disallowNearEntrances;
+            public bool facingAwayFromWall, facingWall, backToWall, backFlushWithWall, requireDistanceBetween, disallowNearEntrances;
 
             public HazardEvent(GameObject hazardObject, Scale minDensity, Scale maxDensity)
             {
@@ -163,25 +211,34 @@ namespace BrutalCompanyMinus.Minus.CustomEvents
                 ScaleList.Add(ScaleType.MaxDensity, maxDensity);
             }
 
-            public HazardEvent(GameObject hazardObject, bool facingAwayFromWall, bool facingWall, bool backToWall, bool backFlushWithWall, bool requireDisanceBetween, bool disallowNearEntrances)
+            public HazardEvent(GameObject hazardObject, Scale minAmount, Scale maxAmount, bool facingAwayFromWall, bool facingWall, bool backToWall, bool backFlushWithWall, bool requireDistanceBetween, bool disallowNearEntrances)
             {
                 this.isInside = true;
                 this.hazardObject = hazardObject;
-                AssignSpawnParameters(facingAwayFromWall, facingWall, backToWall, backFlushWithWall, requireDisanceBetween, disallowNearEntrances);
+                AssignSpawnParameters(minAmount, maxAmount, facingAwayFromWall, facingWall, backToWall, backFlushWithWall, requireDistanceBetween, disallowNearEntrances);
+
+                ScaleList.Add(ScaleType.MinAmount, minAmount);
+                ScaleList.Add(ScaleType.MaxAmount, maxAmount);
             }
 
-            public HazardEvent(Assets.ObjectName hazardName, bool facingAwayFromWall, bool facingWall, bool backToWall, bool backFlushWithWall, bool requireDisanceBetween, bool disallowNearEntrances)
+            public HazardEvent(Assets.ObjectName hazardName, Scale minAmount, Scale maxAmount, bool facingAwayFromWall, bool facingWall, bool backToWall, bool backFlushWithWall, bool requireDistanceBetween, bool disallowNearEntrances)
             {
                 this.isInside = true;
                 this.hazardObject = Assets.GetObject(hazardName);
-                AssignSpawnParameters(facingAwayFromWall, facingWall, backToWall, backFlushWithWall, requireDisanceBetween, disallowNearEntrances);
+                AssignSpawnParameters(minAmount, maxAmount, facingAwayFromWall, facingWall, backToWall, backFlushWithWall, requireDistanceBetween, disallowNearEntrances);
+
+                ScaleList.Add(ScaleType.MinAmount, minAmount);
+                ScaleList.Add(ScaleType.MaxAmount, maxAmount);
             }
 
-            public HazardEvent(string hazardName, bool facingAwayFromWall, bool facingWall, bool backToWall, bool backFlushWithWall, bool requireDisanceBetween, bool disallowNearEntrances)
+            public HazardEvent(string hazardName, Scale minAmount, Scale maxAmount, bool facingAwayFromWall, bool facingWall, bool backToWall, bool backFlushWithWall, bool requireDistanceBetween, bool disallowNearEntrances)
             {
                 this.isInside = true;
                 this.hazardObject = Assets.GetObject(hazardName);
-                AssignSpawnParameters(facingAwayFromWall, facingWall, backToWall, backFlushWithWall, requireDisanceBetween, disallowNearEntrances);
+                AssignSpawnParameters(minAmount, maxAmount, facingAwayFromWall, facingWall, backToWall, backFlushWithWall, requireDistanceBetween, disallowNearEntrances);
+
+                ScaleList.Add(ScaleType.MinAmount, minAmount);
+                ScaleList.Add(ScaleType.MaxAmount, maxAmount);
             }
 
             private void AssignSpawnParameters(Scale minDensity, Scale maxDensity)
@@ -190,13 +247,15 @@ namespace BrutalCompanyMinus.Minus.CustomEvents
                 this.maxDensity = maxDensity;
             }
 
-            private void AssignSpawnParameters(bool facingAwayFromWall, bool facingWall, bool backToWall, bool backFlushWithWall, bool requireDisanceBetween, bool disallowNearEntrances)
+            private void AssignSpawnParameters(Scale minAmount, Scale maxAmount, bool facingAwayFromWall, bool facingWall, bool backToWall, bool backFlushWithWall, bool requireDistanceBetween, bool disallowNearEntrances)
             {
+                this.minDensity = minAmount;
+                this.maxDensity = maxAmount;
                 this.facingWall = facingWall;
                 this.facingAwayFromWall = facingAwayFromWall;
                 this.backToWall = backToWall;
                 this.backFlushWithWall = backFlushWithWall;
-                this.requireDisanceBetween = requireDisanceBetween;
+                this.requireDistanceBetween = requireDistanceBetween;
                 this.disallowNearEntrances = disallowNearEntrances;
             }
             
@@ -205,6 +264,17 @@ namespace BrutalCompanyMinus.Minus.CustomEvents
                 if (isInside)
                 {
                     // Spawn inside
+                    RoundManager.Instance.currentLevel.spawnableMapObjects = RoundManager.Instance.currentLevel.spawnableMapObjects.Add(new SpawnableMapObject()
+                    {
+                        prefabToSpawn = hazardObject,
+                        numberToSpawn = new AnimationCurve(new Keyframe(0f, Get(ScaleType.MinAmount)), new Keyframe(1f, Get(ScaleType.MaxAmount))),
+                        spawnFacingAwayFromWall = this.facingAwayFromWall,
+                        spawnFacingWall = this.facingWall,
+                        spawnWithBackToWall = this.backToWall,
+                        spawnWithBackFlushAgainstWall = this.backFlushWithWall,
+                        requireDistanceBetweenSpawns = this.requireDistanceBetween,
+                        disallowSpawningNearEntrances = this.disallowNearEntrances
+                    });
                 }
                 else
                 {
