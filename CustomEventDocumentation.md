@@ -228,7 +228,7 @@ Due to how the mod may represent percentages, or integers in different ways from
 <details>
    <summary>Required fields</summary>
 
-You are only required at minimum to have the following in your json file:
+You are only required at minimum to have the following in your json file (Other fields depend on what you are adding):
 - Event's Name
 - Event's Type
 - Event's weight
