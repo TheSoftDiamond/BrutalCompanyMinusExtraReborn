@@ -6,15 +6,13 @@ using static BrutalCompanyMinus.Minus.MEvent;
 using HarmonyLib;
 using UnityEngine;
 using System.Globalization;
+using BrutalCompanyMinus.Minus.CustomEvents;
 using BrutalCompanyMinus.Minus.Events;
 using static BrutalCompanyMinus.Minus.MonoBehaviours.EnemySpawnCycle;
 using static BrutalCompanyMinus.Assets;
 using static BrutalCompanyMinus.Helper;
 using BrutalCompanyMinus.Minus.MonoBehaviours;
-using System.Diagnostics;
 using System;
-using System.Threading.Tasks;
-using UnityEngine.InputSystem.LowLevel;
 
 namespace BrutalCompanyMinus
 {
@@ -239,9 +237,6 @@ namespace BrutalCompanyMinus
             /*   EnableStreamerEvents = extensiveSettingsConfig.Bind("Extra Options", "Enable Streamer events?", true, "Enables streamer specific events");*/
 
 
-
-
-
             // Event settings
             void RegisterEvents(ConfigFile toConfig, List<MEvent> events)
             {
@@ -308,7 +303,31 @@ namespace BrutalCompanyMinus
                 e.Initalize();
                 EventManager.customEvents.Add(e);
             }*/
-            
+
+            // Delete the CustomEvent Config File Every time
+            // This is because the config file will take over the .json file instructions.
+            // A method without the need to use the config file would be better but it is suspected it may be some networking issue preventing this.
+            // Will look into this in the future.
+            try
+            {
+                System.IO.File.Delete(customEventConfig.ConfigFilePath);
+            }
+            catch (Exception e)
+            {
+                Log.LogWarning("Failed to delete custom event config file: " + e.Message);
+            }
+
+            foreach (string eventFile in System.IO.Directory.GetFiles(customEventsFolder))
+            {
+                if (eventFile.EndsWith(".json"))
+                {
+                    MEvent cEvent = new GeneralCustomEvent(eventFile);
+                    cEvent.Initalize();
+
+                    if (cEvent.Enabled) EventManager.customEvents.Add(cEvent);
+                }
+            }
+
             RegisterEvents(eventConfig, EventManager.vanillaEvents);
             RegisterEvents(moddedEventConfig, EventManager.moddedEvents);
             RegisterEvents(customEventConfig, EventManager.customEvents);
@@ -397,6 +416,8 @@ namespace BrutalCompanyMinus
             // Use config settings
             for (int i = 0; i != EventManager.events.Count; i++)
             {
+                if (i > eventWeights.Count) break; // This is required to prevent the mod from breaking. Yes, it's a bandaid fix.
+
                 EventManager.events[i].Weight = eventWeights[i].Value;
                 EventManager.events[i].Descriptions = eventDescriptions[i];
                 EventManager.events[i].ColorHex = eventColorHexes[i].Value;

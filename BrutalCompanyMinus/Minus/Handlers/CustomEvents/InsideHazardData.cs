@@ -5,15 +5,15 @@ namespace BrutalCompanyMinus.Minus.Handlers.CustomEvents
     internal class InsideHazardData : BaseHazardData
     {
         [JsonProperty("MinSpawn")]
-        public int MinSpawn { get; set; }
+        public int[] MinSpawn { get; set; }
 
         [JsonProperty("MaxSpawn")]
-        public int MaxSpawn { get; set; }
+        public int[] MaxSpawn { get; set; }
 
         [JsonProperty("SpawnOptions")]
         public SpawnOptions_ SpawnOptions { get; set; }
 
-        public InsideHazardData(string prefabName, int minSpawn, int maxSpawn, SpawnOptions_ options) : base(prefabName)
+        public InsideHazardData(string prefabName, int[] minSpawn, int[] maxSpawn, SpawnOptions_ options) : base(prefabName)
         {
             this.MinSpawn = minSpawn;
             this.MaxSpawn = maxSpawn;
@@ -23,22 +23,22 @@ namespace BrutalCompanyMinus.Minus.Handlers.CustomEvents
         public class SpawnOptions_
         {
             [JsonProperty("FacingAwayFromWall")]
-            bool FacingAwayFromWall { get; set; }
+            public bool FacingAwayFromWall { get; set; }
 
             [JsonProperty("FacingWall")]
-            bool FacingWall { get; set; }
+            public bool FacingWall { get; set; }
             
             [JsonProperty("BackToWall")]
-            bool BackToWall { get; set; }
+            public bool BackToWall { get; set; }
             
             [JsonProperty("BackFlushToWall")]
-            bool BackFlushWithWall { get; set; }
+            public bool BackFlushWithWall { get; set; }
 
             [JsonProperty("RequireDistanceBetween")]
-            bool RequireDistanceBetween { get; set; }
+            public bool RequireDistanceBetween { get; set; }
 
             [JsonProperty("DisallowNearEntrances")]
-            bool DisallowNearEntrances { get; set; }
+            public bool DisallowNearEntrances { get; set; }
         }
     }
 }
