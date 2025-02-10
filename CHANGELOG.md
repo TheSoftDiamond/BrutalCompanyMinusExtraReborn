@@ -1,6 +1,18 @@
 # Changelog
 
 <details>
+  <summary>0.22.0</summary>
+
+## Additions
+
+  - Custom Event Support. See [here](https://github.com/TheSoftDiamond/BrutalCompanyMinusExtraReborn/blob/main/CustomEventDocumentation.md) for info on how custom events supports work.
+
+## Changes
+
+  - Fixed some events referring to wrong dependency by accident.
+ 
+</details>
+<details>
   <summary>0.22.1</summary>
 
 ## Additions
