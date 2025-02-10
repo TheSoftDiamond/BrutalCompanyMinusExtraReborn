@@ -225,6 +225,19 @@ Due to how the mod may represent percentages, or integers in different ways from
 - **MinDensity/MaxDensity**: Percentage of outside nodes to attempt to spawn a hazard prefab on.
 
 </details>
+<details>
+   <summary>Required fields</summary>
+
+You are only required at minimum to have the following in your json file:
+- Event's Name
+- Event's Type
+- Event's weight
+- Event's Color Hex Code
+- Event's Description Text
+- Event's Enabled field
+
+</details>
+
 
 #### Example
 
