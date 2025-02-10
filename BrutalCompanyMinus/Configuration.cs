@@ -310,7 +310,7 @@ namespace BrutalCompanyMinus
             // Will look into this in the future.
             try
             {
-                System.IO.File.Delete(customEventConfig.ConfigFilePath);
+                System.IO.File.Delete(Paths.ConfigPath+"\\BrutalCompanyMinusExtraReborn\\CustomEvents.cfg");
             }
             catch (Exception e)
             {
