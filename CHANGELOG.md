@@ -1,7 +1,7 @@
 # Changelog
 
 <details>
-  <summary>0.22.0</summary>
+  <summary>0.23.0</summary>
 
 ## Additions
 
