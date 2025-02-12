@@ -89,7 +89,10 @@ namespace BrutalCompanyMinus
 
         // Custom Events and Settings
         public static string customEventsFolder = Paths.ConfigPath + "\\BrutalCompanyMinusExtraReborn\\CustomEvents";
+        
+        // Core Properties
         public static ConfigEntry<bool> enableCustomEvents;
+        public static ConfigEntry<bool> ExtraLogging;
 
         /*   public static ConfigEntry<bool> EnableStreamerEvents;*/
 
@@ -218,8 +221,9 @@ namespace BrutalCompanyMinus
             DisplayExtraPropertiesAfterShipLeaves = uiConfig.Bind("UI Options", "Display extra properties on UI after ship Leaves?", true, "This will show Event Type raritys for next day and difficulty info.");
             displayEvents = uiConfig.Bind("UI Options", "Display events?", true, "Having this set to false wont show events in the UI.");
 
-            //Custom Events Settings
+            //Core Properties
             enableCustomEvents = CorePropertiesConfig.Bind("Custom Events", "Enable Custom Events?", true, "Enables custom events to be loaded from the custom events folder.");
+            ExtraLogging = CorePropertiesConfig.Bind("General", "Enable Extra Logging?", false, "Enables extra logging for debugging purposes.");
 
             //Custom Events Folder
             try
@@ -241,57 +245,57 @@ namespace BrutalCompanyMinus
             void RegisterEvents(ConfigFile toConfig, List<MEvent> events)
             {
 
-                    // Event settings
-                    foreach (MEvent e in events)
+                // Event settings
+                foreach (MEvent e in events)
+                {
+                    eventWeights.Add(toConfig.Bind(e.Name(), "Custom Weight", e.Weight, "If you want to use custom weights change 'Use custom weights'? setting in '__Event Settings' to true."));
+                    eventDescriptions.Add(ListToDescriptions(toConfig.Bind(e.Name(), "Descriptions", StringsToList(e.Descriptions, "|"), "Seperated by |").Value));
+                    eventColorHexes.Add(toConfig.Bind(e.Name(), "Color Hex", e.ColorHex));
+                    eventTypes.Add(toConfig.Bind(e.Name(), "Event Type", e.Type));
+                    eventEnables.Add(toConfig.Bind(e.Name(), "Event Enabled?", e.Enabled, "Setting this to false will stop the event from occuring.")); // Normal event
+
+                    // Make scale list
+                    Dictionary<ScaleType, Scale> scales = new Dictionary<ScaleType, Scale>();
+                    foreach (KeyValuePair<ScaleType, Scale> obj in e.ScaleList)
                     {
-                        eventWeights.Add(toConfig.Bind(e.Name(), "Custom Weight", e.Weight, "If you want to use custom weights change 'Use custom weights'? setting in '__Event Settings' to true."));
-                        eventDescriptions.Add(ListToDescriptions(toConfig.Bind(e.Name(), "Descriptions", StringsToList(e.Descriptions, "|"), "Seperated by |").Value));
-                        eventColorHexes.Add(toConfig.Bind(e.Name(), "Color Hex", e.ColorHex));
-                        eventTypes.Add(toConfig.Bind(e.Name(), "Event Type", e.Type));
-                        eventEnables.Add(toConfig.Bind(e.Name(), "Event Enabled?", e.Enabled, "Setting this to false will stop the event from occuring.")); // Normal event
-
-                        // Make scale list
-                        Dictionary<ScaleType, Scale> scales = new Dictionary<ScaleType, Scale>();
-                        foreach (KeyValuePair<ScaleType, Scale> obj in e.ScaleList)
-                        {
-                            scales.Add(obj.Key, getScale(toConfig.Bind(e.Name(), obj.Key.ToString(), GetStringFromScale(obj.Value), ScaleInfoList[obj.Key] + "   " + scaleDescription).Value));
-                        }
-                        eventScales.Add(scales);
-
-                        // EventsToRemove and EventsToSpawnWith
-                        eventsToRemove.Add(ListToStrings(toConfig.Bind(e.Name(), "Events To Remove", StringsToList(e.EventsToRemove, ", "), "Will prevent said event(s) from occuring.").Value));
-                        eventsToSpawnWith.Add(ListToStrings(toConfig.Bind(e.Name(), "Events To Spawn With", StringsToList(e.EventsToSpawnWith, ", "), "Will spawn said events(s).").Value));
-                        
-                        // Monster events
-                        List<MonsterEvent> newMonsterEvents = new List<MonsterEvent>();
-                        for (int i = 0; i < e.monsterEvents.Count; i++)
-                        {
-                            newMonsterEvents.Add(new MonsterEvent(
-                                toConfig.Bind(e.Name(), $"Enemy {i} Name", e.monsterEvents[i].enemy.name, "Inputting an invalid enemy name will cause it to return an empty enemyType").Value,
-                                getScale(toConfig.Bind(e.Name(), $"{e.monsterEvents[i].enemy.name} {ScaleType.InsideEnemyRarity}", GetStringFromScale(e.monsterEvents[i].insideSpawnRarity), $"{ScaleInfoList[ScaleType.InsideEnemyRarity]}   {scaleDescription}").Value),
-                                getScale(toConfig.Bind(e.Name(), $"{e.monsterEvents[i].enemy.name} {ScaleType.OutsideEnemyRarity}", GetStringFromScale(e.monsterEvents[i].outsideSpawnRarity), $"{ScaleInfoList[ScaleType.OutsideEnemyRarity]}   {scaleDescription}").Value),
-                                getScale(toConfig.Bind(e.Name(), $"{e.monsterEvents[i].enemy.name} {ScaleType.MinInsideEnemy}", GetStringFromScale(e.monsterEvents[i].minInside), $"{ScaleInfoList[ScaleType.MinInsideEnemy]}   {scaleDescription}").Value),
-                                getScale(toConfig.Bind(e.Name(), $"{e.monsterEvents[i].enemy.name} {ScaleType.MaxInsideEnemy}", GetStringFromScale(e.monsterEvents[i].maxInside), $"{ScaleInfoList[ScaleType.MaxInsideEnemy]}   {scaleDescription}").Value),
-                                getScale(toConfig.Bind(e.Name(), $"{e.monsterEvents[i].enemy.name} {ScaleType.MinOutsideEnemy}", GetStringFromScale(e.monsterEvents[i].minOutside), $"{ScaleInfoList[ScaleType.MinOutsideEnemy]}   {scaleDescription}").Value),
-                                getScale(toConfig.Bind(e.Name(), $"{e.monsterEvents[i].enemy.name} {ScaleType.MaxOutsideEnemy}", GetStringFromScale(e.monsterEvents[i].maxOutside), $"{ScaleInfoList[ScaleType.MaxOutsideEnemy]}   {scaleDescription}").Value)
-                            ));
-                        }
-                        monsterEvents.Add(newMonsterEvents);
-
-                        // Scrap transmutation events
-                        Scale amount = new Scale(0.0f, 0.0f, 0.0f, 0.0f);
-                        if (e.scrapTransmutationEvent.items.Length > 0) amount = getScale(toConfig.Bind(e.Name(), "Percentage", GetStringFromScale(e.scrapTransmutationEvent.amount), $"{ScaleInfoList[ScaleType.Percentage]}   {scaleDescription}").Value);
-                        SpawnableItemWithRarity[] newScrapTransmuations = new SpawnableItemWithRarity[e.scrapTransmutationEvent.items.Length];
-                        for (int i = 0; i < e.scrapTransmutationEvent.items.Length; i++)
-                        {
-                            newScrapTransmuations[i] = new SpawnableItemWithRarity()
-                            {
-                                spawnableItem = GetItem(toConfig.Bind(e.Name(), $"Scrap {i} name", e.scrapTransmutationEvent.items[i].spawnableItem.name, "Inputting an invalid scrap name will cause it to return an empty item").Value),
-                                rarity = toConfig.Bind(e.Name(), $"{e.scrapTransmutationEvent.items[i].spawnableItem.name} Rarity", e.scrapTransmutationEvent.items[i].rarity).Value
-                            };
-                        }
-                        transmutationEvents.Add(new ScrapTransmutationEvent(amount, newScrapTransmuations));
+                        scales.Add(obj.Key, getScale(toConfig.Bind(e.Name(), obj.Key.ToString(), GetStringFromScale(obj.Value), ScaleInfoList[obj.Key] + "   " + scaleDescription).Value));
                     }
+                    eventScales.Add(scales);
+
+                    // EventsToRemove and EventsToSpawnWith
+                    eventsToRemove.Add(ListToStrings(toConfig.Bind(e.Name(), "Events To Remove", StringsToList(e.EventsToRemove, ", "), "Will prevent said event(s) from occuring.").Value));
+                    eventsToSpawnWith.Add(ListToStrings(toConfig.Bind(e.Name(), "Events To Spawn With", StringsToList(e.EventsToSpawnWith, ", "), "Will spawn said events(s).").Value));
+
+                    // Monster events
+                    List<MonsterEvent> newMonsterEvents = new List<MonsterEvent>();
+                    for (int i = 0; i < e.monsterEvents.Count; i++)
+                    {
+                        newMonsterEvents.Add(new MonsterEvent(
+                            toConfig.Bind(e.Name(), $"Enemy {i} Name", e.monsterEvents[i].enemy.name, "Inputting an invalid enemy name will cause it to return an empty enemyType").Value,
+                            getScale(toConfig.Bind(e.Name(), $"{e.monsterEvents[i].enemy.name} {ScaleType.InsideEnemyRarity}", GetStringFromScale(e.monsterEvents[i].insideSpawnRarity), $"{ScaleInfoList[ScaleType.InsideEnemyRarity]}   {scaleDescription}").Value),
+                            getScale(toConfig.Bind(e.Name(), $"{e.monsterEvents[i].enemy.name} {ScaleType.OutsideEnemyRarity}", GetStringFromScale(e.monsterEvents[i].outsideSpawnRarity), $"{ScaleInfoList[ScaleType.OutsideEnemyRarity]}   {scaleDescription}").Value),
+                            getScale(toConfig.Bind(e.Name(), $"{e.monsterEvents[i].enemy.name} {ScaleType.MinInsideEnemy}", GetStringFromScale(e.monsterEvents[i].minInside), $"{ScaleInfoList[ScaleType.MinInsideEnemy]}   {scaleDescription}").Value),
+                            getScale(toConfig.Bind(e.Name(), $"{e.monsterEvents[i].enemy.name} {ScaleType.MaxInsideEnemy}", GetStringFromScale(e.monsterEvents[i].maxInside), $"{ScaleInfoList[ScaleType.MaxInsideEnemy]}   {scaleDescription}").Value),
+                            getScale(toConfig.Bind(e.Name(), $"{e.monsterEvents[i].enemy.name} {ScaleType.MinOutsideEnemy}", GetStringFromScale(e.monsterEvents[i].minOutside), $"{ScaleInfoList[ScaleType.MinOutsideEnemy]}   {scaleDescription}").Value),
+                            getScale(toConfig.Bind(e.Name(), $"{e.monsterEvents[i].enemy.name} {ScaleType.MaxOutsideEnemy}", GetStringFromScale(e.monsterEvents[i].maxOutside), $"{ScaleInfoList[ScaleType.MaxOutsideEnemy]}   {scaleDescription}").Value)
+                        ));
+                    }
+                    monsterEvents.Add(newMonsterEvents);
+
+                    // Scrap transmutation events
+                    Scale amount = new Scale(0.0f, 0.0f, 0.0f, 0.0f);
+                    if (e.scrapTransmutationEvent.items.Length > 0) amount = getScale(toConfig.Bind(e.Name(), "Percentage", GetStringFromScale(e.scrapTransmutationEvent.amount), $"{ScaleInfoList[ScaleType.Percentage]}   {scaleDescription}").Value);
+                    SpawnableItemWithRarity[] newScrapTransmuations = new SpawnableItemWithRarity[e.scrapTransmutationEvent.items.Length];
+                    for (int i = 0; i < e.scrapTransmutationEvent.items.Length; i++)
+                    {
+                        newScrapTransmuations[i] = new SpawnableItemWithRarity()
+                        {
+                            spawnableItem = GetItem(toConfig.Bind(e.Name(), $"Scrap {i} name", e.scrapTransmutationEvent.items[i].spawnableItem.name, "Inputting an invalid scrap name will cause it to return an empty item").Value),
+                            rarity = toConfig.Bind(e.Name(), $"{e.scrapTransmutationEvent.items[i].spawnableItem.name} Rarity", e.scrapTransmutationEvent.items[i].rarity).Value
+                        };
+                    }
+                    transmutationEvents.Add(new ScrapTransmutationEvent(amount, newScrapTransmuations));
+                }
 
             }
 
@@ -304,41 +308,33 @@ namespace BrutalCompanyMinus
                 EventManager.customEvents.Add(e);
             }*/
 
-            // Delete the CustomEvent Config File Every time
-            // This is because the config file will take over the .json file instructions.
-            // A method without the need to use the config file would be better but it is suspected it may be some networking issue preventing this.
-            // Will look into this in the future.
-            try
-            {
-                System.IO.File.Delete(Paths.ConfigPath+"\\BrutalCompanyMinusExtraReborn\\CustomEvents.cfg");
-            }
-            catch (Exception e)
-            {
-                Log.LogWarning("Failed to delete custom event config file: " + e.Message);
-            }
 
-            foreach (string eventFile in System.IO.Directory.GetFiles(customEventsFolder))
+
+            if (enableCustomEvents.Value)
             {
-                if (eventFile.EndsWith(".json"))
+                foreach (string eventFile in System.IO.Directory.GetFiles(customEventsFolder))
                 {
-                    MEvent cEvent = new GeneralCustomEvent(eventFile);
-                    cEvent.Initalize();
+                    if (eventFile.EndsWith(".json"))
+                    {
+                        MEvent cEvent = new GeneralCustomEvent(eventFile);
+                        cEvent.Initalize();
 
-                    if (cEvent.Enabled) EventManager.customEvents.Add(cEvent);
+                        if (cEvent.Enabled) EventManager.customEvents.Add(cEvent);
+                    }
                 }
+                RegisterEvents(customEventConfig, EventManager.customEvents);
             }
 
             RegisterEvents(eventConfig, EventManager.vanillaEvents);
             RegisterEvents(moddedEventConfig, EventManager.moddedEvents);
-            RegisterEvents(customEventConfig, EventManager.customEvents);
 
-            foreach(EventManager.CustomEvents customevent in EventManager.customEventsList)
+            foreach (EventManager.CustomEvents customevent in EventManager.customEventsList)
             {
-                foreach(MEvent e in customevent.events)
+                foreach (MEvent e in customevent.events)
                 {
                     e.Initalize();
                 }
-            
+
                 RegisterEvents(customevent.configFile, customevent.events);
                 EventManager.customEvents.AddRange(customevent.events);
             }
@@ -369,7 +365,7 @@ namespace BrutalCompanyMinus
             Minus.Handlers.RealityShift.grabbableLandmineWeight = eventConfig.Bind(nameof(RealityShift), "Grabbable landmine shift weight", 15, "Weight for transforming scrap into a grabbable landmine?").Value;
             Minus.Handlers.RealityShift.transmuteChance = eventConfig.Bind(nameof(RealityShift), "Chance to transmute", 0.5f, "Chance for transmutation to occur.").Value;
             Minus.Handlers.RealityShift.enemyTeleportChance = eventConfig.Bind(nameof(RealityShift), "Enemy teleport chance", 0.1f, "Chance enemy teleportation to occur when hit.").Value;
-            
+
 
             DDay.bombardmentInterval = eventConfig.Bind(nameof(Warzone), "Bombardment interval", 100, "The time it takes before each bombardment event.").Value;
             DDay.bombardmentTime = eventConfig.Bind(nameof(Warzone), "Bombardment time", 15, "When a bombardment event occurs, how long will it last?").Value;
@@ -387,7 +383,7 @@ namespace BrutalCompanyMinus
             Minus.Handlers.Mimics.spawnRateScales[5] = getScale(moddedEventConfig.Bind(nameof(Mimics), "Maximum Mimics Scale", "10.0, 0.84, 10.0, 60.0", "Weight Scale of maximum mimics spawning   " + scaleDescription).Value);
 
             // Level properties config
-            foreach(SelectableLevel level in StartOfRound.Instance.levels)
+            foreach (SelectableLevel level in StartOfRound.Instance.levels)
             {
                 if (level == null) continue;
 
@@ -441,7 +437,7 @@ namespace BrutalCompanyMinus
                 else
                 {
                     newEvents.Add(e);
-                    switch(e.Type)
+                    switch (e.Type)
                     {
                         case EventType.VeryBad:
                             EventManager.allVeryBad.Add(e);
@@ -479,14 +475,14 @@ namespace BrutalCompanyMinus
                 $"Remove:{EventManager.eventTypeCount[5]}\n");
 
             CreateAllEnemiesConfig();
-            
+
             uiConfig.Save();
             difficultyConfig.Save();
             eventConfig.Save();
             weatherConfig.Save();
             customAssetsConfig.Save();
             moddedEventConfig.Save();
-            customEventConfig.Save();
+            //customEventConfig.Save();
             allEnemiesConfig.Save();
             levelPropertiesConfig.Save();
             CorePropertiesConfig.Save();
@@ -528,14 +524,15 @@ namespace BrutalCompanyMinus
                 CreateEnemyEntry(EnemyName.OldBird, 6, 3, SpawnLocation.Outside)
             };
 
-            foreach(EnemyType enemy in EnemyList.Values)
+            foreach (EnemyType enemy in EnemyList.Values)
             {
                 if (enemy == null || enemy.enemyPrefab == null || enemy.isDaytimeEnemy || allSpawnInfos.Exists(x => x.enemy.name == enemy.name)) continue;
 
-                if(enemy.isOutsideEnemy)
+                if (enemy.isOutsideEnemy)
                 {
                     CreateEnemyEntry(enemy.name, 5, 1, SpawnLocation.Outside);
-                } else
+                }
+                else
                 {
                     CreateEnemyEntry(enemy.name, 5, 1, SpawnLocation.Inside);
                 }
@@ -632,11 +629,11 @@ namespace BrutalCompanyMinus
         private static EnemySpawnInfo CreateEnemyEntry(EnemyName name, float defaultWeight, int spawnCap, SpawnLocation spawnLocation) => CreateEnemyEntry(EnemyNameList[name], defaultWeight, spawnCap, spawnLocation);
 
         [HarmonyPrefix]
-        [HarmonyPatch(typeof(TimeOfDay), "Awake")] 
+        [HarmonyPatch(typeof(TimeOfDay), "Awake")]
         private static void OnTimeDayStart(ref TimeOfDay __instance)
         {
             enableQuotaChanges = difficultyConfig.Bind("Quota Settings", "_Enable Quota Changes", false, "Once set to true, load up a save to generate the rest of this config, this will take values from the game as default.");
-            if(enableQuotaChanges.Value)
+            if (enableQuotaChanges.Value)
             {
                 __instance.quotaVariables.deadlineDaysAmount = difficultyConfig.Bind("Quota Settings", "Deadline Days Amount", __instance.quotaVariables.deadlineDaysAmount).Value;
                 __instance.quotaVariables.startingCredits = difficultyConfig.Bind("Quota Settings", "Starting Credits", __instance.quotaVariables.startingCredits).Value;

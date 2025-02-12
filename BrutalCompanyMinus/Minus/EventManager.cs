@@ -112,7 +112,7 @@ namespace BrutalCompanyMinus.Minus
             new Events.JetpackFailure(),
             new Events.DoorCircuitFailure(),
             new Events.Meteors(),
-            new Events.Barbers(),
+            //new Events.Barbers(),
             new Events.Mimics(),
             new Events.MobileTurrets(),
             //new Events.AntiBounty(),

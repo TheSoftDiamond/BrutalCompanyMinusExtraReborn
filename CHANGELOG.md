@@ -1,6 +1,34 @@
 # Changelog
 
 <details>
+  <summary>0.23.3</summary>
+
+## Additions
+
+  - Extra Logging. Useful for debugging purposes and more. Defaults to off in config.
+
+## Changes
+
+  - Due to broken Barber behavior from events, the Barber event has been removed again.
+
+</details>
+<details>
+  <summary>0.23.2</summary>
+
+## Changes
+
+  - Bug fixes regarding Custom Events. (For more context, the changes in 0.23.1 were not reliably working as expected, so this hopefully should be the last time I need to deal with this issue!). If you encounter issues, try deleting the CustomEvents.cfg file and see if that fixes the issue(s).
+
+</details>
+<details>
+  <summary>0.23.1</summary>
+
+## Changes
+
+  - The CustomEvent.cfg error should be fixed
+ 
+</details>
+<details>
   <summary>0.23.0</summary>
 
 ## Additions
