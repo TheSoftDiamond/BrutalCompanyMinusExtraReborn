@@ -1,8 +1,10 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.ComponentModel;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace BrutalCompanyMinus.Minus.MonoBehaviours
 {
@@ -207,7 +209,17 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
 
         public void ShootGun(Vector3 shotgunPosition, Vector3 shotgunForward)
         {
-            Log.LogInfo(string.Format("SlayerShotGun shot at {0}, towards {1}", shotgunPosition, shotgunForward));
+            try
+            {
+                if (Configuration.ExtraLogging.Value)
+                {
+                    Log.LogInfo(string.Format("SlayerShotGun shot at {0}, towards {1}", shotgunPosition, shotgunForward));
+                }
+            }
+            catch (NullReferenceException)
+            {
+                Log.LogError("Extra Logging Feature Errored.");
+            }
 
             isReloading = false;
             bool heldByPlayer = false;
@@ -278,11 +290,30 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
             }
 
             RaycastHit[] hits = Physics.SphereCastAll(shotgunPosition, 5f, shotgunForward, 15f, 524288, QueryTriggerInteraction.Collide);
-
-            // TO SETUP WITH CONFIG  Log.LogInfo($"Enemies hit: {hits.Length}");
+            try
+            {
+                if (Configuration.ExtraLogging.Value)
+                {
+                    Log.LogInfo($"Raycast hits: {hits.Length}");
+                }
+            }
+            catch (NullReferenceException)
+            {
+                Log.LogError("Extra Logging Feature Errored.");
+            }
             for (int i = 0; i < hits.Length; i++)
             {
-                // TO SETUP WITH CONFIG  Log.LogInfo("Raycasting enemy");
+                try
+                {
+                    if (Configuration.ExtraLogging.Value)
+                    {
+                        Log.LogInfo("Raycasting enemy");
+                    }
+                }
+                catch (NullReferenceException)
+                {
+                    Log.LogError("Extra Logging Feature Errored.");
+                }
                 if (!hits[i].transform.GetComponent<EnemyAICollisionDetect>())
                 {
                     continue; // Skip entry not break entire loop
@@ -290,7 +321,17 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
                 EnemyAI mainScript = hits[i].transform.GetComponent<EnemyAICollisionDetect>().mainScript;
                 if (heldByEnemy != null && heldByEnemy == mainScript)
                 {
-                    // TO SETUP WITH CONFIG  Log.LogInfo("Shotgun is held by enemy, skipping entry");
+                    try
+                    {
+                        if (Configuration.ExtraLogging.Value)
+                        {
+                            Log.LogInfo("Shotgun is held by enemy, skipping entry");
+                        }
+                    }
+                    catch (NullReferenceException)
+                    {
+                        Log.LogError("Extra Logging Feature Errored.");
+                    }
                     continue; // Skip entry not break entire loop
                 }
 
@@ -299,13 +340,33 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
                 {
                     float num5 = Vector3.Distance(shotgunPosition, hits[i].point);
                     int num6 = num5 < 3.7f ? 5 : !(num5 < 6f) ? 2 : 3;
-                    // TO SETUP WITH CONFIG  Log.LogInfo($"Hit enemy, hitDamage: {num6}");
+                    try
+                    {
+                        if (Configuration.ExtraLogging.Value)
+                        {
+                            Log.LogInfo($"Hit enemy, hitDamage: {num6}");
+                        }
+                    }
+                    catch (NullReferenceException)
+                    {
+                        Log.LogError("Extra Logging Feature Errored.");
+                    }
                     component.Hit(num6, shotgunForward, playerHeldBy, playHitSFX: true);
                 }
                 else
                 {
-                    // TO SETUP WITH CONFIG  Log.LogInfo("Could not get hittable script from collider, transform: " + hits[i].transform.name);
-                    // TO SETUP WITH CONFIG  Log.LogInfo("collider: " + hits[i].collider.name);
+                    try
+                    {
+                        if (Configuration.ExtraLogging.Value)
+                        {
+                            Log.LogInfo("Could not get hittable script from collider, transform: " + hits[i].transform.name);
+                            Log.LogInfo("collider: " + hits[i].collider.name);
+                        }
+                    }
+                    catch (NullReferenceException)
+                    {
+                        Log.LogError("Extra Logging Feature Errored.");
+                    }
                 }
             }
 

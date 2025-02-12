@@ -6,6 +6,7 @@ using BrutalCompanyMinus.Minus.Handlers;
 using BepInEx.Configuration;
 using static BrutalCompanyMinus.Configuration;
 using BrutalCompanyMinus.Minus.Handlers.CustomEvents;
+using System;
 
 namespace BrutalCompanyMinus
 {
@@ -16,7 +17,7 @@ namespace BrutalCompanyMinus
     {
         private const string GUID = "SoftDiamond.BrutalCompanyMinusExtraReborn";
         private const string NAME = "BrutalCompanyMinusExtraReborn";
-        private const string VERSION = "0.23.0";
+        private const string VERSION = "0.23.3";
         private static readonly Harmony harmony = new Harmony(GUID);
 
         void Awake()
@@ -38,7 +39,7 @@ namespace BrutalCompanyMinus
                     }
                 }
             }
-            
+
             // Load assets
             Assets.Load();
 
@@ -72,6 +73,23 @@ namespace BrutalCompanyMinus
             harmony.PatchAll(typeof(GrabObjectTranspiler));
 
             Log.LogInfo(NAME + " " + VERSION + " " + "is done patching.");
+
+            // Delete the CustomEvent Config File Every time
+            // This is because the config file will take over the .json file instructions.
+            // A method without the need to use the config file would be better but it is suspected it may be some networking issue preventing this.
+            // Will look into this in the future, but no definite date. Somehow it prevents failed RPC calls in multiplayer.
+            try
+            {
+                System.IO.File.Delete(Paths.ConfigPath + "\\BrutalCompanyMinusExtraReborn\\CustomEvents.cfg");
+
+                //Create and dispose
+                System.IO.File.Create(Paths.ConfigPath + "\\BrutalCompanyMinusExtraReborn\\CustomEvents.cfg").Dispose();
+
+            }
+            catch (Exception e)
+            {
+                Log.LogWarning("Failed to delete custom event config file: " + e.Message);
+            }
         }
     }
 }
