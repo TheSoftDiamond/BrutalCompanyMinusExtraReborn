@@ -253,7 +253,7 @@ You are only required at minimum to have the following in your json file (Other 
             "EVENT TIME"
         ],
         "Enabled": true,
-        "AddEventIfOnly": ["Event"],
+        "AddEventIfOnly": ["ModGUIDHere"],
         "Items": {
             "TransmuteAmount": [
                 1,
