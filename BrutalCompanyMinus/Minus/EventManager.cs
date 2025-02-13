@@ -16,7 +16,7 @@ namespace BrutalCompanyMinus.Minus
     public class EventManager
     {
         internal static List<MEvent> vanillaEvents = new List<MEvent>() {
-            // Very Good
+        // Very Good
             new Events.BigBonus(),
             new Events.ScrapGalore(),
             new Events.GoldenBars(),
@@ -25,7 +25,7 @@ namespace BrutalCompanyMinus.Minus
             new Events.BlackFriday(),
             new Events.SafeOutside(),
             new Events.VeryEarlyShip(),
-            // Good
+        // Good
             new Events.Bounty(),
             new Events.Bonus(),
             new Events.SmallerMap(),
@@ -43,11 +43,8 @@ namespace BrutalCompanyMinus.Minus
             new Events.EarlyShip(),
             new Events.MoreExits(),
             new Events.DoorOverdriveEv(),
-          //  new Events.TakeyGokuPlush(),  //Incompatible... Will be moved to BrutalCompanyMinusExtra - ExternalModule
-           // new Events.ZombiesPlush(),    //Incompatible... Will be moved to BrutalCompanyMinusExtra - ExternalModule
             new Events.ZedDog(),
-           /* new Events.ToilPlayerEv(),*/  //Does not work
-            // Neutral
+        // Neutral
             new Events.Nothing(),
             new Events.Locusts(),
             new Events.Birds(),
@@ -61,8 +58,6 @@ namespace BrutalCompanyMinus.Minus
             new Events.EasterEggs(),
             //new Events.RGBShipLights(),
             new Events.Clock(),
-          //  new Events.TakeyGokuPlushBig(), //Incompatible... Will be moved to BrutalCompanyMinusExtra - ExternalModule
-           // new Events.BlahajPlush(),     //Does not work
             new Events.SussyPaintings(),
             new Events.Train(),
             new Events.ControlPad(),
@@ -70,7 +65,7 @@ namespace BrutalCompanyMinus.Minus
             new Events.ToiletPaper(),
             new Events.FootballScrap(),
             new Events.GarbageLid(),
-            // Bad
+        // Bad
             new Events.HoardingBugs(),
             new Events.Dustpans(),
             new Events.Bees(),
@@ -116,7 +111,7 @@ namespace BrutalCompanyMinus.Minus
             new Events.Mimics(),
             new Events.MobileTurrets(),
             //new Events.AntiBounty(),
-            // Very Bad
+        // Very Bad
             new Events.Nutcracker(),
             new Events.Arachnophobia(),
             new Events.Bracken(),
@@ -126,7 +121,7 @@ namespace BrutalCompanyMinus.Minus
             new Events.VeryLateShip(),
             new Events.TeleportIn(),
             new Events.GiantsOutside(),
-          //  new Events.MaskedHorde(),
+            //new Events.MaskedHorde(),
             new Events.Jester(),
             new Events.LittleGirl(),
             new Events.AntiCoilhead(),
@@ -140,12 +135,12 @@ namespace BrutalCompanyMinus.Minus
             new Events.Hell(),
             new Events.AllWeather(),
             new Events.Worms(),
-         //   new Events.Crazy(),
+            //new Events.Crazy(),
             new Events.OldBirds(),
             new Events.ShipCoreFailure(),
             new Events.NutSlayersMore(),
             new Events.Dweller(),
-            // No Enemy
+        // No Enemy
             new Events.NoBaboons(),
             new Events.NoBracken(),
             new Events.NoCoilhead(),
@@ -170,18 +165,19 @@ namespace BrutalCompanyMinus.Minus
 
         };
 
-        // Code revision => config entries fix...
         /// <summary>
         /// Registry for modded events
         /// </summary>
         public static List<MEvent> moddedEvents = new List<MEvent>()
         {
-            //Very Good
+        //Very Good
             new Events.CityOfGold(),
-            //Good
+        //Good
             new Events.Dice(),
             new Events.Nemo(),
-            //Bad
+        //Neutral
+            new Events.NeedyCats(),
+        //Bad
             new Events.Lockers(),
             new Events.TakeyGokuBracken(),
             new Events.Cleaners(),
@@ -201,7 +197,7 @@ namespace BrutalCompanyMinus.Minus
             new Events.Foxy(),
             new Events.Bellcrab(),
 
-            //Very Bad
+        //Very Bad
             new Events.Mantitoil(),
             new Events.ToilSlayer(),
             new Events.MantiToilSlayer(),
@@ -223,7 +219,7 @@ namespace BrutalCompanyMinus.Minus
             new Events.PlaytimeBig(),
             new Events.ItsPlaytime(),
 
-            //No Enemy
+        //No Enemy
             new Events.NoMantitoil(),
             new Events.NoToilSlayer(),
             new Events.NoMantiToilSlayer(),
@@ -677,6 +673,11 @@ namespace BrutalCompanyMinus.Minus
             foreach (Keyframe key in newLevel.daytimeEnemySpawnChanceThroughDay.keys) Log.LogInfo($"Time:{key.time} + $Value:{key.value}");
         }
 
+        /// <summary>
+        /// This is used to check if the moon is on the list of moons to ignore events.
+        /// </summary>
+        /// <param name="moonName"></param>
+        /// <returns></returns>
         internal static bool IsIgnoredMoon(string moonName)
         {
             string moonsToIgnore = Configuration.MoonsToIgnore.GetSerializedValue();
@@ -685,8 +686,8 @@ namespace BrutalCompanyMinus.Minus
                 : moonsToIgnore.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                               .Select(moon => moon.Trim())
                               .ToArray();
-
-            //Log.LogInfo(moonsToIgnore); //Current list of moons that are ignored
+            
+            //Log.LogInfo(moonsToIgnore); -- Current list of moons that are ignored
 
             bool skipEventActivation = false;
 
