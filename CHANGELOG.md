@@ -2,7 +2,12 @@
 
 <details>
 
+## Additions
+
+  - Added [Neutral] Needy Cats Event
+
 ## Changes
+
   - Added more Gold Scrap to the LCGoldScrap Event.
 
 </details>
