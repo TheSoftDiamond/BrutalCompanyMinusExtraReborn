@@ -33,7 +33,11 @@ Because we are technically manipulating the game in ways that the game may not s
 ##### Events still show up in the old CustomEvents Config? Do I modify the events there?
 
 - No. While custom event data shows up in the CustomEvents Config, this is only being done for networking purposes in the game. Anything modified in here will be cleared upon every launch of the game. A method is being looked into to see if it can be done without the need for this file.. but as of now, doing it this way prevents a softlock. Your custom event json files are the files you want to modify and won't be deleted or cleared by BCMER.
-   
+
+##### How do I find a mod's plugin guid
+
+- You can find the mod's GUID usually by searching through its source code. Usually some combination involving the mod name and the mod author.
+
 </details>
 
 ## Table of Contents
@@ -253,7 +257,7 @@ You are only required at minimum to have the following in your json file (Other 
             "EVENT TIME"
         ],
         "Enabled": true,
-        "AddEventIfOnly": ["ModGUIDHere"],
+        "AddEventIfOnly": ["ModPluginGUIDHere"],
         "Items": {
             "TransmuteAmount": [
                 1,
