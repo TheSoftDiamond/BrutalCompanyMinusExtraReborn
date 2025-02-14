@@ -384,7 +384,7 @@ You are only required at minimum to have the following in your json file (Other 
       "String",
       "String"
     ],
-    "Enabled": "Boolean",
+    "Enabled": Boolean,
     "AddEventIfOnly": [
       "String"
     ],
