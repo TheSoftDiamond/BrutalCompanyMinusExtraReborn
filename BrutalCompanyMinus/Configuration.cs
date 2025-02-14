@@ -299,16 +299,8 @@ namespace BrutalCompanyMinus
 
             }
 
-            // Custom enemy events
-            /*int customEventCount = customEventConfig.Bind("_Temp Custom Monster Event Count", "How many events to generate in config?", 3, "This is temporary for the time being.").Value;
-            for (int i = 0; i < customEventCount; i++)
-            {
-                MEvent e = new Minus.CustomEvents.CustomMonsterEvent();
-                e.Initalize();
-                EventManager.customEvents.Add(e);
-            }*/
-
-
+            RegisterEvents(eventConfig, EventManager.vanillaEvents);
+            RegisterEvents(moddedEventConfig, EventManager.moddedEvents);
 
             if (enableCustomEvents.Value)
             {
@@ -324,9 +316,6 @@ namespace BrutalCompanyMinus
                 }
                 RegisterEvents(customEventConfig, EventManager.customEvents);
             }
-
-            RegisterEvents(eventConfig, EventManager.vanillaEvents);
-            RegisterEvents(moddedEventConfig, EventManager.moddedEvents);
 
             foreach (EventManager.CustomEvents customevent in EventManager.customEventsList)
             {
