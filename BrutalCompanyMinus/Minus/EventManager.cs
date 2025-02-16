@@ -16,7 +16,7 @@ namespace BrutalCompanyMinus.Minus
     public class EventManager
     {
         internal static List<MEvent> vanillaEvents = new List<MEvent>() {
-        // Very Good
+            // Very Good
             new Events.BigBonus(),
             new Events.ScrapGalore(),
             new Events.GoldenBars(),
@@ -25,7 +25,7 @@ namespace BrutalCompanyMinus.Minus
             new Events.BlackFriday(),
             new Events.SafeOutside(),
             new Events.VeryEarlyShip(),
-        // Good
+            // Good
             new Events.Bounty(),
             new Events.Bonus(),
             new Events.SmallerMap(),
@@ -44,7 +44,7 @@ namespace BrutalCompanyMinus.Minus
             new Events.MoreExits(),
             new Events.DoorOverdriveEv(),
             new Events.ZedDog(),
-        // Neutral
+            // Neutral
             new Events.Nothing(),
             new Events.Locusts(),
             new Events.Birds(),
@@ -56,7 +56,6 @@ namespace BrutalCompanyMinus.Minus
             new Events.HeavyRain(),
             new Events.MaskItem(),
             new Events.EasterEggs(),
-            //new Events.RGBShipLights(),
             new Events.Clock(),
             new Events.SussyPaintings(),
             new Events.Train(),
@@ -65,7 +64,7 @@ namespace BrutalCompanyMinus.Minus
             new Events.ToiletPaper(),
             new Events.FootballScrap(),
             new Events.GarbageLid(),
-        // Bad
+            // Bad
             new Events.HoardingBugs(),
             new Events.Dustpans(),
             new Events.Bees(),
@@ -111,7 +110,7 @@ namespace BrutalCompanyMinus.Minus
             new Events.Mimics(),
             new Events.MobileTurrets(),
             //new Events.AntiBounty(),
-        // Very Bad
+            // Very Bad
             new Events.Nutcracker(),
             new Events.Arachnophobia(),
             new Events.Bracken(),
@@ -121,7 +120,6 @@ namespace BrutalCompanyMinus.Minus
             new Events.VeryLateShip(),
             new Events.TeleportIn(),
             new Events.GiantsOutside(),
-            //new Events.MaskedHorde(),
             new Events.Jester(),
             new Events.LittleGirl(),
             new Events.AntiCoilhead(),
@@ -135,12 +133,11 @@ namespace BrutalCompanyMinus.Minus
             new Events.Hell(),
             new Events.AllWeather(),
             new Events.Worms(),
-            //new Events.Crazy(),
             new Events.OldBirds(),
             new Events.ShipCoreFailure(),
             new Events.NutSlayersMore(),
             new Events.Dweller(),
-        // No Enemy
+            // No Enemy
             new Events.NoBaboons(),
             new Events.NoBracken(),
             new Events.NoCoilhead(),
@@ -165,19 +162,18 @@ namespace BrutalCompanyMinus.Minus
 
         };
 
+        // Code revision => config entries fix...
         /// <summary>
         /// Registry for modded events
         /// </summary>
         public static List<MEvent> moddedEvents = new List<MEvent>()
         {
-        //Very Good
+            //Very Good
             new Events.CityOfGold(),
-        //Good
+            //Good
             new Events.Dice(),
             new Events.Nemo(),
-        //Neutral
-            new Events.NeedyCats(),
-        //Bad
+            //Bad
             new Events.Lockers(),
             new Events.TakeyGokuBracken(),
             new Events.Cleaners(),
@@ -197,7 +193,7 @@ namespace BrutalCompanyMinus.Minus
             new Events.Foxy(),
             new Events.Bellcrab(),
 
-        //Very Bad
+            //Very Bad
             new Events.Mantitoil(),
             new Events.ToilSlayer(),
             new Events.MantiToilSlayer(),
@@ -219,7 +215,7 @@ namespace BrutalCompanyMinus.Minus
             new Events.PlaytimeBig(),
             new Events.ItsPlaytime(),
 
-        //No Enemy
+            //No Enemy
             new Events.NoMantitoil(),
             new Events.NoToilSlayer(),
             new Events.NoMantiToilSlayer(),
@@ -244,7 +240,7 @@ namespace BrutalCompanyMinus.Minus
 
         internal static List<MEvent> allVeryGood = new List<MEvent>(), allGood = new List<MEvent>(), allNeutral = new List<MEvent>(), allBad = new List<MEvent>(), allVeryBad = new List<MEvent>(), allRemove = new List<MEvent>();
 
-        internal static List<CustomEvents> customEventsList = new List<CustomEvents>();
+        //internal static List<CustomEvents> customEventsList = new List<CustomEvents>();
 
         internal static List<string> currentEventDescriptions = new List<string>();
 
@@ -259,14 +255,14 @@ namespace BrutalCompanyMinus.Minus
         /// This must be called before save load, will generate the config in Custom_Events.cfg
         /// </summary>
         /// <param name="mEvents">MEvents.</param>
-        public static void AddEvents(params MEvent[] mEvents) => customEventsList.Add(new CustomEvents(Configuration.customEventConfig, mEvents.ToList()));
+        //public static void AddEvents(params MEvent[] mEvents) => customEventsList.Add(new CustomEvents(Configuration.customEventConfig, mEvents.ToList()));
 
         /// <summary>
         /// This must be called before save load, will generate the config in specified config file.
         /// </summary>
         /// <param name="toConfig">Config to generate to.</param>
         /// <param name="mEvents">MEvents.</param>
-        public static void AddEvents(ConfigFile toConfig, params MEvent[] mEvents) => customEventsList.Add(new CustomEvents(toConfig, mEvents.ToList()));
+        //public static void AddEvents(ConfigFile toConfig, params MEvent[] mEvents) => customEventsList.Add(new CustomEvents(toConfig, mEvents.ToList()));
 
         internal static MEvent RandomWeightedEvent(List<MEvent> _events, System.Random rng)
         {
@@ -673,11 +669,6 @@ namespace BrutalCompanyMinus.Minus
             foreach (Keyframe key in newLevel.daytimeEnemySpawnChanceThroughDay.keys) Log.LogInfo($"Time:{key.time} + $Value:{key.value}");
         }
 
-        /// <summary>
-        /// This is used to check if the moon is on the list of moons to ignore events.
-        /// </summary>
-        /// <param name="moonName"></param>
-        /// <returns></returns>
         internal static bool IsIgnoredMoon(string moonName)
         {
             string moonsToIgnore = Configuration.MoonsToIgnore.GetSerializedValue();
@@ -686,8 +677,8 @@ namespace BrutalCompanyMinus.Minus
                 : moonsToIgnore.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                               .Select(moon => moon.Trim())
                               .ToArray();
-            
-            //Log.LogInfo(moonsToIgnore); -- Current list of moons that are ignored
+
+            //Log.LogInfo(moonsToIgnore); //Current list of moons that are ignored
 
             bool skipEventActivation = false;
 

@@ -12,7 +12,6 @@ namespace BrutalCompanyMinus
 {
     [HarmonyPatch]
     [BepInDependency("ShipInventory", BepInDependency.DependencyFlags.SoftDependency)]
-    [BepInDependency("com.github.zehsteam.ToilHead", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInPlugin(GUID, NAME, VERSION)]
     internal class Plugin : BaseUnityPlugin
     {

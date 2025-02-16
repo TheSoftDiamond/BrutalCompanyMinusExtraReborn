@@ -56,29 +56,7 @@ namespace BrutalCompanyMinus.Minus.Events
                 new SpawnableItemWithRarity() { spawnableItem = Assets.GetItem("GoldPuzzleLCGoldScrapMod"), rarity = 1 },
                 new SpawnableItemWithRarity() { spawnableItem = Assets.GetItem("GoldBoltLCGoldScrapMod"), rarity = 1 },
                 new SpawnableItemWithRarity() { spawnableItem = Assets.GetItem("GoldenAirhornLCGoldScrapMod"), rarity = 1 },
-                new SpawnableItemWithRarity() { spawnableItem = Assets.GetItem("DuckOfGoldLCGoldScrapMod"), rarity = 1 },
-                new SpawnableItemWithRarity() { spawnableItem = Assets.GetItem("GoldBeaconLCGoldScrapMod"), rarity = 1 },
-                new SpawnableItemWithRarity() { spawnableItem = Assets.GetItem("GoldenGrenadeLCGoldScrapMod"), rarity = 1 },
-                new SpawnableItemWithRarity() { spawnableItem = Assets.GetItem("GoldPanLCGoldScrapMod"), rarity = 1 },
-                new SpawnableItemWithRarity() { spawnableItem = Assets.GetItem("JackInTheGoldLCGoldScrapMod"), rarity = 1 },
-                new SpawnableItemWithRarity() { spawnableItem = Assets.GetItem("GoldenClockLCGoldScrapMod"), rarity = 1 },
-                new SpawnableItemWithRarity() { spawnableItem = Assets.GetItem("GoldFishPropLCGoldScrapMod"), rarity = 1 },
-                new SpawnableItemWithRarity() { spawnableItem = Assets.GetItem("MarigoldLCGoldScrapMod"), rarity = 1 },
-                new SpawnableItemWithRarity() { spawnableItem = Assets.GetItem("GoldmineLCGoldScrapMod"), rarity = 1 },
-                new SpawnableItemWithRarity() { spawnableItem = Assets.GetItem("EarlGoldLCGoldScrapMod"), rarity = 1 },
-                new SpawnableItemWithRarity() { spawnableItem = Assets.GetItem("JarOfGoldPicklesLCGoldScrapMod"), rarity = 1 },
-                new SpawnableItemWithRarity() { spawnableItem = Assets.GetItem("ExtremelyGoldenCupLCGoldScrapMod"), rarity = 1 },
-                new SpawnableItemWithRarity() { spawnableItem = Assets.GetItem("GoldenVisionLCGoldScrapMod"), rarity = 1 },
-                new SpawnableItemWithRarity() { spawnableItem = Assets.GetItem("GoldfishLCGoldScrapMod"), rarity = 1 },
-                new SpawnableItemWithRarity() { spawnableItem = Assets.GetItem("GoldBirdLCGoldScrapMod"), rarity = 1 },
-                new SpawnableItemWithRarity() { spawnableItem = Assets.GetItem("GoldRingLCGoldScrapMod"), rarity = 1 },
-                new SpawnableItemWithRarity() { spawnableItem = Assets.GetItem("TatteredGoldSheetLCGoldScrapMod"), rarity = 1 },
-                new SpawnableItemWithRarity() { spawnableItem = Assets.GetItem("GoldenRetrieverLCGoldScrapMod"), rarity = 1 },
-                new SpawnableItemWithRarity() { spawnableItem = Assets.GetItem("ArtOfGoldLCGoldScrapMod"), rarity = 1 },
-                new SpawnableItemWithRarity() { spawnableItem = Assets.GetItem("GoldRemoteLCGoldScrapMod"), rarity = 1 },
-                new SpawnableItemWithRarity() { spawnableItem = Assets.GetItem("GoldNuggetLCGoldScrapMod"), rarity = 1 },
-                new SpawnableItemWithRarity() { spawnableItem = Assets.GetItem("GoldenGirlLCGoldScrapMod"), rarity = 1 },
-                new SpawnableItemWithRarity() { spawnableItem = Assets.GetItem("GoldPerfumeLCGoldScrapMod"), rarity = 1 }
+                new SpawnableItemWithRarity() { spawnableItem = Assets.GetItem("DuckOfGoldLCGoldScrapMod"), rarity = 1 }
             );
 
             EventsToRemove = new List<string>() { nameof(RealityShift) };
