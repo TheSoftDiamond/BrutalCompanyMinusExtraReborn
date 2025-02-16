@@ -317,7 +317,7 @@ namespace BrutalCompanyMinus
                 RegisterEvents(customEventConfig, EventManager.customEvents);
             }
 
-            foreach (EventManager.CustomEvents customevent in EventManager.customEventsList)
+            /*foreach (EventManager.CustomEvents customevent in EventManager.customEventsList)
             {
                 foreach (MEvent e in customevent.events)
                 {
@@ -327,7 +327,7 @@ namespace BrutalCompanyMinus
                 RegisterEvents(customevent.configFile, customevent.events);
                 EventManager.customEvents.AddRange(customevent.events);
             }
-            EventManager.customEventsList.Clear();
+            EventManager.customEventsList.Clear();*/
 
             EventManager.events.AddRange(EventManager.vanillaEvents);
             EventManager.events.AddRange(EventManager.moddedEvents);
@@ -401,8 +401,6 @@ namespace BrutalCompanyMinus
             // Use config settings
             for (int i = 0; i != EventManager.events.Count; i++)
             {
-                if (i > eventWeights.Count) break; // This is required to prevent the mod from breaking. Yes, it's a bandaid fix.
-
                 EventManager.events[i].Weight = eventWeights[i].Value;
                 EventManager.events[i].Descriptions = eventDescriptions[i];
                 EventManager.events[i].ColorHex = eventColorHexes[i].Value;

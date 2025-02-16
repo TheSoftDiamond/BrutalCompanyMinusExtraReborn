@@ -44,18 +44,14 @@ namespace BrutalCompanyMinus
             NonShippingAuthorisationPresent = false,
             moonsweptPresent = false,
             shockwaveDronesPresent = false,
-            // monsterPlushiesPresent = false,
-            // blahajPlushPresent = false,
             zombiesPlushPresent = false,
             takeyGokuPresent = false,
             takeyGokuEssentialPresent = false,
             crowdControlPresent = false,
             officialExternalModulePresent = false,
-            // hallucinoceptsPresent = false,
             facelessStalekerPresent = false,
             gokuBrackenPresent = false,
             moaiEnemyPresent = false,
-            //yesFoxPresent = false,
             BaldiPresent = false,
             ShibaPresent = false,
             SurfacedPresent = false,
@@ -183,58 +179,32 @@ namespace BrutalCompanyMinus
                 }
             }
 
-       /*     Assembly hallucinocepsAssembly = GetAssembly("Hallucinoceps");
-            if (hallucinocepsAssembly != null)
-            {
-                Log.LogInfo("Found CullFactory mod, Will attempt to grab OnTeleportOtherPlayerThroughEntrance() and OnTeleportLocalPlayerThroughEntrance() methodInfos");
-
-                Type DeafMakerShroom = hallucinocepsAssembly.GetType("Hallucinoceps.DeafMakerShroom");
-                if (DeafMakerShroom != null)
-                {
-                    DeafMakerShroom1 = DeafMakerShroom.GetMethod("DeafMakerShroom", BindingFlags.Static | BindingFlags.NonPublic);
-                  //  cullOnTeleportOtherPlayer = teleporterExtender.GetMethod("OnTeleportOtherPlayerThroughEntrance", BindingFlags.Static | BindingFlags.NonPublic);
-
-                    if (DeafMakerShroom1 != null)
-                    {
-                        Log.LogInfo("Found OnTeleportOtherPlayerThroughEntrance() and OnTeleportLocalPlayerThroughEntrance() methodInfos, passages are now compatible with cullfactory");
-                        cullFactoryPresent = true;
-                    }
-                }
-            }*/
-
             lethalEscapePresent = IsModPresent("xCeezy.LethalEscape", "Will prevent SafeOutside event from occuring.") || IsModPresent("AudioKnight.StarlancerEnemyEscape", "Will prevent SafeOutside event from occuring");
-
-            lethalThingsPresent = IsModPresent("evaisa.lethalthings", "Roomba and TeleporterTraps event will now occur.", new Roomba(), new TeleporterTraps());
-            diversityPresent = IsModPresent("Chaos.Diversity", "Walker event will now occur.", new Walkers());
-            scopophobiaPresent = IsModPresent("Scopophobia", "Shy Guy and NoShyGuy event will now occur.", new ShyGuy(), new NoShyGuy());
-            lcOfficePresent = IsModPresent("Piggy.LCOffice", "Shrimp event will now occur.", new Shrimp());
-            herobrinePresent = IsModPresent("Kittenji.HerobrineMod", "Herobrine event will now occur.", new Herobrine());
-            sirenheadPresent = IsModPresent("Ccode.SirenHead", "SirenHead event will now occur.", new SirenHead());
-            rollinggiantPresent = IsModPresent("nomnomab.rollinggiant", "RollingGiant and NoRollingGiant event will now occur.", new RollingGiants());
-            theFiendPresent = IsModPresent("com.RuthlessCompany", "TheFiend and NoFiend event will now occur.", new TheFiend(), new NoFiend());
-            immortalSnailPresent = IsModPresent("ImmortalSnail", "ImmortalSnail and NoImmortalSnail event will now occur.", new ImmortalSnail(), new NoImmortalSnails());
-            lockerPresent = IsModPresent("com.zealsprince.locker", "Locker and NoLocker event will now occur.", new Lockers(), new NoLockers());
-            theGiantSpecimensPresent = IsModPresent("TheGiantSpecimens", "GiantShowdown event will now occur.", new GiantShowdown());
-            footballPresent = IsModPresent("Kittenji.FootballEntity", "Football event will now occur.", new Football());
-            toilheadPresent = IsModPresent("com.github.zehsteam.ToilHead", "Toilhead event will now occur", new ToilHead(), new Mantitoil(), new ToilSlayer(), new MantiToilSlayer(), new NoMantiToilSlayer(), new NoToilSlayer(), new NoMantitoil(), new AllSlayers(), new NoSlayers(), new TurretsEverywhere());
-            emergencyDicePresent = IsModPresent("Theronguard.EmergencyDice", "BadDice and Dice events will now occur.", new BadDice(), new Dice());
-            goldScrapPresent = IsModPresent("LCGoldScrapMod", "CityOfGold event will now occur", new CityOfGold());
-            moonsweptPresent = IsModPresent("MoonsweptTeam.Moonswept", "Cleaner and MobileTurrets events will now occur", new Cleaners(), new MobileTurrets());
-            shockwaveDronesPresent = IsModPresent("droneenemy", "Shockwave Drones event will now occur", new ShockwaveDrones());
-            facelessStalekerPresent = IsModPresent("sparble.slendermanmod", "SlenderMan event will now occur", new SlenderMan());
-           // takeyPlushPresent = IsModPresent("com.github.zehsteam.TakeyPlush", "Takey has joined the game", new TakeyPlush()/*, new TakeyGokuPlush(), new TakeyGokuPlushBig()*/);
-            // zombiesPlushPresent = IsModPresent("com.github.zehsteam.ZombiesPlush", "Zombies Plush event activated", new ZombiesPlush());
+            lethalThingsPresent = IsModPresent("evaisa.lethalthings", "Roomba and TeleporterTraps event will now occur.");
+            diversityPresent = IsModPresent("Chaos.Diversity", "Walker event will now occur.");
+            scopophobiaPresent = IsModPresent("Scopophobia", "Shy Guy and NoShyGuy event will now occur.");
+            lcOfficePresent = IsModPresent("Piggy.LCOffice", "Shrimp event will now occur.");
+            herobrinePresent = IsModPresent("Kittenji.HerobrineMod", "Herobrine event will now occur.");
+            sirenheadPresent = IsModPresent("Ccode.SirenHead", "SirenHead event will now occur.");
+            rollinggiantPresent = IsModPresent("nomnomab.rollinggiant", "RollingGiant and NoRollingGiant event will now occur.");
+            theFiendPresent = IsModPresent("com.RuthlessCompany", "TheFiend and NoFiend event will now occur.");
+            immortalSnailPresent = IsModPresent("ImmortalSnail", "ImmortalSnail and NoImmortalSnail event will now occur.");
+            lockerPresent = IsModPresent("com.zealsprince.locker", "Locker and NoLocker event will now occur.");
+            theGiantSpecimensPresent = IsModPresent("TheGiantSpecimens", "GiantShowdown event will now occur.");
+            footballPresent = IsModPresent("Kittenji.FootballEntity", "Football event will now occur.");
+            toilheadPresent = IsModPresent("com.github.zehsteam.ToilHead", "Toilhead event will now occur");
+            emergencyDicePresent = IsModPresent("Theronguard.EmergencyDice", "BadDice and Dice events will now occur.");
+            goldScrapPresent = IsModPresent("LCGoldScrapMod", "CityOfGold event will now occur");
+            moonsweptPresent = IsModPresent("MoonsweptTeam.Moonswept", "Cleaner and MobileTurrets events will now occur");
+            shockwaveDronesPresent = IsModPresent("droneenemy", "Shockwave Drones event will now occur");
+            facelessStalekerPresent = IsModPresent("sparble.slendermanmod", "SlenderMan event will now occur");
             NonShippingAuthorisationPresent = IsModPresent("NonShippingAuthorisation", "Authorisation accepted"); 
-            // blahajPlushPresent = IsModPresent("com.github.zehsteam.BlahajPlush", "BlahajPlush dettected", new BlahajPlush());
-            // monsterPlushiesPresent = IsModPresent("scin.monsterplushies", "Monster Plushies events will now occur", new SpiderPlush());
-            takeyGokuPresent = IsModPresent("com.github.zehsteam.TakeyGokuBracken", "Takey Goku dettected", new TakeyGokuBracken());
-            //Vulf.GokuBracken hallucinoceptsPresent = IsModPresent("Hallucinoceps", "Damn u Minzy!, Integration not in working state, event will NEVER occur!", new MushroomEv());
+            takeyGokuPresent = IsModPresent("com.github.zehsteam.TakeyGokuBracken", "Takey Goku dettected");
             takeyGokuEssentialPresent = IsModPresent("Vulf.GokuBracken", "GokuBracken detected, proceeding with TakeyGoku check");
             officialExternalModulePresent = IsModPresent("BCME-ExternalModule", "ExternalModule dettected...");
             crowdControlPresent = IsModPresent("WarpWorld.CrowdControl", "Warning! CrowdControl dettected, shutting down incompatible events");
-            moaiEnemyPresent = IsModPresent("MoaiEnemy", "Moai Enemies were detected", new MoaiEnemy());
-            //yesFoxPresent = IsModPresent("uk.1a3.yesfox"), "YesFox detected", new KidnapperFox());
-            BaldiPresent = IsModPresent("com.riskivr.BaldiEnemy", "Baldi Mod Detected", new Baldi());
+            moaiEnemyPresent = IsModPresent("MoaiEnemy", "Moai Enemies were detected");
+            BaldiPresent = IsModPresent("com.riskivr.BaldiEnemy", "Baldi Mod Detected");
             FacilityMeltdownPresent = IsModPresent("me.loaforc.facilitymeltdown", "Facility Meltdown Detected");
             ShibaPresent = IsModPresent("ReavsStuff.ShibaEnemy", "Shiba Bat Detected");
             SurfacedPresent = IsModPresent("Surfaced", "Surfaced Detected");
@@ -246,8 +216,8 @@ namespace BrutalCompanyMinus
             FoxyPresent = IsModPresent("NightmareFoxy", "NightmareFoxy Detected");
             PlaytimePresent = IsModPresent("Nuclear_Fox.LethalPlaytime", "Lethal Playtime Detected");
             CrittersPresent = IsModPresent("Nuclear_Fox.SmilingCritters", "Critters Present");
-            ShipInventoryPresent = IsModPresent("ShipInventory", "Ship Inventory Detected. Including in inventory checks");
             NeedyCatsPresent = IsModPresent("Jordo.NeedyCats", "Needy Cats Detected");
+            ShipInventoryPresent = IsModPresent("ShipInventory", "Ship Inventory Detected. Including in inventory checks");
         }
 
         private static Assembly GetAssembly(string name)
@@ -259,12 +229,11 @@ namespace BrutalCompanyMinus
             return null;
         }
 
-        private static bool IsModPresent(string name, string logMessage, params MEvent[] associatedEvents)
+        public static bool IsModPresent(string name, string logMessage = "")
         {
             bool isPresent = Chainloader.PluginInfos.ContainsKey(name);
             if (isPresent)
             {
-                moddedEvents.AddRange(associatedEvents);
                 Log.LogInfo($"{name} is present. {logMessage}");
             }
             return isPresent;
