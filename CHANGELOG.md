@@ -1,6 +1,7 @@
 # Changelog
 
 <details>
+  <summary>0.23.4</summary>
 
 ## Additions
 
@@ -9,6 +10,8 @@
 ## Changes
 
   - Added more Gold Scrap to the LCGoldScrap Event.
+  - Optimized code so that duplicate events
+  - Fixed Custom Events AGAIN (Hopefully the last time)
 
 </details>
 <details>
