@@ -173,6 +173,7 @@ namespace BrutalCompanyMinus.Minus
             //Good
             new Events.Dice(),
             new Events.Nemo(),
+            new Events.HotBarMania(),
             //Bad
             new Events.Lockers(),
             new Events.TakeyGokuBracken(),
@@ -191,6 +192,7 @@ namespace BrutalCompanyMinus.Minus
             new Events.YeetBomb(),
             new Events.ManStalker(),
             new Events.Foxy(),
+            new Events.HotBarHassle(),
             new Events.Bellcrab(),
 
             //Very Bad
@@ -207,7 +209,6 @@ namespace BrutalCompanyMinus.Minus
             new Events.ToilHead(),
             new Events.Walkers(),
             new Events.GiantShowdown(),
-            new Events.GokuBracken(),
             new Events.MoaiEnemy(),
             new Events.Meltdown(),
             new Events.SkullEnemy(),
