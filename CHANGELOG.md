@@ -1,6 +1,24 @@
 # Changelog
 
 <details>
+  <summary>0.23.5</summary>
+
+## Additions
+
+  - Added [Good] HotBarMania. Requires HotbarPlus
+  - Added [Bad] HotBarHassle. Requires HotBarPlus
+
+## Changes
+
+  - 
+
+## Removed
+
+  - **Removed GokuBracken event**. You can find its custom event json here:
+
+</details>
+
+<details>
   <summary>0.23.4</summary>
 
 ## Additions
@@ -10,7 +28,7 @@
 ## Changes
 
   - Added more Gold Scrap to the LCGoldScrap Event.
-  - Optimized code so that duplicate events
+  - Optimized code so that duplicate events should not occur
   - Fixed Custom Events AGAIN (Hopefully the last time)
 
 </details>
