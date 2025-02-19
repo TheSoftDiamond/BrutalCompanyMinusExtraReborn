@@ -12,12 +12,13 @@ namespace BrutalCompanyMinus
 {
     [HarmonyPatch]
     [BepInDependency("ShipInventory", BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency("FlipMods.HotbarPlus", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInPlugin(GUID, NAME, VERSION)]
     internal class Plugin : BaseUnityPlugin
     {
         private const string GUID = "SoftDiamond.BrutalCompanyMinusExtraReborn";
         private const string NAME = "BrutalCompanyMinusExtraReborn";
-        private const string VERSION = "0.23.4";
+        private const string VERSION = "0.23.5";
         private static readonly Harmony harmony = new Harmony(GUID);
 
         void Awake()
