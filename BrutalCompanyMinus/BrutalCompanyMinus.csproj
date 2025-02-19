@@ -226,6 +226,10 @@
     <Reference Include="UnityEngine.UIModule">
       <HintPath>libs\UnityEngine.UIModule.dll</HintPath>
     </Reference>
+	  <Reference Include="HotBarPlus">
+		  <HintPath>libs\HotBarPlus.dll</HintPath>
+	  </Reference>
+	  
   </ItemGroup>
 
 <!--  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
