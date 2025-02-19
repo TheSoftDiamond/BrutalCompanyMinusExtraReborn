@@ -24,7 +24,7 @@ namespace BrutalCompanyMinus.Minus.Events
             ColorHex = "#800000";
             Type = EventType.VeryBad;
 
-            EventsToRemove = new List<string>() { nameof(GokuBracken) };
+            
 
             monsterEvents = new List<MonsterEvent>() { new MonsterEvent(
                 Assets.EnemyName.Bracken,
