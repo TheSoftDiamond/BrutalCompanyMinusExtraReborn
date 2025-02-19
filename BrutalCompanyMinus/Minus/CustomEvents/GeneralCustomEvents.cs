@@ -37,6 +37,10 @@ namespace BrutalCompanyMinus.Minus.CustomEvents
                 ColorHex = eventData.Color;
                 Descriptions = eventData.Descriptions;
                 Enabled = eventData.Enabled;
+
+                SanitizeName();
+
+                if (Descriptions.Count == 0) Descriptions.Add($"Please add a description to {name} event");
                 
                 if (eventData.Items != null)
                 {
@@ -60,7 +64,7 @@ namespace BrutalCompanyMinus.Minus.CustomEvents
                     ScaleList.Add(ScaleType.ScrapValue, scrapValue);
                 }
                 
-                if (eventData.Enemies != null)
+                if (eventData.Enemies != null && eventData.Enemies.Count > 0)
                 {
                     foreach (CustomEventHandling.EnemyData enemy in eventData.Enemies)
                     {
@@ -75,7 +79,7 @@ namespace BrutalCompanyMinus.Minus.CustomEvents
                     }
                 }
                 
-                if (eventData.Hazards != null)
+                if (eventData.Hazards != null && eventData.Hazards.Count > 0)
                 {
                     foreach (BaseHazardData hazard in eventData.Hazards)
                     {
@@ -104,12 +108,12 @@ namespace BrutalCompanyMinus.Minus.CustomEvents
                     }
                 }
                 
-                if (eventData.EventsToRemove != null)
+                if (eventData.EventsToRemove != null && eventData.EventsToRemove.Count > 0)
                 {
                     EventsToRemove = eventData.EventsToRemove;
                 }
                 
-                if (eventData.EventsToSpawnWith != null)
+                if (eventData.EventsToSpawnWith != null && eventData.EventsToSpawnWith.Count > 0)
                 {
                     EventsToSpawnWith = eventData.EventsToSpawnWith;
                 }
@@ -128,7 +132,7 @@ namespace BrutalCompanyMinus.Minus.CustomEvents
             if (eventData == null) return false; // Force event off if it's missing data
 
             // Check event's requirements
-            if (eventData.AddEventIfOnly != null)
+            if (eventData.AddEventIfOnly != null && eventData.AddEventIfOnly.Count > 0)
             {
                 foreach (string evt in eventData.AddEventIfOnly)
                 {
@@ -165,6 +169,28 @@ namespace BrutalCompanyMinus.Minus.CustomEvents
             foreach (HazardEvent hazard in hazardEvents)
             {
                 hazard.Execute();
+            }
+        }
+
+        /// <summary>
+        /// Removes invalid characters from the name of the event.
+        /// </summary>
+        private void SanitizeName()
+        {
+            //This is done because BepinEx Configurations does not allow these special characters
+            string origName = name;
+            name = name.Replace("\n", "")
+                .Replace("\t", "")
+                .Replace("\\", "")
+                .Replace("\"", "")
+                .Replace("\'", "")
+                .Replace("[", "")
+                .Replace("]", "")
+                .Replace(" ", "");
+
+            if (name != origName)
+            {
+                Log.LogWarning($"{origName} has been renamed to {name} due to invalid characters");
             }
         }
 
