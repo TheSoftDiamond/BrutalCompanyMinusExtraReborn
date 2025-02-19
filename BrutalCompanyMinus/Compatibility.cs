@@ -65,7 +65,8 @@ namespace BrutalCompanyMinus
             PlaytimePresent = false,
             CrittersPresent = false,
             FacilityMeltdownPresent = false,
-            NeedyCatsPresent = false;
+            NeedyCatsPresent = false,
+            HotBarPlusPresent = false;
 
 
         internal static FieldInfo peeperSpawnChance = null;
@@ -218,6 +219,7 @@ namespace BrutalCompanyMinus
             CrittersPresent = IsModPresent("Nuclear_Fox.SmilingCritters", "Critters Present");
             NeedyCatsPresent = IsModPresent("Jordo.NeedyCats", "Needy Cats Detected");
             ShipInventoryPresent = IsModPresent("ShipInventory", "Ship Inventory Detected. Including in inventory checks");
+            HotBarPlusPresent = IsModPresent("FlipMods.HotbarPlus", "HotBarPlus Detected.");
         }
 
         private static Assembly GetAssembly(string name)
