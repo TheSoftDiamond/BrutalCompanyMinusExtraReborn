@@ -8,13 +8,13 @@ using UnityEngine;
 
 namespace BrutalCompanyMinus.Minus.Events
 {
-    internal class ZombiesPlush : MEvent
+    internal class ZombiePlush : MEvent
     {
-        public override string Name() => nameof(ZombiesPlush);
+        public override string Name() => nameof(ZombiePlush);
 
        // public static bool IsZombiesPlushEvent = false;
 
-        public static ZombiesPlush Instance;
+        public static ZombiePlush Instance;
 
         public override void Initalize()
         {

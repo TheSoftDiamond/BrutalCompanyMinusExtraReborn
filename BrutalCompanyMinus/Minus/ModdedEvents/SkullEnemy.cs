@@ -32,7 +32,7 @@ namespace BrutalCompanyMinus.Minus.Events
             };
         }
 
-        public override bool AddEventIfOnly() => Compatibility.ManStalkerPresent;
+        public override bool AddEventIfOnly() => Compatibility.SkullEnemyPresent;
 
         public override void Execute() => ExecuteAllMonsterEvents();
     }
