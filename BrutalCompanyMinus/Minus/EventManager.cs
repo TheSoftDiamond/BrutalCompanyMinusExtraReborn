@@ -44,6 +44,7 @@ namespace BrutalCompanyMinus.Minus
             new Events.MoreExits(),
             new Events.DoorOverdriveEv(),
             new Events.ZedDog(),
+            new Events.ZombiePlush(),
             // Neutral
             new Events.Nothing(),
             new Events.Locusts(),
@@ -99,14 +100,12 @@ namespace BrutalCompanyMinus.Minus
             new Events.WalkieFailure(),
             new Events.ManualCameraFailure(),
             new Events.LeverFailure(),
-            new Events.LassoEv(),
             new Events.WelcomeToTheFactory(),
             new Events.TargetingFailure(),
             new Events.FlashLightsFailure(),
             new Events.JetpackFailure(),
             new Events.DoorCircuitFailure(),
             new Events.Meteors(),
-            //new Events.Barbers(),
             new Events.Mimics(),
             new Events.MobileTurrets(),
             //new Events.AntiBounty(),
@@ -174,6 +173,8 @@ namespace BrutalCompanyMinus.Minus
             new Events.Dice(),
             new Events.Nemo(),
             new Events.HotBarMania(),
+            // Neutral
+            new Events.NeedyCats(),
             //Bad
             new Events.Lockers(),
             new Events.TakeyGokuBracken(),
@@ -215,6 +216,7 @@ namespace BrutalCompanyMinus.Minus
             new Events.Critters(),
             new Events.PlaytimeBig(),
             new Events.ItsPlaytime(),
+            new Events.Walkers(),
 
             //No Enemy
             new Events.NoMantitoil(),
