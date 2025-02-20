@@ -40,10 +40,6 @@ namespace BrutalCompanyMinus.Minus.Events
         {
             if (Compatibility.HotBarPlusPresent)
             {
-                // TODO: Force players to drop items (if present) from extra slots
-                // //This will only be done for both HotBar Events where it's possible to have more item slots than specified.
-                // This part is gonna be the "fun" part to code.
-
                 // Reset the hotbar to the original size
                 HotBarPlusCompat.ResetHotbar(ref newSize);
             }

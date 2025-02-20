@@ -33,8 +33,6 @@ namespace BrutalCompanyMinus.Minus.Events
             {
                 // Resize the hotbar randomly
                 HotBarPlusCompat.ResizeHotbarRandomlySmall(ref newSize);
-
-                // TODO: Force players to drop items in lost slots
             }
             
         }
