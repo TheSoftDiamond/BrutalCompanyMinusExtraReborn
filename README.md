@@ -215,7 +215,6 @@ Exponential Function:
 | Gloomy | Makes the atmosphere foggy |
 | Rainy | Makes it rain (No mud) | 
 | Heavy Rain | Makes the atmosphere rainy, flooded and stormy. Triple rain. |
-| Dustpans | Makes the game spawn lot of dustpans | 
 | RGBShipLights | Allows you to change the ship lights color when the event is active | 
   </details>
 
@@ -236,6 +235,7 @@ Exponential Function:
 | Facility Ghost | The ghost can open/close bigdoors and doors, mess with lights, mess with the breaker and can lock/unlock doors(Rare) |
 | Outside Turrets | Spawns turrets outside, comes with Trees |
 | Outside Landmines | Spawns Landmines outside |
+| Dustpans | Makes the game spawn lot of dustpans | 
 | Grabbable Turrets | Turns some of the turrets on the map into scrap |
 | Grabbable Mines | Turns some of the mines on the map into scrap |
 | Shipment Fees | Any shipment's on given moon will deduct credits as a fee |
@@ -249,7 +249,6 @@ Exponential Function:
 | Late Ship | Time will start a little later |
 | Holiday Season | Turns scrap into mystery boxes and eggs and spawns nutcrackers and hoarding bugs inside |
 | Welcome To The Factory | Makes the game spawn metallic objects only |
-| Barbers | Spawns silent barbers |
 | Dweller | Spawns maneater outside  |
 | TargetingFailure | Makes the teleporter choose random player when teleport button is pressed |
 | TeleporterFailure | Breaks teleporters |
@@ -294,8 +293,8 @@ Exponential Function:
 | ShipCoreFailure | Breaks almost everything in the ship | 
 | MaskedHorde[Removed in 0.18.3] | Spawns lot of Mimics and i mean a lot |
 | NutSlayersMore | Spawns lot of NutSlayers only outside[Warning! This is Extreme and you probably wont survive] |
-| Sealed[Does not work] | Spawns more Hydraulic doors in interiors that allow it |
 | VeryLateShip | The ship arrives at a very late hour! |
+| GiantsOutside | Spawns a whole bunch of Giants Outside. Alternative to GiantShowdown |
   </details>
   
 </details>
@@ -304,7 +303,7 @@ Exponential Function:
   <summary><b>Modded Event List</b></summary>
   
   - These events will only appear with said mods installed
-  - Currently supported mods include Lethalthings, Diversity, Scopophobia, HerobrineMod, SirenHead, RollingGiant, TheFiend, Lockers, TheGiantSpecimens, Football, Mimics, LCGoldScrapMod, Toilhead, Moonswept, ShockwaveDrones, FacelessStalker, EmergencyDice, GokuBracken, MoaiEnemy, BaldiEnemy, TestAccountVariety, Surfaced, Peepers, NightmareFoxy, Man Stalker, Skull Enemy, ...
+  - Currently supported mods include Lethalthings, Diversity, Scopophobia, HerobrineMod, SirenHead, RollingGiant, TheFiend, Lockers, TheGiantSpecimens, Football, Mimics, LCGoldScrapMod, Toilhead, Moonswept, ShockwaveDrones, FacelessStalker, EmergencyDice, MoaiEnemy, BaldiEnemy, TestAccountVariety, Surfaced, Peepers, NightmareFoxy, Man Stalker, Skull Enemy, ...
   
   <details>
     <summary><b>Very Good</b></summary>
@@ -320,7 +319,8 @@ Exponential Function:
 | Name | Description |
 |-|-|
 | Dice | Only spawns various dice |
-| TakeyPlush[Requires: BCME - ExternalModule] | Spawns quite a lot TakeyPlushies(Spawn rate may vary from moon to moon) |
+| Nemo | Spawns that clownfish |
+| HotBarMania | Spawns more inventory slots |
   </details>
 
   <details>
@@ -347,7 +347,7 @@ Exponential Function:
 
 | Name | Description |
 |-|-|
-| None | None |
+| NeedyCats | Spawns a whole bunch of cats |
   </details>
 
   <details>
@@ -373,6 +373,8 @@ Exponential Function:
 | Seamine | Seamines... EVERYWHERE outside |
 | SkullEnemy | The floating skull chases you.. |
 | Foxy | Nightmare Foxy chases... |
+| Bellcrab | Spawns a whole bunch of bellcrabs.. Good luck. |
+| HotBarHassle | You lose inventory slots |
   </details>
 
   <details>
@@ -393,10 +395,13 @@ Exponential Function:
 | MantiToilSlayer | Spawns lot of MantiToilSlayers |
 | ToilSlayer | Spawns ToilSlayers |
 | ZombieApocalypse[Removed in 0.19.1] | Spawns lot Mimics with Zombies reskin |
-| GokuBracken | Something is very powerful and its everywhere... |
 | MoaiEnemy | Spawns a lot of Moai enemies. Good luck will be needed. |
 | Bertha | Big Bertha Mines... EVERYWHERE outside |
 | ManStalker | Spawns Man Stalker to chase you.. Avoid at all costs |
+| Critters | Spawns a whole bunch of critters |
+| PlaytimeBig | Spawns playtime enemies |
+| ItsPlaytime | Ready for yourself for Critters and some Playtime Enemies |
+
 
   </details>
   
