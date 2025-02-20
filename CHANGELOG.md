@@ -15,6 +15,7 @@
 ## Removed
 
   - **Removed GokuBracken event**. You can find its custom event json here:
+  - *Removed a few other events that had no obvious mod dependency or source as to what mod they were from. Some of which were deprecated events from BCME(R) itself. If anyone knows the source of these mods, feel free to contact me.*
 
 </details>
 
