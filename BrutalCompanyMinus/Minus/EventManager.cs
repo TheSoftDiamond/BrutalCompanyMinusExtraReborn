@@ -172,7 +172,7 @@ namespace BrutalCompanyMinus.Minus
             //Good
             new Events.Dice(),
             new Events.Nemo(),
-            new Events.HotBarMania(),
+            //new Events.HotBarMania(),
             // Neutral
             new Events.NeedyCats(),
             //Bad
@@ -193,7 +193,7 @@ namespace BrutalCompanyMinus.Minus
             new Events.YeetBomb(),
             new Events.ManStalker(),
             new Events.Foxy(),
-            new Events.HotBarHassle(),
+            //new Events.HotBarHassle(),
             new Events.Bellcrab(),
 
             //Very Bad
