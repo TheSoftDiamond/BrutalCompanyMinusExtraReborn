@@ -20,7 +20,7 @@ I've been working on a website for the mod, which you can find at https://bcmer.
   - Removed a couple of events that are no longer part of the mod.
   - *Removed a few other events that had no obvious mod dependency or source as to what mod they were from. Some of which were deprecated events or removed from the event registry from BCME(R) itself. If anyone knows the source of these mods, feel free to contact me.*
 
-Note: HotBarMania and HotBarHassle were going to be a part of this version, but due to issues and finetuning required, I will be pushing it back to a previous build.
+Note: HotBarMania and HotBarHassle were going to be a part of this version, but due to issues and finetuning required, I will be pushing it back to a future build.
 
 </details>
 
