@@ -18,7 +18,7 @@ namespace BrutalCompanyMinus.Minus.Events
         {
             Instance = this;
 
-            Weight = 3;
+            Weight = 2;
             Descriptions = new List<string>() { "Attack on titan!!", "Battle of giants", "Take your bets..." };
             ColorHex = "#800000";
             Type = EventType.VeryBad;
