@@ -27,7 +27,7 @@ namespace BrutalCompanyMinus.Minus.Events
 
                 scrapTransmutationEvent = new ScrapTransmutationEvent(
                     new Scale(0.5f, 0.008f, 0.5f, 0.9f),
-                    new SpawnableItemWithRarity() { spawnableItem = Assets.GetItemByNameModded("Smol Zombies",Compatibility.zombiesPlushPresent, false), rarity = 100 }
+                    new SpawnableItemWithRarity() { spawnableItem = Assets.GetItem("Smol Zombies"), rarity = 100 }
                 );
 
 

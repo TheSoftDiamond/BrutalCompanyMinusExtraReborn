@@ -3,19 +3,24 @@
 <details>
   <summary>0.23.5</summary>
 
+I've been working on a website for the mod, which you can find at https://bcmer.softdiamond.net/ so this update has been a bit delayed.
+
 ## Additions
 
-  - Added [Good] HotBarMania. Requires HotbarPlus
-  - Added [Bad] HotBarHassle. Requires HotBarPlus
+  - Sanitization of Event Names (Spaces, etc would cause softlocks/crashes)
 
 ## Changes
 
-  - 
+  - Skull Enemy had wrong dependency for it.
+  - Adjusted weight of GiantsOutside event
 
 ## Removed
 
   - **Removed GokuBracken event**. You can find its custom event json here:
+  - Removed a couple of events that are no longer part of the mod.
   - *Removed a few other events that had no obvious mod dependency or source as to what mod they were from. Some of which were deprecated events or removed from the event registry from BCME(R) itself. If anyone knows the source of these mods, feel free to contact me.*
+
+Note: HotBarMania and HotBarHassle were going to be a part of this version, but due to issues and finetuning required, I will be pushing it back to a previous build.
 
 </details>
 
