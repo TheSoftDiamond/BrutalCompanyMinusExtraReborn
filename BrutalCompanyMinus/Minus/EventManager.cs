@@ -172,7 +172,6 @@ namespace BrutalCompanyMinus.Minus
             //Good
             new Events.Dice(),
             new Events.Nemo(),
-            //new Events.HotBarMania(),
             // Neutral
             new Events.NeedyCats(),
             //Bad
