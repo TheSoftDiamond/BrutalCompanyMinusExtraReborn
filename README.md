@@ -428,8 +428,26 @@ The formula used to compute the **scale** is `Base + (DaysPassed * Increment)`.
 **MaxCap** is the value that the computed value wont go above.
 
 # Config overview
+
+## Core Properties Settings
+Location: BrutalCompanyMinusExtraReborn\CoreProperties.cfg`
+
+#### Custom Events
+
+`Enable Custom Events?` : Enable Custom Event Support. See the Custom Event Documentation for more info.
+
+#### Events Features
+
+`Enable Hell Time Adjustment` : Adjust whether or not Hell Event uses regular Lethal Company time scale, or an adjusted one for the event. Defaults to True (adjusted scale for event).
+
+`Enable VeryLateShip Time Adjustment` : Adjust whether or not VeryLateShip Event uses regular Lethal Company time scale, or an adjusted one for the event. Defaults to True (adjusted scale for event).
+
+#### General
+
+`Enable Extra Logging?` : Mostly used for debugging purposes, but also can hide some details in the Log Output that tend to cause a lot of console spam, for example: NutSlayer event.
+
 ## Difficulty Config 
-Location: `BrutalCompanyMinus\Difficulty_Settings.cfg`
+Location: `BrutalCompanyMinusExtraReborn\Difficulty_Settings.cfg`
 
 #### Event Settings
 
@@ -550,7 +568,7 @@ Location: `BrutalCompanyMinus\Difficulty_Settings.cfg`
 `Moons to Not Spawn Events On` : Seperated by comma, the list of moons you do not want events to spawn on. Uses *newLevel.PlanetName* flag but other name flags are being looked into being added. Example: `41 Experimentation, 56 Vow` would prevent Experimentation and Vow from recieving events.
 
 ## Weather config
-Location: `BrutalCompanyMinus\Weather_Settings.cfg`
+Location: `BrutalCompanyMinusExtraReborn\Weather_Settings.cfg`
 
 `Enable Weather Multipliers`: Enable weather multipliers?
 
@@ -577,7 +595,7 @@ Location: `BrutalCompanyMinus\Weather_Settings.cfg`
 `Amount Multiplier`: Multiply scrap amount by.
 
 ## UI config
-Location: `BrutalCompanyMinus\UI_Settings.cfg`
+Location: `BrutalCompanyMinusExtraReborn\UI_Settings.cfg`
 
 `UI Key`: They key used to toggle the UI.
 
