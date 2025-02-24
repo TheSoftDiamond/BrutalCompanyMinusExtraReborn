@@ -93,6 +93,8 @@ namespace BrutalCompanyMinus
         // Core Properties
         public static ConfigEntry<bool> enableCustomEvents;
         public static ConfigEntry<bool> ExtraLogging;
+        public static ConfigEntry<bool> HellTimeAdjustment;
+        public static ConfigEntry<bool> VeryLateShipAdjustment;
 
         /*   public static ConfigEntry<bool> EnableStreamerEvents;*/
 
@@ -224,6 +226,11 @@ namespace BrutalCompanyMinus
             //Core Properties
             enableCustomEvents = CorePropertiesConfig.Bind("Custom Events", "Enable Custom Events?", true, "Enables custom events to be loaded from the custom events folder.");
             ExtraLogging = CorePropertiesConfig.Bind("General", "Enable Extra Logging?", false, "Enables extra logging for debugging purposes.");
+            //todo - add settings for events and modded events that mess with features like time
+            HellTimeAdjustment = CorePropertiesConfig.Bind("Events Features", "Enable Hell Time Adjustment?", true, "When the Hell event occurs, should the time be adjusted to be normal? Disable if you wish to suffer.");
+            VeryLateShipAdjustment = CorePropertiesConfig.Bind("Events Features", "Enable Very Late Ship Adjustment?", true, "When the VeryLateShip event occurs, should the time be adjusted to be normal? Disable if you wish to suffer.");
+
+
 
             //Custom Events Folder
             try
