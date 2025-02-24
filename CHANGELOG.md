@@ -1,6 +1,13 @@
 # Changelog
 
+<details>
+  <summary>0.23.7</summary>
+  
+## Changes
 
+  - VeryLateShip has been configured to use the same time speed as "Hell" event. As well as not being dependant on scaling like some of the other time functions. **For this to be turned off, you can go into the CoreProperites and disable the Time Adjustment in Event Features Category** (I may move this into the specific events themselves in the future is possible).
+
+</details>
 <details>
   <summary>0.23.6</summary>
 
