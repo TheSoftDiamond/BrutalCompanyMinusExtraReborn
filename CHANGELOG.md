@@ -1,5 +1,16 @@
 # Changelog
 
+
+<details>
+  <summary>0.23.6</summary>
+
+Also, forgot to link previous update but if you want the Goku event: https://github.com/TheSoftDiamond/BCMER_CustomEvents/blob/main/Goku.json
+
+## ChangeS
+
+  - Apparently in my state of low sleep, I had forgot to unregister HotBarHassle and HotBarMania.
+
+</details>
 <details>
   <summary>0.23.5</summary>
 
