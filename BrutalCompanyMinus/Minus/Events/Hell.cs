@@ -32,7 +32,7 @@ namespace BrutalCompanyMinus.Minus.Events
             ColorHex = "#280000";
             Type = EventType.VeryBad;
 
-            EventsToRemove = new List<string>() { nameof(Trees), nameof(LeaflessBrownTrees), nameof(Gloomy), nameof(Raining), nameof(HeavyRain), nameof(Warzone), nameof(EarlyShip), nameof(LateShip) };
+            EventsToRemove = new List<string>() { nameof(Trees), nameof(LeaflessBrownTrees), nameof(Gloomy), nameof(Raining), nameof(HeavyRain), nameof(Warzone), nameof(EarlyShip), nameof(LateShip), nameof(VeryEarlyShip), nameof(VeryLateShip) };
             EventsToSpawnWith = new List<string>() { nameof(LeaflessTrees), nameof(FacilityGhost), nameof(Spiders), nameof(Thumpers), nameof(Landmines) };
 
             monsterEvents = new List<MonsterEvent>(){ new MonsterEvent(
@@ -70,7 +70,11 @@ namespace BrutalCompanyMinus.Minus.Events
             ScaleList.Add(ScaleType.ScrapAmount, new Scale(1.75f, 0.0225f, 1.75f, 4.0f));
             ScaleList.Add(ScaleType.SpawnMultiplier, new Scale(1.0f, 0.02f, 1.0f, 3.0f));
             ScaleList.Add(ScaleType.FactorySize, new Scale(1.5f, 0.01f, 1.5f, 2.5f));
-            
+
+            // The following is used for the time adjustment feature
+            ScaleList.Add(ScaleType.MinAmount, new Scale(700.0f, 1.0f, 700.0f, 2300.0f));
+            ScaleList.Add(ScaleType.MaxAmount, new Scale(780.0f, 1.2f, 780.0f, 2780.0f));
+
             insideHellSpawnCycle = new SpawnCycle()
             {
                 nothingWeight = 100,
@@ -303,7 +307,16 @@ namespace BrutalCompanyMinus.Minus.Events
             insideHellSpawnCycle.nothingWeight = 100 / Getf(ScaleType.SpawnMultiplier);
             outsideHellSpawnCycle.nothingWeight = 100 / Getf(ScaleType.SpawnMultiplier);
 
-            Net.Instance.MoveTimeServerRpc(860, 0.139534883721f);
+            if (Configuration.HellTimeAdjustment.Value) 
+            {
+                // For slower moving time
+                Net.Instance.MoveTimeServerRpc(860, 0.139534883721f);
+            }
+            else
+            {
+                // For regular moving time
+                Net.Instance.MoveTimeServerRpc(860);
+            }
 
             Manager.SetAtmosphere("bloodyrain", true);
             Manager.SetAtmosphere(Assets.AtmosphereNameList[Assets.AtmosphereName.Eclipsed], true);

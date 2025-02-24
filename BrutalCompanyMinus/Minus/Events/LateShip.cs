@@ -25,7 +25,7 @@ namespace BrutalCompanyMinus.Minus.Events
             ColorHex = "#FF0000";
             Type = EventType.Bad;
 
-            EventsToRemove = new List<string>() { nameof(VeryEarlyShip), nameof(EarlyShip), nameof(VeryLateShip) };
+            EventsToRemove = new List<string>() { nameof(VeryEarlyShip), nameof(EarlyShip), nameof(VeryLateShip), nameof(Hell) };
 
             ScaleList.Add(ScaleType.MinAmount, new Scale(50.0f, 1.0f, 50.0f, 150.0f));
             ScaleList.Add(ScaleType.MaxAmount, new Scale(60.0f, 1.2f, 60.0f, 180.0f));
