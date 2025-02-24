@@ -42,6 +42,7 @@ namespace BrutalCompanyMinus
         public static Dictionary<EventType, Scale> scrapValueByEventTypeScale = new Dictionary<EventType, Scale>();
         public static Dictionary<EventType, Scale> scrapAmountByEventTypeScale = new Dictionary<EventType, Scale>();
         public static ConfigEntry<string> MoonsToIgnore;
+        public static Scale FactorySize = new Scale();
 
         public static EventManager.DifficultyTransition[] difficultyTransitions;
         public static ConfigEntry<bool> enableQuotaChanges;
@@ -171,6 +172,8 @@ namespace BrutalCompanyMinus
             }
 
             MoonsToIgnore = difficultyConfig.Bind("Moons Settings", "Moons to Not Spawn Events On", "", "Events will not spawn on these moons. Seperate by comma for each moon name.");
+            //FactorySize = getScale(difficultyConfig.Bind("Moons Settings", "Factory Size multiplier scale", "1.0, 0.012, 1.0, 2.0", "This will multiply the factory size by this. Avoid negatives, zero or any numbers too big.   " + scaleDescription).Value);
+
 
             // Custom scrap settings
             nutSlayerLives = customAssetsConfig.Bind("NutSlayer", "Lives", 5, "If hp reaches zero or below, decrement lives and reset hp until 0 lives.");
@@ -228,7 +231,7 @@ namespace BrutalCompanyMinus
             ExtraLogging = CorePropertiesConfig.Bind("General", "Enable Extra Logging?", false, "Enables extra logging for debugging purposes.");
             //todo - add settings for events and modded events that mess with features like time
             HellTimeAdjustment = CorePropertiesConfig.Bind("Events Features", "Enable Hell Time Adjustment?", true, "When the Hell event occurs, should the time be adjusted to be normal? Disable if you wish to suffer.");
-            VeryLateShipAdjustment = CorePropertiesConfig.Bind("Events Features", "Enable Very Late Ship Adjustment?", true, "When the VeryLateShip event occurs, should the time be adjusted to be normal? Disable if you wish to suffer.");
+            VeryLateShipAdjustment = CorePropertiesConfig.Bind("Events Features", "Enable Very Late Ship Time Adjustment?", true, "When the VeryLateShip event occurs, should the time be adjusted to be normal? Disable if you wish to suffer.");
 
 
 
