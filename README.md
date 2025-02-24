@@ -430,11 +430,11 @@ The formula used to compute the **scale** is `Base + (DaysPassed * Increment)`.
 # Config overview
 
 ## Core Properties Settings
-Location: BrutalCompanyMinusExtraReborn\Difficulty_Settings.cfg`
+Location: BrutalCompanyMinusExtraReborn\CoreProperties.cfg`
 
 #### Custom Events
 
-`Enable Custom Events?` : Enable Custom Event Support
+`Enable Custom Events?` : Enable Custom Event Support. See the Custom Event Documentation for more info.
 
 #### Events Features
 
