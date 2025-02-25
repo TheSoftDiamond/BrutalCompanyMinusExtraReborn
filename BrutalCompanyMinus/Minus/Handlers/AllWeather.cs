@@ -5,7 +5,6 @@ using System.Text;
 using HarmonyLib;
 using UnityEngine.AI;
 using UnityEngine;
-using static MonoMod.Cil.RuntimeILReferenceBag.FastDelegateInvokers;
 
 namespace BrutalCompanyMinus.Minus.Handlers
 {

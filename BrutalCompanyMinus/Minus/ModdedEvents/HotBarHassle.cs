@@ -1,8 +1,5 @@
-﻿using System;
+﻿using BrutalCompanyMinus.Minus.Handlers.Modded;
 using System.Collections.Generic;
-using UnityEngine;
-using BrutalCompanyMinus.Minus.Handlers.Modded;
-using System.ComponentModel.Design;
 
 namespace BrutalCompanyMinus.Minus.Events
 {
@@ -11,8 +8,6 @@ namespace BrutalCompanyMinus.Minus.Events
         public override string Name() => nameof(HotBarHassle);
 
         public static HotBarHassle Instance;
-
-        private int newSize;
 
         public override void Initalize()
         {
@@ -32,9 +27,10 @@ namespace BrutalCompanyMinus.Minus.Events
             if (Compatibility.HotBarPlusPresent)
             {
                 // Resize the hotbar randomly
-                HotBarPlusCompat.ResizeHotbarRandomlySmall(ref newSize);
+                HotBarPlusCompat.ResizeHotbarRandomlySmall();
             }
-            
+
+            Net.Instance.ResizeHotbarRandomlySmallClientRpc();
         }
 
         public override void OnShipLeave()
@@ -42,8 +38,10 @@ namespace BrutalCompanyMinus.Minus.Events
             if (Compatibility.HotBarPlusPresent)
             {
                 // Reset the hotbar to the original size
-                HotBarPlusCompat.ResetHotbar(ref newSize);
+                HotBarPlusCompat.ResetHotbar();
             }
+
+            Net.Instance.ResetHotbarClientRpc();
         }
     }
 }

@@ -1,16 +1,15 @@
-﻿using HarmonyLib;
-using BepInEx;
-using UnityEngine;
-using System.Reflection;
-using BrutalCompanyMinus.Minus.Handlers;
+﻿using BepInEx;
 using BepInEx.Configuration;
-using static BrutalCompanyMinus.Configuration;
-using BrutalCompanyMinus.Minus.Handlers.CustomEvents;
+using BrutalCompanyMinus.Minus.Handlers;
+using BrutalCompanyMinus.Minus.Handlers.Modded;
+using HarmonyLib;
 using System;
+using System.Reflection;
+using UnityEngine;
+using static BrutalCompanyMinus.Configuration;
 
 namespace BrutalCompanyMinus
 {
-    [HarmonyPatch]
     [BepInDependency("ShipInventory", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("FlipMods.HotbarPlus", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInPlugin(GUID, NAME, VERSION)]
@@ -19,27 +18,19 @@ namespace BrutalCompanyMinus
         private const string GUID = "SoftDiamond.BrutalCompanyMinusExtraReborn";
         private const string NAME = "BrutalCompanyMinusExtraReborn";
         private const string VERSION = "0.23.7";
+
+        internal static Plugin Instance { get; private set; }
+
         private static readonly Harmony harmony = new Harmony(GUID);
 
-        void Awake()
+        #pragma warning disable IDE0051 // Remove unused private members
+        private void Awake()
+        #pragma warning restore IDE0051 // Remove unused private members
         {
+            if (Instance == null) Instance = this;
+
             // Logger
             Log.Initalize(Logger);
-
-            // Required for netweaving
-            var EventTypes = Assembly.GetExecutingAssembly().GetTypes();
-            foreach (var EventType in EventTypes)
-            {
-                var methods = EventType.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
-                foreach (var method in methods)
-                {
-                    var attributes = method.GetCustomAttributes(typeof(RuntimeInitializeOnLoadMethodAttribute), false);
-                    if (attributes.Length > 0)
-                    {
-                        method.Invoke(null, null);
-                    }
-                }
-            }
 
             // Load assets
             Assets.Load();
@@ -73,6 +64,11 @@ namespace BrutalCompanyMinus
             harmony.PatchAll();
             harmony.PatchAll(typeof(GrabObjectTranspiler));
 
+            if (Compatibility.IsModPresent("FlipMods.HotbarPlus"))
+            {
+                HotBarPlusCompat.PatchAll(harmony);
+            }
+
             Log.LogInfo(NAME + " " + VERSION + " " + "is done patching.");
 
             // Delete the CustomEvent Config File Every time
@@ -90,6 +86,55 @@ namespace BrutalCompanyMinus
             catch (Exception e)
             {
                 Log.LogWarning("Failed to delete custom event config file: " + e.Message);
+            }
+
+            NetcodePatcherAwake();
+        }
+
+        private void NetcodePatcherAwake()
+        {
+            try
+            {
+                var currentAssembly = Assembly.GetExecutingAssembly();
+                var types = currentAssembly.GetTypes();
+
+                foreach (var type in types)
+                {
+                    var methods = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
+
+                    foreach (var method in methods)
+                    {
+                        try
+                        {
+                            // Safely attempt to retrieve custom attributes
+                            var attributes = method.GetCustomAttributes(typeof(RuntimeInitializeOnLoadMethodAttribute), false);
+
+                            if (attributes.Length > 0)
+                            {
+                                try
+                                {
+                                    // Safely attempt to invoke the method
+                                    method.Invoke(null, null);
+                                }
+                                catch (TargetInvocationException ex)
+                                {
+                                    // Log and continue if method invocation fails (e.g., due to missing dependencies)
+                                    Logger.LogWarning($"Failed to invoke method {method.Name}: {ex.Message}");
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            // Handle errors when fetching custom attributes, due to missing types or dependencies
+                            Logger.LogWarning($"Error processing method {method.Name} in type {type.Name}: {ex.Message}");
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Catch any general exceptions that occur in the process
+                Logger.LogError($"An error occurred in NetcodePatcherAwake: {ex.Message}");
             }
         }
     }

@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Text;
-using BepInEx.Bootstrap;
+﻿using BepInEx.Bootstrap;
+using BrutalCompanyMinus.Minus.Events;
 using HarmonyLib;
+using System;
+using System.Reflection;
 using Unity.Netcode;
 using UnityEngine;
 using static BrutalCompanyMinus.Minus.EventManager;
-using BrutalCompanyMinus.Minus.Events;
-using BrutalCompanyMinus.Minus;
-using BepInEx;
-using Mono.Cecil.Cil;
 
 namespace BrutalCompanyMinus
 {
