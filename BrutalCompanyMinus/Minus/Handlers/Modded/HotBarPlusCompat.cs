@@ -24,7 +24,7 @@ namespace BrutalCompanyMinus.Minus.Handlers.Modded
         {
             if (_overrideSlots > 0) return;
 
-            int newSize = Random.Range(_defaultHotbarSize, 11);
+            int newSize = (_defaultHotbarSize >= 20) ? _defaultHotbarSize : Random.Range(_defaultHotbarSize, 20);
 
             Log.LogInfo("[HotBarMania] New big hotbar size: " + newSize);
 
