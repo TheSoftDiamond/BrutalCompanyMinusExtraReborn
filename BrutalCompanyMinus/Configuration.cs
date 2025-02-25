@@ -13,7 +13,9 @@ using static BrutalCompanyMinus.Assets;
 using static BrutalCompanyMinus.Helper;
 using BrutalCompanyMinus.Minus.MonoBehaviours;
 using System;
+using EventType = BrutalCompanyMinus.Minus.MEvent.EventType;
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 namespace BrutalCompanyMinus
 {
     [HarmonyPatch]
