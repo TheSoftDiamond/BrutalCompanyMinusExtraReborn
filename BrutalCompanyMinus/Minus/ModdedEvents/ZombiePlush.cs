@@ -32,7 +32,7 @@ namespace BrutalCompanyMinus.Minus.Events
 
 
 
-            EventsToRemove = new List<string>() { nameof(RealityShift), nameof(Pickles), nameof(TakeyPlush), nameof(SussyPaintings), /*nameof(TakeyGokuPlushBig),*/ nameof(Dustpans), nameof(Clock) };
+            EventsToRemove = new List<string>() { nameof(RealityShift), nameof(Pickles), /*nameof(TakeyPlush),*/ nameof(SussyPaintings), /*nameof(TakeyGokuPlushBig),*/ nameof(Dustpans), nameof(Clock) };
 
             ScaleList.Add(ScaleType.ScrapAmount, new Scale(1.0f, 0.005f, 1.0f, 1.5f));
         }

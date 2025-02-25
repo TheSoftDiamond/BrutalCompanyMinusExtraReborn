@@ -1,95 +1,122 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using GameNetcodeStuff;
+﻿using GameNetcodeStuff;
+using HarmonyLib;
+using HotbarPlus.Networking;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace BrutalCompanyMinus.Minus.Handlers.Modded
 {
     internal class HotBarPlusCompat
     {
-        private static bool hotbarSet = false;
-        private static readonly int baseSize = HotbarPlus.Config.ConfigSettings.hotbarSizeConfig.Value;
+        private static int _defaultHotbarSize => SyncManager.hotbarSize + SyncManager.purchasedHotbarSlots;
+        private static int _currentHotbarSize => SyncManager.currentHotbarSize;
 
-        public static void ResizeHotbarRandomly(ref int newSize)
+        private static int _overrideSlots = 0;
+
+        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+        public static void PatchAll(Harmony harmony)
         {
-            if (hotbarSet) return; // Hotbar has already been set by another hotbar event instance, ignore this one
+            ApplyCurrentHotbarSizePatch(harmony);
+        }
 
-            // Generate a new size for the hotbar
-            newSize = UnityEngine.Random.Range(HotbarPlus.Networking.SyncManager.currentHotbarSize, 30);
+        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+        public static void ResizeHotbarRandomly()
+        {
+            if (_overrideSlots > 0) return;
+
+            int newSize = Random.Range(_defaultHotbarSize, 11);
+
             Log.LogInfo("[HotBarMania] New big hotbar size: " + newSize);
 
-            // Update the hotbar
-            UpdateHotbar(newSize);
-            newSize += baseSize; // Offset by base hotbar size for the reset operation on ship leave
-            hotbarSet = true;
+            OverrideHotbarSlots(newSize);
         }
 
-        public static void ResizeHotbarRandomlySmall(ref int newSize)
+        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+        public static void ResizeHotbarRandomlySmall()
         {
-            if (hotbarSet) return; // Hotbar has already been set by another hotbar event instance, ignore this one
+            if (_overrideSlots > 0) return;
 
-            // Generate a new size for the hotbar
-            newSize = -(UnityEngine.Random.Range(1, HotbarPlus.Networking.SyncManager.currentHotbarSize));
+            int newSize = Random.Range(1, _defaultHotbarSize);
+
             Log.LogInfo("[HotBarMania] New small hotbar size: " + newSize);
+
+            OverrideHotbarSlots(newSize);
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+        public static void OverrideHotbarSlots(int size)
+        {
+            if (size <= 0)
+            {
+                if (_defaultHotbarSize < _currentHotbarSize)
+                {
+                    DropExtraItems(newSize: _defaultHotbarSize);
+                }
+            }
+            else if (size < _currentHotbarSize)
+            {
+                DropExtraItems(newSize: size);
+            }
             
-            // Drop any items
-            foreach (PlayerControllerB player in StartOfRound.Instance.allPlayerScripts)
-            {
-                if (!player.isPlayerControlled) continue; // Ignore unused player controllers
-
-                for (int i = HotbarPlus.Networking.SyncManager.currentHotbarSize + newSize; i < HotbarPlus.Networking.SyncManager.currentHotbarSize; i++)
-                {
-                    HotbarPlus.Patches.PlayerPatcher.CallSwitchToItemSlot(player, i);
-                    player.DiscardHeldObject();
-                }
-            }
-
-            // Update the hotbar
-            UpdateHotbar(newSize);
-            newSize += baseSize; // Offset by base hotbar size for the reset operation on ship leave
-            hotbarSet = true;
-        }
-        
-        public static void ResetHotbar(ref int newSize)
-        {
-            if (!hotbarSet) return; // Hotbar has already been reset, ignore this call
-
-            int prevSize = newSize;
-            newSize = HotbarPlus.Networking.SyncManager.currentHotbarSize - newSize;
-            Log.LogInfo("[HotBarMania] New reset hotbar size: " + newSize);
-
-            //We need to drop items that are in the extra slots if any to prevent items from being stuck in the inventory
-            if (HotbarPlus.Networking.SyncManager.currentHotbarSize - baseSize < prevSize)
-            {
-                foreach (PlayerControllerB player in StartOfRound.Instance.allPlayerScripts)
-                {
-                    if (!player.isPlayerControlled) continue; // Ignore unused player controllers
-
-                    for (int i = newSize; i < prevSize; i++)
-                    {
-                        HotbarPlus.Patches.PlayerPatcher.CallSwitchToItemSlot(player, i);
-                        player.DiscardHeldObject();
-                    }
-                }
-            }
-
-            //Finally Reset the hotbar
-            UpdateHotbar(newSize);
-            hotbarSet = false;
+            _overrideSlots = Mathf.Max(size, 0);
+            SyncManager.OnUpdateHotbarSize();
         }
 
-        private static void UpdateHotbar(int newSize)
+        private static void DropExtraItems(int newSize)
         {
-            try
+            PlayerControllerB playerScript = GameNetworkManager.Instance.localPlayerController;
+            if (playerScript == null) return;
+
+            int slots = playerScript.ItemSlots.Length;
+            if (newSize >= slots) return;
+
+            for (int i = slots - 1; i >= newSize; i--)
             {
-                Log.LogInfo("[HotBarMania] Attempting to set hotbar remotely");
-                HotbarPlus.Networking.SyncManager.SendPurchaseHotbarSlotToServer(newSize);
+                if (i > playerScript.ItemSlots.Length - 1)
+                {
+                    Log.LogWarning($"DropExtraItems(); Index {i} is out of range. Slots: {slots}");
+                    continue;
+                }
+
+                if (playerScript.ItemSlots[i] != null)
+                {
+                    playerScript.SwitchToItemSlot(i, null);
+                    playerScript.DiscardHeldObject();
+                }
             }
-            catch (Exception e)
+        }
+
+        public static void ResetHotbar()
+        {
+            OverrideHotbarSlots(0);
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+        public static void ApplyCurrentHotbarSizePatch(Harmony harmony)
+        {
+            var originalMethod = AccessTools.PropertyGetter(typeof(SyncManager), nameof(SyncManager.currentHotbarSize));
+            var prefixMethod = AccessTools.Method(typeof(HotBarPlusCompat), nameof(CurrentHotbarSizePatch));
+
+            if (originalMethod != null && prefixMethod != null)
             {
-                Log.LogError("[HotBarMania] Unable to set hotbar remotely: " + e.Message);
+                harmony.Patch(originalMethod, prefix: new HarmonyMethod(prefixMethod));
+                Log.LogInfo("Successfully patched SyncManager.currentHotbarSize.");
             }
+            else
+            {
+                Log.LogError("Failed to locate methods for conditional patching.");
+            }
+        }
+
+        private static bool CurrentHotbarSizePatch(ref short __result)
+        {
+            if (_overrideSlots <= 0)
+            {
+                return true;
+            }
+
+            __result = (short)_overrideSlots;
+            return false;
         }
     }
 }

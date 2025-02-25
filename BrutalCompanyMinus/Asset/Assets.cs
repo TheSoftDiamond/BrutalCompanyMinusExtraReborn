@@ -1,18 +1,12 @@
-﻿using BrutalCompanyMinus.Minus;
-using DunGen;
+﻿using HarmonyLib;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Reflection;
-using UnityEngine;
-using UnityEngine.SceneManagement;
-using HarmonyLib;
 using Unity.Netcode;
-using BrutalCompanyMinus.Minus.Events;
-using System.Reflection.Emit;
-using JetBrains.Annotations;
-using BrutalCompanyMinus.Minus.MonoBehaviours;
+using UnityEngine;
 using UnityEngine.Rendering.HighDefinition;
+using UnityEngine.SceneManagement;
 
 namespace BrutalCompanyMinus
 {
@@ -152,15 +146,35 @@ namespace BrutalCompanyMinus
 
         internal static void Load()
         {
-            using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("BrutalCompanyMinus.Asset.bcm_assets"))
-            {
-                bundle = AssetBundle.LoadFromStream(stream);
-            }
-            using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("BrutalCompanyMinus.Asset.bcm_customassets"))
-            {
-                customAssetBundle = AssetBundle.LoadFromStream(stream);
-            }
+            bundle = LoadAssetBundle("bcm_assets");
+            customAssetBundle = LoadAssetBundle("bcm_customassets");
+
+            //using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("BrutalCompanyMinus.Asset.bcm_assets"))
+            //{
+            //    bundle = AssetBundle.LoadFromStream(stream);
+            //}
+            //using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("BrutalCompanyMinus.Asset.bcm_customassets"))
+            //{
+            //    customAssetBundle = AssetBundle.LoadFromStream(stream);
+            //}
+
             SceneManager.sceneLoaded += OnSceneLoaded;
+        }
+
+        private static AssetBundle LoadAssetBundle(string fileName)
+        {
+            try
+            {
+                string dllFolderPath = Path.GetDirectoryName(Plugin.Instance.Info.Location);
+                string assetBundleFilePath = Path.Combine(dllFolderPath, fileName);
+                return AssetBundle.LoadFromFile(assetBundleFilePath);
+            }
+            catch (Exception e)
+            {
+                Log.LogError($"Failed to load AssetBundle \"{fileName}\". {e}");
+            }
+
+            return null;
         }
 
         private static bool generatedList = false;

@@ -137,7 +137,7 @@ namespace BrutalCompanyMinus.Minus
         public virtual bool AddEventIfOnly() { return true; }
 
         /// <summary>
-        /// This is called after lever is pulled.
+        /// This is called after lever is pulled. This is only called on the host.
         /// </summary>
         public virtual void Execute() { }
 
@@ -150,6 +150,11 @@ namespace BrutalCompanyMinus.Minus
         /// This will only be called once when the game starts.
         /// </summary>
         public virtual void OnGameStart() { }
+
+        /// <summary>
+        /// This is called when the local player is disconncted.
+        /// </summary>
+        public virtual void OnLocalDisconnect() { }
 
         /// <summary>
         /// This is used to compute scales, can be overriden.

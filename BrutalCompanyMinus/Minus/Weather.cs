@@ -8,7 +8,6 @@ namespace BrutalCompanyMinus.Minus
 {
     public struct Weather : INetworkSerializable, IEquatable<Weather>
     {
-
         public LevelWeatherType weatherType;
 
         public float scrapValueMultiplier;

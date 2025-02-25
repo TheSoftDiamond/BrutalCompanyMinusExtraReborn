@@ -172,6 +172,7 @@ namespace BrutalCompanyMinus.Minus
             //Good
             new Events.Dice(),
             new Events.Nemo(),
+            new Events.HotBarMania(),
             // Neutral
             new Events.NeedyCats(),
             //Bad
@@ -192,7 +193,7 @@ namespace BrutalCompanyMinus.Minus
             new Events.YeetBomb(),
             new Events.ManStalker(),
             new Events.Foxy(),
-            //new Events.HotBarHassle(),
+            new Events.HotBarHassle(),
             new Events.Bellcrab(),
 
             //Very Bad
@@ -421,6 +422,30 @@ namespace BrutalCompanyMinus.Minus
             foreach (MEvent e in customEvents)
             {
                 e.OnGameStart();
+            }
+        }
+
+        internal static void ExecuteOnLocalDisconnect()
+        {
+            Log.LogInfo("Executing OnLocalDisconnect for all events()");
+            foreach (MEvent e in events)
+            {
+                e.OnLocalDisconnect();
+            }
+
+            foreach (MEvent e in vanillaEvents)
+            {
+                e.OnLocalDisconnect();
+            }
+
+            foreach (MEvent e in moddedEvents)
+            {
+                e.OnLocalDisconnect();
+            }
+
+            foreach (MEvent e in customEvents)
+            {
+                e.OnLocalDisconnect();
             }
         }
 

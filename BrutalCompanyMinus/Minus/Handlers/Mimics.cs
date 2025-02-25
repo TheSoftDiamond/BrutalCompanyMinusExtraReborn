@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using UnityEngine.Animations;
-using UnityEngine;
+﻿using UnityEngine;
 using static BrutalCompanyMinus.Minus.MEvent;
+using EventType = BrutalCompanyMinus.Minus.MEvent.EventType;
 
 namespace BrutalCompanyMinus.Minus.Handlers
 {

@@ -1,19 +1,16 @@
-﻿using System;
+﻿using BrutalCompanyMinus.Minus;
+using BrutalCompanyMinus.Minus.Handlers;
+using BrutalCompanyMinus.Minus.Handlers.Modded;
+using BrutalCompanyMinus.Minus.MonoBehaviours;
+using GameNetcodeStuff;
+using HarmonyLib;
+using System;
 using System.Collections.Generic;
-using System.Text;
+using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
-using HarmonyLib;
-using BrutalCompanyMinus.Minus;
-using Unity.Collections;
-using GameNetcodeStuff;
-using BrutalCompanyMinus.Minus.Handlers;
 using UnityEngine.AI;
-using BrutalCompanyMinus.Minus.MonoBehaviours;
 using UnityEngine.Rendering.HighDefinition;
-using System.Diagnostics.CodeAnalysis;
-using System.Xml.Linq;
-using LethalNetworkAPI;
 
 namespace BrutalCompanyMinus
 {
@@ -38,7 +35,9 @@ namespace BrutalCompanyMinus
 
         private float currentIntervalTime = 0.0f;
 
+        #pragma warning disable IDE0051 // Remove unused private members
         private void Awake()
+        #pragma warning restore IDE0051 // Remove unused private members
         {
             // Initalize or it will break
             currentWeatherMultipliers = new NetworkList<Weather>();
@@ -46,7 +45,9 @@ namespace BrutalCompanyMinus
             currentWeatherEffects = new NetworkList<CurrentWeatherEffect>();
         }
 
+        #pragma warning disable IDE0051 // Remove unused private members
         private void Update()
+        #pragma warning restore IDE0051 // Remove unused private members
         {
             if (currentIntervalTime > 0.0f)
             {
@@ -638,8 +639,38 @@ namespace BrutalCompanyMinus
              BrutalCompanyMinus.Minus.Events.ShipLightsFailure.LightsActive = state;
          }*/
 
-        
+        [ClientRpc]
+        public void ResizeHotbarRandomlyClientRpc()
+        {
+            if (IsServer) return;
 
+            if (Compatibility.HotBarPlusPresent)
+            {
+                HotBarPlusCompat.ResizeHotbarRandomly();
+            }
+        }
+
+        [ClientRpc]
+        public void ResizeHotbarRandomlySmallClientRpc()
+        {
+            if (IsServer) return;
+
+            if (Compatibility.HotBarPlusPresent)
+            {
+                HotBarPlusCompat.ResizeHotbarRandomlySmall();
+            }
+        }
+
+        [ClientRpc]
+        public void ResetHotbarClientRpc()
+        {
+            if (IsServer) return;
+
+            if (Compatibility.HotBarPlusPresent)
+            {
+                HotBarPlusCompat.ResetHotbar();
+            }
+        }
     }
 
     public struct CurrentWeatherEffect : INetworkSerializable, IEquatable<CurrentWeatherEffect>
