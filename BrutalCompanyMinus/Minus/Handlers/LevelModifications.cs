@@ -6,6 +6,7 @@ using System.Reflection.Emit;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
+using BrutalCompanyMinus.Minus.Handlers.Modded;
 using HarmonyLib;
 using JetBrains.Annotations;
 using Unity.Netcode;
@@ -34,7 +35,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
 
         [HarmonyPrefix]
         [HarmonyPatch(typeof(StartOfRound), "ShipLeave")]
-        public static void OnShipLeave()
+        private static void OnShipLeave()
         {
             EventManager.ExecuteOnShipLeave();
             EventManager.currentEvents.Clear();
@@ -46,6 +47,18 @@ namespace BrutalCompanyMinus.Minus.Handlers
             RoundManager.Instance.currentLevel.Enemies.Clear(); RoundManager.Instance.currentLevel.Enemies.AddRange(insideEnemies);
             RoundManager.Instance.currentLevel.OutsideEnemies.Clear(); RoundManager.Instance.currentLevel.OutsideEnemies.AddRange(outsideEnemies);
             RoundManager.Instance.currentLevel.DaytimeEnemies.Clear(); RoundManager.Instance.currentLevel.DaytimeEnemies.AddRange(daytimeEnemies);
+        }
+
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(StartOfRound), nameof(StartOfRound.OnLocalDisconnect))]
+        private static void OnLocalDisconnect()
+        {
+            EventManager.ExecuteOnLocalDisconnect();
+
+            if (Compatibility.HotBarPlusPresent)
+            {
+                HotBarPlusCompat.ResetHotbar();
+            }
         }
 
         public static void ResetValues(StartOfRound __instance) // Reset values

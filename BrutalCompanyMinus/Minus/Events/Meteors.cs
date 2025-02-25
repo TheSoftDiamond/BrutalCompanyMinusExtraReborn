@@ -15,7 +15,7 @@ namespace BrutalCompanyMinus.Minus.Events
 
         public static Meteors Instance;
 
-      //  private readonly int meteorStartTime = (TimeOfDay.Instance.hour = 5);
+        //private readonly int meteorStartTime = (TimeOfDay.Instance.hour = 5);
 
         public override void Initalize()
         {

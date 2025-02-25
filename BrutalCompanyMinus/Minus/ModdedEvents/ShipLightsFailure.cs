@@ -1,24 +1,7 @@
-﻿using System;
+﻿using LethalNetworkAPI;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Unity.Netcode;
 using UnityEngine;
-using static BrutalCompanyMinus.Net;
-using static UnityEngine.Object;
-using GameNetcodeStuff;
-using System.Text.RegularExpressions;
-using UnityEngine.InputSystem.XR;
-using Mono.Cecil;
-using UnityEngine.Assertions.Must;
-using LethalNetworkAPI;
-using Unity.Collections.LowLevel.Unsafe;
-using BrutalCompanyMinus.Minus.Handlers;
-using System.IO;
-using MonoMod.Cil;
-using UnityEngine.Search;
 
 namespace BrutalCompanyMinus.Minus.Events
 {
