@@ -1,6 +1,19 @@
 # Changelog
 
 <details>
+  <summary>0.23.8</summary>
+  
+## Added
+
+  - Added HotBarHassle and HotBarMania events (Thanks Zehs for the help here!)
+  - Several code optimizations (Thanks Zehs for the help here!)
+
+## Changes
+
+  - = Asset Bundles are now outside of the dll. Makes easier to use.
+
+</details>
+<details>
   <summary>0.23.7</summary>
   
 ## Changes

@@ -7,6 +7,7 @@
   - UnloadedHangar, for allowing me to continue the project and help develop on it.
   - bmnr2819, for their contributions and help with testing.
   - KanoliAvali, for their contribution and help with testing
+  - Zehs, for their contributions and major code optimizations.
 
 </details>
 
