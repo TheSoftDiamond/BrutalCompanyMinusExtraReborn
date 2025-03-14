@@ -108,10 +108,7 @@ namespace BrutalCompanyMinus.Minus
             {
                 float increment = scale.Increment;
 
-                if (Type == EventType.VeryBad || Type == EventType.Bad) increment = scale.Increment * Configuration.badEventIncrementMultiplier.Value;
-                if (Type == EventType.VeryGood || Type == EventType.Good) increment = scale.Increment * Configuration.goodEventIncrementMultiplier.Value;
-
-                return Mathf.Clamp(scale.Base + (increment * Manager.difficulty), scale.MinCap, Configuration.ignoreMaxCap.Value ? 99999999999.0f : scale.MaxCap);
+                return Mathf.Clamp(scale.Base + (increment * Manager.difficulty), scale.MinCap, Configuration.ignoreMaxCap.Value ? 2147483647.0f : scale.MaxCap);
             }
 
             public float Computef(EventType type) => Compute(this, type);
