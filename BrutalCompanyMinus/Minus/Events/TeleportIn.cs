@@ -66,6 +66,30 @@ namespace BrutalCompanyMinus.Minus.Events
                                                               // Rest in pieces - SoftDiamond
                                                               // Thank you Jacon for the code help here
 
+                        //Check if the furniture pack is present
+                        //if (Compatibility.IsModPresent("MelanieMelicious.furniturePack0"))
+                        //    Log.LogInfo("Furniture Pack 0 is present");
+                        //{
+                        //    GameObject room0 = GameObject.Find("Room0");
+                        //    // If the room is not null and the player is within 3 units of the room
+                        //    if (room0 != null && Vector3.Distance(player.transform.position, room0.transform.position) <= 3)
+                        //    {
+                        //        Log.LogInfo("Player is in Room0");
+                        //        // Teleport the player down by 150 units
+                        //        Vector3 newPosition = player.transform.position;
+                        //        newPosition.y -= 150;
+                        //        Net.Instance.TeleportPlayerServerRPC(player, newPosition);
+                        //        component.isInElevator = false;
+                        //        component.isInHangarShipRoom = false;
+                        //        component.isInsideFactory = true;
+                        //        component.averageVelocity = 0f;
+                        //        component.velocityLastFrame = Vector3.zero;
+                        //        component.TeleportPlayer(newPosition);
+                        //        component.beamOutParticle.Play();
+                        //    }
+                        //}
+
+                        //Finally teleport the player
                         Vector3 position = RoundManager.Instance.insideAINodes[random.Next(RoundManager.Instance.insideAINodes.Length)].transform.position;
                         Net.Instance.TeleportPlayerServerRPC(player, position);
                         component.isInElevator = false;
