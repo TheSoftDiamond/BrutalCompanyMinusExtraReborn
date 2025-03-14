@@ -38,7 +38,6 @@ namespace BrutalCompanyMinus
         // Difficulty Settings
         public static ConfigEntry<bool> useCustomWeights, showEventsInChat;
         public static Scale eventsToSpawn;
-        public static ConfigEntry<float> goodEventIncrementMultiplier, badEventIncrementMultiplier;
         public static float[] weightsForExtraEvents;
         public static Scale[] eventTypeScales = new Scale[6];
         public static Dictionary<EventType, Scale> scrapValueByEventTypeScale = new Dictionary<EventType, Scale>();
@@ -54,6 +53,8 @@ namespace BrutalCompanyMinus
             scrapAmountMultiplier = new Scale(), scrapValueMultiplier = new Scale(), insideSpawnChanceAdditive = new Scale(), outsideSpawnChanceAdditive = new Scale();
         public static ConfigEntry<bool> ignoreMaxCap;
         public static ConfigEntry<float> difficultyMaxCap;
+        public static ConfigEntry<float> scrapValueMax;
+        public static ConfigEntry<float> scrapAmountMax;
         public static ConfigEntry<bool> scaleByDaysPassed, scaleByScrapInShip, scaleByMoonGrade, scaleByWeather, scaleByQuota;
         public static ConfigEntry<float> daysPassedDifficultyMultiplier, daysPassedDifficultyCap, scrapInShipDifficultyMultiplier, scrapInShipDifficultyCap, quotaDifficultyMultiplier, quotaDifficultyCap;
         public static Dictionary<string, float> gradeAdditives = new Dictionary<string, float>();
@@ -122,6 +123,8 @@ namespace BrutalCompanyMinus
             difficultyTransitions = GetDifficultyTransitionsFromString(difficultyConfig.Bind("Difficulty Scaling", "Difficulty Transitions", "Easy,00FF00,0|Medium,008000,15|Hard,FF0000,30|Very Hard,800000,50|Insane,140000,75", "Format: NAME,HEX,ABOVE, above is the value the name will be shown at.").Value);
             ignoreMaxCap = difficultyConfig.Bind("Difficulty Scaling", "Ignore max cap?", false, "Will ignore max cap if true, upperlimit is dictated by difficulty max cap setting as well.");
             difficultyMaxCap = difficultyConfig.Bind("Difficulty Scaling", "Difficulty max cap", 100.0f, "The difficulty value wont go beyond this.");
+            
+            
             scaleByDaysPassed = difficultyConfig.Bind("Difficulty Scaling", "Scale by days passed?", true, "Will add to difficulty depending on how many days have passed.");
             daysPassedDifficultyMultiplier = difficultyConfig.Bind("Difficulty Scaling", "Difficulty per days passed?", 1.0f, "");
             daysPassedDifficultyCap = difficultyConfig.Bind("Difficulty Scaling", "Days passed difficulty cap", 60.0f, "Days passed difficulty scaling wont add beyond this.");
@@ -144,6 +147,8 @@ namespace BrutalCompanyMinus
                 { LevelWeatherType.Stormy, difficultyConfig.Bind("Difficulty Scaling", "Stormy weather difficulty", 7.0f, "Difficulty added for playing on Stormy weather").Value },
                 { LevelWeatherType.Eclipsed, difficultyConfig.Bind("Difficulty Scaling", "Eclipsed weather difficulty", 7.0f, "Difficulty added for playing on Eclipsed weather").Value },
             };
+            scrapValueMax = difficultyConfig.Bind("Difficulty Scaling", "Scrap value max cap", 2147483647.0f, "The scrap value multipliers when added together wont go beyond this.");
+            scrapAmountMax = difficultyConfig.Bind("Difficulty Scaling", "Scrap amount max cap", 2147483647.0f, "The scrap amount multipliers when added together wont go beyond this.");
 
             spawnChanceMultiplierScaling = getScale(difficultyConfig.Bind("Difficulty", "Spawn chance multiplier scale", "1.0, 0.017, 1.0, 2.0", "This will multiply the spawn chance by this,   " + scaleDescription).Value);
             insideSpawnChanceAdditive = getScale(difficultyConfig.Bind("Difficulty", "Inside spawn chance additive", "0.0, 0.0, 0.0, 0.0", "This will add to all keyframes for insideSpawns on the animationCurve,   " + scaleDescription).Value);
@@ -154,8 +159,7 @@ namespace BrutalCompanyMinus
             enemyBonusHpScaling = getScale(difficultyConfig.Bind("Difficulty", "Additional hp scale", "0, 0, 0, 0", "Added hp to all enemies,   " + scaleDescription).Value);
             scrapValueMultiplier = getScale(difficultyConfig.Bind("Difficulty", "Scrap value multiplier scale", "1.0, 0.003, 1.0, 1.3", "Global scrap value multiplier,   " + scaleDescription).Value);
             scrapAmountMultiplier = getScale(difficultyConfig.Bind("Difficulty", "Scrap amount multiplier scale", "1.0, 0.003, 1.0, 1.3", "Global scrap amount multiplier,   " + scaleDescription).Value);
-            goodEventIncrementMultiplier = difficultyConfig.Bind("Difficulty", "Global multiplier for increment value on good and veryGood eventTypes.", 1.0f);
-            badEventIncrementMultiplier = difficultyConfig.Bind("Difficulty", "Global multiplier for increment value on bad and veryBad eventTypes.", 1.0f);
+            
 
             enablePlayerScaling = difficultyConfig.Bind("Player Scaling", "Enable player scaling?", false, "Enable player scaling");
             playerScalingType = difficultyConfig.Bind("Player Scaling", "Player scaling type", "Linear", "Type of scaling for player amount. Options: Linear, Exponential");
