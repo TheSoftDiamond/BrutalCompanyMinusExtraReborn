@@ -669,9 +669,14 @@ namespace BrutalCompanyMinus.Minus
                 }
             }
 
+
             // Apply maxPower counts
             RoundManager.Instance.currentLevel.maxEnemyPowerCount = (int)((RoundManager.Instance.currentLevel.maxEnemyPowerCount + Manager.bonusMaxInsidePowerCount) * Manager.spawncapMultipler);
             RoundManager.Instance.currentLevel.maxOutsideEnemyPowerCount = (int)((RoundManager.Instance.currentLevel.maxOutsideEnemyPowerCount + Manager.bonusMaxOutsidePowerCount) * Manager.spawncapMultipler);
+
+            //Make sure scrap amount/value stays below the cap
+            Manager.scrapValueMultiplier = Mathf.Clamp(Manager.scrapValueMultiplier, 0.0f, Configuration.scrapValueMax.Value);
+            Manager.scrapAmountMultiplier = Mathf.Clamp(Manager.scrapAmountMultiplier, 0.0f, Configuration.scrapAmountMax.Value);
 
             // Sync values to all clients
             Net.Instance.SyncValuesClientRpc(Manager.currentLevel.factorySizeMultiplier, Manager.scrapValueMultiplier, Manager.scrapAmountMultiplier, Manager.bonusEnemyHp);
