@@ -61,6 +61,7 @@ namespace BrutalCompanyMinus
             CrittersPresent = false,
             FacilityMeltdownPresent = false,
             NeedyCatsPresent = false,
+            furniturePackPresent = false,
             HotBarPlusPresent = false;
 
 
@@ -215,6 +216,7 @@ namespace BrutalCompanyMinus
             NeedyCatsPresent = IsModPresent("Jordo.NeedyCats", "Needy Cats Detected");
             ShipInventoryPresent = IsModPresent("ShipInventory", "Ship Inventory Detected. Including in inventory checks");
             HotBarPlusPresent = IsModPresent("FlipMods.HotbarPlus", "HotBarPlus Detected.");
+            furniturePackPresent = IsModPresent("MelanieMelicious.furniturePack0", "Furniture Pack Detected");
         }
 
         private static Assembly GetAssembly(string name)
