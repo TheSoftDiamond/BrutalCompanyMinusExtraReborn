@@ -1,6 +1,40 @@
 # Changelog
 
 <details>
+  <summary>0.24.0</summary>
+
+# Additions
+
+  - Ability to suppress get method, prefab, Enum warnings from the game. On second run of 0.24.0, will apply it automatically to true.
+
+# Changes
+
+  - Enable extra loggings was moved to [Debugging] instead of [General].
+
+# Fixes
+
+  - A softlock involving null items should no longer occur
+  - Fixed a way items and enemies were instances
+
+</details>
+
+<details>
+  <summary>0.23.10</summary>
+
+# Additions
+
+  - Scrap amount and value caps
+
+</details>
+<details>
+  <summary>0.23.9</summary>
+
+# Fixes
+
+  - Fixed code to work with ShipInventory 1.2.6 and ShipInventoryUpdated.
+
+</details>
+<details>
   <summary>0.23.8</summary>
   
 ## Added
@@ -26,7 +60,7 @@
 
 Also, forgot to link previous update but if you want the Goku event: https://github.com/TheSoftDiamond/BCMER_CustomEvents/blob/main/Goku.json
 
-## ChangeS
+## Changes
 
   - Apparently in my state of low sleep, I had forgot to unregister HotBarHassle and HotBarMania.
 
