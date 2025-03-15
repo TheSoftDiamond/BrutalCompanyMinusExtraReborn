@@ -19,7 +19,7 @@ namespace BrutalCompanyMinus
     {
         private const string GUID = "SoftDiamond.BrutalCompanyMinusExtraReborn";
         private const string NAME = "BrutalCompanyMinusExtraReborn";
-        private const string VERSION = "0.23.10";
+        private const string VERSION = "0.24.0";
 
         internal static Plugin Instance { get; private set; }
 
@@ -33,9 +33,6 @@ namespace BrutalCompanyMinus
 
             // Logger
             Log.Initalize(Logger);
-
-            // Load assets
-            Assets.Load();
 
             // Create config files
             uiConfig = new ConfigFile(Paths.ConfigPath + "\\BrutalCompanyMinusExtraReborn\\UI_Settings.cfg", true);
@@ -61,6 +58,9 @@ namespace BrutalCompanyMinus
             levelPropertiesConfig.SaveOnConfigSet = false;
             CorePropertiesConfig.SaveOnConfigSet = false;
             //   extensiveSettingsConfig.SaveOnConfigSet = false;
+
+            // Load assets
+            Assets.Load();
 
             // Patch all
             harmony.PatchAll();
