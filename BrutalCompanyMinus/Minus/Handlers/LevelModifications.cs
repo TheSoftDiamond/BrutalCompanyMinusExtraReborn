@@ -216,18 +216,25 @@ namespace BrutalCompanyMinus.Minus.Handlers
             {
                 SpawnableItemWithRarity chosenItem = Manager.ScrapToTransmuteTo[RoundManager.Instance.GetRandomWeightedIndexList(weights)];
 
+                // Null check against the item
+                if (chosenItem.spawnableItem.spawnPrefab == null)
+                {
+                    Log.LogWarning("chosenItem spawnPrefab is null, skipping entry.");
+                    continue;
+                }
+
                 GameObject obj = GameObject.Instantiate(chosenItem.spawnableItem.spawnPrefab, Vector3.zero, Quaternion.identity);
 
                 GrabbableObject grabObj = obj.GetComponent<GrabbableObject>();
                 NetworkObject netObj = obj.GetComponent<NetworkObject>();
                 if (grabObj == null)
                 {
-                    Log.LogError("chosenItem grabbableObject is null, skipping entry.");
+                    Log.LogWarning("chosenItem grabbableObject is null, skipping entry.");
                     continue;
                 }
                 if (netObj == null)
                 {
-                    Log.LogError("chosenItem networkObject is null, skipping entry,");
+                    Log.LogWarning("chosenItem networkObject is null, skipping entry,");
                     continue;
                 }
 
