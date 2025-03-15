@@ -97,6 +97,9 @@ namespace BrutalCompanyMinus
         // Core Properties
         public static ConfigEntry<bool> enableCustomEvents;
         public static ConfigEntry<bool> ExtraLogging;
+        public static ConfigEntry<bool> SilenceEnum;
+        public static ConfigEntry<bool> SilencePrefab;
+        public static ConfigEntry<bool> GetMethods;
         public static ConfigEntry<bool> HellTimeAdjustment;
         public static ConfigEntry<bool> VeryLateShipAdjustment;
 
@@ -234,7 +237,11 @@ namespace BrutalCompanyMinus
 
             //Core Properties
             enableCustomEvents = CorePropertiesConfig.Bind("Custom Events", "Enable Custom Events?", true, "Enables custom events to be loaded from the custom events folder.");
-            ExtraLogging = CorePropertiesConfig.Bind("General", "Enable Extra Logging?", false, "Enables extra logging for debugging purposes.");
+            ExtraLogging = CorePropertiesConfig.Bind("Debugging", "Enable Extra Logging?", false, "Enables extra logging for debugging purposes.");
+            SilenceEnum = CorePropertiesConfig.Bind("Debugging", "Silence Enum Warnings?", true, "Silences warnings about potentially mismatched enums");
+            SilencePrefab = CorePropertiesConfig.Bind("Debugging", "Silence Prefab Warnings?", true, "Silences warnings about potentially missing prefabs");
+            GetMethods = CorePropertiesConfig.Bind("Debugging", "Silence Get Method Warnings?", true, "Silences warnings about missing enemies and items from mods not installed.");
+
             //todo - add settings for events and modded events that mess with features like time
             HellTimeAdjustment = CorePropertiesConfig.Bind("Events Features", "Enable Hell Time Adjustment?", true, "When the Hell event occurs, should the time be adjusted to be normal? Disable if you wish to suffer.");
             VeryLateShipAdjustment = CorePropertiesConfig.Bind("Events Features", "Enable Very Late Ship Time Adjustment?", true, "When the VeryLateShip event occurs, should the time be adjusted to be normal? Disable if you wish to suffer.");
