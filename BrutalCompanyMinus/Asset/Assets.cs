@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -7,6 +8,8 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Rendering.HighDefinition;
 using UnityEngine.SceneManagement;
+using System.Text.RegularExpressions;
+using BepInEx;
 
 namespace BrutalCompanyMinus
 {
@@ -71,6 +74,52 @@ namespace BrutalCompanyMinus
             get => GameObject.Find("/Environment/HangarShip");
         }
 
+        public static bool? ReadSettingEarly(string filePath, string settingName)
+        {
+            try
+            {
+                if (!File.Exists(filePath))
+                {
+                    // Log the error
+                    //Log.LogWarning($"Config file not found: {filePath}");
+                    return false;
+                }
+                else
+                {
+                    // Log the success
+                    //Log.LogInfo($"Config file found: {filePath}");
+                }
+                // Read the file content
+                string fileContent = File.ReadAllText(filePath);
+
+                // Match the setting name and its value
+                string pattern = $@"{Regex.Escape(settingName)}\s*=\s*(true|false)";
+
+                // Match the setting
+                Match match = Regex.Match(fileContent, pattern, RegexOptions.IgnoreCase);
+
+                // If the setting is found, return its value
+                if (match.Success)
+                {
+                    // Get the value
+                    string value = match.Groups[1].Value;
+                    //Log.LogInfo($"Setting '{settingName}' found: {value}");
+                    return bool.Parse(value);
+                }
+                else
+                {
+                    // Log the error
+                    //Log.LogWarning($"Setting '{settingName}' not found.");
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the error
+                //Log.LogWarning($"An error occurred: {ex.Message}");
+                return false;
+            }
+        }
         internal static GameObject cruiser
         {
             get => GameObject.Find("CompanyCruiser(Clone)");
@@ -149,14 +198,8 @@ namespace BrutalCompanyMinus
             bundle = LoadAssetBundle("bcm_assets");
             customAssetBundle = LoadAssetBundle("bcm_customassets");
 
-            //using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("BrutalCompanyMinus.Asset.bcm_assets"))
-            //{
-            //    bundle = AssetBundle.LoadFromStream(stream);
-            //}
-            //using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("BrutalCompanyMinus.Asset.bcm_customassets"))
-            //{
-            //    customAssetBundle = AssetBundle.LoadFromStream(stream);
-            //}
+            //Ensure Configuration is loaded
+            //Configuration.CreateConfig();
 
             SceneManager.sceneLoaded += OnSceneLoaded;
         }
@@ -201,7 +244,10 @@ namespace BrutalCompanyMinus
 
             for (int i = 0; i < AllEnemies.Length; i++)
             {
-                if (AllEnemies[i].enemyPrefab == null) Log.LogWarning(string.Format("Enemy:{0}, prefab is null, this may cause issues...", AllEnemies[i].name));
+                if (ReadSettingEarly(Paths.ConfigPath + "\\BrutalCompanyMinusExtraReborn\\CoreProperties.cfg", "Silence Prefab Warnings?") == false)
+                {
+                    if (AllEnemies[i].enemyPrefab == null) Log.LogWarning(string.Format("Enemy:{0}, prefab is null, this may cause issues...", AllEnemies[i].name));
+                }
                 EnemyList.Add(AllEnemies[i].name, AllEnemies[i]);
             }
             EnemyList.Remove("RedPillEnemyType"); // Useless
@@ -218,7 +264,10 @@ namespace BrutalCompanyMinus
                         break;
                     }
                 }
-                if (!existsInList) Log.LogWarning(string.Format("Enemy:'{0}', isn't matched with enum, this may cause issues...", e.Key));
+                if (ReadSettingEarly(Paths.ConfigPath + "\\BrutalCompanyMinusExtraReborn\\CoreProperties.cfg", "Silence Enum Warnings?") == false)
+                {
+                    if (!existsInList) Log.LogWarning(string.Format("Enemy:'{0}', isn't matched with enum, this may cause issues...", e.Key));
+                }
             }
 
             Log.LogInfo(string.Format("Finished generating 'EnemyList', Count:{0}", EnemyList.Count));
@@ -232,7 +281,10 @@ namespace BrutalCompanyMinus
 
             for (int i = 0; i < AllItems.Length; i++)
             {
-                if (AllItems[i].spawnPrefab == null) Log.LogWarning(string.Format("Item:{0}, prefab is null, this may cause issues...", AllItems[i].name));
+                if (ReadSettingEarly(Paths.ConfigPath + "\\BrutalCompanyMinusExtraReborn\\CoreProperties.cfg", "Silence Prefab Warnings?") == false)
+                {
+                    if (AllItems[i].spawnPrefab == null) Log.LogWarning(string.Format("Item:{0}, prefab is null, this may cause issues...", AllItems[i].name));
+                }
                 ItemList.Add(AllItems[i].name, AllItems[i]);
             }
 
@@ -248,7 +300,10 @@ namespace BrutalCompanyMinus
                         break;
                     }
                 }
-                if (!existsInList) Log.LogWarning(string.Format("Item:'{0}', isn't matched with enum, this may cause issues...", i.Key));
+                if (ReadSettingEarly(Paths.ConfigPath + "\\BrutalCompanyMinusExtraReborn\\CoreProperties.cfg", "Silence Enum Warnings?") == false)
+                {
+                    if (!existsInList) Log.LogWarning(string.Format("Item:'{0}', isn't matched with enum, this may cause issues...", i.Key));
+                }
             }
 
             Log.LogInfo(string.Format("Finished generating 'ItemList', Count:{0}", ItemList.Count));
@@ -298,7 +353,10 @@ namespace BrutalCompanyMinus
                         break;
                     }
                 }
-                if (!existsInList) Log.LogWarning(string.Format("Object:'{0}', isn't matched with enum, this may cause issues...", o.Key));
+                if (ReadSettingEarly(Paths.ConfigPath + "\\BrutalCompanyMinusExtraReborn\\CoreProperties.cfg", "Silence Enum Warnings?") == false)
+                {
+                    if (!existsInList) Log.LogWarning(string.Format("Object:'{0}', isn't matched with enum, this may cause issues...", o.Key));
+                }
             }
 
             Log.LogInfo(string.Format("Finished generating 'ObjectList', Count:{0}", ObjectList.Count));
@@ -366,8 +424,12 @@ namespace BrutalCompanyMinus
         public static EnemyType GetEnemy(string name)
         {
             if (EnemyList.TryGetValue(name, out EnemyType enemyType)) return enemyType;
-            Log.LogWarning($"GetEnemy({name}) failed, returning an empty enemy type");
-            EnemyType empty = new EnemyType();
+
+            if (ReadSettingEarly(Paths.ConfigPath + "\\BrutalCompanyMinusExtraReborn\\CoreProperties.cfg", "Silence Get Method Warnings?") == false)
+            {
+                Log.LogWarning($"GetEnemy({name}) failed, returning an empty enemy type");
+            }
+            EnemyType empty = ScriptableObject.CreateInstance<EnemyType>();
             empty.enemyName = name;
             empty.name = name;
             return empty;
@@ -376,7 +438,10 @@ namespace BrutalCompanyMinus
         public static EnemyType GetEnemyOrDefault(string name)
         {
             if (EnemyList.TryGetValue(name, out EnemyType enemyType)) return enemyType;
-            Log.LogWarning($"GetEnemyOrDefault({name}) failed, returning kamikazie bug.");
+            if (ReadSettingEarly(Paths.ConfigPath + "\\BrutalCompanyMinusExtraReborn\\CoreProperties.cfg", "Silence Get Method Warnings?") == false)
+            {
+                Log.LogWarning($"GetEnemyOrDefault({name}) failed, returning kamikazie bug.");
+            }
             return kamikazieBug;
         }
 
@@ -384,8 +449,11 @@ namespace BrutalCompanyMinus
         public static Item GetItem(string name)
         {
             if(ItemList.TryGetValue(name, out Item item)) return item;
-            Log.LogWarning($"GetItem({name}) failed, returning an empty item");
-            Item empty = new Item();
+            if (ReadSettingEarly(Paths.ConfigPath + "\\BrutalCompanyMinusExtraReborn\\CoreProperties.cfg", "Silence Get Method Warnings?") == false)
+            {
+                Log.LogWarning($"GetItem({name}) failed, returning an empty item");
+            }
+            Item empty = ScriptableObject.CreateInstance<Item>();
             empty.itemName = name;
             empty.name = name;
             return empty;
