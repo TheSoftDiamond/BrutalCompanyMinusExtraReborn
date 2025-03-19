@@ -43,7 +43,7 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
 
         private float currentAnimSpeed = 1f;
 
-        public AudioClip[] springNoises;
+        public AudioClip[] springNoises; // Will need to be changed to the appropriate sound effects
 
         public Collider mainCollider;
 
@@ -52,6 +52,8 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
         private bool hasStopped;
 
         private float timeSinceHittingPlayer;
+
+        private float distanceofSound;
 
         private float timeSinceReachingSoundLocation; // Timer for Phase 4
 
