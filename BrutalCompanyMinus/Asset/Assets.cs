@@ -139,7 +139,7 @@ namespace BrutalCompanyMinus
         internal static FloodWeather flooded;
 
         // Custom Assets
-        public static EnemyType antiCoilHead, nutSlayer, kamikazieBug;
+        public static EnemyType antiCoilHead, nutSlayer, kamikazieBug, antiJester;
         public static Item slayerShotgun, grabbableTurret, grabbableLandmine;
         public static GameObject artilleryShell, artillerySirens, bunkerEntrance, bunkerEscape, teleportAudio, bloodRain;
 
@@ -150,6 +150,7 @@ namespace BrutalCompanyMinus
             antiCoilHead = (EnemyType)customAssetBundle.LoadAsset("AntiCoilHead");
             nutSlayer = (EnemyType)customAssetBundle.LoadAsset("NutSlayer");
             kamikazieBug = (EnemyType)customAssetBundle.LoadAsset("KamikazieBug");
+            antiJester = (EnemyType)customAssetBundle.LoadAsset("AntiJester");
 
             slayerShotgun = (Item)customAssetBundle.LoadAsset("SlayerShotgun");
             grabbableTurret = (Item)customAssetBundle.LoadAsset("GrabbableTurret");
