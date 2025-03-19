@@ -53,19 +53,23 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
 
         private float timeSinceHittingPlayer;
 
-        private float distanceofSound;
+        private float distanceofSound; // Distance of the sound from the AntiJester
+
+        private float radiusConcealMentPhase = 30f; // Radius for Phase 1
+
+        private float radiusChasePhase = 100f; // Radius for Phase 4
 
         private float timeSinceReachingSoundLocation; // Timer for Phase 4
 
-        private float TimerInitial = 10f; // Initial timer value for Phase 4
+        private float timerInitial = 10f; // Initial timer value for Phase 4
 
-        private float AngerDecayRate = 0.5f; // Rate at which the timer decreases for Phase 4
+        private float angerDecayRate = 0.5f; // Rate at which the timer decreases for Phase 4
 
-        private float AlertnessScore = 0f; // Initial Alertness score for Phase 1
+        private float alertnessScore = 0f; // Initial Alertness score for Phase 1
 
-        private float AlertnessThreshold = 10f; // Threshold for the Alertness score during Phase 1
+        private float alertnessThreshold = 10f; // Threshold for the Alertness score during Phase 1
 
-        private float AlertnessDecayRate = 0.5f; // Rate at which the alertness score decays during Phase 1
+        private float alertnessDecayRate = 0.5f; // Rate at which the alertness score decays during Phase 1
 
         private Vector3 lastSoundLocation; // Last sound location, used in Phase 2 and 4
 
