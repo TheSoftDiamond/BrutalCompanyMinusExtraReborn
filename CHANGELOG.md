@@ -1,6 +1,16 @@
 # Changelog
 
 <details>
+  <summary>0.24.1</summary>
+
+# Additions
+
+  - Factory Size Multiplier: Can be globally adjusted with respect to difficulty scaling. Recommended to leave as is if you don't wish to change dungeon size. Setting this number too big or too small may cause generation issues or delays. Tested values were from 0.5x to 25x, but may depend on interior and system specs.
+  - Starting time: Can adjust the starting time globally. This can also be adjusted with respect to difficulty scaling.
+  - Time Scaling: Can be adjusted to change how fast a day goes. This can be adjusted with respect to difficulty scaling.
+
+</details>
+<details>
   <summary>0.24.0</summary>
 
 # Additions
@@ -14,7 +24,7 @@
 # Fixes
 
   - A softlock involving null items should no longer occur
-  - Fixed a way items and enemies were instances
+  - Fixed a way items and enemies were instanced
 
 </details>
 
