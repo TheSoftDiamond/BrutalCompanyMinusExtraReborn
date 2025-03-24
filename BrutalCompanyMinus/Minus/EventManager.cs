@@ -616,6 +616,8 @@ namespace BrutalCompanyMinus.Minus
             Manager.scrapValueMultiplier *= MEvent.Scale.Compute(Configuration.scrapValueMultiplier);
             Manager.scrapAmountMultiplier *= MEvent.Scale.Compute(Configuration.scrapAmountMultiplier);
 
+            Manager.factorySizeMultiplier = MEvent.Scale.Compute(Configuration.factorySizeMultiplier);
+
             List<MEvent> additionalEvents = new List<MEvent>();
             List<MEvent> currentEvents = new List<MEvent>();
 
@@ -677,6 +679,15 @@ namespace BrutalCompanyMinus.Minus
             //Make sure scrap amount/value stays below the cap
             Manager.scrapValueMultiplier = Mathf.Clamp(Manager.scrapValueMultiplier, 0.0f, Configuration.scrapValueMax.Value);
             Manager.scrapAmountMultiplier = Mathf.Clamp(Manager.scrapAmountMultiplier, 0.0f, Configuration.scrapAmountMax.Value);
+
+            //Apply factory size by the multiplier and clamp it
+            RoundManager.Instance.currentLevel.factorySizeMultiplier *= Math.Clamp(Math.Abs(Manager.factorySizeMultiplier), Math.Abs(Configuration.FactorySizeMin.Value), Math.Abs(Configuration.FactorySizeMax.Value));
+
+            // Check time adjustments
+            if (Configuration.enableCustomTimeAdjustments.Value)
+            {
+                Net.Instance.MoveTimeServerRpc(Mathf.Min(MEvent.Scale.Compute(Configuration.startingTime), 1080f), Mathf.Clamp(MEvent.Scale.Compute(Configuration.timeScaling), 0.001f, 2147483647));
+            }
 
             // Sync values to all clients
             Net.Instance.SyncValuesClientRpc(Manager.currentLevel.factorySizeMultiplier, Manager.scrapValueMultiplier, Manager.scrapAmountMultiplier, Manager.bonusEnemyHp);
