@@ -160,7 +160,7 @@ namespace BrutalCompanyMinus
             scrapAmountMax = difficultyConfig.Bind("Difficulty Scaling", "Scrap amount max cap", 2147483647.0f, "The scrap amount multipliers when added together wont go beyond this.");
             FactorySizeMax = difficultyConfig.Bind("Difficulty Scaling", "Factory size max cap", 2147483647.0f, "The factory size multipliers when added together wont go beyond this. Use at own risk");
             FactorySizeMin = difficultyConfig.Bind("Difficulty Scaling", "Factory size min cap", 0.01f, "The factory size multipliers when added together wont go below this. Use at own risk.");
-            enableCustomTimeAdjustments = difficultyConfig.Bind("Difficulty Scaling", "Enable Time Scaling?", false, "Enable custom time adjustments for events.");
+            enableCustomTimeAdjustments = difficultyConfig.Bind("Difficulty Scaling", "Enable Time Adjustments?", false, "Enable custom time adjustments globally for difficulty scaling.");
             timeScaling = getScale(difficultyConfig.Bind("Difficulty Scaling", "Time Scaling", "1, 0.0, 1, 1", "Time scaling multiplier with respect to difficulty scaling" + scaleDescription).Value);
             startingTime = getScale(difficultyConfig.Bind("Difficulty Scaling", "Starting Time", "100, 0.0, 100, 100", "Starting time with respect to difficulty" + scaleDescription).Value);
 
