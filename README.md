@@ -443,9 +443,15 @@ Location: BrutalCompanyMinusExtraReborn\CoreProperties.cfg`
 
 `Enable VeryLateShip Time Adjustment` : Adjust whether or not VeryLateShip Event uses regular Lethal Company time scale, or an adjusted one for the event. Defaults to True (adjusted scale for event).
 
-#### General
+#### Debugging
 
 `Enable Extra Logging?` : Mostly used for debugging purposes, but also can hide some details in the Log Output that tend to cause a lot of console spam, for example: NutSlayer event.
+
+`Silence enum warnings?` : Hide enum warnings about potentially mismatched enums.
+
+`Silence prefab warnings` : Hide warnings about potentially missing prefabs.
+
+`Silence get method warnings` : Hide warnings about potentially missing enemies, and items from mods not present.
 
 ## Difficulty Config 
 Location: `BrutalCompanyMinusExtraReborn\Difficulty_Settings.cfg`
@@ -498,9 +504,7 @@ Location: `BrutalCompanyMinusExtraReborn\Difficulty_Settings.cfg`
 
 `Global scrap amount multiplier scale`: A **scale** that multiplies all scrap amount.
 
-`Good event increment multiplier`: A global multiplier that will multiply all **Good** and **Very Good** increments.
-
-`Bad event increment multiplier`: A global multiplier that will multiply all **Bad** and **Very Bad** increments.
+`Factory size multiplier scale`: A **scale** that multiplies the factory size.
 
 #### Difficulty Scaling
 
@@ -539,6 +543,20 @@ Location: `BrutalCompanyMinusExtraReborn\Difficulty_Settings.cfg`
 **...**
 
 `Eclipsed weather difficulty?`: Difficulty added if eclipsed weather.
+
+`Scrap value max cap`: Max scrap value multiplier possible.
+
+`Scrap amount max cap`: Max scrap amount multiplier possible.
+
+`Factory size max cap`: Maximum possible size of factory. Used with factory size multiplier.
+
+`Factory size min cap`: Minimum possible size of factory. Used with factory size multiplier
+
+`Enable time adjustments`: Enable changes such as starting time and how fast a day goes.
+
+`Time Scaling`: Multiplier for how fast a day goes.
+
+`Starting time`: The value at which the day starts at.
 
 #### Player Scaling
 
