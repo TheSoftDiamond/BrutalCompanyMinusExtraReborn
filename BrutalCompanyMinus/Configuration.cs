@@ -43,7 +43,7 @@ namespace BrutalCompanyMinus
         public static Dictionary<EventType, Scale> scrapValueByEventTypeScale = new Dictionary<EventType, Scale>();
         public static Dictionary<EventType, Scale> scrapAmountByEventTypeScale = new Dictionary<EventType, Scale>();
         public static ConfigEntry<string> MoonsToIgnore;
-        public static Scale FactorySize = new Scale();
+        public static Scale factorySizeMultiplier = new Scale();
 
         public static EventManager.DifficultyTransition[] difficultyTransitions;
         public static ConfigEntry<bool> enableQuotaChanges;
@@ -55,10 +55,16 @@ namespace BrutalCompanyMinus
         public static ConfigEntry<float> difficultyMaxCap;
         public static ConfigEntry<float> scrapValueMax;
         public static ConfigEntry<float> scrapAmountMax;
+        public static ConfigEntry<float> FactorySizeMax;
+        public static ConfigEntry<float> FactorySizeMin;
         public static ConfigEntry<bool> scaleByDaysPassed, scaleByScrapInShip, scaleByMoonGrade, scaleByWeather, scaleByQuota;
         public static ConfigEntry<float> daysPassedDifficultyMultiplier, daysPassedDifficultyCap, scrapInShipDifficultyMultiplier, scrapInShipDifficultyCap, quotaDifficultyMultiplier, quotaDifficultyCap;
         public static Dictionary<string, float> gradeAdditives = new Dictionary<string, float>();
         public static Dictionary<LevelWeatherType, float> weatherAdditives = new Dictionary<LevelWeatherType, float>();
+        public static ConfigEntry<bool> enableCustomTimeAdjustments;
+        public static Scale timeScaling = new Scale();
+        public static Scale startingTime = new Scale();
+
         // Player Scaling Settings
         public static ConfigEntry<bool> enablePlayerScaling;
         public static ConfigEntry<string> playerScalingType;
@@ -152,6 +158,11 @@ namespace BrutalCompanyMinus
             };
             scrapValueMax = difficultyConfig.Bind("Difficulty Scaling", "Scrap value max cap", 2147483647.0f, "The scrap value multipliers when added together wont go beyond this.");
             scrapAmountMax = difficultyConfig.Bind("Difficulty Scaling", "Scrap amount max cap", 2147483647.0f, "The scrap amount multipliers when added together wont go beyond this.");
+            FactorySizeMax = difficultyConfig.Bind("Difficulty Scaling", "Factory size max cap", 2147483647.0f, "The factory size multipliers when added together wont go beyond this. Use at own risk");
+            FactorySizeMin = difficultyConfig.Bind("Difficulty Scaling", "Factory size min cap", 0.01f, "The factory size multipliers when added together wont go below this. Use at own risk.");
+            enableCustomTimeAdjustments = difficultyConfig.Bind("Difficulty Scaling", "Enable Time Scaling?", false, "Enable custom time adjustments for events.");
+            timeScaling = getScale(difficultyConfig.Bind("Difficulty Scaling", "Time Scaling", "1, 0.0, 1, 1", "Time scaling multiplier with respect to difficulty scaling" + scaleDescription).Value);
+            startingTime = getScale(difficultyConfig.Bind("Difficulty Scaling", "Starting Time", "100, 0.0, 100, 100", "Starting time with respect to difficulty" + scaleDescription).Value);
 
             spawnChanceMultiplierScaling = getScale(difficultyConfig.Bind("Difficulty", "Spawn chance multiplier scale", "1.0, 0.017, 1.0, 2.0", "This will multiply the spawn chance by this,   " + scaleDescription).Value);
             insideSpawnChanceAdditive = getScale(difficultyConfig.Bind("Difficulty", "Inside spawn chance additive", "0.0, 0.0, 0.0, 0.0", "This will add to all keyframes for insideSpawns on the animationCurve,   " + scaleDescription).Value);
@@ -162,7 +173,7 @@ namespace BrutalCompanyMinus
             enemyBonusHpScaling = getScale(difficultyConfig.Bind("Difficulty", "Additional hp scale", "0, 0, 0, 0", "Added hp to all enemies,   " + scaleDescription).Value);
             scrapValueMultiplier = getScale(difficultyConfig.Bind("Difficulty", "Scrap value multiplier scale", "1.0, 0.003, 1.0, 1.3", "Global scrap value multiplier,   " + scaleDescription).Value);
             scrapAmountMultiplier = getScale(difficultyConfig.Bind("Difficulty", "Scrap amount multiplier scale", "1.0, 0.003, 1.0, 1.3", "Global scrap amount multiplier,   " + scaleDescription).Value);
-            
+            factorySizeMultiplier = getScale(difficultyConfig.Bind("Difficulty", "Factory Size multiplier scale", "1.0, 0, 1.0, 1.0", "Factory size multiplier. Use at your own risk. May not load at all or will take a very long time to generate." + scaleDescription).Value);
 
             enablePlayerScaling = difficultyConfig.Bind("Player Scaling", "Enable player scaling?", false, "Enable player scaling");
             playerScalingType = difficultyConfig.Bind("Player Scaling", "Player scaling type", "Linear", "Type of scaling for player amount. Options: Linear, Exponential");
@@ -181,7 +192,6 @@ namespace BrutalCompanyMinus
             }
 
             MoonsToIgnore = difficultyConfig.Bind("Moons Settings", "Moons to Not Spawn Events On", "", "Events will not spawn on these moons. Seperate by comma for each moon name.");
-            //FactorySize = getScale(difficultyConfig.Bind("Moons Settings", "Factory Size multiplier scale", "1.0, 0.012, 1.0, 2.0", "This will multiply the factory size by this. Avoid negatives, zero or any numbers too big.   " + scaleDescription).Value);
 
 
             // Custom scrap settings
