@@ -686,7 +686,7 @@ namespace BrutalCompanyMinus.Minus
             // Check time adjustments
             if (Configuration.enableCustomTimeAdjustments.Value)
             {
-                Net.Instance.MoveTimeServerRpc(Mathf.Min(MEvent.Scale.Compute(Configuration.startingTime), 1080f), Mathf.Clamp(MEvent.Scale.Compute(Configuration.timeScaling), 0.001f, 2147483647));
+                Net.Instance.MoveTimeServerRpc(Mathf.Min(MEvent.Scale.Compute(Configuration.startingTime), 2147483647.0f), Mathf.Clamp(MEvent.Scale.Compute(Configuration.timeScaling), 0.001f, 2147483647));
             }
 
             // Sync values to all clients
