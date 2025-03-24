@@ -6,6 +6,7 @@ using HarmonyLib;
 using System;
 using System.Reflection;
 using UnityEngine;
+using UnityEngine.ProBuilder.MeshOperations;
 using static BrutalCompanyMinus.Configuration;
 
 namespace BrutalCompanyMinus
@@ -19,7 +20,7 @@ namespace BrutalCompanyMinus
     {
         private const string GUID = "SoftDiamond.BrutalCompanyMinusExtraReborn";
         private const string NAME = "BrutalCompanyMinusExtraReborn";
-        private const string VERSION = "0.24.0";
+        private const string VERSION = "0.24.1";
 
         internal static Plugin Instance { get; private set; }
 
@@ -72,6 +73,10 @@ namespace BrutalCompanyMinus
             }
 
             Log.LogInfo(NAME + " " + VERSION + " " + "is done patching.");
+            if (Assets.ReadSettingEarly(Paths.ConfigPath + "\\BrutalCompanyMinusExtraReborn\\DifficultySettings.cfg", "Enable time scaling?") == true) ;
+            {
+                Log.LogInfo("Time adjustment is enabled.");
+            }
 
             // Delete the CustomEvent Config File Every time
             // This is because the config file will take over the .json file instructions.
