@@ -69,7 +69,7 @@ namespace BrutalCompanyMinus.Minus
             new Events.HoardingBugs(),
             new Events.Dustpans(),
             new Events.Bees(),
-            new Events.ShipLightsFailure(),
+            /*new Events.ShipLightsFailure(), NOTE: TEMPORARILY REMOVED DUE TO CRASHES AROUND THE EVENT*/
             new Events.Landmines(),
             new Events.Lizard(),
             new Events.Slimes(),
@@ -670,7 +670,6 @@ namespace BrutalCompanyMinus.Minus
                     HUDManager.Instance.AddTextToChatOnServer(eventDescription);
                 }
             }
-
 
             // Apply maxPower counts
             RoundManager.Instance.currentLevel.maxEnemyPowerCount = (int)((RoundManager.Instance.currentLevel.maxEnemyPowerCount + Manager.bonusMaxInsidePowerCount) * Manager.spawncapMultipler);
