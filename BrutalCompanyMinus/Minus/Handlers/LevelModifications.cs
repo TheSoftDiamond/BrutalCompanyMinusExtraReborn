@@ -79,19 +79,26 @@ namespace BrutalCompanyMinus.Minus.Handlers
             __instance.currentLevel.spawnableMapObjects = Assets.spawnableMapObjects[levelIndex];
 
             // Reset spawn chances
-            __instance.currentLevel.enemySpawnChanceThroughoutDay.ClearKeys();
-            __instance.currentLevel.outsideEnemySpawnChanceThroughDay.ClearKeys();
-            __instance.currentLevel.daytimeEnemySpawnChanceThroughDay.ClearKeys();
-            foreach (Keyframe key in Assets.insideSpawnChanceCurves[levelIndex].keys) __instance.currentLevel.enemySpawnChanceThroughoutDay.AddKey(key);
-            foreach (Keyframe key in Assets.outsideSpawnChanceCurves[levelIndex].keys) __instance.currentLevel.outsideEnemySpawnChanceThroughDay.AddKey(key);
-            foreach (Keyframe key in Assets.daytimeSpawnChanceCurves[levelIndex].keys) __instance.currentLevel.daytimeEnemySpawnChanceThroughDay.AddKey(key);
+            if (!Configuration.dontHandleSpawnCurves.Value)
+            {
+                __instance.currentLevel.enemySpawnChanceThroughoutDay.ClearKeys();
+                __instance.currentLevel.outsideEnemySpawnChanceThroughDay.ClearKeys();
+                __instance.currentLevel.daytimeEnemySpawnChanceThroughDay.ClearKeys();
+
+                foreach (Keyframe key in Assets.insideSpawnChanceCurves[levelIndex].keys) __instance.currentLevel.enemySpawnChanceThroughoutDay.AddKey(key);
+                foreach (Keyframe key in Assets.outsideSpawnChanceCurves[levelIndex].keys) __instance.currentLevel.outsideEnemySpawnChanceThroughDay.AddKey(key);
+                foreach (Keyframe key in Assets.daytimeSpawnChanceCurves[levelIndex].keys) __instance.currentLevel.daytimeEnemySpawnChanceThroughDay.AddKey(key);
+            }
 
             Events.GrabbableLandmines.LandmineDisabled = false;
             foreach (MEvent e in EventManager.events) e.Executed = false;
 
-            RoundManager.Instance.currentLevel.maxEnemyPowerCount = Assets.insideMaxPowerCounts[levelIndex];
-            RoundManager.Instance.currentLevel.maxOutsideEnemyPowerCount = Assets.outsideMaxPowerCounts[levelIndex];
-            RoundManager.Instance.currentLevel.maxDaytimeEnemyPowerCount = Assets.daytimeMaxPowerCounts[levelIndex];
+            if (!Configuration.dontHandlePower.Value)
+            {
+                RoundManager.Instance.currentLevel.maxEnemyPowerCount = Assets.insideMaxPowerCounts[levelIndex];
+                RoundManager.Instance.currentLevel.maxOutsideEnemyPowerCount = Assets.outsideMaxPowerCounts[levelIndex];
+                RoundManager.Instance.currentLevel.maxDaytimeEnemyPowerCount = Assets.daytimeMaxPowerCounts[levelIndex];
+            }
 
             // Reset bonus hp
             Manager.bonusEnemyHp = 0;
