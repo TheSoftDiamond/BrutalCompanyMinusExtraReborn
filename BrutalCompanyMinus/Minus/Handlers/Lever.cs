@@ -20,24 +20,24 @@ namespace BrutalCompanyMinus.Minus.Handlers
         private static bool InterruptPullLever(StartMatchLever __instance)
         {
             // Interrupt pulling the lever if a power malfunction has triggered.
-            if (LeverNet.Value == 0 && ShipLightsNet.Value == 0)
+            if (LeverNet.Value == 0/* && ShipLightsNet.Value == 0*/)
             {
-                
-                 
-                    HUDManager.Instance.globalNotificationText.text =
-                        "SHIP CORE DEPLETION:\nAWAIT 12PM EMERGENCY AUTOPILOT";
 
-                    HUDManager.Instance.globalNotificationAnimator.SetTrigger("TriggerNotif");
-                    HUDManager.Instance.UIAudio.PlayOneShot(
-                        HUDManager.Instance.radiationWarningAudio,
-                        1f
-                    );
 
-                    // Make sure that the tooltip specifies this.
-                    __instance.triggerScript.disabledHoverTip = "[No power to hydraulics]";
+                HUDManager.Instance.globalNotificationText.text =
+                    "SHIP CORE DEPLETION:\nAWAIT 12PM EMERGENCY AUTOPILOT";
 
-                    return false;
-                 
+                HUDManager.Instance.globalNotificationAnimator.SetTrigger("TriggerNotif");
+                HUDManager.Instance.UIAudio.PlayOneShot(
+                    HUDManager.Instance.radiationWarningAudio,
+                    1f
+                );
+
+                // Make sure that the tooltip specifies this.
+                __instance.triggerScript.disabledHoverTip = "[No power to hydraulics]";
+
+                return false;
+
             }
             else if (LeverNet.Value == 0)
             {
@@ -52,7 +52,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
                 __instance.triggerScript.disabledHoverTip = "[Hydraulics jammed]";
 
                 return false;
-            } 
+            }
 
             return true;
         }
