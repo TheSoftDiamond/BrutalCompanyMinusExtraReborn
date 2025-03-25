@@ -398,16 +398,19 @@ namespace BrutalCompanyMinus
                     averageScrapValueList.Add(80);
                 }
 
-                // Animation curves list
-                AnimationCurve newInsideSpawnChanceCurve = new AnimationCurve(), newOutsideSpawnChanceCurve = new AnimationCurve(), newDaytimeSpawnChanceCurve = new AnimationCurve();
+                if (ReadSettingEarly(Paths.ConfigPath + "\\BrutalCompanyMinusExtraReborn\\CoreProperties.cfg", "Experimental Dont Handle Spawn Chance?") == false)
+                {
+                    // Animation curves list
+                    AnimationCurve newInsideSpawnChanceCurve = new AnimationCurve(), newOutsideSpawnChanceCurve = new AnimationCurve(), newDaytimeSpawnChanceCurve = new AnimationCurve();
 
-                foreach (Keyframe key in level.enemySpawnChanceThroughoutDay.keys) newInsideSpawnChanceCurve.AddKey(key);
-                foreach (Keyframe key in level.outsideEnemySpawnChanceThroughDay.keys) newOutsideSpawnChanceCurve.AddKey(key);
-                foreach (Keyframe key in level.daytimeEnemySpawnChanceThroughDay.keys) newDaytimeSpawnChanceCurve.AddKey(key);
+                    foreach (Keyframe key in level.enemySpawnChanceThroughoutDay.keys) newInsideSpawnChanceCurve.AddKey(key);
+                    foreach (Keyframe key in level.outsideEnemySpawnChanceThroughDay.keys) newOutsideSpawnChanceCurve.AddKey(key);
+                    foreach (Keyframe key in level.daytimeEnemySpawnChanceThroughDay.keys) newDaytimeSpawnChanceCurve.AddKey(key);
 
-                insideSpawnChanceCurves.Add(newInsideSpawnChanceCurve);
-                outsideSpawnChanceCurves.Add(newOutsideSpawnChanceCurve);
-                daytimeSpawnChanceCurves.Add(newDaytimeSpawnChanceCurve);
+                    insideSpawnChanceCurves.Add(newInsideSpawnChanceCurve);
+                    outsideSpawnChanceCurves.Add(newOutsideSpawnChanceCurve);
+                    daytimeSpawnChanceCurves.Add(newDaytimeSpawnChanceCurve);
+                }
 
                 // enemyPowerCounts
                 insideMaxPowerCounts.Add(level.maxEnemyPowerCount);

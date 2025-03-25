@@ -37,7 +37,7 @@ namespace BrutalCompanyMinus.Minus.Events
         //        new Scale(10.0f, 0.03f, 10.0f, 12.0f))
         //    };
 
-            EventsToSpawnWith = new List<string>() { nameof(ShipLightsFailure), nameof(DoorFailure), nameof(ItemChargerFailure), 
+            EventsToSpawnWith = new List<string>() { /*nameof(ShipLightsFailure),*/ nameof(DoorFailure), nameof(ItemChargerFailure), 
                 nameof(LeverFailure), nameof(ManualCameraFailure), nameof(TeleporterFailure), nameof(TerminalFailure), nameof(WalkieFailure) };
 
         }
