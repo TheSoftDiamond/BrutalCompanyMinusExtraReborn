@@ -1,6 +1,26 @@
 # Changelog
 
 <details>
+  <summary>0.24.3</summary>
+
+Apparently the changelog never saved despite me double checking it, it somehow reverted... This version is just to fix the changelog and adds nothing on top of 0.24.2.
+
+</details>
+
+<details>
+  <summary>0.24.2</summary>
+
+# Additions
+
+  - Ability to let other mods handle power counts and spawn curves. A few settings will still affect these as I thought users may be interested in those features still working alongside this.
+
+# Removed
+
+  - Temporarily removed Ship Lights Failure for the time being due to crashes. Hopefully it can be back in a timely manner.
+
+</details>
+
+<details>
   <summary>0.24.1</summary>
 
 # Additions
