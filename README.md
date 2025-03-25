@@ -453,6 +453,12 @@ Location: BrutalCompanyMinusExtraReborn\CoreProperties.cfg`
 
 `Silence get method warnings` : Hide warnings about potentially missing enemies, and items from mods not present.
 
+#### Mod Compatibility
+
+`Experimental dont handle power`: Makes it so Brutal does not handle power level settings, save for a few settings the user may want to use that affect power.
+
+`Experimental dont handle spawn chance`: Makes it so Brutal does not handle spawn curves, save for a few settings the user may want that interact with spawn curves.
+
 ## Difficulty Config 
 Location: `BrutalCompanyMinusExtraReborn\Difficulty_Settings.cfg`
 
