@@ -1,6 +1,34 @@
 # Changelog
 
 <details>
+  <summary>0.24.5</summary>
+
+# Additions
+
+  - Added [VeryBad] Soul Devourer event from Soul Devourer Enemy Mod. https://thunderstore.io/c/lethal-company/p/bcs4313/Soul_Devourer_Enemy/
+  - Added [Bad] Light Eater Enemy event. https://thunderstore.io/c/lethal-company/p/Lega/LightEater/
+
+# Fixes
+
+  - Shrimp now depends on LCShrimpMod, fixing an incorrect mod dependency check.
+  - Forced Events will no longer complain about an empty white space
+
+# Changes
+
+  - MoaiEnemy event has been nerfed.
+  - Soul Devourer is now its own event.
+
+</details>
+<details>
+  <summary>0.24.4</summary>
+
+# Fixes
+
+  - Hopefully the issues people have had to that ShipLightsFailure being removed, or something about Terminal nodes with it? ShipCoreFailure may still attempt to roll "ShipLightsFailure" if your events config for shipcorefailure still references shiplightsfailure, but it will not cause a softlock. This should only affect users who have the same config files before 0.24.2.
+
+</details>
+
+<details>
   <summary>0.24.3</summary>
 
 Apparently the changelog never saved despite me double checking it, it somehow reverted... This version is just to fix the changelog and adds nothing on top of 0.24.2.
