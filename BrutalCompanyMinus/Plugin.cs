@@ -15,12 +15,13 @@ namespace BrutalCompanyMinus
     [BepInDependency("FlipMods.HotbarPlus", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("mrov.WeatherRegistry", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("voxx.LethalElementsPlugin", BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency("uk.1a3.yesfox", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInPlugin(GUID, NAME, VERSION)]
     internal class Plugin : BaseUnityPlugin
     {
         private const string GUID = "SoftDiamond.BrutalCompanyMinusExtraReborn";
         private const string NAME = "BrutalCompanyMinusExtraReborn";
-        private const string VERSION = "0.24.4";
+        private const string VERSION = "0.24.5";
 
         internal static Plugin Instance { get; private set; }
 

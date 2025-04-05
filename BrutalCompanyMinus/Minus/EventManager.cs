@@ -195,6 +195,7 @@ namespace BrutalCompanyMinus.Minus
             new Events.Foxy(),
             new Events.HotBarHassle(),
             new Events.Bellcrab(),
+            new Events.LightEaterEnemy(),
 
             //Very Bad
             new Events.Mantitoil(),
@@ -217,6 +218,7 @@ namespace BrutalCompanyMinus.Minus
             new Events.PlaytimeBig(),
             new Events.ItsPlaytime(),
             new Events.Walkers(),
+            new Events.SoulDev(),
 
             //No Enemy
             new Events.NoMantitoil(),

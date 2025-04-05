@@ -34,7 +34,7 @@ namespace BrutalCompanyMinus.Minus.Events
             };
         }
 
-        public override bool AddEventIfOnly() => Compatibility.lcOfficePresent;
+        public override bool AddEventIfOnly() => Compatibility.shrimpPresent;
 
         public override void Execute() => ExecuteAllMonsterEvents();
     }

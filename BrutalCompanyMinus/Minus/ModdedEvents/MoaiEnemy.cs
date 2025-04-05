@@ -21,37 +21,34 @@ namespace BrutalCompanyMinus.Minus.Events
 
             monsterEvents = new List<MonsterEvent>()
             {
-                // Original MoaiEnemy event
                 new MonsterEvent(
                     "MoaiEnemy",
                     new Scale(12.0f, 0.3f, 7.0f, 25.0f),
                     new Scale(20.0f, 0.4f, 15.0f, 30.0f),
                     new Scale(1.0f, 0.03f, 1.0f, 1.0f),
                     new Scale(1.0f, 0.04f, 0.0f, 2.0f),
-                    new Scale(1.0f, 0.3f, 1.0f, 1.0f),
-                    new Scale(1.0f, 0.4f, 1.0f, 2.0f)),
+                    new Scale(1.0f, 0.3f, 1.0f, 2.0f),
+                    new Scale(1.0f, 0.4f, 1.0f, 3.0f)),
 
-                // MoaiBlue - Rare
+
                 new MonsterEvent(
                     "MoaiBlue",
                     new Scale(6.0f, 0.15f, 3.0f, 12.0f),
                     new Scale(3.0f, 0.15f, 2.5f, 8.0f),
                     new Scale(1.0f, 0.02f, 1.0f, 1.0f),
                     new Scale(1.0f, 0.03f, 0.0f, 1.0f),
-                    new Scale(1.0f, 0.25f, 1.0f, 1.0f),
-                    new Scale(1.0f, 0.25f, 1.0f, 1.0f)),
+                    new Scale(0.5f, 0.25f, 1.0f, 1.0f),
+                    new Scale(1.0f, 0.25f, 1.0f, 2.0f)),
 
-                // MoaiRed - Uncommon
                 new MonsterEvent(
                     "MoaiRed",
                     new Scale(14.0f, 0.4f, 9.0f, 25.0f),
                     new Scale(10.0f, 0.3f, 7.0f, 18.0f),
                     new Scale(1.0f, 0.03f, 1.0f, 1.0f),
                     new Scale(1.0f, 0.05f, 1.0f, 2.0f),
-                    new Scale(1.0f, 0.35f, 1.0f, 1.0f),
+                    new Scale(0.0f, 0.35f, 1.0f, 1.0f),
                     new Scale(2.0f, 0.4f, 2.0f, 2.0f)),
 
-                // MoaiGreen - Rare
                 new MonsterEvent(
                     "MoaiGreen",
                     new Scale(5.0f, 0.15f, 3.0f, 10.0f),
@@ -61,35 +58,23 @@ namespace BrutalCompanyMinus.Minus.Events
                     new Scale(1.0f, 0.25f, 1.0f, 1.0f),
                     new Scale(1.0f, 0.25f, 1.0f, 1.0f)),
 
-                // MoaiGold - Super Ultra Rare
                 new MonsterEvent(
                     "MoaiGold",
                     new Scale(1.5f, 0.05f, 0.5f, 4.0f),
                     new Scale(1.0f, 0.05f, 0.5f, 2.5f),
                     new Scale(1.0f, 0.01f, 1.0f, 1.0f),
                     new Scale(1.0f, 0.01f, 1.0f, 1.0f),
-                    new Scale(1.0f, 0.1f, 1.0f, 1.0f),
+                    new Scale(0.0f, 0.1f, 1.0f, 1.0f),
                     new Scale(1.0f, 0.1f, 1.0f, 1.0f)),
 
-                // MoaiPurple - Uncommon
                 new MonsterEvent(
                     "MoaiPurple",
                     new Scale(13.0f, 0.4f, 8.0f, 22.0f),
                     new Scale(7.0f, 0.25f, 5.0f, 14.0f),
                     new Scale(1.0f, 0.03f, 1.0f, 1.0f),
                     new Scale(1.0f, 0.05f, 1.0f, 2.0f),
-                    new Scale(1.0f, 0.35f, 1.0f, 1.0f),
-                    new Scale(2.0f, 0.4f, 2.0f, 2.0f)),
-
-                // SoulDev - Very Rare and Dangerous
-                new MonsterEvent(
-                    "SoulDev",
-                    new Scale(1.0f, 0.05f, 0.3f, 3.0f),
-                    new Scale(1.0f, 0.05f, 0.3f, 3.0f),
-                    new Scale(1.0f, 0.01f, 0.0f, 1.0f),
-                    new Scale(1.0f, 0.01f, 1.0f, 1.0f),
-                    new Scale(1.0f, 0.1f, 0.0f, 1.0f),
-                    new Scale(1.0f, 0.1f, 0.0f, 1.0f))
+                    new Scale(0.5f, 0.35f, 1.0f, 1.0f),
+                    new Scale(1.0f, 0.4f, 2.0f, 2.0f)),
             };
         }
 
