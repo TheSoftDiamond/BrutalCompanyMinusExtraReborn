@@ -20,6 +20,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
 
         public static List<MCommand> mCommands = new List<MCommand>()
         {
+            #region MHelp
             new MCommand()
             {
                 command = "MHELP",
@@ -53,6 +54,9 @@ namespace BrutalCompanyMinus.Minus.Handlers
                     }
                 })
             },
+            #endregion
+            
+            #region MEvent
             new MCommand()
             {
                 command = "MEVENT",
@@ -69,6 +73,11 @@ namespace BrutalCompanyMinus.Minus.Handlers
                     string text = "";
                     foreach(string arg in arguments)
                     {
+                        if (arg.IsNullOrWhiteSpace())
+                        {
+                            continue;
+                        }
+
                         bool found = false;
                         foreach(MEvent e in EventManager.events)
                         {
@@ -90,6 +99,9 @@ namespace BrutalCompanyMinus.Minus.Handlers
                     Respond(text);
                 })
             },
+            #endregion
+
+            #region MClear
             new MCommand()
             {
                 command = "MCLEAR",
@@ -100,7 +112,10 @@ namespace BrutalCompanyMinus.Minus.Handlers
                     EventManager.forcedEvents.Clear();
                     Respond($"Cleared forced event list\n\nCurrent forced events = [{Helper.StringsToList(EventManager.forcedEvents.Select(n => n.Name()).ToList(), ",")}]");
                 })
-            },           
+            },
+            #endregion
+            
+            #region MEvents
             new MCommand()
             {
                 command = "MEVENTS",
@@ -171,6 +186,9 @@ namespace BrutalCompanyMinus.Minus.Handlers
                     }
                 })
             },
+            #endregion
+
+            #region MPay
             new MCommand()
             {
                 command = "MPAY",
@@ -194,6 +212,9 @@ namespace BrutalCompanyMinus.Minus.Handlers
                     }
                 })
             },
+            #endregion
+
+            #region MEnemies
             new MCommand()
             {
                 command = "MENEMIES",
@@ -217,6 +238,9 @@ namespace BrutalCompanyMinus.Minus.Handlers
                     Respond(text);
                 })
             },
+            #endregion
+
+            #region MItems
             new MCommand()
             {
                 command = "MITEMS",
@@ -240,6 +264,9 @@ namespace BrutalCompanyMinus.Minus.Handlers
                     Respond(text);
                 })
             },
+            #endregion
+
+            #region MMoons
             new MCommand()
             {
                 command = "MMOONS",
@@ -421,6 +448,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
                     }
                 })
             }
+            #endregion
         };
 
         public static string ScaleTypePadded(MEvent.ScaleType type) => $"[{type}]:".PadRight(23);

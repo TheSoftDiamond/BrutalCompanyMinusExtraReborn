@@ -20,7 +20,7 @@ namespace BrutalCompanyMinus
             lethalThingsPresent = false,
             diversityPresent = false,
             scopophobiaPresent = false,
-            lcOfficePresent = false,
+            shrimpPresent = false,
             herobrinePresent = false,
             peepersPresent = false,
             sirenheadPresent = false,
@@ -62,6 +62,9 @@ namespace BrutalCompanyMinus
             FacilityMeltdownPresent = false,
             NeedyCatsPresent = false,
             furniturePackPresent = false,
+            yesFoxPresent = false,
+            soulDevPresent = false,
+            lighteaterPresent = false,
             HotBarPlusPresent = false;
 
 
@@ -180,7 +183,7 @@ namespace BrutalCompanyMinus
             lethalThingsPresent = IsModPresent("evaisa.lethalthings", "Roomba and TeleporterTraps event will now occur.");
             diversityPresent = IsModPresent("Chaos.Diversity", "Walker event will now occur.");
             scopophobiaPresent = IsModPresent("Scopophobia", "Shy Guy and NoShyGuy event will now occur.");
-            lcOfficePresent = IsModPresent("Piggy.LCOffice", "Shrimp event will now occur.");
+            shrimpPresent = IsModPresent("Piggy.Shrimp", "Shrimp event will now occur.");
             herobrinePresent = IsModPresent("Kittenji.HerobrineMod", "Herobrine event will now occur.");
             sirenheadPresent = IsModPresent("Ccode.SirenHead", "SirenHead event will now occur.");
             rollinggiantPresent = IsModPresent("nomnomab.rollinggiant", "RollingGiant and NoRollingGiant event will now occur.");
@@ -216,7 +219,10 @@ namespace BrutalCompanyMinus
             NeedyCatsPresent = IsModPresent("Jordo.NeedyCats", "Needy Cats Detected");
             ShipInventoryPresent = IsModPresent("ShipInventory", "Ship Inventory Detected. Including in inventory checks");
             HotBarPlusPresent = IsModPresent("FlipMods.HotbarPlus", "HotBarPlus Detected.");
+            yesFoxPresent = IsModPresent("uk.1a3.yesfox", "Yes Fox Detected");
+            soulDevPresent = IsModPresent("SoulDev", "Soul Dev Detected");
             furniturePackPresent = IsModPresent("MelanieMelicious.furniturePack0", "Furniture Pack Detected");
+            lighteaterPresent = IsModPresent("Lega.LightEater", "Light Eater Detected");
         }
 
         private static Assembly GetAssembly(string name)
