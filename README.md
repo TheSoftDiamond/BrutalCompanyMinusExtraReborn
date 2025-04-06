@@ -43,9 +43,7 @@ The levels of compatibility are color coded to represent the level of compatibil
 | [Brutal Company Minus](https://thunderstore.io/c/lethal-company/p/DrinkableWater/Brutal_Company_Minus/) | 🔴 (Incompatible) | BCMER is built off of BCME, which itself is built off of BCM |
 | [Brutal Comapny Minus Extra](https://thunderstore.io/c/lethal-company/p/UnloadedHangar/Brutal_Company_Minus_Extra/) | 🔴 (Incompatible) | BCMER is built off of BCME |
 | [SuperEclipse](https://thunderstore.io/c/lethal-company/p/MillieTheSilly/SuperEclipse/) | 🟢 (Compatible) | Provided ShipCoreFailure or LeverFailure is never rolled. BCMER 0.21.9+ prevents these two events from being ran if SuperEclipse is present. |
-
 </details>
-
 <details>
   <summary>Recommended Mods</summary>
 
@@ -55,8 +53,6 @@ Besides the mods in the Modded Events, other mods that may come in handy or add 
 - [ShipInventory](https://thunderstore.io/c/lethal-company/p/WarperSan/ShipInventory/) and [ShipInventoryUpdated](https://thunderstore.io/c/lethal-company/p/LethalCompanyModding/ShipInventoryUpdated/) - Helps with storage
 - [LateGame Upgrades](https://thunderstore.io/c/lethal-company/p/malco/Lategame_Upgrades/) - Helps counter some of the challenge of Brutal Company
 - [LCR](https://thunderstore.io/c/lethal-company/p/nicofloflolive/LCR/) - Makes things a bit more unpredictable.
-- 
-  
 </details>
 
 # Features
