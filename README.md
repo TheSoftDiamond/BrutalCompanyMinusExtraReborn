@@ -28,20 +28,20 @@ This section shows a list of mods and how compatible they are with BCMER. I will
 
 The levels of compatibility are color coded to represent the level of compatibility:
 
-🟢 (Compatible) - No known issues/very minor issues, if any present at all.
+🟢 (Compatible) - No known issues. Very minor bugs, if any present at all.
 
-🟠 (Partial) - Partial compability. Bugs, or issues may be present.
+🟠 (Partial) - Partial compatiblity. Bugs, or issues may be present. For most part should work normally.
 
-🔴 (Incompatible) - Not compabitible for one reason or another. May result in conflicts, bugs, softlocks or crashes.
+🔴 (Incompatible) - Not compatible for one reason or another. Most likely will result in conflicts, bugs, softlocks or crashes.
 
-🟣 (Planned) - Planned compatibility. Parts of, or completely all of BCMER or/and mod may not work as expected. Refer to notes for more information.
+🟣 (Planned) - Planned compatibility. Parts of, or completely all of BCMER or/and mod may not work as expected. Potentially no documented behavior on interaction between said mods. Refer to notes for more information.
 
 | Mod Name | Status | Notes | 
 |------------|-------------|--------------|
 | [LethalUtilities](https://thunderstore.io/c/lethal-company/p/kyxino/LethalUtilities/) | 🟠 (Partial) | Some values are capable of being modified, but BCMER takes over some level spawning properties. |
 | [Black Mesa Half Life Moon Interior](https://thunderstore.io/c/lethal-company/p/Plastered_Crab/Black_Mesa_Half_Life_Moon_Interior/) | 🟠 (Partial) | Barnacles and trip mines can not be used as an hazard properly in Custom Events. |
 | [Brutal Company Minus](https://thunderstore.io/c/lethal-company/p/DrinkableWater/Brutal_Company_Minus/) | 🔴 (Incompatible) | BCMER is built off of BCME, which itself is built off of BCM. Will cause conflicts. |
-| [Brutal Comapny Minus Extra](https://thunderstore.io/c/lethal-company/p/UnloadedHangar/Brutal_Company_Minus_Extra/) | 🔴 (Incompatible) | BCMER is built off of BCME  Will cause conflicts.|
+| [Brutal Comapny Minus Extra](https://thunderstore.io/c/lethal-company/p/UnloadedHangar/Brutal_Company_Minus_Extra/) | 🔴 (Incompatible) | BCMER is built off of BCME  Will cause conflicts. |
 | [SuperEclipse](https://thunderstore.io/c/lethal-company/p/MillieTheSilly/SuperEclipse/) | 🟢 (Compatible) | Provided ShipCoreFailure or LeverFailure is never rolled. BCMER 0.21.9+ prevents these two events from being ran if SuperEclipse is present. |
 | [GeneralImprovements](https://thunderstore.io/c/lethal-company/p/ShaosilGaming/GeneralImprovements/) | 🟠 (Partial) | Intro skip feature from GeneralImprovements causes issues with BCMER |
 | [YesFox](https://thunderstore.io/c/lethal-company/p/Dev1A3/YesFox/) | 🟣 (Planned) | May require additional patching. Currently the Kidnapper Fox only spawns if natural spawn conditions exist. |
