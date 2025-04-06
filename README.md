@@ -40,9 +40,11 @@ The levels of compatibility are color coded to represent the level of compatibil
 |------------|-------------|--------------|
 | [LethalUtilities](https://thunderstore.io/c/lethal-company/p/kyxino/LethalUtilities/) | 🟠 (Partial) | Some values are capable of being modified, but BCMER takes over some level spawning properties. |
 | [Black Mesa Half Life Moon Interior](https://thunderstore.io/c/lethal-company/p/Plastered_Crab/Black_Mesa_Half_Life_Moon_Interior/) | 🟠 (Partial) | Barnacles and trip mines can not be used as an hazard properly in Custom Events. |
-| [Brutal Company Minus](https://thunderstore.io/c/lethal-company/p/DrinkableWater/Brutal_Company_Minus/) | 🔴 (Incompatible) | BCMER is built off of BCME, which itself is built off of BCM |
-| [Brutal Comapny Minus Extra](https://thunderstore.io/c/lethal-company/p/UnloadedHangar/Brutal_Company_Minus_Extra/) | 🔴 (Incompatible) | BCMER is built off of BCME |
+| [Brutal Company Minus](https://thunderstore.io/c/lethal-company/p/DrinkableWater/Brutal_Company_Minus/) | 🔴 (Incompatible) | BCMER is built off of BCME, which itself is built off of BCM. Will cause conflicts. |
+| [Brutal Comapny Minus Extra](https://thunderstore.io/c/lethal-company/p/UnloadedHangar/Brutal_Company_Minus_Extra/) | 🔴 (Incompatible) | BCMER is built off of BCME  Will cause conflicts.|
 | [SuperEclipse](https://thunderstore.io/c/lethal-company/p/MillieTheSilly/SuperEclipse/) | 🟢 (Compatible) | Provided ShipCoreFailure or LeverFailure is never rolled. BCMER 0.21.9+ prevents these two events from being ran if SuperEclipse is present. |
+| [GeneralImprovements](https://thunderstore.io/c/lethal-company/p/ShaosilGaming/GeneralImprovements/) | 🟠 (Partial) | Intro skip feature from GeneralImprovements causes issues with BCMER |
+
 </details>
 <details>
   <summary>Recommended Mods</summary>
