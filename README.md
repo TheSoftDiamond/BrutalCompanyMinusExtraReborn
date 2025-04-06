@@ -38,7 +38,7 @@ The levels of compatibility are color coded to represent the level of compatibil
 
 | Mod Name | Status | Notes | 
 |------------|-------------|--------------|
-| [LethalUtilies](https://thunderstore.io/c/lethal-company/p/kyxino/LethalUtilities/) | 🟠 (Partial) | Some values are capable of being modified, but BCMER takes over some level spawning properties. |
+| [LethalUtilities](https://thunderstore.io/c/lethal-company/p/kyxino/LethalUtilities/) | 🟠 (Partial) | Some values are capable of being modified, but BCMER takes over some level spawning properties. |
 | [Black Mesa Half Life Moon Interior](https://thunderstore.io/c/lethal-company/p/Plastered_Crab/Black_Mesa_Half_Life_Moon_Interior/) | 🟠 (Partial) | Barnacles and trip mines can not be used as an hazard properly in Custom Events. |
 | [Brutal Company Minus](https://thunderstore.io/c/lethal-company/p/DrinkableWater/Brutal_Company_Minus/) | 🔴 (Incompatible) | BCMER is built off of BCME, which itself is built off of BCM |
 | [Brutal Comapny Minus Extra](https://thunderstore.io/c/lethal-company/p/UnloadedHangar/Brutal_Company_Minus_Extra/) | 🔴 (Incompatible) | BCMER is built off of BCME |
