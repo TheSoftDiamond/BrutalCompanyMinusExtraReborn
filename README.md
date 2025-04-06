@@ -1,8 +1,10 @@
 # Brutal Company Minus Extra Reborn
 ![Screenshot](https://softdiamond.net/images/smalllogoBCMER.png)
 
+BCMER has a website! You can find it at [https://bcmer.softdiamond.net/](https://bcmer.softdiamond.net/)
+
 <details>
-  <summary><b>Special Thanks to</b></summary>
+  <summary><b>Special Thanks To</b></summary>
   
   - UnloadedHangar, for allowing me to continue the project and help develop on it.
   - bmnr2819, for their contributions and help with testing.
@@ -17,6 +19,32 @@
 - Highly customizable!
 - Modded event support when said mods installed.
 - Supports external event injection
+
+# Mod Compatibility
+<details>
+  <summary>Compatibility</summary>
+
+This section shows a list of mods and how compatible they are with BCMER. I will not be listing any mods from the Modded Events, as you can find them [here](https://bcmer.softdiamond.net/events/) or in the readme under list of modded events. Please note that this list is subject to potential changes as features/changes to BCMER/the mod itself could break compatibility.
+
+The levels of compatibility are color coded to represent the level of compatibility:
+
+🟢 (Compatible) - No known issues/very minor issues, if any present at all.
+
+🟠 (Partial) - Partial compability. Bugs, or issues may be present.
+
+🔴 (Incompatible) - Not compabitible for one reason or another. May result in conflicts, bugs, softlocks or crashes.
+
+🟣 (Planned) - Planned compatibility. Parts of, or completely all of BCMER or/and mod may not work as expected. Refer to notes for more information.
+
+| Mod Name | Status | Notes | 
+|------------|-------------|--------------|
+| [LethalUtilies](https://thunderstore.io/c/lethal-company/p/kyxino/LethalUtilities/) | 🟠 (Partial) | Some values are capable of being modified, but BCMER takes over some level spawning properties. |
+| [Black Mesa Half Life Moon Interior](https://thunderstore.io/c/lethal-company/p/Plastered_Crab/Black_Mesa_Half_Life_Moon_Interior/) | 🟠 (Partial) | Barnacles and trip mines can not be used as an hazard properly in Custom Events. |
+| [Brutal Company Minus](https://thunderstore.io/c/lethal-company/p/DrinkableWater/Brutal_Company_Minus/) | 🔴 (Incompatible) | BCMER is built off of BCME, which itself is built off of BCM |
+| [Brutal Comapny Minus Extra](https://thunderstore.io/c/lethal-company/p/UnloadedHangar/Brutal_Company_Minus_Extra/) | 🔴 (Incompatible) | BCMER is built off of BCME |
+| [SuperEclipse](https://thunderstore.io/c/lethal-company/p/MillieTheSilly/SuperEclipse/) | 🟢 (Compatible) | Provided ShipCoreFailure or LeverFailure is never rolled. BCMER 0.21.9+ prevents these two events from being ran if SuperEclipse is present. |
+
+</details>
 
 # Features
 <details>
