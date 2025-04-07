@@ -65,7 +65,10 @@ namespace BrutalCompanyMinus
             yesFoxPresent = false,
             soulDevPresent = false,
             lighteaterPresent = false,
+            BiodiversityPresent = false,
+            OoblterraPresent = false,
             HotBarPlusPresent = false;
+
 
 
         internal static FieldInfo peeperSpawnChance = null;
@@ -221,7 +224,9 @@ namespace BrutalCompanyMinus
             HotBarPlusPresent = IsModPresent("FlipMods.HotbarPlus", "HotBarPlus Detected.");
             yesFoxPresent = IsModPresent("uk.1a3.yesfox", "Yes Fox Detected");
             soulDevPresent = IsModPresent("SoulDev", "Soul Dev Detected");
+            BiodiversityPresent = IsModPresent("com.github.biodiversitylc.Biodiversity", "Biodiversity Detected");
             furniturePackPresent = IsModPresent("MelanieMelicious.furniturePack0", "Furniture Pack Detected");
+            OoblterraPresent = IsModPresent("SkullCrusher.WTO", "Ooblterra Detected");
             lighteaterPresent = IsModPresent("Lega.LightEater", "Light Eater Detected");
         }
 
