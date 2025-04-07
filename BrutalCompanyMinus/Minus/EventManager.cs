@@ -136,6 +136,7 @@ namespace BrutalCompanyMinus.Minus
             new Events.ShipCoreFailure(),
             new Events.NutSlayersMore(),
             new Events.Dweller(),
+            new Events.TimeChaos(),
             // No Enemy
             new Events.NoBaboons(),
             new Events.NoBracken(),
@@ -196,6 +197,8 @@ namespace BrutalCompanyMinus.Minus
             new Events.HotBarHassle(),
             new Events.Bellcrab(),
             new Events.LightEaterEnemy(),
+            new Events.LeafBoys(),
+            new Events.WelcomeToOoblterra(),
 
             //Very Bad
             new Events.Mantitoil(),
