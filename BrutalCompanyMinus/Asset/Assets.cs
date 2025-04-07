@@ -74,7 +74,7 @@ namespace BrutalCompanyMinus
             get => GameObject.Find("/Environment/HangarShip");
         }
 
-        public static bool? ReadSettingEarly(string filePath, string settingName)
+        public static bool ReadSettingEarly(string filePath, string settingName)
         {
             try
             {
