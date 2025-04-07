@@ -226,6 +226,16 @@ namespace BrutalCompanyMinus
             Manager.timeSpeedMultiplier *= speedMultiplier;
         }
 
+        [ServerRpc(RequireOwnership = false)]
+        public void SetTimeMultiplierServerRpc(float speedMultiplier = 1.0f) => SetTimeMultiplierClientRpc(speedMultiplier);
+
+        [ClientRpc]
+        public void SetTimeMultiplierClientRpc(float speedMultiplier)
+        {
+            Manager.moveTime = true;
+            Manager.timeSpeedMultiplier = speedMultiplier;
+        }
+
         private void UpdateAtmosphere(FixedString128Bytes name, bool state)
         {
             for (int i = 0; i < TimeOfDay.Instance.effects.Length; i++)
@@ -277,6 +287,12 @@ namespace BrutalCompanyMinus
 
         [ClientRpc]
         public void SetAllWeatherActiveClientRpc(bool state) => Minus.Events.AllWeather.Active = state;
+
+        [ServerRpc(RequireOwnership = false)]
+        public void SetTimeChaosActiveServerRpc(bool state) => SetTimeChaosActiveClientRpc(state);
+
+        [ClientRpc]
+        public void SetTimeChaosActiveClientRpc(bool state) => Minus.Events.TimeChaos.Active = state;
 
         [ServerRpc(RequireOwnership = false)]
         public void MessWithLightsServerRpc() => MessWithLightsClientRpc();
@@ -596,7 +612,8 @@ namespace BrutalCompanyMinus
             netObject = (GameObject)Assets.bundle.LoadAsset("BrutalCompanyMinus");
             netObject.AddComponent<Net>();
             netObject.AddComponent<EnemySpawnCycle>();
-            
+            //netObject.AddComponent<TimeChaosEvent>();
+
             NetworkManager.Singleton.AddNetworkPrefab(netObject);
         }
 
