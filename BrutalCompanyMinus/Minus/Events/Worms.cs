@@ -35,11 +35,11 @@ namespace BrutalCompanyMinus.Minus.Events
                 new Scale(1.0f, 0.02f, 1.0f, 3.0f)), new MonsterEvent(
                 Assets.EnemyName.SnareFlea,
                 new Scale(20.0f, 0.8f, 20.0f, 100.0f),
-                new Scale(10.0f, 0.4f, 10.0f, 50.0f),
-                new Scale(7.0f, 0.14f, 7.0f, 21.0f),
+                new Scale(0.0f, 0.0f, 0.0f, 0.0f),
+                new Scale(9.0f, 0.14f, 9.0f, 31.0f),
                 new Scale(10.0f, 0.2f, 10.0f, 30.0f),
-                new Scale(3.0f, 0.06f, 3.0f, 9.0f),
-                new Scale(5.0f, 0.1f, 5.0f, 15.0f))
+                new Scale(0.0f, 0.00f, 0.0f, 0.0f),
+                new Scale(0.0f, 0.0f, 0.0f, 0.0f))
             };
         }
 
