@@ -140,8 +140,11 @@ namespace BrutalCompanyMinus.Minus.Handlers
                         text += Helper.StringsToList(EventManager.allRemove.Select(n => n.Name()).ToList(), ", ");
 
                         Respond(text);
-                    } else
+                    }
+                    else
                     {
+                        if (arguments[0].IsNullOrWhiteSpace()) return;
+                        
                         bool found = false;
                         foreach(MEvent mEvent in EventManager.events)
                         {
