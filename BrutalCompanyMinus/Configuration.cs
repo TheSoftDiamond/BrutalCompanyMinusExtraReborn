@@ -110,6 +110,8 @@ namespace BrutalCompanyMinus
         public static ConfigEntry<bool> VeryLateShipAdjustment;
         public static ConfigEntry<bool> dontHandlePower;
         public static ConfigEntry<bool> dontHandleSpawnCurves;
+        public static ConfigEntry<bool> enableSpecialEvents;
+        public static Scale timeChaosScale = new Scale();
 
 
         /*   public static ConfigEntry<bool> EnableStreamerEvents;*/
@@ -245,7 +247,7 @@ namespace BrutalCompanyMinus
             UITime = uiConfig.Bind("UI Options", "PopUp UI time.", 45.0f, "UI popup time");
             scrollSpeed = uiConfig.Bind("UI Options", "Scroll speed", 1.0f, "Multiplier speed on scrolling with arrows.");
             DisplayUIAfterShipLeaves = uiConfig.Bind("UI Options", "Display UI after ship leaves?", false, "Will only display event's after ship has left.");
-            DisplayExtraPropertiesAfterShipLeaves = uiConfig.Bind("UI Options", "Display extra properties on UI after ship Leaves?", true, "This will show Event Type raritys for next day and difficulty info.");
+            DisplayExtraPropertiesAfterShipLeaves = uiConfig.Bind("UI Options", "Display extra properties on UI after ship leaves?", true, "This will show Event Type raritys for next day and difficulty info.");
             displayEvents = uiConfig.Bind("UI Options", "Display events?", true, "Having this set to false wont show events in the UI.");
 
             //Core Properties
@@ -256,8 +258,11 @@ namespace BrutalCompanyMinus
             GetMethods = CorePropertiesConfig.Bind("Debugging", "Silence Get Method Warnings?", true, "Silences warnings about missing enemies and items from mods not installed.");
             HellTimeAdjustment = CorePropertiesConfig.Bind("Events Features", "Enable Hell Time Adjustment?", true, "When the Hell event occurs, should the time be adjusted to be normal? Disable if you wish to suffer.");
             VeryLateShipAdjustment = CorePropertiesConfig.Bind("Events Features", "Enable Very Late Ship Time Adjustment?", true, "When the VeryLateShip event occurs, should the time be adjusted to be normal? Disable if you wish to suffer.");
-            dontHandlePower = CorePropertiesConfig.Bind("Mod Compatibility", "Experimental Dont Handle Power?", false, "If you wish to let other mods hanlde power levels, enable this. Some settings may affect this.");
-            dontHandleSpawnCurves = CorePropertiesConfig.Bind("Mod Compatibility", "Experimental Dont Handle Spawn Chance?", false, "If you wish to let other mods hanlde spawn curves, enable this. Some settings may affect this.");
+            dontHandlePower = CorePropertiesConfig.Bind("Mod Compatibility", "Experimental Dont Handle Power?", false, "If you wish to let other mods handle power levels, enable this. Some settings may affect this.");
+            dontHandleSpawnCurves = CorePropertiesConfig.Bind("Mod Compatibility", "Experimental Dont Handle Spawn Chance?", false, "If you wish to let other mods handle spawn curves, enable this. Some settings may affect this.");
+            enableSpecialEvents = CorePropertiesConfig.Bind("Events Features", "Enable Special Events?", false, "Enables special events to be loaded.");
+
+
             //todo - add settings for events and modded events that mess with features like time
 
 
