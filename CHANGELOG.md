@@ -3,7 +3,7 @@
 <details>
   <summary>0.24.6</summary>
 
-This update adds new events. I may do a bit of tweaking with the values for some of these new events down the road.
+This update adds new events and modifies some various things in the code. I may do a bit of tweaking with the values for some of these new events down the road.
 
 # Additions
 
