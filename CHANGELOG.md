@@ -1,6 +1,24 @@
 # Changelog
 
 <details>
+  <summary>0.24.6</summary>
+
+This update adds new events. I may do a bit of tweaking with the values for some of these new events down the road.
+
+# Additions
+
+  - Added Time Chaos. Requires Special Events to be enabled.
+  - Added the Leaf Boys from BioDiversity. https://thunderstore.io/c/lethal-company/p/super_fucking_cool_and_badass_team/Biodiversity/
+  - Added Welcome To Ooblterra event. https://thunderstore.io/c/lethal-company/p/Skeleton_Studios/Welcome_To_Ooblterra/
+
+# Changes
+
+  - Updated readme to reflect mod compatibility.
+  - ReadSettingsEarly function should run better.
+  - Worm event no longer spawns snare fleas outside, and instead buffs snare fleas spawns inside.
+
+</details>
+<details>
   <summary>0.24.5</summary>
 
 # Additions
