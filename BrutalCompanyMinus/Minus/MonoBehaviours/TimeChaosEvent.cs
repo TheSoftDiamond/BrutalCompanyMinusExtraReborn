@@ -24,7 +24,6 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
 
         public void Update()
         {
-            //Log.LogWarning("Time Chaos Update");
             if (!TimeChaos.Active) return;
 
             // Set the time scale
