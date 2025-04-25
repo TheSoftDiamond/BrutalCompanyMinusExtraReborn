@@ -21,7 +21,6 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
             if (instance != null) DestroyTimeInstance();
             instance = this;
         }
-
         public void Update()
         {
             if (!TimeChaos.Active) return;
