@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 using Unity.Netcode;
 using UnityEngine;
 using LethalNetworkAPI;
+using GameNetcodeStuff;
+using BrutalCompanyMinus.Minus.Handlers.Modded;
+using BrutalCompanyMinus;
 
 namespace BrutalCompanyMinus.Minus.Events
 {
@@ -29,57 +32,166 @@ namespace BrutalCompanyMinus.Minus.Events
             ColorHex = "#FF0000";
             Type = EventType.Bad;
 
-        //    monsterEvents = new List<MonsterEvent>() { new MonsterEvent(
-        //        Assets.EnemyName.Manticoil,
-        //        new Scale(20.0f, 0.8f, 20.0f, 100.0f),
-        //        new Scale(5.0f, 0.2f, 5.0f, 25.0f),
-        //        new Scale(3.0f, 0.06f, 3.0f, 9.0f),
-        //        new Scale(4.0f, 0.08f, 4.0f, 12.0f),
-        //        new Scale(8.0f, 0.02f, 8.0f, 10.0f),
-        //        new Scale(10.0f, 0.03f, 10.0f, 12.0f))
-        //    };
-
-          //  EventsToRemove = new List<string>() { nameof(NoMantitoil) };
-
         }
-        
-     //   public override bool AddEventIfOnly() => Compatibility.NonShippingAuthorisationPresent;
 
         public override void Execute()
         {
             if (NetworkManager.Singleton.IsHost)
             {
-              //  Log.LogWarning(" Reseting FlashLightNet to prevent bugs ");
                 FlashLightNet.Value = 0;
                 FlashLightActive = 0;
-              //  Log.LogError(CameraNet.Value);
-
             }
             FlashLightActive = 0;
+
+            FlashlightsGoEmptyAtStart();
         }
         public override void OnShipLeave()
         {
             if (NetworkManager.Singleton.IsHost)
             {
-              //  Log.LogWarning(" Reseting FlashLightNet to prevent bugs ");
                 FlashLightNet.Value = 1;
                 FlashLightActive = 1;
-              //  Log.LogError(CameraNet.Value);
-
             }
             FlashLightActive = 1;
+
+            ChargeUpBatteries();
+
         }
         public override void OnGameStart()
         {
             if (NetworkManager.Singleton.IsHost)
             {
-              //  Log.LogWarning(" Reseting FlashLightNet to prevent bugs ");
                 FlashLightNet.Value = 1;
                 FlashLightActive = 1;
-              //  Log.LogError(CameraNet.Value);
 
             }
             FlashLightActive = 1;
         }
+        internal void FlashlightsGoEmptyAtStart()
+        {
+            GameObject hangarShip = Assets.hangarShip;
+            if (hangarShip == null)
+            {
+                return;
+            }
+
+            GrabbableObject[] itemsInShip = hangarShip.GetComponentsInChildren<GrabbableObject>();
+
+            foreach (GrabbableObject item in itemsInShip)
+            {
+                if (item == null || (item.itemProperties.itemName != "Flashlight" && item.itemProperties.itemName != "Pro-flashlight"))
+                {
+                    continue;
+                }
+                else
+                {
+                    // Charge the item back to 100%
+                    item.insertedBattery = new Battery(false, 0f);
+                    item.SyncBatteryServerRpc(0);
+                }
+            }
+
+            GameObject companyCruiser = Assets.cruiser;
+            if (companyCruiser != null)
+            {
+                GrabbableObject[] itemsInCruiser = companyCruiser.GetComponentsInChildren<GrabbableObject>();
+
+                foreach (GrabbableObject item in itemsInCruiser)
+                {
+                    if (item == null || (item.itemProperties.itemName != "Flashlight" && item.itemProperties.itemName != "Pro-flashlight"))
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        // Charge the item back to 100%
+                        item.insertedBattery = new Battery(false, 0f);
+                        item.SyncBatteryServerRpc(0);
+                    }
+                }
+            }
+            //else Log.LogDebug("No cruiser found");
+
+            PlayerControllerB playerScript = GameNetworkManager.Instance.localPlayerController;
+            if (playerScript == null) return;
+
+            foreach (var item in playerScript.ItemSlots)
+            {
+                if (item == null || (item.itemProperties.itemName != "Flashlight" && item.itemProperties.itemName != "Pro-flashlight"))
+                {
+                    continue;
+                }
+                else
+                {
+                    // Charge the item back to 100%
+                    item.insertedBattery = new Battery(false, 0f);
+                    item.SyncBatteryServerRpc(0);
+                }
+            }
+        }
+
+        internal void ChargeUpBatteries()
+        {
+            GameObject hangarShip = Assets.hangarShip;
+            if (hangarShip == null)
+            {
+                return;
+            }
+
+            GrabbableObject[] itemsInShip = hangarShip.GetComponentsInChildren<GrabbableObject>();
+
+            foreach (GrabbableObject item in itemsInShip)
+            {
+                if (item == null || (item.itemProperties.itemName != "Flashlight" && item.itemProperties.itemName != "Pro-flashlight"))
+                {
+                    continue;
+                }
+                else
+                {
+                    // Charge the item back to 100%
+                    item.insertedBattery = new Battery(true, 1f);
+                    item.SyncBatteryServerRpc(100);
+                }
+            }
+
+            GameObject companyCruiser = Assets.cruiser;
+            if (companyCruiser != null)
+            {
+                GrabbableObject[] itemsInCruiser = companyCruiser.GetComponentsInChildren<GrabbableObject>();
+
+                foreach (GrabbableObject item in itemsInCruiser)
+                {
+                    if (item == null || (item.itemProperties.itemName != "Flashlight" && item.itemProperties.itemName != "Pro-flashlight"))
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        // Charge the item back to 100%
+                        item.insertedBattery = new Battery(true, 1f);
+                        item.SyncBatteryServerRpc(100);
+                    }
+                }
+            }
+            //else Log.LogDebug("No cruiser found");
+
+            PlayerControllerB playerScript = GameNetworkManager.Instance.localPlayerController;
+            if (playerScript == null) return;
+
+            foreach (var item in playerScript.ItemSlots)
+            {
+                if (item == null || (item.itemProperties.itemName != "Flashlight" && item.itemProperties.itemName != "Pro-flashlight"))
+                {
+                    continue;
+                }
+                else
+                {
+                    // Charge the item back to 100%
+                    item.insertedBattery = new Battery(true, 1f);
+                    item.SyncBatteryServerRpc(100);
+                }
+            }
+        }
+
     }
 }
