@@ -16,10 +16,9 @@ namespace BrutalCompanyMinus.Minus.Events
 
         public static ItemChargerFailure Instance;
 
-        public static int ChargerActive = 1;
-
         public static LethalNetworkVariable<int> ItemChargerNet = new LethalNetworkVariable<int>(identifier: "itemchargerid") { Value = 1 };
 
+        public static int ChargerActive = 1;
         public override void Initalize()
         {
             Instance = this;

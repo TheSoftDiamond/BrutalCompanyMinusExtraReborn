@@ -578,6 +578,126 @@ namespace BrutalCompanyMinus
         }
 
         [ServerRpc(RequireOwnership = false)]
+        public void LightsOffServerRpc()
+        {
+            LightsOffClientRpc();
+        }
+
+        [ClientRpc]
+        public void LightsOffClientRpc()
+        {
+            GameObject hangarShip = Assets.hangarShip;
+            if (hangarShip == null)
+            {
+                return;
+            }
+
+            // Find a gameobject called ShipElectricLights, which is a child of hangarShip
+            GameObject shipElectricLights = hangarShip.transform.Find("ShipElectricLights").gameObject;
+            if (shipElectricLights == null)
+            {
+                return;
+            }
+
+            // Find two objects called "Area Light (3)", and one "Area Light (4)" which is a child of ShipElectricLights, and setactive false it
+            GameObject areaLight3 = shipElectricLights.transform.Find("Area Light (3)")?.gameObject;
+            if (areaLight3 != null)
+            {
+                areaLight3.SetActive(false);
+            }
+
+            GameObject areaLight4 = shipElectricLights.transform.Find("Area Light (4)")?.gameObject;
+            if (areaLight4 != null)
+            {
+                areaLight4.SetActive(false);
+            }
+
+            GameObject areaLight5 = shipElectricLights.transform.Find("Area Light (5)")?.gameObject;
+            if (areaLight5 != null)
+            {
+                areaLight5.SetActive(false);
+            }
+
+            GameObject areaLight7 = shipElectricLights.transform.Find("Area Light (7)")?.gameObject;
+            if (areaLight7 != null)
+            {
+                areaLight7.SetActive(false);
+            }
+
+            GameObject areaLight8 = shipElectricLights.transform.Find("Area Light (8)")?.gameObject;
+            if (areaLight8 != null)
+            {
+                areaLight8.SetActive(false);
+            }
+
+            GameObject areaLight9 = shipElectricLights.transform.Find("Area Light (9)")?.gameObject;
+            if (areaLight9 != null)
+            {
+                areaLight9.SetActive(false);
+            }
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void LightsOnServerRpc()
+        {
+            LightsOnClientRpc();
+        }
+
+        [ClientRpc]
+        public void LightsOnClientRpc()
+        {
+            GameObject hangarShip = Assets.hangarShip;
+            if (hangarShip == null)
+            {
+                return;
+            }
+
+            // Find a gameobject called ShipElectricLights, which is a child of hangarShip
+            GameObject shipElectricLights = hangarShip.transform.Find("ShipElectricLights").gameObject;
+            if (shipElectricLights == null)
+            {
+                return;
+            }
+
+            // Find two objects called "Area Light (3)", and one "Area Light (4)" which is a child of ShipElectricLights, and setactive false it
+            GameObject areaLight3 = shipElectricLights.transform.Find("Area Light (3)")?.gameObject;
+            if (areaLight3 != null)
+            {
+                areaLight3.SetActive(true);
+            }
+
+            GameObject areaLight4 = shipElectricLights.transform.Find("Area Light (4)")?.gameObject;
+            if (areaLight4 != null)
+            {
+                areaLight4.SetActive(true);
+            }
+
+            GameObject areaLight5 = shipElectricLights.transform.Find("Area Light (5)")?.gameObject;
+            if (areaLight5 != null)
+            {
+                areaLight5.SetActive(true);
+            }
+
+            GameObject areaLight7 = shipElectricLights.transform.Find("Area Light (7)")?.gameObject;
+            if (areaLight7 != null)
+            {
+                areaLight7.SetActive(true);
+            }
+
+            GameObject areaLight8 = shipElectricLights.transform.Find("Area Light (8)")?.gameObject;
+            if (areaLight8 != null)
+            {
+                areaLight8.SetActive(true);
+            }
+
+            GameObject areaLight9 = shipElectricLights.transform.Find("Area Light (9)")?.gameObject;
+            if (areaLight9 != null)
+            {
+                areaLight9.SetActive(true);
+            }
+        }
+
+        [ServerRpc(RequireOwnership = false)]
         public void TeleportPlayerServerRPC(NetworkObjectReference obj, Vector3 pos) => TeleportPlayerClientRPC(obj, pos);
 
         [ClientRpc]
