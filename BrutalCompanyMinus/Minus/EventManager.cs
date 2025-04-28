@@ -69,7 +69,7 @@ namespace BrutalCompanyMinus.Minus
             new Events.HoardingBugs(),
             new Events.Dustpans(),
             new Events.Bees(),
-            //new Events.ShipLightsFailure(),
+            new Events.ShipLightsFailure(),
             new Events.Landmines(),
             new Events.Lizard(),
             new Events.Slimes(),
