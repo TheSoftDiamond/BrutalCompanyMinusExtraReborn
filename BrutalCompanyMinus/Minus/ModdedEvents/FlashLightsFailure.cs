@@ -85,7 +85,7 @@ namespace BrutalCompanyMinus.Minus.Events
                 }
                 else
                 {
-                    // Charge the item back to 100%
+                    // Charge the item to 0%
                     item.insertedBattery = new Battery(false, 0f);
                     item.SyncBatteryServerRpc(0);
                 }
@@ -104,7 +104,7 @@ namespace BrutalCompanyMinus.Minus.Events
                     }
                     else
                     {
-                        // Charge the item back to 100%
+                        // Charge the item to 0%
                         item.insertedBattery = new Battery(false, 0f);
                         item.SyncBatteryServerRpc(0);
                     }
@@ -123,7 +123,7 @@ namespace BrutalCompanyMinus.Minus.Events
                 }
                 else
                 {
-                    // Charge the item back to 100%
+                    // Charge the item to 0%
                     item.insertedBattery = new Battery(false, 0f);
                     item.SyncBatteryServerRpc(0);
                 }
