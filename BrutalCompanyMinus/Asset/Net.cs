@@ -1,7 +1,9 @@
 ﻿using BrutalCompanyMinus.Minus;
+using BrutalCompanyMinus.Minus.Events;
 using BrutalCompanyMinus.Minus.Handlers;
 using BrutalCompanyMinus.Minus.Handlers.Modded;
 using BrutalCompanyMinus.Minus.MonoBehaviours;
+using com.github.zehsteam.TakeyPlush;
 using GameNetcodeStuff;
 using HarmonyLib;
 using System;
@@ -11,6 +13,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Rendering.HighDefinition;
+using AllWeather = BrutalCompanyMinus.Minus.Handlers.AllWeather;
 
 namespace BrutalCompanyMinus
 {
@@ -575,6 +578,18 @@ namespace BrutalCompanyMinus
                 int percentage = 100 - (int)Mathf.Clamp(rng.Next(minPercentageCut, maxPercentageCut), 0.0f, 90.0f);
                 Manager.currentTerminal.itemSalesPercentages[i] = (int)Math.Round((double)percentage / 10) * 10;
             }
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void SetFlashlightsServerRpc(bool active)
+        {
+            SetFlashlightsClientRpc(active);
+        }
+
+        [ClientRpc]
+        public void SetFlashlightsClientRpc(bool active)
+        { 
+            FlashLightsFailure.Active = active;
         }
 
         [ServerRpc(RequireOwnership = false)]

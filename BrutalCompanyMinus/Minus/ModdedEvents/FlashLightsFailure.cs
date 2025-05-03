@@ -12,6 +12,9 @@ using GameNetcodeStuff;
 using BrutalCompanyMinus.Minus.Handlers.Modded;
 using BrutalCompanyMinus;
 using Steamworks.Ugc;
+using BrutalCompanyMinus.Minus.Handlers;
+using System.ComponentModel.Design;
+using BrutalCompanyMinus.Minus.MonoBehaviours;
 
 namespace BrutalCompanyMinus.Minus.Events
 {
@@ -21,12 +24,8 @@ namespace BrutalCompanyMinus.Minus.Events
         public override string Name() => nameof(FlashLightsFailure);
 
         public static FlashLightsFailure Instance;
-
-        public static int FlashLightActive = 1;
-
+        
         public static bool Active = false;
-
-        public static LethalNetworkVariable<int> FlashLightNet = new LethalNetworkVariable<int>(identifier: "flashlightid") { Value = 1 };
 
         public override void Initalize()
         {
@@ -41,17 +40,34 @@ namespace BrutalCompanyMinus.Minus.Events
 
         public override void Execute()
         {
+            // Make sure already existing flashlights are empty
             FlashlightsGoEmptyAtStart();
-            Active = true;
+
+            // Declare the Active state to true globally
+            Net.Instance.SetFlashlightsServerRpc(true);
+
+            // Bind the FlashLightFailure to an GameObject
+            GameObject flashlightObject = new GameObject("FlashlightsFailureObject");
+
+            // Add the FlashlightItemChargerPatches component to the GameObject
+            flashlightObject.AddComponent<FlashlightItemChargerPatches>();
         }
         public override void OnShipLeave()
         {
+            // Make sure the flashlights are charged upon leaving
             ChargeUpBatteries();
+
+            // Reset the Active state
             Active = false;
         }
         public override void OnGameStart()
         {
+            // Reset the Active state
             Active = false;
+        }
+
+        public override void OnLocalDisconnect()
+        {
         }
         internal void FlashlightsGoEmptyAtStart()
         {
@@ -180,33 +196,19 @@ namespace BrutalCompanyMinus.Minus.Events
         }
 
         [HarmonyPrefix]
-        [HarmonyPatch(typeof(GrabbableObject), nameof(GrabbableObject.GrabItem))]
-        public static void FlashlightFailureItemGrab(GrabbableObject __instance)
+        [HarmonyPatch(typeof(ItemCharger), nameof(ItemCharger.ChargeItem))]
+        public static bool InterruptChargeFlashlightItem(ItemCharger __instance)
         {
+            // Interrupt the charger method
             if (Events.FlashLightsFailure.Active)
             {
-                if (__instance.itemProperties.itemName == "Flashlight" || __instance.itemProperties.itemName == "Pro-flashlight")
-                {
-                    __instance.insertedBattery = new Battery(false, 0f);
-                    __instance.SyncBatteryServerRpc(0);
-                }
-            }
-        }
-        
-        // We borrow from the ItemChargerPatches to allow it to patch flashlights.
-        [HarmonyPatch(typeof(ItemCharger))]
-        internal class ItemChargerPatches
-        {
-            [HarmonyPrefix]
-            [HarmonyPatch("ChargeItem")]
-            private static bool InterruptChargeFlashlightItem()
-            {
-                // Interrupt the charger if certain criterion met
-                if (Events.FlashLightsFailure.Active)
+                PlayerControllerB localPlayer = GameNetworkManager.Instance.localPlayerController;
+                if (localPlayer != null && localPlayer.currentlyHeldObjectServer != null)
                 {
                     GrabbableObject currentItem = GameNetworkManager.Instance.localPlayerController.currentlyHeldObjectServer;
                     if (currentItem.itemProperties.itemName == "Flashlight" || currentItem.itemProperties.itemName == "Pro-flashlight")
                     {
+                        __instance.triggerScript.interactable = false;
                         HUDManager.Instance.globalNotificationText.text =
                         "FLASHLIGHT CANNOT BE CHARGED!!!!";
 
@@ -218,8 +220,23 @@ namespace BrutalCompanyMinus.Minus.Events
                         return false;
                     }
                 }
+            }
 
-                return true;
+            return true;
+        }
+
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(GrabbableObject), nameof(GrabbableObject.GrabItem))]
+        public static void FlashlightFailureItemGrab(GrabbableObject __instance)
+        {
+            // Interrupt the grab item method 
+            if (Events.FlashLightsFailure.Active)
+            {
+                if (__instance.itemProperties.itemName == "Flashlight" || __instance.itemProperties.itemName == "Pro-flashlight")
+                {
+                    __instance.insertedBattery = new Battery(false, 0f);
+                    __instance.SyncBatteryServerRpc(0);
+                }
             }
         }
     }

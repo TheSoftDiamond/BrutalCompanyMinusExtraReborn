@@ -1,142 +1,162 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <LangVersion>latest</LangVersion>
-    <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
-    <Nullable>enable</Nullable>
-    
-    <Authors>SoftDiamond</Authors>
-    <Product>BrutalCompanyMinusExtraReborn</Product>
-    <ToolCommandName>BrutalCompanyMinusExtraReborn</ToolCommandName>
-    
-    <RootNamespace>BrutalCompanyMinus</RootNamespace>
+﻿<Project Sdk="Microsoft.NET.Sdk">  
+<PropertyGroup> 
+	<TargetFramework>netstandard2.1</TargetFramework>  
+	<AllowUnsafeBlocks>true</AllowUnsafeBlocks>  
+	<LangVersion>latest</LangVersion>  
+	<ProduceReferenceAssembly>False</ProduceReferenceAssembly>  
+	<Nullable>enable</Nullable>  
 
-    <RestoreAdditionalProjectSources>
-      https://api.nuget.org/v3/index.json;
-      https://nuget.bepinex.dev/v3/index.json;
-      https://nuget.samboy.dev/v3/index.json;
-    </RestoreAdditionalProjectSources>
-  </PropertyGroup>
+	<Authors>SoftDiamond</Authors>  
+	<Product>BrutalCompanyMinusExtraReborn</Product>  
+	<ToolCommandName>BrutalCompanyMinusExtraReborn</ToolCommandName>
 
-  <ItemGroup>
-    <Compile Remove="Minus\Modules\**" />
-    <EmbeddedResource Remove="Minus\Modules\**" />
-    <None Remove="Minus\Modules\**" />
-  </ItemGroup>
 
-  <ItemGroup>
-    <Compile Remove="Minus\Handlers\AutopilotFailure.cs" />
-    <Compile Remove="Minus\Handlers\BreakerBox.cs" />
-    <Compile Remove="Minus\Handlers\CodeCheck.cs" />
-    <Compile Remove="Minus\Handlers\CreditsMonitor.cs" />
-    <Compile Remove="Minus\Handlers\EnemyAIModify.cs" />
-    <Compile Remove="Minus\Handlers\Icarus - Kopie.cs" />
-    <Compile Remove="Minus\Handlers\ISPH.cs" />
-    <Compile Remove="Minus\Handlers\Jetpack - Kopie.cs" />
-    <Compile Remove="Minus\Handlers\RustedDoors.cs" />
-    <Compile Remove="Minus\Handlers\SafeBridgesH.cs" />
-    <Compile Remove="Minus\Handlers\ShipLightsAdditions.cs" />
-    <Compile Remove="Minus\Handlers\SpiderConf.cs" />
-    <Compile Remove="Minus\Handlers\TakeyAwakePatch.cs" />
-    <Compile Remove="Minus\Handlers\TakeyDinkDonkH.cs" />
-    <Compile Remove="Minus\Handlers\ZombiesShutup.cs" />
-    <Compile Remove="Minus\ModdedEvents\BlahajPlush.cs" />
-    <Compile Remove="Minus\ModdedEvents\ButlerAiTechinalDifficulties.cs" />
-    <Compile Remove="Minus\ModdedEvents\Crazy.cs" />
-    <Compile Remove="Minus\ModdedEvents\FoxEv.cs" />
-    <Compile Remove="Minus\ModdedEvents\HallucinoceptsEv.cs" />
-    <Compile Remove="Minus\ModdedEvents\Invisible.cs" />
-    <Compile Remove="Minus\ModdedEvents\ISP.cs" />
-    <Compile Remove="Minus\ModdedEvents\MaskedHorde.cs" />
-    <Compile Remove="Minus\ModdedEvents\MushroomEv.cs" />
-    <Compile Remove="Minus\ModdedEvents\PowerFail.cs" />
-    <Compile Remove="Minus\ModdedEvents\RustedDoorsEv.cs" />
-    <Compile Remove="Minus\ModdedEvents\SafeBridges.cs" />
-    <Compile Remove="Minus\ModdedEvents\SpiderPlush.cs" />
-    <Compile Remove="Minus\ModdedEvents\StrawberryDonut.cs" />
-    <Compile Remove="Minus\ModdedEvents\TakeyGokuPlush.cs" />
-    <Compile Remove="Minus\ModdedEvents\TakeyGokuPlushBig.cs" />
-    <Compile Remove="Minus\ModdedEvents\TakeyPlush.cs" />
-    <Compile Remove="Minus\ModdedEvents\TakeyPlushDinkDonk.cs" />
-    <Compile Remove="Minus\ModdedEvents\Toilet.cs" />
-    <Compile Remove="Minus\ModdedEvents\ToilPlayerEv.cs" />
-    <Compile Remove="Minus\ModdedEvents\ZombieApocalipse.cs" />
-    <Compile Remove="Minus\ModdedEvents\ZombiesPlush.cs" />
-  </ItemGroup>
-		
-  <ItemGroup>
-    <None Remove="Asset\asset" />
-    <None Remove="Asset\bcm_assets" />
-    <None Remove="Asset\bcm_customassets" />
-    <None Remove="Asset\customassets" />
-    <None Remove="Asset\customenemies" />
-  </ItemGroup>
+	<RootNamespace>BrutalCompanyMinus</RootNamespace>  
 
-  <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.5.0-beta.1" PrivateAssets="all" />
-    <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
-    <PackageReference Include="BepInEx.Core" Version="5.*" />
-    <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" />
-    <PackageReference Include="Rune580.Mods.LethalCompany.InputUtils" Version="0.7.10" />
-    <PackageReference Include="UnityEngine.Modules" Version="2022.3.9" IncludeAssets="compile" PrivateAssets="all" />
-    <PackageReference Include="LethalCompany.GameLibs.Steam" Version="67.0.0-ngd.0" PrivateAssets="all" />
-  </ItemGroup>
-  
-  <ItemGroup>
-    <Reference Include="BCMECodeSecurityCheck">               <HintPath>libs\BCMECodeSecurityCheck.dll               </HintPath></Reference>
-    <Reference Include="com.github.zehsteam.BlahajPlush">     <HintPath>libs\com.github.zehsteam.BlahajPlush.dll     </HintPath></Reference>
-    <Reference Include="com.github.zehsteam.TakeyGokuBracken"><HintPath>libs\com.github.zehsteam.TakeyGokuBracken.dll</HintPath></Reference>
-	<Reference Include="com.github.zehsteam.TakeyPlush">      <HintPath>libs\com.github.zehsteam.TakeyPlush.dll      </HintPath></Reference>
-    <Reference Include="com.github.zehsteam.ToilHead">        <HintPath>libs\com.github.zehsteam.ToilHead.dll        </HintPath></Reference>
-    <Reference Include="com.github.zehsteam.ZombiesPlush">    <HintPath>libs\com.github.zehsteam.ZombiesPlush.dll    </HintPath></Reference>
-    <Reference Include="FacilityMeltdown">                    <HintPath>libs\FacilityMeltdown.dll                    </HintPath></Reference>
-    <Reference Include="LethalNetworkAPI">                    <HintPath>libs\LethalNetworkAPI.dll                    </HintPath></Reference>
-    <Reference Include="ShipInventory">                       <HintPath>libs\ShipInventory.dll                       </HintPath></Reference>
-	<Reference Include="HotBarPlus">                          <HintPath>libs\HotBarPlus.dll                          </HintPath></Reference>
-	<Reference Include="uk.1a3.yesfox">                       <HintPath>libs\yesfox.dll</HintPath></Reference>
-  </ItemGroup>
-  
-  <PropertyGroup>
-    <!-- Mod libraries folder -->
-    <LibraryFolder>D:\Documents\Lethal Company Modding\Mods</LibraryFolder>
+	<RestoreAdditionalProjectSources>  
+		https://api.nuget.org/v3/index.json;  
+		https://nuget.bepinex.dev/v3/index.json;  
+		https://nuget.samboy.dev/v3/index.json;  
+	</RestoreAdditionalProjectSources>  
+</PropertyGroup>  
 
-    <!-- Steam library folder -->
-    <SteamLibrary>D:\SteamLibrary\steamapps\common</SteamLibrary>
+<ItemGroup>  
+	<Compile Remove="Minus\Modules\**" />  
+	<EmbeddedResource Remove="Minus\Modules\**" />  
+	<None Remove="Minus\Modules\**" />  
+</ItemGroup>  
 
-    <!-- Lethal Company plugins folder -->
-    <PluginsFolder>$(SteamLibrary)\Lethal Company\BepInEx\plugins</PluginsFolder>
-    
-    <!-- Gale profile name -->
-    <GaleProfile>BCDev2</GaleProfile>
-    
-    <!-- Gale plugins folder -->
-    <GalePluginsFolder>$(AppData)\com.kesomannen.gale\lethal-company\profiles\$(GaleProfile)\BepInEx\plugins\SoftDiamond-BrutalCompanyMinusExtraReborn</GalePluginsFolder>
-    
-    <!-- Other settings -->
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <GenerateDocumentationFile>False</GenerateDocumentationFile>
-  </PropertyGroup>
-  
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <Optimize>False</Optimize>
-    <DebugType>embedded</DebugType>
-  </PropertyGroup>
-  
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DebugType>embedded</DebugType>
-  </PropertyGroup>
-  
-  <Target Name="NetcodePatch" AfterTargets="PostBuildEvent">
-    <Exec Command="netcode-patch &quot;$(TargetPath)&quot; @(ReferencePathWithRefAssemblies->'&quot;%(Identity)&quot;', ' ')" />
-  </Target>
+<ItemGroup>  
+	<Compile Remove="Minus\Handlers\AutopilotFailure.cs" />  
+	<Compile Remove="Minus\Handlers\BreakerBox.cs" />  
+	<Compile Remove="Minus\Handlers\CodeCheck.cs" />  
+	<Compile Remove="Minus\Handlers\CreditsMonitor.cs" />  
+	<Compile Remove="Minus\Handlers\EnemyAIModify.cs" />  
+	<Compile Remove="Minus\Handlers\Icarus - Kopie.cs" />  
+	<Compile Remove="Minus\Handlers\ISPH.cs" />  
+	<Compile Remove="Minus\Handlers\Jetpack - Kopie.cs" />  
+	<Compile Remove="Minus\Handlers\RustedDoors.cs" />  
+	<Compile Remove="Minus\Handlers\SafeBridgesH.cs" />  
+	<Compile Remove="Minus\Handlers\ShipLightsAdditions.cs" />  
+	<Compile Remove="Minus\Handlers\SpiderConf.cs" />  
+	<Compile Remove="Minus\Handlers\TakeyAwakePatch.cs" />  
+	<Compile Remove="Minus\Handlers\TakeyDinkDonkH.cs" />  
+	<Compile Remove="Minus\Handlers\ZombiesShutup.cs" />  
+	<Compile Remove="Minus\ModdedEvents\BlahajPlush.cs" />  
+	<Compile Remove="Minus\ModdedEvents\ButlerAiTechinalDifficulties.cs" />  
+	<Compile Remove="Minus\ModdedEvents\Crazy.cs" />  
+	<Compile Remove="Minus\ModdedEvents\FoxEv.cs" />  
+	<Compile Remove="Minus\ModdedEvents\HallucinoceptsEv.cs" />  
+	<Compile Remove="Minus\ModdedEvents\Invisible.cs" />  
+	<Compile Remove="Minus\ModdedEvents\ISP.cs" />  
+	<Compile Remove="Minus\ModdedEvents\MaskedHorde.cs" />  
+	<Compile Remove="Minus\ModdedEvents\MushroomEv.cs" />  
+	<Compile Remove="Minus\ModdedEvents\PowerFail.cs" />  
+	<Compile Remove="Minus\ModdedEvents\RustedDoorsEv.cs" />  
+	<Compile Remove="Minus\ModdedEvents\SafeBridges.cs" />  
+	<Compile Remove="Minus\ModdedEvents\SpiderPlush.cs" />  
+	<Compile Remove="Minus\ModdedEvents\StrawberryDonut.cs" />  
+	<Compile Remove="Minus\ModdedEvents\TakeyGokuPlush.cs" />  
+	<Compile Remove="Minus\ModdedEvents\TakeyGokuPlushBig.cs" />  
+	<Compile Remove="Minus\ModdedEvents\TakeyPlush.cs" />  
+	<Compile Remove="Minus\ModdedEvents\TakeyPlushDinkDonk.cs" />  
+	<Compile Remove="Minus\ModdedEvents\Toilet.cs" />  
+	<Compile Remove="Minus\ModdedEvents\ToilPlayerEv.cs" />  
+	<Compile Remove="Minus\ModdedEvents\ZombieApocalipse.cs" />  
+	<Compile Remove="Minus\ModdedEvents\ZombiesPlush.cs" />  
+</ItemGroup>  
 
-  <Target Name="CopyToPluginsFolder" AfterTargets="PostBuildEvent">
-    <Copy DestinationFolder="$(PluginsFolder)" OverwriteReadOnlyFiles="true" SkipUnchangedFiles="true" SourceFiles="$(TargetPath)" />
-  </Target>
-  
-  <Target Name="CopyToGalePluginsFolder" AfterTargets="CopyToPluginsFolder">
-    <Copy DestinationFolder="$(GalePluginsFolder)" OverwriteReadOnlyFiles="true" SkipUnchangedFiles="true" SourceFiles="$(TargetPath)" />
-  </Target>
+<ItemGroup>  
+	<None Remove="Asset\asset" />  
+	<None Remove="Asset\bcm_assets" />  
+	<None Remove="Asset\bcm_customassets" />  
+	<None Remove="Asset\customassets" />  
+	<None Remove="Asset\customenemies" />  
+</ItemGroup>  
+
+<ItemGroup>  
+	<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />  
+	<PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.5.0-beta.1" PrivateAssets="all" />  
+	<PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />  
+	<PackageReference Include="BepInEx.Core" Version="5.*" />  
+	<PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" />  
+	<PackageReference Include="Rune580.Mods.LethalCompany.InputUtils" Version="0.7.10" />  
+	<PackageReference Include="UnityEngine.Modules" Version="2022.3.9" IncludeAssets="compile" PrivateAssets="all" />  
+	<PackageReference Include="LethalCompany.GameLibs.Steam" Version="67.0.0-ngd.0" PrivateAssets="all" />  
+</ItemGroup>  
+
+<ItemGroup>  
+	<Reference Include="BCMECodeSecurityCheck">  
+		<HintPath>libs\BCMECodeSecurityCheck.dll               </HintPath>  
+	</Reference>  
+	<Reference Include="com.github.zehsteam.BlahajPlush">  
+		<HintPath>libs\com.github.zehsteam.BlahajPlush.dll     </HintPath>  
+	</Reference>  
+	<Reference Include="com.github.zehsteam.TakeyGokuBracken">  
+		<HintPath>libs\com.github.zehsteam.TakeyGokuBracken.dll</HintPath>  
+	</Reference>  
+	<Reference Include="com.github.zehsteam.TakeyPlush">  
+		<HintPath>libs\com.github.zehsteam.TakeyPlush.dll      </HintPath>  
+	</Reference>  
+	<Reference Include="com.github.zehsteam.ToilHead">  
+		<HintPath>libs\com.github.zehsteam.ToilHead.dll        </HintPath>  
+	</Reference>  
+	<Reference Include="com.github.zehsteam.ZombiesPlush">  
+   <HintPath>libs\com.github.zehsteam.ZombiesPlush.dll</HintPath>  
+	</Reference>  
+	<Reference Include="FacilityMeltdown">  
+		<HintPath>libs\FacilityMeltdown.dll                    </HintPath>  
+	</Reference>  
+	<Reference Include="LethalNetworkAPI">  
+		<HintPath>libs\LethalNetworkAPI.dll                    </HintPath>  
+	</Reference>  
+	<Reference Include="ShipInventory">  
+		<HintPath>libs\ShipInventory.dll                       </HintPath>  
+	</Reference>  
+	<Reference Include="HotBarPlus">  
+		<HintPath>libs\HotBarPlus.dll                          </HintPath>  
+	</Reference>  
+	<Reference Include="uk.1a3.yesfox">  
+		<HintPath>libs\yesfox.dll</HintPath>  
+	</Reference>  
+</ItemGroup>  
+
+<PropertyGroup>  
+	<!-- Steam library folder -->  
+	<SteamLibrary>D:\SteamLibrary\steamapps\common</SteamLibrary>  
+
+	<!-- Lethal Company plugins folder -->  
+	<PluginsFolder>$(SteamLibrary)\Lethal Company\BepInEx\plugins</PluginsFolder>  
+
+	<!-- Gale profile name -->  
+	<GaleProfile>BCDev2</GaleProfile>  
+
+	<!-- Gale plugins folder -->  
+	<GalePluginsFolder>$(AppData)\com.kesomannen.gale\lethal-company\profiles\$(GaleProfile)\BepInEx\plugins\SoftDiamond-BrutalCompanyMinusExtraReborn</GalePluginsFolder>  
+
+	<!-- Other settings -->  
+	<PlatformTarget>AnyCPU</PlatformTarget>  
+	<GenerateDocumentationFile>False</GenerateDocumentationFile>  
+</PropertyGroup>  
+
+<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">  
+	<Optimize>False</Optimize>  
+	<DebugType>embedded</DebugType>  
+</PropertyGroup>  
+
+<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">  
+	<DebugType>embedded</DebugType>  
+</PropertyGroup>  
+
+<Target Name="NetcodePatch" AfterTargets="PostBuildEvent">  
+	<Exec Command="netcode-patch &quot;$(TargetPath)&quot; @(ReferencePathWithRefAssemblies->'&quot;%(Identity)&quot;', ' ')" />  
+</Target>
+
+	<Target Name="CopyToPluginsFolder" AfterTargets="PostBuildEvent">
+		<Copy DestinationFolder="$(PluginsFolder)" OverwriteReadOnlyFiles="true" SkipUnchangedFiles="true" SourceFiles="$(TargetPath)" />
+	</Target>
+
+	<Target Name="CopyToGalePluginsFolder" AfterTargets="CopyToPluginsFolder">
+		<Copy DestinationFolder="$(GalePluginsFolder)" OverwriteReadOnlyFiles="true" SkipUnchangedFiles="true" SourceFiles="$(TargetPath)" />
+	</Target>
 </Project>
