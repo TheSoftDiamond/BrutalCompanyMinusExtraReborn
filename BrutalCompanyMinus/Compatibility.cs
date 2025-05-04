@@ -53,6 +53,7 @@ namespace BrutalCompanyMinus
             VarietyPresent = false,
             CodeRebirthPresent = false,
             ShipInventoryPresent = false,
+            SelfSortingStorage = false,
             SuperEclipsePresent = false,
             SkullEnemyPresent = false,
             ManStalkerPresent = false,
@@ -228,6 +229,7 @@ namespace BrutalCompanyMinus
             furniturePackPresent = IsModPresent("MelanieMelicious.furniturePack0", "Furniture Pack Detected");
             OoblterraPresent = IsModPresent("SkullCrusher.WTO", "Ooblterra Detected");
             lighteaterPresent = IsModPresent("Lega.LightEater", "Light Eater Detected");
+            SelfSortingStorage = IsModPresent("zigzag.SelfSortingStorage", "Self Sorting Storage Detected");
         }
 
         private static Assembly GetAssembly(string name)

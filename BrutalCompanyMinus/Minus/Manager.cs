@@ -618,7 +618,11 @@ namespace BrutalCompanyMinus.Minus
             {
                 count += ShipInventoryCompat.GetShipInventoryScrapValue();
             }
-        
+
+            //if (Compatibility.SelfSortingStorage)
+            //{
+            //    count += SelfSortingStorageCompat.GetSelfSortingStorageScrapValue();
+            //}
 
             return count;
         }
