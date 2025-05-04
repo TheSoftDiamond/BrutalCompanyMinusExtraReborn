@@ -1,6 +1,21 @@
 # Changelog
 
 <details>
+  <summary>0.24.7</summary>
+
+# Additions
+
+  - Readded ShipLightsFailure
+  - Added Compatibility Check to SelfSortingStorage. Future Items checks will  
+
+# Changes
+
+  - ShipLightsFailure should no longer crash and works perfectly for both the host and clients
+  - FlashlightsFailure event should work properly for both the host and client correctly. Grabbing and charging flashlights in general should fail to work. Upon leaving, flashlights should register as fully charged again and will display as such correctly.
+  - Semi-what fixed NutcrackerAI.cs issue, and somewhat introduced a server rpc bug but it shouldn't be spamming the object reference missing thing every tick. If anyone has more experience with enemy ai, please feel free to get in contact with me, so we can see what we can do to fix the issues better!
+</details>
+
+<details>
   <summary>0.24.6</summary>
 
 This update adds new events and modifies some various things in the code. I may do a bit of tweaking with the values for some of these new events down the road.
