@@ -11,21 +11,21 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
     public class NutSlayerAI : EnemyAI
     {
 #pragma warning disable 0649
-        private int previousBehaviourState = -1;
+        public int previousBehaviourState = -1;
 
-        private int previousBehaviourStateAIInterval = -1;
+        public int previousBehaviourStateAIInterval = -1;
 
         public static float timeAtNextInspection;
 
-        private bool inspectingLocalPlayer;
+        public bool inspectingLocalPlayer;
 
-        private float localPlayerTurnDistance;
+        public float localPlayerTurnDistance;
 
-        private bool isInspecting;
+        public bool isInspecting;
 
-        private bool hasGun;
+        public bool hasGun;
 
-        private int randomSeedNumber;
+        public int randomSeedNumber;
 
         public GameObject gunPrefab;
 
@@ -33,7 +33,7 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
 
         public Transform gunPoint;
 
-        private NetworkObjectReference gunObjectRef;
+        public NetworkObjectReference gunObjectRef;
 
         public AISearchRoutine patrol;
 
@@ -59,68 +59,68 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
 
         public GameObject shotgunShellPrefab;
 
-        private bool torsoTurning;
+        public bool torsoTurning;
 
-        private System.Random NutcrackerRandom;
+        public System.Random NutcrackerRandom;
 
-        private int timesDoingInspection;
+        public int timesDoingInspection;
 
-        private Coroutine inspectionCoroutine;
+        public Coroutine inspectionCoroutine;
 
         public int lastPlayerSeenMoving = 0;
 
-        private float timeSinceSeeingTarget;
+        public float timeSinceSeeingTarget;
 
-        private float timeSinceInspecting;
+        public float timeSinceInspecting;
 
-        private float timeSinceFiringGun;
+        public float timeSinceFiringGun;
 
-        private bool aimingGun;
+        public bool aimingGun;
 
-        private bool reloadingGun;
+        public bool reloadingGun;
 
-        private Vector3 lastSeenPlayerPos;
+        public Vector3 lastSeenPlayerPos;
 
-        private RaycastHit rayHit;
+        public RaycastHit rayHit;
 
-        private Coroutine gunCoroutine;
+        public Coroutine gunCoroutine;
 
-        private bool isLeaderScript;
+        public bool isLeaderScript;
 
-        private Vector3 positionLastCheck;
+        public Vector3 positionLastCheck;
 
-        private Vector3 strafePosition;
+        public Vector3 strafePosition;
 
-        private bool reachedStrafePosition;
+        public bool reachedStrafePosition;
 
-        private bool lostPlayerInChase;
+        public bool lostPlayerInChase;
 
-        private float timeSinceHittingPlayer;
+        public float timeSinceHittingPlayer;
 
-        private Coroutine waitToFireGunCoroutine;
+        public Coroutine waitToFireGunCoroutine;
 
-        private float walkCheckInterval;
+        public float walkCheckInterval;
 
-        private int setShotgunScrapValue;
+        public int setShotgunScrapValue;
 
-        private int timesSeeingSamePlayer;
+        public int timesSeeingSamePlayer;
 
-        private int previousPlayerSeenWhenAiming;
+        public int previousPlayerSeenWhenAiming;
 
-        private float speedWhileAiming;
+        public float speedWhileAiming;
 
         // Custom variables
 
-        private float speedWhileMoving = 9.5f;
-        private float widthSearch = 45f;
-        private int rangeSearch = 30;
-        private Transform target;
-        private List<string> aiBlackList = new List<string>();
-        private bool isFiring = false;
+        public float speedWhileMoving = 9.5f;
+        public float widthSearch = 45f;
+        public int rangeSearch = 30;
+        public Transform target;
+        public List<string> aiBlackList = new List<string>();
+        public bool isFiring = false;
 
-        private int setHp = 5;
-        private int Lives = 4;
-        private bool Immortal = false;
+        public int setHp = 5;
+        public int Lives = 4;
+        public bool Immortal = false;
 
 #pragma warning restore 0649
 
@@ -579,12 +579,12 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
                     {
                         SetTargetDegreesToPosition(lastSeenPlayerPos);
                     }
-                    if (HasLineOfSightToPositionCopy(target.position, widthSearch, rangeSearch, 1f))
+                    if (target != null && HasLineOfSightToPositionCopy(target.position, widthSearch, rangeSearch, 1f))
                     {
                         timeSinceSeeingTarget = 0f;
                         lastSeenPlayerPos = target.position;
                     }
-                    if (!CheckLineOfSightForTarget(70f, 12, 1))
+                    else if (!CheckLineOfSightForTarget(70f, 12, 1))
                     {
                         break;
                     }
@@ -748,7 +748,30 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
         [ClientRpc]
         public void FireGunClientRpc()
         {
-            Vector3 targetForward = new Vector3(gun.shotgunRayPoint.forward.x, (target.position - gun.shotgunRayPoint.position).normalized.y, gun.shotgunRayPoint.forward.z);
+            if (gun == null)
+            {
+                Log.LogError("FireGunClientRpc failed: gun is null");
+                return;
+            }
+
+            if (gun.shotgunRayPoint == null)
+            {
+                Log.LogError("FireGunClientRpc failed: gun.shotgunRayPoint is null");
+                return;
+            }
+
+            if (target == null)
+            {
+                //Log.LogError("FireGunClientRpc failed: target is null");
+                return;
+            }
+
+            Vector3 targetForward = new Vector3(
+                gun.shotgunRayPoint.forward.x,
+                (target.position - gun.shotgunRayPoint.position).normalized.y,
+                gun.shotgunRayPoint.forward.z
+            );
+
             FireGun(gun.shotgunRayPoint.position, targetForward);
         }
 
