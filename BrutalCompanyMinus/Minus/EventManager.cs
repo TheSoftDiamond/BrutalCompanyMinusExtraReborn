@@ -199,6 +199,7 @@ namespace BrutalCompanyMinus.Minus
             new Events.LightEaterEnemy(),
             new Events.LeafBoys(),
             new Events.WelcomeToOoblterra(),
+            new Events.PhonesOut(),
 
             //Very Bad
             new Events.Mantitoil(),

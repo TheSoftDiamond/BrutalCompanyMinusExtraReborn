@@ -581,6 +581,19 @@ namespace BrutalCompanyMinus
         }
 
         [ServerRpc(RequireOwnership = false)]
+        public void SetPhonesOutServerRpc(bool active)
+        {
+            SetPhonesOutClientRpc(active);
+        }
+
+        [ClientRpc]
+        public void SetPhonesOutClientRpc(bool active)
+        {
+            PhonesOut.Active = active;
+        }
+
+
+        [ServerRpc(RequireOwnership = false)]
         public void SetFlashlightsServerRpc(bool active)
         {
             SetFlashlightsClientRpc(active);

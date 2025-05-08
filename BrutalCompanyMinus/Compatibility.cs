@@ -68,6 +68,7 @@ namespace BrutalCompanyMinus
             lighteaterPresent = false,
             BiodiversityPresent = false,
             OoblterraPresent = false,
+            LethalPhonesPresent = false,
             HotBarPlusPresent = false;
 
 
@@ -229,6 +230,7 @@ namespace BrutalCompanyMinus
             furniturePackPresent = IsModPresent("MelanieMelicious.furniturePack0", "Furniture Pack Detected");
             OoblterraPresent = IsModPresent("SkullCrusher.WTO", "Ooblterra Detected");
             lighteaterPresent = IsModPresent("Lega.LightEater", "Light Eater Detected");
+            LethalPhonesPresent = IsModPresent("LethalPhones", "Lethal Phones Detected");
             SelfSortingStorage = IsModPresent("zigzag.SelfSortingStorage", "Self Sorting Storage Detected");
         }
 

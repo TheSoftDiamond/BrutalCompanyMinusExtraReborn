@@ -110,6 +110,9 @@
 	<Reference Include="LethalNetworkAPI">  
 		<HintPath>libs\LethalNetworkAPI.dll                    </HintPath>  
 	</Reference>  
+	<Reference Include="LethalPhones">
+	  <HintPath>libs\LethalPhones.dll</HintPath>
+	</Reference>  
 	<Reference Include="SelfSortingStorage">
 	  <HintPath>libs\SelfSortingStorage.dll</HintPath>
 	</Reference>  
