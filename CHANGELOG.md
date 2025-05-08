@@ -6,7 +6,7 @@
 # Additions
 
   - Readded ShipLightsFailure
-  - Added Compatibility Check to SelfSortingStorage. Future Items checks will  
+  - Added Compatibility Check to SelfSortingStorage. Future Items checks will be added.
 
 # Changes
 
