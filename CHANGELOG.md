@@ -1,6 +1,17 @@
 # Changelog
 
 <details>
+
+  <summary>0.24.8</summary>
+
+Just a small update that adds one new event. Though.. I also want to add more "good" or "VeryGood" rated events too.
+
+# Additions
+
+  - Added PhonesOut event, which requires Lethal Phones.
+
+<details>
+<details>
   <summary>0.24.7</summary>
 
 # Additions
