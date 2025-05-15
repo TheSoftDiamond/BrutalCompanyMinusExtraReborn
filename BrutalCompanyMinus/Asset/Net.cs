@@ -138,6 +138,11 @@ namespace BrutalCompanyMinus
             Manager.seed = seed;
         }
 
+        [ServerRpc(RequireOwnership = false)]
+        public void ClearGameObjectsServerRpc()
+        {
+            ClearGameObjectsClientRpc();
+        }
 
         [ClientRpc] 
         public void ClearGameObjectsClientRpc()
@@ -789,20 +794,6 @@ namespace BrutalCompanyMinus
                 Instance.outsideObjectsToSpawn.Clear();
             }
         }
-        /* 
-         [ServerRpc(RequireOwnership = false)]
-         public void ShipLightsServerRpc(int state)
-         {
-             //  GameObject net = Instantiate(netObject);
-            // netObject.AddComponent<NetworkObject>(ShipLightsServerRpc);
-             ShipLightsClientRpc(state);
-         }
-
-         [ClientRpc]
-         public void ShipLightsClientRpc(int state)
-         {
-             BrutalCompanyMinus.Minus.Events.ShipLightsFailure.LightsActive = state;
-         }*/
 
         [ClientRpc]
         public void ResizeHotbarRandomlyClientRpc()

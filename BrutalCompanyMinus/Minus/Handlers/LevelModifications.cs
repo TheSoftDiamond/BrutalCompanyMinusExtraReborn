@@ -40,7 +40,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
             EventManager.ExecuteOnShipLeave();
             EventManager.currentEvents.Clear();
 
-            Net.Instance.ClearGameObjectsClientRpc(); // Clear all previously placed objects on all clients
+            Net.Instance.ClearGameObjectsServerRpc(); // Clear all previously placed objects on all clients
 
             Log.LogInfo("Restoring un-modified level enemy spawns on current level.");
             // Restore parameters

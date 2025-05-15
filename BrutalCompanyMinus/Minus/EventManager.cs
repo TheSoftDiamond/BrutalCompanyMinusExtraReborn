@@ -588,7 +588,7 @@ namespace BrutalCompanyMinus.Minus
             Manager.currentTerminal = GameObject.FindObjectOfType<Terminal>();
 
             Assets.generateOriginalValuesLists();
-            Net.Instance.ClearGameObjectsClientRpc(); // Clear all previously placed objects on all clients
+            Net.Instance.ClearGameObjectsServerRpc(); // Clear all previously placed objects on all clients
             if (!RoundManager.Instance.IsHost || newLevel.levelID == 3) return;
 
             LevelModifications.ResetValues(StartOfRound.Instance);
