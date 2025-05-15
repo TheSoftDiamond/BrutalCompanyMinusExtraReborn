@@ -2,6 +2,20 @@
 
 <details>
 
+  <summary>0.24.9</summary>
+
+# Additions
+
+  - 
+
+# Fixes
+
+  - PhonesOut event will now only harmony patch if LethalPhones is present
+  - Desync/Despawn bugs related to outside objects and hazards should properly despawn and sync up to all clients now.
+
+</details>
+<details>
+
   <summary>0.24.8</summary>
 
 Just a small update that adds one new event. Though.. I also want to add more "good" or "VeryGood" rated events too.
