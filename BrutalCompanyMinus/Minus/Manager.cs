@@ -944,6 +944,8 @@ namespace BrutalCompanyMinus.Minus
             {
                 Spawn.OutsideObjects(Assets.GetObject((Assets.ObjectName)obj.objectEnumID), new Vector3(0.0f, -1.0f, 0.0f), obj.density, -1, 1000); // 1000 cap for trees as such
             }
+
+            Net.Instance.outsideObjectsToSpawn.Clear();
         }
 
         [HarmonyPrefix]
