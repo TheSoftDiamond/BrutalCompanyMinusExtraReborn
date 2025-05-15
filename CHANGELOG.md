@@ -4,10 +4,6 @@
 
   <summary>0.24.9</summary>
 
-# Additions
-
-  - 
-
 # Fixes
 
   - PhonesOut event will now only harmony patch if LethalPhones is present
