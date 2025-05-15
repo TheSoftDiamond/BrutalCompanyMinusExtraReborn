@@ -6,7 +6,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Unity.Netcode;
 using UnityEngine;
-using HarmonyLib;
 using LethalNetworkAPI;
 using GameNetcodeStuff;
 using BrutalCompanyMinus.Minus.Handlers.Modded;
@@ -16,10 +15,11 @@ using BrutalCompanyMinus.Minus.Handlers;
 using System.ComponentModel.Design;
 using BrutalCompanyMinus.Minus.MonoBehaviours;
 using Scoops.misc;
+using HarmonyLib;
+using System.Runtime.CompilerServices;
 
 namespace BrutalCompanyMinus.Minus.Events
 {
-    [HarmonyPatch]
     internal class PhonesOut : MEvent
     {
         public override string Name() => nameof(PhonesOut);
@@ -68,28 +68,5 @@ namespace BrutalCompanyMinus.Minus.Events
         public override void OnLocalDisconnect()
         {
         }
-
-        [HarmonyPrefix]
-        [HarmonyPatch(typeof(PlayerPhone), nameof(PlayerPhone.ToggleActive))]
-        public static bool InterruptPhoneUsage(bool active)
-        {
-            // Interrupt the phone pickup
-            if (PhonesOut.Active)
-            {
-                HUDManager.Instance.globalNotificationText.text =
-                "BAD PHONE RECEPTION!!!!";
-
-                HUDManager.Instance.globalNotificationAnimator.SetTrigger("TriggerNotif");
-                HUDManager.Instance.UIAudio.PlayOneShot(
-                    HUDManager.Instance.radiationWarningAudio,
-                    1f
-                );
-                return false;
-
-            }
-
-            return true;
-        }
-
     }
 }

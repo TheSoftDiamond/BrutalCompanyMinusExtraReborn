@@ -75,6 +75,11 @@ namespace BrutalCompanyMinus
                 HotBarPlusCompat.PatchAll(harmony);
             }
 
+            if (Compatibility.IsModPresent("LethalPhones"))
+            {
+                PhonesOutPatching.PatchAllPhone(harmony);
+            }
+
             Log.LogInfo(NAME + " " + VERSION + " " + "is done patching.");
             if (Assets.ReadSettingEarly(Paths.ConfigPath + "\\BrutalCompanyMinusExtraReborn\\DifficultySettings.cfg", "Enable time scaling?") == true) ;
             {
