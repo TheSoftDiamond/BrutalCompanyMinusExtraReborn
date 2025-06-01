@@ -80,7 +80,12 @@ namespace BrutalCompanyMinus
                 PhonesOutPatching.PatchAllPhone(harmony);
             }
 
-            Log.LogInfo(NAME + " " + VERSION + " " + "is done patching.");
+            if (!Compatibility.IsModPresent("AudioKnight.StarlancerAIFix"))
+            {
+                _EnemyAI.PatchEnemyStart(harmony);
+            }
+
+                Log.LogInfo(NAME + " " + VERSION + " " + "is done patching.");
             if (Assets.ReadSettingEarly(Paths.ConfigPath + "\\BrutalCompanyMinusExtraReborn\\DifficultySettings.cfg", "Enable time scaling?") == true) ;
             {
                 Log.LogInfo("Time adjustment is enabled.");
