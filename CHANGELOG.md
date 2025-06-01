@@ -2,12 +2,21 @@
 
 <details>
 
-  <summary>0.24.9</summary>
+  <summary>1.25.0</summary>
+
+This update brings BCMER into v70 finally! Bugs and crashes may occur.
+
+# Additions
+
+  - Added GiantKiwi and its egg to BCMER's register.
+  - Added 'KiwiBird' event to BCMER, but currently depends on Special Events being enabled. Currently not tested fully.
 
 # Fixes
 
   - PhonesOut event will now only harmony patch if LethalPhones is present
   - Desync/Despawn bugs related to outside objects and hazards should properly despawn and sync up to all clients now.
+  - Enemy behavior in the _EnemyAI.cs file broke on some modded moons. While it has been removed from BCM, I have made is so it only will be present if StarLancerAI is not present. This is so I can try to monitor and study the behavior of this code more closely, but I highly recommend the use of StarLancerAI fix if enemy behavior should break.
+    Project updated for v70.
 
 </details>
 <details>
