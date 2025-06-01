@@ -4,7 +4,7 @@
 
   <summary>1.25.0</summary>
 
-This update brings BCMER into v70 finally! Bugs and crashes may occur.
+This update brings BCMER into v70 finally! Bugs and crashes may occur. Versions prior to this may not be compatible with v70.
 
 # Additions
 
