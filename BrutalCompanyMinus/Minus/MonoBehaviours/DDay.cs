@@ -1,5 +1,4 @@
-﻿using Discord;
-using HarmonyLib;
+﻿using HarmonyLib;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;

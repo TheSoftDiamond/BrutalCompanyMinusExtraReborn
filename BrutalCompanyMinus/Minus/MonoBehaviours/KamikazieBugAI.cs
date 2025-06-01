@@ -739,7 +739,14 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
         {
             if (objectRef.TryGet(out var networkObject))
             {
-                DropItem(networkObject, targetFloorPosition, droppedInNest);
+                try
+                {
+                    DropItem(networkObject, targetFloorPosition, droppedInNest);
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError(gameObject.name + ": Error while dropping item: " + e.Message);
+                }
             }
             else
             {
