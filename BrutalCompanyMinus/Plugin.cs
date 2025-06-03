@@ -23,7 +23,7 @@ namespace BrutalCompanyMinus
     {
         private const string GUID = "SoftDiamond.BrutalCompanyMinusExtraReborn";
         private const string NAME = "BrutalCompanyMinusExtraReborn";
-        private const string VERSION = "0.24.8";
+        private const string VERSION = "1.25.0";
 
         internal static Plugin Instance { get; private set; }
 
@@ -80,7 +80,12 @@ namespace BrutalCompanyMinus
                 PhonesOutPatching.PatchAllPhone(harmony);
             }
 
-            Log.LogInfo(NAME + " " + VERSION + " " + "is done patching.");
+            if (!Compatibility.IsModPresent("AudioKnight.StarlancerAIFix"))
+            {
+                _EnemyAI.PatchEnemyStart(harmony);
+            }
+
+                Log.LogInfo(NAME + " " + VERSION + " " + "is done patching.");
             if (Assets.ReadSettingEarly(Paths.ConfigPath + "\\BrutalCompanyMinusExtraReborn\\DifficultySettings.cfg", "Enable time scaling?") == true) ;
             {
                 Log.LogInfo("Time adjustment is enabled.");

@@ -1,12 +1,12 @@
-﻿using GameNetcodeStuff;
+﻿using BrutalCompanyMinus.Minus.Handlers.Modded;
+using GameNetcodeStuff;
 using HarmonyLib;
 using System.Collections;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace BrutalCompanyMinus.Minus.Handlers
 {
-    [HarmonyPatch]
-    [HarmonyPatch(typeof(EnemyAI))]
     internal class _EnemyAI
     {
         [HarmonyPostfix]
@@ -24,9 +24,33 @@ namespace BrutalCompanyMinus.Minus.Handlers
             }
         }
 
+        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+        public static void PatchEnemyStart(Harmony harmony)
+        {
+            ApplyEnemyStart(harmony);
+        }
+
         [HarmonyPostfix]
-        [HarmonyPatch("Start")]
-        private static void OnStart(ref EnemyAI __instance) // Set isOutside and scale hp
+        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+        public static void ApplyEnemyStart(Harmony harmony)
+        {
+            var originalMethod = AccessTools.Method(typeof(EnemyAI), nameof(EnemyAI.Start));
+            var prefixMethod = AccessTools.Method(typeof(_EnemyAI), nameof(OnStart));
+
+            if (originalMethod != null && prefixMethod != null)
+            {
+                harmony.Patch(originalMethod, prefix: new HarmonyMethod(prefixMethod));
+                Log.LogInfo("Successfully patched EnemyAI");
+            }
+            else
+            {
+                Log.LogError("Failed to locate methods for conditional patching.");
+            }
+        }
+
+        //[HarmonyPostfix]
+        //[HarmonyPatch("Start")]
+        public static void OnStart(ref EnemyAI __instance) // Set isOutside and scale hp
         {
             __instance.StartCoroutine(UpdateHP(__instance));
             

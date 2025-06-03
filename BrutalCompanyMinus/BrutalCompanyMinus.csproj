@@ -82,10 +82,10 @@
 	<PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" />  
 	<PackageReference Include="Rune580.Mods.LethalCompany.InputUtils" Version="0.7.10" />  
 	<PackageReference Include="UnityEngine.Modules" Version="2022.3.9" IncludeAssets="compile" PrivateAssets="all" />  
-	<PackageReference Include="LethalCompany.GameLibs.Steam" Version="67.0.0-ngd.0" PrivateAssets="all" />  
+    <PackageReference Include="LethalCompany.GameLibs.Steam" Version="70.0.0-ngd.0" PrivateAssets="all" />
 </ItemGroup>  
 
-<ItemGroup>  
+<ItemGroup>
 	<Reference Include="BCMECodeSecurityCheck">  
 		<HintPath>libs\BCMECodeSecurityCheck.dll               </HintPath>  
 	</Reference>  
@@ -102,7 +102,7 @@
 		<HintPath>libs\com.github.zehsteam.ToilHead.dll        </HintPath>  
 	</Reference>  
 	<Reference Include="com.github.zehsteam.ZombiesPlush">  
-   <HintPath>libs\com.github.zehsteam.ZombiesPlush.dll</HintPath>  
+   <HintPath>libs\com.github.zehsteam.ZombiesPlush.dll         </HintPath>  
 	</Reference>  
 	<Reference Include="FacilityMeltdown">  
 		<HintPath>libs\FacilityMeltdown.dll                    </HintPath>  
@@ -111,10 +111,10 @@
 		<HintPath>libs\LethalNetworkAPI.dll                    </HintPath>  
 	</Reference>  
 	<Reference Include="LethalPhones">
-	  <HintPath>libs\LethalPhones.dll</HintPath>
+	  <HintPath>libs\LethalPhones.dll                          </HintPath>
 	</Reference>  
 	<Reference Include="SelfSortingStorage">
-	  <HintPath>libs\SelfSortingStorage.dll</HintPath>
+	  <HintPath>libs\SelfSortingStorage.dll                    </HintPath>
 	</Reference>  
 	<Reference Include="ShipInventory">  
 		<HintPath>libs\ShipInventory.dll                       </HintPath>  
@@ -123,7 +123,7 @@
 		<HintPath>libs\HotBarPlus.dll                          </HintPath>  
 	</Reference>  
 	<Reference Include="uk.1a3.yesfox">  
-		<HintPath>libs\yesfox.dll</HintPath>  
+		<HintPath>libs\yesfox.dll                              </HintPath>  
 	</Reference>  
 </ItemGroup>  
 
