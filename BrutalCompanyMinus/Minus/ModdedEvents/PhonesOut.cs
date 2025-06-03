@@ -45,7 +45,7 @@ namespace BrutalCompanyMinus.Minus.Events
         {
 
             // Declare the Active state to true globally
-            Net.Instance.SetFlashlightsServerRpc(true);
+            Net.Instance.SetPhonesOutServerRpc(true);
 
             // Bind the PhonesOut to an GameObject
             GameObject PhonesOutObject = new GameObject("PhonesOutFailureObject");

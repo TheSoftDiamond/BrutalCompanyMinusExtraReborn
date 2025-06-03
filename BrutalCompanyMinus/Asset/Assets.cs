@@ -20,19 +20,19 @@ namespace BrutalCompanyMinus
 
         public enum EnemyName
         {
-            Bracken, HoardingBug, CoilHead, Thumper, BunkerSpider, Jester, SnareFlea, Hygrodere, GhostGirl, SporeLizard, NutCracker, Masked, EyelessDog, ForestKeeper, EarthLeviathan, BaboonHawk, RoamingLocust, Manticoil, CircuitBee, Lasso, Butler, OldBird, FlowerSnake, Maneater, Barber
+            Bracken, HoardingBug, CoilHead, Thumper, BunkerSpider, Jester, SnareFlea, Hygrodere, GhostGirl, SporeLizard, NutCracker, Masked, EyelessDog, ForestKeeper, EarthLeviathan, BaboonHawk, RoamingLocust, Manticoil, CircuitBee, Lasso, Butler, OldBird, FlowerSnake, Maneater, Barber, GiantKiwi
         }
         public static Dictionary<EnemyName, string> EnemyNameList = new Dictionary<EnemyName, string>() {
             { EnemyName.SnareFlea, "Centipede" }, { EnemyName.BunkerSpider, "SandSpider" }, { EnemyName.HoardingBug, "HoarderBug" }, { EnemyName.Bracken, "Flowerman" }, { EnemyName.Thumper, "Crawler" },
             { EnemyName.Hygrodere, "Blob" }, { EnemyName.GhostGirl, "DressGirl" }, { EnemyName.SporeLizard, "Puffer" }, { EnemyName.NutCracker, "Nutcracker" }, { EnemyName.EyelessDog, "MouthDog" },
             { EnemyName.ForestKeeper, "ForestGiant" }, { EnemyName.EarthLeviathan, "SandWorm" }, { EnemyName.CircuitBee, "RedLocustBees" }, { EnemyName.BaboonHawk, "BaboonHawk" }, { EnemyName.CoilHead, "SpringMan" },
             { EnemyName.Jester, "Jester" }, { EnemyName.Lasso, "LassoMan" }, { EnemyName.Masked, "MaskedPlayerEnemy" }, { EnemyName.Manticoil, "Doublewing" }, { EnemyName.RoamingLocust, "DocileLocustBees" },
-            { EnemyName.Butler, "Butler" }, { EnemyName.OldBird, "RadMech" }, { EnemyName.FlowerSnake, "FlowerSnake" }, { EnemyName.Maneater, "CaveDweller" }, { EnemyName.Barber, "ClaySurgeon" }
+            { EnemyName.Butler, "Butler" }, { EnemyName.OldBird, "RadMech" }, { EnemyName.FlowerSnake, "FlowerSnake" }, { EnemyName.Maneater, "CaveDweller" }, { EnemyName.Barber, "ClaySurgeon" }, {EnemyName.GiantKiwi, "GiantKiwi" }
         };
 
         public enum ItemName
         {
-            LargeAxle, V_TypeEngine, PlasticFish, MetalSheet, LaserPointer, BigBolt, Bottles, Ring, SteeringWheel, CookieMoldPan, EggBeater, JarOfPickles, DustPan, AirHorn, ClownHorn, CashRegister, Candy, GoldBar, YieldSign, HomemadeFlashbang, Gift, Flask, ToyCube, Remote, ToyRobot, MagnifyingGlass, StopSign, TeaKettle, Mug, RedSoda, OldPhone, HairDryer, Brush, Bell, WhoopieCushion, Comedy, Tragedy, RubberDucky, ChemicalJug, FancyLamp, GoldenCup, Painting, Toothpaste, PillBottle, PerfumeBottle, Teeth, Magic7Ball, EasterEgg, ToyTrain, ToiletPaper, SoccerBall, PlasticCup, GarabgeLid, ControlPad, Clock, ZedDog
+            LargeAxle, V_TypeEngine, PlasticFish, MetalSheet, LaserPointer, BigBolt, Bottles, Ring, SteeringWheel, CookieMoldPan, EggBeater, JarOfPickles, DustPan, AirHorn, ClownHorn, CashRegister, Candy, GoldBar, YieldSign, HomemadeFlashbang, Gift, Flask, ToyCube, Remote, ToyRobot, MagnifyingGlass, StopSign, TeaKettle, Mug, RedSoda, OldPhone, HairDryer, Brush, Bell, WhoopieCushion, Comedy, Tragedy, RubberDucky, ChemicalJug, FancyLamp, GoldenCup, Painting, Toothpaste, PillBottle, PerfumeBottle, Teeth, Magic7Ball, EasterEgg, ToyTrain, ToiletPaper, SoccerBall, PlasticCup, GarabgeLid, ControlPad, Clock, ZedDog, BabyKiwiEgg
         }
         public static Dictionary<ItemName, string> ItemNameList = new Dictionary<ItemName, string>() {
             { ItemName.LargeAxle, "Cog1" }, { ItemName.V_TypeEngine, "EnginePart1"}, { ItemName.PlasticFish, "FishTestProp" }, { ItemName.MetalSheet, "MetalSheet" }, { ItemName.LaserPointer, "FlashLaserPointer" },
@@ -46,7 +46,7 @@ namespace BrutalCompanyMinus
             { ItemName.Painting, "FancyPainting" }, { ItemName.GoldenCup, "FancyCup" }, { ItemName.Toothpaste, "Toothpaste" }, { ItemName.PillBottle, "PillBottle" }, { ItemName.PerfumeBottle, "PerfumeBottle" },
             { ItemName.Teeth, "Dentures" }, { ItemName.Magic7Ball, "7Ball" }, { ItemName.EasterEgg, "EasterEgg" }, { ItemName.ToyTrain, "ToyTrain" }, { ItemName.ToiletPaper, "ToiletPaperRolls" },
             { ItemName.SoccerBall, "SoccerBall" }, { ItemName.PlasticCup, "PlasticCup" }, { ItemName.GarabgeLid, "GarbageLid" }, { ItemName.ControlPad, "ControlPad" }, { ItemName.Clock, "Clock" },
-            { ItemName.ZedDog, "ZedDog" }
+            { ItemName.ZedDog, "ZedDog" }, { ItemName.BabyKiwiEgg, "BabyKiwiEgg" }
         };
         
         public enum ObjectName

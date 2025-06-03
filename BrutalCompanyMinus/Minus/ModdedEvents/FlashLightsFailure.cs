@@ -35,7 +35,6 @@ namespace BrutalCompanyMinus.Minus.Events
             Descriptions = new List<string>() { "I think the batteries leaked", "Who broke the flashlights?" };
             ColorHex = "#FF0000";
             Type = EventType.Bad;
-
         }
 
         public override void Execute()
@@ -69,6 +68,7 @@ namespace BrutalCompanyMinus.Minus.Events
         public override void OnLocalDisconnect()
         {
         }
+
         internal void FlashlightsGoEmptyAtStart()
         {
             GameObject hangarShip = Assets.hangarShip;

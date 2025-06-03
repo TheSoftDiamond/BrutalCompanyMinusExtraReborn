@@ -144,38 +144,42 @@ namespace BrutalCompanyMinus
             ClearGameObjectsClientRpc();
         }
 
-        [ClientRpc] 
+        [ClientRpc]
         public void ClearGameObjectsClientRpc()
         {
-            for (int i = 0; i != Manager.objectsToClear.Count; i++)
+            for (int i = 0; i < Manager.objectsToClear.Count; i++)
             {
-                if (Manager.objectsToClear[i] != null)
+                var obj = Manager.objectsToClear[i];
+                if (obj == null)
+                    continue;
+
+                var netObject = obj.GetComponent<NetworkObject>();
+                string objectName = obj.name;
+                try
                 {
-                    NetworkObject netObject = Manager.objectsToClear[i].GetComponent<NetworkObject>();
-
-                    if (netObject != null) // If net object
+                    if (netObject != null)
                     {
-                        try
-                        {
-                            netObject.Despawn(true);
-                        } catch
-                        {
-
-                        }
+                        netObject.Despawn(true);
+                        if (Configuration.ExtraLogging.Value)
+                            Log.LogInfo($"Despawned network object: {objectName}");
                     }
-                    else // If not net object
+                    else
                     {
-                        try
-                        {
-                            Destroy(Manager.objectsToClear[i]);
-                        } catch
-                        {
-
-                        }
+                        GameObject.Destroy(obj);
+                        if (Configuration.ExtraLogging.Value)
+                            Log.LogInfo($"Destroyed non-network object: {objectName}");
                     }
                 }
+                catch (KeyNotFoundException ex)
+                {
+                    Log.LogError($"KeyNotFoundException while despawning/destroying '{objectName}': {ex.Message}");
+                }
+                catch (Exception ex)
+                {
+                    Log.LogError($"Unexpected exception while despawning/destroying '{objectName}': {ex.Message}");
+                }
             }
-            Manager.objectsToClear.Clear(); // clear list
+            Manager.objectsToClear.Clear();
         }
 
         [ClientRpc]

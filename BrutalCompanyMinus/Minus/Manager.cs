@@ -26,6 +26,7 @@ using Unity.Collections;
 using BrutalCompanyMinus;
 using System.Linq.Expressions;
 using BrutalCompanyMinus.Minus.Handlers.Modded;
+using UnityEngine.UIElements;
 
 
 
@@ -72,6 +73,7 @@ namespace BrutalCompanyMinus.Minus
         internal static float outsideObjectSpawnRadius = 0.0f;
 
         internal static List<GameObject> objectsToClear = new List<GameObject>();
+        internal static Dictionary<ulong, GameObject> networkedObjects = new Dictionary<ulong, GameObject>();
 
         internal static List<ObjectInfo> enemiesToSpawnInside = new List<ObjectInfo>();
         internal static List<ObjectInfo> enemiesToSpawnOutside = new List<ObjectInfo>();
@@ -415,7 +417,7 @@ namespace BrutalCompanyMinus.Minus
                     }
                     else
                     {
-                        pos = r.GetRandomNavMeshPositionInBoxPredictable(randomScrapSpawn.transform.position, randomScrapSpawn.itemSpawnRange, r.navHit, rng) + Vector3.up * ScrapToSpawn[i].verticalOffset;
+                        pos = r.GetRandomNavMeshPositionInBoxPredictable(randomScrapSpawn.transform.position, randomScrapSpawn.itemSpawnRange, r.navHit, rng, -1, 1f) + Vector3.up * ScrapToSpawn[i].verticalOffset;
                     }
 
                     if (ScrapToSpawn[i].spawnPrefab.GetComponent<GrabbableObject>() == null)
