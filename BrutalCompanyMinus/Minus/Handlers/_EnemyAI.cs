@@ -1,15 +1,12 @@
 ﻿using BrutalCompanyMinus.Minus.Handlers.Modded;
 using GameNetcodeStuff;
 using HarmonyLib;
-using Scoops.misc;
 using System.Collections;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace BrutalCompanyMinus.Minus.Handlers
 {
-    [HarmonyPatch]
-    [HarmonyPatch(typeof(EnemyAI))]
     internal class _EnemyAI
     {
         [HarmonyPostfix]
