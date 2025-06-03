@@ -111,6 +111,7 @@ namespace BrutalCompanyMinus.Minus
             //new Events.AntiBounty(),
             // Very Bad
             new Events.Nutcracker(),
+            new Events.KiwiBird(),
             new Events.Arachnophobia(),
             new Events.Bracken(),
             new Events.Coilhead(),

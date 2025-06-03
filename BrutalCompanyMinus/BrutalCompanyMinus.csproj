@@ -82,53 +82,10 @@
 	<PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" />  
 	<PackageReference Include="Rune580.Mods.LethalCompany.InputUtils" Version="0.7.10" />  
 	<PackageReference Include="UnityEngine.Modules" Version="2022.3.9" IncludeAssets="compile" PrivateAssets="all" />  
-    <!-- <PackageReference Include="LethalCompany.GameLibs.Steam" Version="67.0.0-ngd.0" PrivateAssets="all" /> -->
+    <PackageReference Include="LethalCompany.GameLibs.Steam" Version="70.0.0-ngd.0" PrivateAssets="all" />
 </ItemGroup>  
 
 <ItemGroup>
-	<Reference Include="Assembly-CSharp">
-		<HintPath>libs\LC-Unity\Assembly-CSharp.dll            </HintPath>
-	</Reference>
-	<Reference Include="Unity.Netcode.Runtime">
-		<HintPath>libs\LC-Unity\Unity.Netcode.Runtime.dll      </HintPath>
-	</Reference>
-	<Reference Include="UnityEngine.UI">
-		<HintPath>libs\LC-Unity\UnityEngine.UI.dll      </HintPath>
-	</Reference>
-	<Reference Include="UnityEngine.InputModule">
-		<HintPath>libs\LC-Unity\UnityEngine.InputModule.dll      </HintPath>
-	</Reference>
-	<Reference Include="Unity.InputSystem">
-		<HintPath>libs\LC-Unity\Unity.InputSystem.dll      </HintPath>
-	</Reference>
-	<Reference Include="Facepunch.Steamworks.Win64">
-		<HintPath>libs\LC-Unity\Facepunch.Steamworks.Win64.dll      </HintPath>
-	</Reference>
-	<Reference Include="Unity.ProBuilder">
-		<HintPath>libs\LC-Unity\Unity.ProBuilder.dll      </HintPath>
-	</Reference>
-	<Reference Include="UnityEngine.AnimationModule">
-		<HintPath>libs\LC-Unity\UnityEngine.AnimationModule.dll      </HintPath>
-	</Reference>
-	<Reference Include="Unity.Animation.Rigging">
-		<HintPath>libs\LC-Unity\Unity.Animation.Rigging.dll      </HintPath>
-	</Reference>
-	<Reference Include="UnityEngine.XRModule">
-		<HintPath>libs\LC-Unity\UnityEngine.XRModule.dll      </HintPath>
-	</Reference>
-	<Reference Include="Unity.TextMeshPro">
-		<HintPath>libs\LC-Unity\Unity.TextMeshPro.dll      </HintPath>
-	</Reference>
-	<Reference Include="UnityEngine.CoreModule">
-		<HintPath>libs\LC-Unity\UnityEngine.CoreModule.dll      </HintPath>
-	</Reference>
-	<Reference Include="Unity.RenderPipelines.HighDefinition.Runtime">
-		<HintPath>libs\LC-Unity\Unity.RenderPipelines.HighDefinition.Runtime.dll      </HintPath>
-	</Reference>
-	<Reference Include="Unity.Collections">
-		<HintPath>libs\LC-Unity\Unity.Collections.dll      </HintPath>
-	</Reference>
-	<!-- THE REFERENCES ABOVE ARE TEMPORARY -->
 	<Reference Include="BCMECodeSecurityCheck">  
 		<HintPath>libs\BCMECodeSecurityCheck.dll               </HintPath>  
 	</Reference>  

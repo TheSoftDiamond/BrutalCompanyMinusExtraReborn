@@ -7,10 +7,8 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using HarmonyLib;
 using GameNetcodeStuff;
-using System.Globalization;
 using UnityEngine.InputSystem.Controls;
 using Unity.Netcode;
-using static System.Net.Mime.MediaTypeNames;
 using System.Collections;
 
 namespace BrutalCompanyMinus
