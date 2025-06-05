@@ -615,6 +615,18 @@ namespace BrutalCompanyMinus
         }
 
         [ServerRpc(RequireOwnership = false)]
+        public void SetEntranceServerRpc(bool active)
+        {
+            SetEntranceClientRpc(active);
+        }
+
+        [ClientRpc]
+        public void SetEntranceClientRpc(bool active)
+        {
+            LockedEntrance.Active = active;
+        }
+
+        [ServerRpc(RequireOwnership = false)]
         public void LightsOffServerRpc()
         {
             LightsOffClientRpc();
