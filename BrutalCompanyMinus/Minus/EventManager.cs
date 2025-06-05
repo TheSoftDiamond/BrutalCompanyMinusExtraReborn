@@ -111,7 +111,8 @@ namespace BrutalCompanyMinus.Minus
             //new Events.AntiBounty(),
             // Very Bad
             new Events.Nutcracker(),
-            new Events.KiwiBird(),
+            new Events.KiwiBird(),// Requires Special Events
+            new Events.LockedEntrance(),// Requires Special Events
             new Events.Arachnophobia(),
             new Events.Bracken(),
             new Events.Coilhead(),
@@ -137,7 +138,7 @@ namespace BrutalCompanyMinus.Minus
             new Events.ShipCoreFailure(),
             new Events.NutSlayersMore(),
             new Events.Dweller(),
-            new Events.TimeChaos(),
+            new Events.TimeChaos(),// Requires Special Events
             // No Enemy
             new Events.NoBaboons(),
             new Events.NoBracken(),
