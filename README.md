@@ -485,6 +485,8 @@ Location: BrutalCompanyMinusExtraReborn\CoreProperties.cfg`
 
 `Enable VeryLateShip Time Adjustment` : Adjust whether or not VeryLateShip Event uses regular Lethal Company time scale, or an adjusted one for the event. Defaults to True (adjusted scale for event).
 
+`Enable Special Events` : Should Special Events be loaded? These are special events made for the game that may not be desirable in regular sessions (Such as very unfair mechanics) or are not fully implemented (this could be because of slight issues related to the event, or just not fully polished like other events are).
+
 #### Debugging
 
 `Enable Extra Logging?` : Mostly used for debugging purposes, but also can hide some details in the Log Output that tend to cause a lot of console spam, for example: NutSlayer event.
