@@ -2,6 +2,25 @@
 
 <details>
 
+  <summary>1.25.1</summary>
+
+This update brings BCMER into v70 finally! Bugs and crashes may occur. Versions prior to this may not be compatible with v70.
+
+# Additions
+
+  - LockedEntrance, requires Special Event to be enabled
+
+# Fixes
+
+  - 
+
+# Changes
+
+  - Modified values for kiwi bird event.
+
+</details>
+<details>
+
   <summary>1.25.0</summary>
 
 This update brings BCMER into v70 finally! Bugs and crashes may occur. Versions prior to this may not be compatible with v70.
