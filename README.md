@@ -45,7 +45,8 @@ The levels of compatibility are color coded to represent the level of compatibil
 | [SuperEclipse](https://thunderstore.io/c/lethal-company/p/MillieTheSilly/SuperEclipse/) | 🟢 (Compatible) | Provided ShipCoreFailure or LeverFailure is never rolled. BCMER 0.21.9+ prevents these two events from being ran if SuperEclipse is present. |
 | [GeneralImprovements](https://thunderstore.io/c/lethal-company/p/ShaosilGaming/GeneralImprovements/) | 🟠 (Partial) | Intro skip feature from GeneralImprovements causes issues with BCMER |
 | [YesFox](https://thunderstore.io/c/lethal-company/p/Dev1A3/YesFox/) | 🟣 (Planned) | May require additional patching. Currently the Kidnapper Fox only spawns if natural spawn conditions exist. |
-| [VeryLateCompany](https://thunderstore.io/c/lethal-company/p/McBowie/VeryLateCompany/) | 🟠 Partial | Some events may not work as expected. Expect potential desyncs. |
+| [VeryLateCompany](https://thunderstore.io/c/lethal-company/p/McBowie/VeryLateCompany/) | 🟠 (Partial) | Some events may not work as expected. Expect potential desyncs. |
+| [Late Company](https://thunderstore.io/c/lethal-company/p/anormaltwig/LateCompany/) | 🟢 (Compatible) | Works perfectly fine. At worst, potentially not recieving event UI until ship lever is pulled. |
 
 </details>
 <details>
@@ -483,6 +484,8 @@ Location: BrutalCompanyMinusExtraReborn\CoreProperties.cfg`
 `Enable Hell Time Adjustment` : Adjust whether or not Hell Event uses regular Lethal Company time scale, or an adjusted one for the event. Defaults to True (adjusted scale for event).
 
 `Enable VeryLateShip Time Adjustment` : Adjust whether or not VeryLateShip Event uses regular Lethal Company time scale, or an adjusted one for the event. Defaults to True (adjusted scale for event).
+
+`Enable Special Events` : Should Special Events be loaded? These are special events made for the game that may not be desirable in regular sessions (Such as very unfair mechanics) or are not fully implemented (this could be because of slight issues related to the event, or just not fully polished like other events are).
 
 #### Debugging
 
