@@ -10,6 +10,7 @@ using GameNetcodeStuff;
 using UnityEngine.InputSystem.Controls;
 using Unity.Netcode;
 using System.Collections;
+using System;
 
 namespace BrutalCompanyMinus
 {
@@ -202,9 +203,9 @@ namespace BrutalCompanyMinus
             try
             {
                 ClearText();
-            } catch
+            } catch (Exception e)
             {
-
+                Log.LogError("Failed to clear text: " + e.Message);
             }
         }
 
@@ -298,7 +299,7 @@ namespace BrutalCompanyMinus
             try
             {
                 ClearText();
-            } catch
+            } catch (Exception e)
             {
                 __instance.StartCoroutine(ClearAfterDelay());
             }
@@ -310,9 +311,9 @@ namespace BrutalCompanyMinus
             try
             {
                 ClearText();
-            } catch
+            } catch (Exception e)
             {
-
+                Log.LogError("Encountered an error in the ClearAfterDelay coroutine: " + e.Message);
             }
         }
 
@@ -351,7 +352,10 @@ namespace BrutalCompanyMinus
             try
             {
                 Instance.keyPressEnabledTerminal = !___terminalInUse;
-            } catch { }
+            } catch (Exception e)
+            {
+                Log.LogError("Failed to update keyPressEnabledTerminal: " + e.Message);
+            }
         }
 
         [HarmonyPrefix]
@@ -361,7 +365,10 @@ namespace BrutalCompanyMinus
             try
             {
                 Instance.keyPressEnabledSettings = !___quickMenuManager.isMenuOpen;
-            } catch { }
+            } catch (Exception e) 
+            {
+                Log.LogError("Failed to update keyPressEnabledSettings: " + e.Message);
+            }
         }
 
         [HarmonyPrefix]
@@ -371,7 +378,10 @@ namespace BrutalCompanyMinus
             try
             {
                 Instance.keyPressEnabledTyping = !___localPlayer.isTypingChat;
-            } catch { }
+            } catch (Exception e) 
+            {
+                //Log.LogError("Failed to update keyPressEnabledTyping: " + e.Message);
+            }
         }
     }
 }
