@@ -75,7 +75,11 @@ namespace BrutalCompanyMinus.Minus.Events
             // Interrupt the charger method  
             if (Events.LockedEntrance.Active)
             {
+<<<<<<< HEAD
                 //Debug.Log($"Interact called on: {__instance.name}, parent: {__instance.transform.parent?.name}");
+=======
+                Debug.Log($"Interact called on: {__instance.name}, parent: {__instance.transform.parent?.name}");
+>>>>>>> ce1889e966d10ab2d92c0638480022b6488655df
 
                 PlayerControllerB localPlayer = GameNetworkManager.Instance.localPlayerController;
                 if (localPlayer != null)
