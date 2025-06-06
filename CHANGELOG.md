@@ -4,7 +4,8 @@
 
   <summary>1.25.1</summary>
 
-This update is fixing stuff up with kiwi bird.
+This update is mostly me attempting to fix stuff up with kiwi bird event.
+
 # Additions
 
   - LockedEntrance, requires Special Event to be enabled
