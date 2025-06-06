@@ -6,9 +6,6 @@ using System.Threading.Tasks;
 using BepInEx;
 using Unity.Netcode;
 using UnityEngine;
-using static Steamworks.InventoryItem;
-using UnityEngine.UIElements;
-using static UnityEngine.ParticleSystem.PlaybackState;
 
 namespace BrutalCompanyMinus.Minus.Events
 {
@@ -40,7 +37,7 @@ namespace BrutalCompanyMinus.Minus.Events
             try
             {
                 Vector3 shipPosition = hangarShip.transform.position;
-                Vector3 spawnSpot = RoundManager.Instance.GetRandomNavMeshPositionInRadiusSpherical(shipPosition, 170.0f); // Hope the position you recieve is a good one
+                Vector3 spawnSpot = RoundManager.Instance.GetRandomNavMeshPositionInRadiusSpherical(shipPosition, 170.0f); // Hope the position you receive is a good one. This position has a chance to be "undesirable" for players depending on the moon.
                 EnemyType giantKiwiType = Assets.GetEnemy(Assets.EnemyName.GiantKiwi);
                 RoundManager.Instance.SpawnEnemyGameObject(spawnSpot, 0, 1, giantKiwiType); // Spawn the Giant Kiwi
                 if (GameObject.FindObjectOfType<EnemyAINestSpawnObject>() == null)
@@ -49,22 +46,21 @@ namespace BrutalCompanyMinus.Minus.Events
                     GiantKiwiAI giantKiwiAI = GameObject.FindObjectOfType<GiantKiwiAI>();
                     try
                     {
-                        giantKiwiAI.SpawnBirdNest(); //Should things go wrong? Who knows if this is needed.
+                        giantKiwiAI.SpawnBirdNest(); // Should things go wrong? Who knows if this is needed.
                     }
                     catch (Exception ex)
                     {
                         Log.LogError($"Error while spawning GiantKiwiAI nest: {ex.Message}");
                     }
+                }
             }
             catch (Exception ex)
             {
                 Log.LogError($"Error while spawning GiantKiwiAI: {ex.Message}");
             }
-            //}
         }
 
         public override bool AddEventIfOnly() => Assets.ReadSettingEarly(Paths.ConfigPath + "\\BrutalCompanyMinusExtraReborn\\CoreProperties.cfg", "Enable Special Events?");
-
     }
 }
 
