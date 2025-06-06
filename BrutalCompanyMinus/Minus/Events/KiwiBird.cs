@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 using BepInEx;
 using Unity.Netcode;
 using UnityEngine;
+using static Steamworks.InventoryItem;
+using UnityEngine.UIElements;
+using static UnityEngine.ParticleSystem.PlaybackState;
 
 namespace BrutalCompanyMinus.Minus.Events
 {
@@ -19,24 +22,49 @@ namespace BrutalCompanyMinus.Minus.Events
         {
             Instance = this;
 
-            Weight = 4;
+            Weight = 1;
             Descriptions = new List<string>() { "Eggs for breakfast!", "Egging you on", "Is it worth it?", "Beware of the Giant Kiwi", "Whats that pecking noise?", "Its like a woodpecker but..." };
             ColorHex = "#800000";
             Type = EventType.VeryBad;
-
-            monsterEvents = new List<MonsterEvent>() { new MonsterEvent(
-                Assets.EnemyName.GiantKiwi,
-                new Scale(0.0f, 0.0f, 0.0f, 0.0f),
-                new Scale(44.0f, 3.2f, 44.0f, 100.0f),
-                new Scale(0.0f, 0.0f, 0.0f, 0.0f),
-                new Scale(0.0f, 0.0f, 0.0f, 0.0f),
-                new Scale(1.0f, 0.0f, 1.0f, 1.0f),
-                new Scale(2.0f, 0.04f, 2.0f, 3.0f))
-            };
         }
 
-        public override void Execute() => ExecuteAllMonsterEvents();
+        public override void Execute()
+        {
+            // I hate this method used to spawn the Giant Kiwi Bird but it somehow works.
+            GameObject hangarShip = Assets.hangarShip;
+            if (hangarShip == null)
+            {
+                return;
+            }
+
+            try
+            {
+                Vector3 shipPosition = hangarShip.transform.position;
+                Vector3 spawnSpot = RoundManager.Instance.GetRandomNavMeshPositionInRadiusSpherical(shipPosition, 170.0f); // Hope the position you recieve is a good one
+                EnemyType giantKiwiType = Assets.GetEnemy(Assets.EnemyName.GiantKiwi);
+                RoundManager.Instance.SpawnEnemyGameObject(spawnSpot, 0, 1, giantKiwiType); // Spawn the Giant Kiwi
+                if (GameObject.FindObjectOfType<EnemyAINestSpawnObject>() == null)
+                {
+                    Log.LogWarning("A nest was not found. Spawning Next");
+                    GiantKiwiAI giantKiwiAI = GameObject.FindObjectOfType<GiantKiwiAI>();
+                    try
+                    {
+                        giantKiwiAI.SpawnBirdNest(); //Should things go wrong? Who knows if this is needed.
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.LogError($"Error while spawning GiantKiwiAI nest: {ex.Message}");
+                    }
+            }
+            catch (Exception ex)
+            {
+                Log.LogError($"Error while spawning GiantKiwiAI: {ex.Message}");
+            }
+            //}
+        }
 
         public override bool AddEventIfOnly() => Assets.ReadSettingEarly(Paths.ConfigPath + "\\BrutalCompanyMinusExtraReborn\\CoreProperties.cfg", "Enable Special Events?");
+
     }
 }
+
