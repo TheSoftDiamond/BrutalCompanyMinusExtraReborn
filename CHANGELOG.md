@@ -4,15 +4,14 @@
 
   <summary>1.25.1</summary>
 
-This update brings BCMER into v70 finally! Bugs and crashes may occur. Versions prior to this may not be compatible with v70.
-
+This update is fixing stuff up with kiwi bird.
 # Additions
 
   - LockedEntrance, requires Special Event to be enabled
 
 # Fixes
 
-  - 
+  - Kiwi Bird doesnt die upon spawn (hopefully)
 
 # Changes
 
