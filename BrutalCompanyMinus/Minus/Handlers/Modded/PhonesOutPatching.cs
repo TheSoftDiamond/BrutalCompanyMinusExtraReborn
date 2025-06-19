@@ -4,7 +4,9 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using BrutalCompanyMinus.Minus.Events;
 using HarmonyLib;
+using Scoops;
 using Scoops.misc;
+using Scoops.patch;
 
 namespace BrutalCompanyMinus.Minus.Handlers.Modded
 {
@@ -36,11 +38,11 @@ namespace BrutalCompanyMinus.Minus.Handlers.Modded
 
         public static bool InterruptPhoneUsage(bool active)
         {
-            // Interrupt the phone pickup
+            // Interrupt the phone pickup  
             if (PhonesOut.Active)
             {
                 HUDManager.Instance.globalNotificationText.text =
-                "BAD PHONE RECEPTION!!!!";
+                    "BAD PHONE RECEPTION!!!!";
 
                 HUDManager.Instance.globalNotificationAnimator.SetTrigger("TriggerNotif");
                 HUDManager.Instance.UIAudio.PlayOneShot(
@@ -48,7 +50,6 @@ namespace BrutalCompanyMinus.Minus.Handlers.Modded
                     1f
                 );
                 return false;
-
             }
 
             return true;
