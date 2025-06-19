@@ -26,10 +26,10 @@ namespace BrutalCompanyMinus.Minus.Events
 
             EventsToRemove = new List<string>() { nameof(LateShip), nameof(EarlyShip), nameof(VeryLateShip), nameof(Hell) };
 
-            ScaleList.Add(ScaleType.MaxAmount, new Scale(-342.0f, -0.55f, -342.0f, -300.0f));
-            ScaleList.Add(ScaleType.MinAmount, new Scale(-480.0f, -0.55f, -480.0f, -240.0f));
+            ScaleList.Add(ScaleType.TimeMax, new Scale(-342.0f, -0.55f, -342.0f, -300.0f));
+            ScaleList.Add(ScaleType.TimeMin, new Scale(-480.0f, -0.55f, -480.0f, -240.0f));
         }
 
-        public override void Execute() => Net.Instance.MoveTimeServerRpc(UnityEngine.Random.Range(Getf(ScaleType.MinAmount), Getf(ScaleType.MaxAmount)));
+        public override void Execute() => Net.Instance.MoveTimeServerRpc(UnityEngine.Random.Range(Getf(ScaleType.TimeMin), Getf(ScaleType.TimeMax)));
     }
 }
