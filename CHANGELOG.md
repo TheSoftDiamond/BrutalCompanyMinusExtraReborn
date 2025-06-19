@@ -1,5 +1,19 @@
 # Changelog
 
+
+<details>
+
+  <summary>1.25.2</summary>
+
+# Fixes
+
+  - Thanks to a few friends, fixed RealityShift event hopefully.
+
+# Changes
+
+  - Hell, VeryEarlyShip, EarlyShip, LateShip, VeryLateShip can now have starting time for the moon customized.
+
+</details>
 <details>
 
   <summary>1.25.1</summary>
