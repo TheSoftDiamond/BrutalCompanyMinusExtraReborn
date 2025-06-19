@@ -33,7 +33,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
         public static List<NetworkObjectReference> shiftedObjects = new List<NetworkObjectReference>();
 
         public static MethodInfo grabObjectServerRpc = typeof(PlayerControllerB).GetMethod("GrabObjectServerRpc", BindingFlags.NonPublic | BindingFlags.Instance);
-        public static MethodInfo firstEmptyItemSlot = typeof(PlayerControllerB).GetMethod("FirstEmptyItemSlot", BindingFlags.NonPublic| BindingFlags.Instance);
+        public static MethodInfo firstEmptyItemSlot = typeof(PlayerControllerB).GetMethod("FirstEmptyItemSlot", BindingFlags.NonPublic | BindingFlags.Instance);
         public static MethodInfo setSpecialGrabAnimationBool = typeof(PlayerControllerB).GetMethod("SetSpecialGrabAnimationBool", BindingFlags.NonPublic | BindingFlags.Instance);
         public static FieldInfo grabObjectCoroutine = typeof(PlayerControllerB).GetField("grabObjectCoroutine", BindingFlags.NonPublic | BindingFlags.Instance);
         public static FieldInfo currentlyGrabbingObject = typeof(PlayerControllerB).GetField("currentlyGrabbingObject", BindingFlags.NonPublic | BindingFlags.Instance);
@@ -51,17 +51,17 @@ namespace BrutalCompanyMinus.Minus.Handlers
             {
                 return;
             }
-            if((int)firstEmptyItemSlot.Invoke(__instance, null) == -1)
+            if ((int)firstEmptyItemSlot.Invoke(__instance, null) == -1)
             {
                 return;
-            } 
+            }
 
             GrabbableObject grabbableObject = hit.collider.gameObject.GetComponent<GrabbableObject>();
             if (grabbableObject != null && grabbableObject.NetworkObject != null)
             {
-                foreach(int objectID in ShiftableObjects)
+                foreach (int objectID in ShiftableObjects)
                 {
-                    if(objectID == grabbableObject.gameObject.GetInstanceID() && UnityEngine.Random.Range(0.0f, 1.0f) <= transmuteChance)
+                    if (objectID == grabbableObject.gameObject.GetInstanceID() && UnityEngine.Random.Range(0.0f, 1.0f) <= transmuteChance)
                     {
                         invalidateGrab = true;
                         Net.Instance.ShiftServerRpc(grabbableObject.NetworkObject);
@@ -81,11 +81,11 @@ namespace BrutalCompanyMinus.Minus.Handlers
             if (!Events.RealityShift.Active || !NetworkManager.Singleton.IsServer || __instance == null || __instance.transform == null) return;
             System.Random rng = new System.Random(Net.Instance._seed++);
 
-            if(rng.NextDouble() <= enemyTeleportChance)
+            if (rng.NextDouble() <= enemyTeleportChance)
             {
                 Vector3 newPosition = Helper.GetRandomNavMeshPositionInBox(__instance.transform.position, 15.0f, 25.0f);
 
-                if(__instance.TryGetComponent<NetworkObject>(out NetworkObject netObject))
+                if (__instance.TryGetComponent<NetworkObject>(out NetworkObject netObject))
                 {
                     Net.Instance.TeleportEnemyServerRpc(netObject, newPosition);
                 }
@@ -97,7 +97,19 @@ namespace BrutalCompanyMinus.Minus.Handlers
             yield return new WaitUntil(() => shiftedObjects.Count > 0);
 
             NetworkObject networkObject = null;
-            if (!shiftedObjects[0].TryGet(out networkObject))
+            NetworkObjectReference targetRef;
+
+            lock (shiftedObjects)
+            {
+                if (shiftedObjects.Count == 0)
+                {
+                    Log.LogError("No shifted objects found in GrabShiftedObject()");
+                    yield break;
+                }
+                targetRef = shiftedObjects[0];
+                shiftedObjects.RemoveAt(0);
+            }
+            if (!targetRef.TryGet(out networkObject) || networkObject == null)
             {
                 Log.LogError("Null network object in GrabShiftedObject()");
                 yield break;
@@ -107,13 +119,13 @@ namespace BrutalCompanyMinus.Minus.Handlers
             currentlyGrabbingObject.SetValue(instance, newObject);
 
             newObject.InteractItem();
-            if(newObject.grabbable)
+            if (newObject.grabbable)
             {
                 instance.playerBodyAnimator.SetBool("GrabInvalidated", value: false);
                 instance.playerBodyAnimator.SetBool("GrabValidated", value: false);
                 instance.playerBodyAnimator.SetBool("cancelHolding", value: false);
                 instance.playerBodyAnimator.ResetTrigger("Throw");
-                setSpecialGrabAnimationBool.Invoke(instance, new object[] { true, newObject } );
+                setSpecialGrabAnimationBool.Invoke(instance, new object[] { true, newObject });
                 instance.isGrabbingObjectAnimation = true;
                 instance.cursorIcon.enabled = false;
                 instance.cursorTip.text = "";
@@ -135,20 +147,23 @@ namespace BrutalCompanyMinus.Minus.Handlers
                 grabObjectCoroutine.SetValue(instance, instance.StartCoroutine("GrabObject"));
             }
 
-            grabObjectServerRpc.Invoke(instance, new object[] { shiftedObjects[0] });
+            grabObjectServerRpc.Invoke(instance, new object[] { targetRef });
         }
 
         [HarmonyPostfix]
         [HarmonyPatch(typeof(PlayerControllerB), "GrabObjectClientRpc")]
         public static void OnGrabObjectClientRpc()
         {
-            shiftedObjects.Clear();
+            lock (shiftedObjects)
+            {
+                shiftedObjects.Clear();
+            }
         }
 
         [HarmonyPrefix]
         [HarmonyPriority(Priority.Last)]
         [HarmonyPatch(typeof(RoundManager), "waitForScrapToSpawnToSync")]
-        public static void OnwaitForScrapToSpawnToSync(ref NetworkObjectReference[] spawnedScrap) 
+        public static void OnwaitForScrapToSpawnToSync(ref NetworkObjectReference[] spawnedScrap)
         {
             if (!Events.RealityShift.Active) return;
 
@@ -189,7 +204,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
         }
     }
 
-    internal class GrabObjectTranspiler 
+    internal class GrabObjectTranspiler
     {
         [HarmonyTranspiler]
         [HarmonyPatch(typeof(PlayerControllerB), "BeginGrabObject")]
@@ -214,7 +229,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
                 }
             }
 
-            if(index != -1 && returnOperand != null)
+            if (index != -1 && returnOperand != null)
             {
                 code.Insert(index, new CodeInstruction(OpCodes.Brtrue, returnOperand));
                 code.Insert(index, new CodeInstruction(Transpilers.EmitDelegate<Func<bool>>(() =>
@@ -226,20 +241,21 @@ namespace BrutalCompanyMinus.Minus.Handlers
                     }
                     return false;
                 })));
-            } else
+            }
+            else
             {
                 Log.LogError("Failed to patch BeginGrabObject()");
             }
 
             Log.LogInfo("Patched Section     PlayerControllerB.BeginGrabObject()");
-            for(int i = 0; i < index + 4; i++)
+            for (int i = 0; i < index + 4; i++)
             {
                 string labels = "", arrow = "";
                 foreach (Label l in code[i].labels) labels += code[i].labels;
                 if (i == index || i == index + 1) arrow = "-> ";
                 Log.LogInfo($"{arrow}{i}: {code[i].opcode}, {code[i].operand}, {labels}");
             }
-            
+
             return code.AsEnumerable();
         }
     }
