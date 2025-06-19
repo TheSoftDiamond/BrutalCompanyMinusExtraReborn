@@ -24,6 +24,9 @@ namespace BrutalCompanyMinus.Minus.Events
             ColorHex = "#800000";
             Type = EventType.VeryBad;
 
+            ScaleList.Add(ScaleType.TimeMin, new Scale(780f, 0f, 780f, 780f));
+            ScaleList.Add(ScaleType.TimeMax, new Scale(860f, 0f, 860f, 860f));
+
             EventsToRemove = new List<string>() { nameof(VeryEarlyShip), nameof(EarlyShip), nameof(LateShip), nameof(Hell) };
         }
 
@@ -32,13 +35,13 @@ namespace BrutalCompanyMinus.Minus.Events
             if (Configuration.VeryLateShipAdjustment.Value)
             {
                 // For slower moving time
-                int random = UnityEngine.Random.Range(780, 860);
+                int random = (int)UnityEngine.Random.Range(Getf(ScaleType.TimeMin), Getf(ScaleType.TimeMax));
                 Net.Instance.MoveTimeServerRpc(random, 0.139534883721f);
             }
             else
             {
                 // For regular moving time
-                int Regularrandom = UnityEngine.Random.Range(780, 860);
+                int Regularrandom = (int)UnityEngine.Random.Range(Getf(ScaleType.TimeMin), Getf(ScaleType.TimeMax));
                 Net.Instance.MoveTimeServerRpc(Regularrandom);
             }
         }
