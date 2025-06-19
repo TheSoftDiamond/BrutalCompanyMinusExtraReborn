@@ -23,7 +23,7 @@ namespace BrutalCompanyMinus
     {
         private const string GUID = "SoftDiamond.BrutalCompanyMinusExtraReborn";
         private const string NAME = "BrutalCompanyMinusExtraReborn";
-        private const string VERSION = "1.25.0";
+        private const string VERSION = "1.25.2";
 
         internal static Plugin Instance { get; private set; }
 
@@ -49,7 +49,6 @@ namespace BrutalCompanyMinus
             allEnemiesConfig = new ConfigFile(Paths.ConfigPath + "\\BrutalCompanyMinusExtraReborn\\AllEnemies.cfg", true);
             levelPropertiesConfig = new ConfigFile(Paths.ConfigPath + "\\BrutalCompanyMinusExtraReborn\\LevelProperties.cfg", true);
             CorePropertiesConfig = new ConfigFile(Paths.ConfigPath + "\\BrutalCompanyMinusExtraReborn\\CoreProperties.cfg", true);
-            //  extensiveSettingsConfig = new ConfigFile(Paths.ConfigPath + "\\BrutalCompanyMinusExtraReborn\\ExtensiveOptions.cfg", true);
 
             uiConfig.SaveOnConfigSet = false;
             difficultyConfig.SaveOnConfigSet = false;
@@ -61,7 +60,6 @@ namespace BrutalCompanyMinus
             allEnemiesConfig.SaveOnConfigSet = false;
             levelPropertiesConfig.SaveOnConfigSet = false;
             CorePropertiesConfig.SaveOnConfigSet = false;
-            //   extensiveSettingsConfig.SaveOnConfigSet = false;
 
             // Load assets
             Assets.Load();
@@ -70,6 +68,7 @@ namespace BrutalCompanyMinus
             harmony.PatchAll();
             harmony.PatchAll(typeof(GrabObjectTranspiler));
 
+            // Conditional patching depending on mods present
             if (Compatibility.IsModPresent("FlipMods.HotbarPlus"))
             {
                 HotBarPlusCompat.PatchAll(harmony);
@@ -85,7 +84,9 @@ namespace BrutalCompanyMinus
                 _EnemyAI.PatchEnemyStart(harmony);
             }
 
-                Log.LogInfo(NAME + " " + VERSION + " " + "is done patching.");
+            Log.LogInfo(NAME + " " + VERSION + " " + "is done patching.");
+
+
             if (Assets.ReadSettingEarly(Paths.ConfigPath + "\\BrutalCompanyMinusExtraReborn\\DifficultySettings.cfg", "Enable time scaling?") == true) ;
             {
                 Log.LogInfo("Time adjustment is enabled.");
@@ -98,7 +99,7 @@ namespace BrutalCompanyMinus
             try
             {
                 System.IO.File.Delete(Paths.ConfigPath + "\\BrutalCompanyMinusExtraReborn\\CustomEvents.cfg");
-
+            
                 //Create and dispose
                 System.IO.File.Create(Paths.ConfigPath + "\\BrutalCompanyMinusExtraReborn\\CustomEvents.cfg").Dispose();
 
