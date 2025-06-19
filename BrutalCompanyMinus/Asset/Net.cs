@@ -648,7 +648,6 @@ namespace BrutalCompanyMinus
                 return;
             }
 
-            // Find two objects called "Area Light (3)", and one "Area Light (4)" which is a child of ShipElectricLights, and setactive false it
             GameObject areaLight3 = shipElectricLights.transform.Find("Area Light (3)")?.gameObject;
             if (areaLight3 != null)
             {
@@ -708,7 +707,6 @@ namespace BrutalCompanyMinus
                 return;
             }
 
-            // Find two objects called "Area Light (3)", and one "Area Light (4)" which is a child of ShipElectricLights, and setactive false it
             GameObject areaLight3 = shipElectricLights.transform.Find("Area Light (3)")?.gameObject;
             if (areaLight3 != null)
             {
