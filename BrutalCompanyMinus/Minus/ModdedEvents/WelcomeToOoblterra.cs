@@ -23,8 +23,6 @@ namespace BrutalCompanyMinus.Minus.Events
             ColorHex = "#FF0000";
             Type = EventType.VeryBad;
 
-            EventsToRemove = new List<string>() { nameof(Coilhead), nameof(AntiCoilhead), nameof(ToilHead), nameof(Mantitoil), nameof(ToilSlayer), nameof(MantiToilSlayer), nameof(NoSlayers), nameof(NoMantitoil) };
-
             monsterEvents = new List<MonsterEvent>() { new MonsterEvent(
                 "Wanderer",
                 new Scale(0.0f, 0.0f, 0.0f, 0.0f),
