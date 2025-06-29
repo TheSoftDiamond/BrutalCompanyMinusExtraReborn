@@ -84,6 +84,11 @@ namespace BrutalCompanyMinus
                 _EnemyAI.PatchEnemyStart(harmony);
             }
 
+            if (Compatibility.KidnapperFoxPresent)
+            {
+                //KidnapperFoxPatches.PatchAll(harmony);
+            }
+
             Log.LogInfo(NAME + " " + VERSION + " " + "is done patching.");
 
 
