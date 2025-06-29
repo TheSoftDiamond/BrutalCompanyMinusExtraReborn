@@ -23,7 +23,7 @@ namespace BrutalCompanyMinus
     {
         private const string GUID = "SoftDiamond.BrutalCompanyMinusExtraReborn";
         private const string NAME = "BrutalCompanyMinusExtraReborn";
-        private const string VERSION = "1.25.2";
+        private const string VERSION = "1.25.3";
 
         internal static Plugin Instance { get; private set; }
 
@@ -84,10 +84,10 @@ namespace BrutalCompanyMinus
                 _EnemyAI.PatchEnemyStart(harmony);
             }
 
-            if (Compatibility.KidnapperFoxPresent)
-            {
+            //if (Compatibility.KidnapperFoxPresent)
+            //{
                 //KidnapperFoxPatches.PatchAll(harmony);
-            }
+            //}
 
             Log.LogInfo(NAME + " " + VERSION + " " + "is done patching.");
 
