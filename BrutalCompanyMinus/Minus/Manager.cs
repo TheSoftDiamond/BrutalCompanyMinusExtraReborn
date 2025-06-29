@@ -614,6 +614,18 @@ namespace BrutalCompanyMinus.Minus
                     if (item != null) count += item.scrapValue;
                 }
             }
+
+            GameObject Microwave = Assets.Microwave;
+            if (Microwave != null)
+            {
+                GrabbableObject[] itemsInMicrowave = Microwave.GetComponentsInChildren<GrabbableObject>();
+                foreach (GrabbableObject item in itemsInMicrowave)
+                {
+                    if (item != null) count += item.scrapValue;
+                }
+            }
+
+
             //else Log.LogDebug("No cruiser found");
 
             if (Compatibility.ShipInventoryPresent)
