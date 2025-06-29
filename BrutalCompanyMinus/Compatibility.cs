@@ -69,7 +69,8 @@ namespace BrutalCompanyMinus
             BiodiversityPresent = false,
             OoblterraPresent = false,
             LethalPhonesPresent = false,
-            HotBarPlusPresent = false;
+            HotBarPlusPresent = false,
+            KidnapperFoxPresent = false;
 
 
 
@@ -232,6 +233,7 @@ namespace BrutalCompanyMinus
             lighteaterPresent = IsModPresent("Lega.LightEater", "Light Eater Detected");
             LethalPhonesPresent = IsModPresent("LethalPhones", "Lethal Phones Detected");
             SelfSortingStorage = IsModPresent("zigzag.SelfSortingStorage", "Self Sorting Storage Detected");
+            KidnapperFoxPresent = IsModPresent("uk.1a3.yesfox", "Kidnapper Fox Detected");
         }
 
         private static Assembly GetAssembly(string name)
