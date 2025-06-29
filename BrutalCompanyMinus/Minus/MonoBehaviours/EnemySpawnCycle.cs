@@ -57,6 +57,9 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
             }
             allEnemiesCycle.Reset();
             allAllEnemiesCycle.Reset();
+
+            allEnemiesCycle.enemies.Clear();
+            allAllEnemiesCycle.enemies.Clear();
         }
 
         [HarmonyPostfix]
