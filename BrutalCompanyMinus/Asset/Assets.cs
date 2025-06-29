@@ -74,6 +74,16 @@ namespace BrutalCompanyMinus
             get => GameObject.Find("/Environment/HangarShip");
         }
 
+        internal static GameObject cruiser
+        {
+            get => GameObject.Find("CompanyCruiser(Clone)");
+        }
+
+        internal static GameObject Microwave
+        {
+            get => GameObject.Find("MicrowaveContainer(Clone)");
+        }
+
         public static bool ReadSettingEarly(string filePath, string settingName)
         {
             try
@@ -119,10 +129,6 @@ namespace BrutalCompanyMinus
                 //Log.LogWarning($"An error occurred: {ex.Message}");
                 return false;
             }
-        }
-        internal static GameObject cruiser
-        {
-            get => GameObject.Find("CompanyCruiser(Clone)");
         }
 
         public static Dictionary<string, EnemyType> EnemyList = new Dictionary<string, EnemyType>();
