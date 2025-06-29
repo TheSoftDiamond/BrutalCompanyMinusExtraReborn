@@ -1,6 +1,14 @@
 # Changelog
 
+<details>
 
+  <summary>1.25.3</summary>
+
+# Fixes
+
+  - Microwave is now considered for ship difficulty scrap counting.
+
+</details>
 <details>
 
   <summary>1.25.2</summary>
