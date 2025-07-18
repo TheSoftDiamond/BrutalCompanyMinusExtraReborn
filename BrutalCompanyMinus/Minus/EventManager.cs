@@ -111,7 +111,7 @@ namespace BrutalCompanyMinus.Minus
             new Events.Meteors(),
             new Events.Mimics(),
             new Events.MobileTurrets(),
-            //new Events.AntiBounty(),
+            new Events.AntiBounty(),
             // Very Bad
             new Events.Nutcracker(),
             new Events.KiwiBird(),// Requires Special Events

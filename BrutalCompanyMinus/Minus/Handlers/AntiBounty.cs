@@ -15,6 +15,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
         [HarmonyPatch(nameof(EnemyAI.KillEnemyOnOwnerClient))]
         static void PayOnkill(ref EnemyAI __instance)
         {
+            // Keep track of the due amount on future kills where you have credits.
             if (due > 0 && Manager.currentTerminal.groupCredits > 0)
             {
                 HUDManager.Instance.AddTextToChatOnServer("<color=#FF0000>Due payment.</color>");
@@ -36,16 +37,17 @@ namespace BrutalCompanyMinus.Minus.Handlers
                 if (__instance.gameObject.GetInstanceID() == id) return;
             }
 
-            MEvent AntibountEvent = Events.AntiBounty.Instance;
+            MEvent AntibountyEvent = Events.AntiBounty.Instance;
             
-            int fineIncurred = UnityEngine.Random.Range(AntibountEvent.Get(MEvent.ScaleType.MinValue), AntibountEvent.Get(MEvent.ScaleType.MaxValue) + 1);
+            int fineIncurred = UnityEngine.Random.Range(AntibountyEvent.Get(MEvent.ScaleType.MinValue), AntibountyEvent.Get(MEvent.ScaleType.MaxValue) + 1);
 
+            //Lacking credits
             if (Manager.currentTerminal.groupCredits - fineIncurred < 0) {
                 due += fineIncurred - Manager.currentTerminal.groupCredits;
                 fineIncurred = Manager.currentTerminal.groupCredits;
                 HUDManager.Instance.AddTextToChatOnServer(string.Format("<color=#FF0000>Since you lack credits to pay the full fine, you will be due </color><color=#800000>{0}</color><color=#FF0000> on the next kill.</color>", due));
             }
-            Log.LogDebug("BCMER Pay " + -fineIncurred);
+            Log.LogDebug("BCMER Fine " + -fineIncurred);
             Manager.PayCredits(-fineIncurred);
 
             enemyObjectIDs.Add(__instance.gameObject.GetInstanceID());

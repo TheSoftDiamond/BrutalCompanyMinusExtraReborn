@@ -38,8 +38,13 @@ namespace BrutalCompanyMinus.Minus.Events
             AntiBountyActive = true;
         }
 
-        public override void OnShipLeave() => AntiBountyActive = false;
-
-        public override void OnGameStart() => AntiBountyActive = false;
+        public override void OnShipLeave()
+        {
+            AntiBountyActive = false;
+        }
+        public override void OnGameStart()
+        {
+            AntiBountyActive = false;
+        }
     }
 }
