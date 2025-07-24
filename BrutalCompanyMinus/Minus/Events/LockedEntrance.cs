@@ -76,11 +76,6 @@ namespace BrutalCompanyMinus.Minus.Events
             if (Events.LockedEntrance.Active)
             {
 
-                //Debug.Log($"Interact called on: {__instance.name}, parent: {__instance.transform.parent?.name}");
-
-                Debug.Log($"Interact called on: {__instance.name}, parent: {__instance.transform.parent?.name}");
-
-
                 PlayerControllerB localPlayer = GameNetworkManager.Instance.localPlayerController;
                 if (localPlayer != null)
                 {
@@ -88,7 +83,23 @@ namespace BrutalCompanyMinus.Minus.Events
                     if (interactObject.name.Contains("EntranceTeleportA"))
                     {
                         __instance.interactable = false;
-                        HUDManager.Instance.globalNotificationText.text = "DOOR IS LOCKED!!!!";
+                        //Give a random response using random
+                        int randomResponse = UnityEngine.Random.RandomRangeInt(0, 3);
+                        switch (randomResponse)
+                        {
+                            case 0:
+                                HUDManager.Instance.globalNotificationText.text = "The entrance is locked!";
+                                break;
+                            case 1:
+                                HUDManager.Instance.globalNotificationText.text = "You can't go through here!";
+                                break;
+                            case 2:
+                                HUDManager.Instance.globalNotificationText.text = "The door is blocked!";
+                                break;
+                            default:
+                                HUDManager.Instance.globalNotificationText.text = "DOOR IS LOCKED!!!!";
+                                break;
+                        }
 
                         HUDManager.Instance.globalNotificationAnimator.SetTrigger("TriggerNotif");
                         HUDManager.Instance.UIAudio.PlayOneShot(
