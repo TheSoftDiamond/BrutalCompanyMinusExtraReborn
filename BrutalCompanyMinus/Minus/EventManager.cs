@@ -142,6 +142,7 @@ namespace BrutalCompanyMinus.Minus
             new Events.NutSlayersMore(),
             new Events.Dweller(),
             new Events.TimeChaos(),// Requires Special Events
+            new Events.BerserkTurrets(),
             // No Enemy
             new Events.NoBaboons(),
             new Events.NoBracken(),
@@ -179,12 +180,15 @@ namespace BrutalCompanyMinus.Minus
         {
             //Very Good
             new Events.CityOfGold(),
+
             //Good
             new Events.Dice(),
             new Events.Nemo(),
             new Events.HotBarMania(),
+
             // Neutral
             new Events.NeedyCats(),
+
             //Bad
             new Events.Lockers(),
             new Events.TakeyGokuBracken(),
@@ -210,6 +214,8 @@ namespace BrutalCompanyMinus.Minus
             new Events.WelcomeToOoblterra(),
             new Events.PhonesOut(),
             //new Events.KidnapperFox(),
+            //new Events.SolarFlare(),
+            //new Events.Heatwave(),
 
             //Very Bad
             new Events.Mantitoil(),
