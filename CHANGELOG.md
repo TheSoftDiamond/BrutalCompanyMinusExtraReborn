@@ -6,7 +6,13 @@
 
 # Additions
 
-  - AntiBounty Event
+  - AntiBounty Event (You lose money for kills, and yes even if enemies themselves cause it too. Should one run out of credits, the total bounty amount will be paid off on future kills until you owe nothing)
+  - TrapsFailure Event (Only affects vanilla traps as of right now, will look into supplying modded traps later)
+  - BerserkTurrets Event
+
+# Changes
+
+  - Small additions to LockedEntrances
 
 # Fixes
 
