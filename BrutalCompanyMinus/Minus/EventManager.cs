@@ -255,7 +255,7 @@ namespace BrutalCompanyMinus.Minus
         };
         #endregion
 
-        //public static List<MEvent> ExternalEvents = new List<MEvent>() { };
+        public static List<MEvent> ExternalEvents = new List<MEvent>() { };
 
         internal static List<MEvent> customEvents = new List<MEvent>();
 
@@ -319,11 +319,13 @@ namespace BrutalCompanyMinus.Minus
             List<MEvent> chosenEvents = new List<MEvent>();
             List<MEvent> eventsToChooseForm = new List<MEvent>();
             foreach (MEvent e in events) eventsToChooseForm.Add(e);
+            foreach (MEvent e in ExternalEvents) eventsToChooseForm.Add(e);
 
             // Decide how many events to spawn
             System.Random rng = new System.Random(StartOfRound.Instance.randomMapSeed + 32345 + Environment.TickCount);
             int eventsToSpawn = (int)MEvent.Scale.Compute(Configuration.eventsToSpawn, MEvent.EventType.Neutral) + RoundManager.Instance.GetRandomWeightedIndex(Configuration.weightsForExtraEvents.IntArray(), rng);
             
+            // Forced Events
             foreach(MEvent forcedEvent in forcedEvents)
             {
                 eventsToChooseForm.RemoveAll(x => x.Name() == forcedEvent.Name());
@@ -426,10 +428,10 @@ namespace BrutalCompanyMinus.Minus
                 e.OnShipLeave();
             }
 
-            //foreach(MEvent e in ExternalEvents)
-            //{
-            //    e.OnShipLeave();
-            //}
+            foreach(MEvent e in ExternalEvents)
+            {
+                e.OnShipLeave();
+            }
         }
 
         internal static void ExecuteOnGameStart()
@@ -455,10 +457,10 @@ namespace BrutalCompanyMinus.Minus
                 e.OnGameStart();
             }
 
-            //foreach (MEvent e in ExternalEvents)
-            //{
-            //    e.OnGameStart();
-            //}
+            foreach (MEvent e in ExternalEvents)
+            {
+                e.OnGameStart();
+            }
         }
 
         internal static void ExecuteOnLocalDisconnect()
@@ -484,10 +486,10 @@ namespace BrutalCompanyMinus.Minus
                 e.OnLocalDisconnect();
             }
 
-            //foreach (MEvent e in ExternalEvents)
-            //{
-            //    e.OnLocalDisconnect();
-            //}
+            foreach (MEvent e in ExternalEvents)
+            {
+                e.OnLocalDisconnect();
+            }
         }
 
         internal static void UpdateAllEventWeights()
