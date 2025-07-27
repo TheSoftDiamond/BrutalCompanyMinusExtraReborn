@@ -27,7 +27,7 @@ namespace BrutalCompanyMinus
             { EnemyName.Hygrodere, "Blob" }, { EnemyName.GhostGirl, "DressGirl" }, { EnemyName.SporeLizard, "Puffer" }, { EnemyName.NutCracker, "Nutcracker" }, { EnemyName.EyelessDog, "MouthDog" },
             { EnemyName.ForestKeeper, "ForestGiant" }, { EnemyName.EarthLeviathan, "SandWorm" }, { EnemyName.CircuitBee, "RedLocustBees" }, { EnemyName.BaboonHawk, "BaboonHawk" }, { EnemyName.CoilHead, "SpringMan" },
             { EnemyName.Jester, "Jester" }, { EnemyName.Lasso, "LassoMan" }, { EnemyName.Masked, "MaskedPlayerEnemy" }, { EnemyName.Manticoil, "Doublewing" }, { EnemyName.RoamingLocust, "DocileLocustBees" },
-            { EnemyName.Butler, "Butler" }, { EnemyName.OldBird, "RadMech" }, { EnemyName.FlowerSnake, "FlowerSnake" }, { EnemyName.Maneater, "CaveDweller" }, { EnemyName.Barber, "ClaySurgeon" }, {EnemyName.GiantKiwi, "GiantKiwi" }
+            { EnemyName.Butler, "Butler" }, { EnemyName.OldBird, "RadMech" }, { EnemyName.FlowerSnake, "FlowerSnake" }, { EnemyName.Maneater, "CaveDweller" }, { EnemyName.Barber, "ClaySurgeon" }, {EnemyName.GiantKiwi, "GiantKiwi" },
         };
 
         public enum ItemName
