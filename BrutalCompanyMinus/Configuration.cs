@@ -14,6 +14,10 @@ using static BrutalCompanyMinus.Helper;
 using BrutalCompanyMinus.Minus.MonoBehaviours;
 using System;
 using EventType = BrutalCompanyMinus.Minus.MEvent.EventType;
+using UnityEngine.UIElements;
+using Scale = BrutalCompanyMinus.Minus.MEvent.Scale;
+using System.Text.RegularExpressions;
+using System.IO;
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 namespace BrutalCompanyMinus
@@ -22,7 +26,7 @@ namespace BrutalCompanyMinus
     public class Configuration
     {
         // Config files
-        public static ConfigFile uiConfig, eventConfig, weatherConfig, customAssetsConfig, difficultyConfig, moddedEventConfig, customEventConfig, allEnemiesConfig, levelPropertiesConfig, CorePropertiesConfig /*, extensiveSettingsConfig*/;
+        public static ConfigFile uiConfig, eventConfig, weatherConfig, customAssetsConfig, difficultyConfig, moddedEventConfig, customEventConfig, allEnemiesConfig, levelPropertiesConfig, CorePropertiesConfig, externalEventConfig /*, extensiveSettingsConfig*/;
 
         // Event settings
         public static List<ConfigEntry<int>> eventWeights = new List<ConfigEntry<int>>();
@@ -116,6 +120,108 @@ namespace BrutalCompanyMinus
 
         /*   public static ConfigEntry<bool> EnableStreamerEvents;*/
 
+        public static void RegisterExternalEvent(MEvent e)
+        {
+
+            // Event settings
+            {
+                eventWeights.Add(externalEventConfig.Bind(e.Name(), "Custom Weight", e.Weight, "If you want to use custom weights change 'Use custom weights'? setting in '__Event Settings' to true."));
+                eventDescriptions.Add(ListToDescriptions(externalEventConfig.Bind(e.Name(), "Descriptions", StringsToList(e.Descriptions, "|"), "Seperated by |").Value));
+                eventColorHexes.Add(externalEventConfig.Bind(e.Name(), "Color Hex", e.ColorHex));
+                eventTypes.Add(externalEventConfig.Bind(e.Name(), "Event Type", e.Type));
+                eventEnables.Add(externalEventConfig.Bind(e.Name(), "Event Enabled?", e.Enabled, "Setting this to false will stop the event from occuring.")); // Normal event
+
+                // Make scale list
+                Dictionary<ScaleType, Scale> scales = new Dictionary<ScaleType, Scale>();
+                foreach (KeyValuePair<ScaleType, Scale> obj in e.ScaleList)
+                {
+                    scales.Add(obj.Key, getScale(externalEventConfig.Bind(e.Name(), obj.Key.ToString(), GetStringFromScale(obj.Value), ScaleInfoList[obj.Key] + "   " + scaleDescription).Value));
+                }
+                eventScales.Add(scales);
+
+                // EventsToRemove and EventsToSpawnWith
+                eventsToRemove.Add(ListToStrings(externalEventConfig.Bind(e.Name(), "Events To Remove", StringsToList(e.EventsToRemove, ", "), "Will prevent said event(s) from occuring.").Value));
+                eventsToSpawnWith.Add(ListToStrings(externalEventConfig.Bind(e.Name(), "Events To Spawn With", StringsToList(e.EventsToSpawnWith, ", "), "Will spawn said events(s).").Value));
+
+                // Monster events
+                List<MonsterEvent> newMonsterEvents = new List<MonsterEvent>();
+                for (int i = 0; i < e.monsterEvents.Count; i++)
+                {
+                    newMonsterEvents.Add(new MonsterEvent(
+                        externalEventConfig.Bind(e.Name(), $"Enemy {i} Name", e.monsterEvents[i].enemy.name, "Inputting an invalid enemy name will cause it to return an empty enemyType").Value,
+                        getScale(externalEventConfig.Bind(e.Name(), $"{e.monsterEvents[i].enemy.name} {ScaleType.InsideEnemyRarity}", GetStringFromScale(e.monsterEvents[i].insideSpawnRarity), $"{ScaleInfoList[ScaleType.InsideEnemyRarity]}   {scaleDescription}").Value),
+                        getScale(externalEventConfig.Bind(e.Name(), $"{e.monsterEvents[i].enemy.name} {ScaleType.OutsideEnemyRarity}", GetStringFromScale(e.monsterEvents[i].outsideSpawnRarity), $"{ScaleInfoList[ScaleType.OutsideEnemyRarity]}   {scaleDescription}").Value),
+                        getScale(externalEventConfig.Bind(e.Name(), $"{e.monsterEvents[i].enemy.name} {ScaleType.MinInsideEnemy}", GetStringFromScale(e.monsterEvents[i].minInside), $"{ScaleInfoList[ScaleType.MinInsideEnemy]}   {scaleDescription}").Value),
+                        getScale(externalEventConfig.Bind(e.Name(), $"{e.monsterEvents[i].enemy.name} {ScaleType.MaxInsideEnemy}", GetStringFromScale(e.monsterEvents[i].maxInside), $"{ScaleInfoList[ScaleType.MaxInsideEnemy]}   {scaleDescription}").Value),
+                        getScale(externalEventConfig.Bind(e.Name(), $"{e.monsterEvents[i].enemy.name} {ScaleType.MinOutsideEnemy}", GetStringFromScale(e.monsterEvents[i].minOutside), $"{ScaleInfoList[ScaleType.MinOutsideEnemy]}   {scaleDescription}").Value),
+                        getScale(externalEventConfig.Bind(e.Name(), $"{e.monsterEvents[i].enemy.name} {ScaleType.MaxOutsideEnemy}", GetStringFromScale(e.monsterEvents[i].maxOutside), $"{ScaleInfoList[ScaleType.MaxOutsideEnemy]}   {scaleDescription}").Value)
+                    ));
+                }
+                monsterEvents.Add(newMonsterEvents);
+
+                // Scrap transmutation events
+                Scale amount = new Scale(0.0f, 0.0f, 0.0f, 0.0f);
+                if (e.scrapTransmutationEvent.items.Length > 0) amount = getScale(externalEventConfig.Bind(e.Name(), "Percentage", GetStringFromScale(e.scrapTransmutationEvent.amount), $"{ScaleInfoList[ScaleType.Percentage]}   {scaleDescription}").Value);
+                SpawnableItemWithRarity[] newScrapTransmuations = new SpawnableItemWithRarity[e.scrapTransmutationEvent.items.Length];
+                for (int i = 0; i < e.scrapTransmutationEvent.items.Length; i++)
+                {
+                    newScrapTransmuations[i] = new SpawnableItemWithRarity()
+                    {
+                        spawnableItem = GetItem(externalEventConfig.Bind(e.Name(), $"Scrap {i} name", e.scrapTransmutationEvent.items[i].spawnableItem.name, "Inputting an invalid scrap name will cause it to return an empty item").Value),
+                        rarity = externalEventConfig.Bind(e.Name(), $"{e.scrapTransmutationEvent.items[i].spawnableItem.name} Rarity", e.scrapTransmutationEvent.items[i].rarity).Value
+                    };
+                }
+                transmutationEvents.Add(new ScrapTransmutationEvent(amount, newScrapTransmuations));
+            }
+            EventManager.externalEvents.Add(e);
+
+        }
+
+        /// <summary>
+        /// Resets the event data for a specific path mode and setting name. For path modes, use "Vanilla", "Modded", or "External".
+        /// </summary>
+        /// <param name="pathMode"></param>
+        /// <param name="settingName"></param>
+        public static void ResetEventData(string pathMode, string EventName)
+        {
+            string filePath = "";
+
+            if (pathMode != "Vanilla" && pathMode != "Modded" && pathMode != "External")
+            {
+                Log.LogWarning($"Invalid path mode: {pathMode}. Use 'Vanilla', 'Modded', or 'External'.");
+                return;
+            }
+            else if (pathMode.ToLower().Trim() == "vanilla")
+            {
+                filePath = Paths.ConfigPath + "\\BrutalCompanyMinusExtraReborn\\VanillaEvents.cfg";
+            }
+            else if (pathMode.ToLower().Trim() == "modded")
+            {
+                filePath = Paths.ConfigPath + "\\BrutalCompanyMinusExtraReborn\\ModdedEvents.cfg";
+            }
+            else if (pathMode.ToLower().Trim() == "external")
+            {
+                filePath = Paths.ConfigPath + "\\BrutalCompanyMinusExtraReborn\\ExternalEvents.cfg";
+            }
+
+            try
+            {
+                if (!File.Exists(filePath))
+                {
+                    // Log the error  
+                    Log.LogWarning($"Config file not found: {filePath}");
+                }
+                // Read the file content  
+                string fileContent = File.ReadAllText(filePath);
+
+                string eventNamePattern = $@"^\[{Regex.Escape(EventName)}\]";
+            }
+            catch (Exception ex)
+            {
+                // Log the error  
+                Log.LogWarning($"An error occurred: {ex.Message}");
+            }
+        }
         private static void Initalize()
         {
             // Difficulty Settings
@@ -340,6 +446,8 @@ namespace BrutalCompanyMinus
 
             }
 
+
+            //Register Events
             RegisterEvents(eventConfig, EventManager.vanillaEvents);
             RegisterEvents(moddedEventConfig, EventManager.moddedEvents);
 
@@ -357,6 +465,10 @@ namespace BrutalCompanyMinus
                 }
                 RegisterEvents(customEventConfig, EventManager.customEvents);
             }
+            //foreach (MEvent e in EventManager.externalEvents)
+            //{
+            //    e.Initalize();
+            //}
 
             /*foreach (EventManager.CustomEvents customevent in EventManager.customEventsList)
             {
@@ -370,9 +482,24 @@ namespace BrutalCompanyMinus
             }
             EventManager.customEventsList.Clear();*/
 
+
+            //Add events to the pool of all events
+            try
+            {
+                EventManager.events.AddRange(EventManager.externalEvents);
+            }
+            catch (Exception e)
+            {
+                Log.LogError("Failed to load external events: " + e.Message);
+            }
             EventManager.events.AddRange(EventManager.vanillaEvents);
             EventManager.events.AddRange(EventManager.moddedEvents);
             EventManager.events.AddRange(EventManager.customEvents);
+            
+            //foreach (MEvent e in EventManager.events)
+            //{
+            //   Log.LogWarning($"Event {e.Name()} has been loaded with Descriptions '{String.Join(",", e.Descriptions)}'");
+            //}
 
             // Specific event settings
             Minus.Handlers.FacilityGhost.actionTimeCooldown = eventConfig.Bind(nameof(FacilityGhost), "Normal Action Time Interval", 15.0f, "How often does it take for the ghost to make a decision?").Value;
