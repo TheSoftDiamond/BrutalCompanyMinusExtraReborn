@@ -282,7 +282,12 @@ namespace BrutalCompanyMinus.Minus.Events
 
             foreach (EnemyType enemy in Assets.EnemyList.Values)
             {
-                if (enemy == null || enemy.enemyPrefab == null || enemy.isDaytimeEnemy || insideHellSpawnCycle.enemies.Select(x => x.enemy.name).Contains(enemy.name)) continue;
+
+                    if (enemy == null || enemy.enemyPrefab == null || enemy.isDaytimeEnemy || insideHellSpawnCycle.enemies.Select(x => x.enemy.name).Contains(enemy.name))
+                    {
+                        continue;
+                    }
+
 
                 if (enemy.isOutsideEnemy)
                 {
