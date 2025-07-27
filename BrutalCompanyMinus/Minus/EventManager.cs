@@ -255,7 +255,7 @@ namespace BrutalCompanyMinus.Minus
         };
         #endregion
 
-        public static List<MEvent> ExternalEvents = new List<MEvent>() { };
+        public static List<MEvent> externalEvents = new List<MEvent>() { };
 
         internal static List<MEvent> customEvents = new List<MEvent>();
 
@@ -317,9 +317,8 @@ namespace BrutalCompanyMinus.Minus
             currentEvents.Clear();
 
             List<MEvent> chosenEvents = new List<MEvent>();
-            List<MEvent> eventsToChooseForm = new List<MEvent>();
-            foreach (MEvent e in events) eventsToChooseForm.Add(e);
-            foreach (MEvent e in ExternalEvents) eventsToChooseForm.Add(e);
+            List<MEvent> eventsToChooseFrom = new List<MEvent>();
+            foreach (MEvent e in events) eventsToChooseFrom.Add(e);
 
             // Decide how many events to spawn
             System.Random rng = new System.Random(StartOfRound.Instance.randomMapSeed + 32345 + Environment.TickCount);
@@ -328,42 +327,42 @@ namespace BrutalCompanyMinus.Minus
             // Forced Events
             foreach(MEvent forcedEvent in forcedEvents)
             {
-                eventsToChooseForm.RemoveAll(x => x.Name() == forcedEvent.Name());
+                eventsToChooseFrom.RemoveAll(x => x.Name() == forcedEvent.Name());
                 foreach(string eventToRemove in forcedEvent.EventsToRemove)
                 {
-                    eventsToChooseForm.RemoveAll(x => x.Name() == forcedEvent.Name());
+                    eventsToChooseFrom.RemoveAll(x => x.Name() == forcedEvent.Name());
                 }
             }
 
             // Spawn events
             for (int i = 0; i < eventsToSpawn; i++)
             {
-                MEvent newEvent = RandomWeightedEvent(eventsToChooseForm, rng);
+                MEvent newEvent = RandomWeightedEvent(eventsToChooseFrom, rng);
 
                 if (!newEvent.AddEventIfOnly()) // If event condition is false, remove event from eventsToChoosefrom and iterate again
                 {
                     i--;
-                    eventsToChooseForm.RemoveAll(x => x.Name() == newEvent.Name());
+                    eventsToChooseFrom.RemoveAll(x => x.Name() == newEvent.Name());
                     continue;
                 }
 
                 chosenEvents.Add(newEvent);
 
                 // Remove so no further accurrences
-                eventsToChooseForm.RemoveAll(x => x.Name() == newEvent.Name());
+                eventsToChooseFrom.RemoveAll(x => x.Name() == newEvent.Name());
 
                 // Remove incompatible events from toChooseList
                 int AmountRemoved = 0;
 
                 foreach (string eventToRemove in newEvent.EventsToRemove)
                 {
-                    eventsToChooseForm.RemoveAll(x => x.Name() == eventToRemove);
+                    eventsToChooseFrom.RemoveAll(x => x.Name() == eventToRemove);
                     AmountRemoved += chosenEvents.RemoveAll(x => x.Name() == eventToRemove);
                 }
 
                 foreach (string eventToSpawnWith in newEvent.EventsToSpawnWith)
                 {
-                    eventsToChooseForm.RemoveAll(x => x.Name() == eventToSpawnWith);
+                    eventsToChooseFrom.RemoveAll(x => x.Name() == eventToSpawnWith);
                     AmountRemoved += chosenEvents.RemoveAll(x => x.Name() == eventToSpawnWith);
                 }
 
@@ -428,7 +427,7 @@ namespace BrutalCompanyMinus.Minus
                 e.OnShipLeave();
             }
 
-            foreach(MEvent e in ExternalEvents)
+            foreach(MEvent e in externalEvents)
             {
                 e.OnShipLeave();
             }
@@ -457,7 +456,7 @@ namespace BrutalCompanyMinus.Minus
                 e.OnGameStart();
             }
 
-            foreach (MEvent e in ExternalEvents)
+            foreach (MEvent e in externalEvents)
             {
                 e.OnGameStart();
             }
@@ -486,7 +485,7 @@ namespace BrutalCompanyMinus.Minus
                 e.OnLocalDisconnect();
             }
 
-            foreach (MEvent e in ExternalEvents)
+            foreach (MEvent e in externalEvents)
             {
                 e.OnLocalDisconnect();
             }
