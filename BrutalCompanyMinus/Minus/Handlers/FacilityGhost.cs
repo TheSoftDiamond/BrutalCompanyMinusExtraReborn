@@ -3,10 +3,10 @@ using System;
 using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
-using com.github.zehsteam.ToilHead.MonoBehaviours;
 using BrutalCompanyMinus.Minus.Events;
 using BrutalCompanyMinus.Minus.MonoBehaviours;
 using static UnityEngine.GraphicsBuffer;
+using BrutalCompanyMinus.Minus.Handlers.Modded;
 
 namespace BrutalCompanyMinus.Minus.Handlers
 {
@@ -21,7 +21,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
 
         public static float chanceToOpenCloseDoor = 0.3f, chanceToLockUnlockDoor = 0.1f, rageTurretsChance = 0.33f;
 
-        private static System.Random rng = new System.Random();
+         static System.Random rng = new System.Random();
 
         [HarmonyPostfix]
         [HarmonyPatch(typeof(RoundManager), "Update")]
@@ -104,7 +104,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
                         {
                             if (Convert.ToBoolean(rng.Next(2))) RoundManager.Instance.StartCoroutine(DisableTurret(turret));
                         }
-                        if (Compatibility.toilheadPresent) AttemptToDisableToilHeadTurrets();
+                        if (Compatibility.toilheadPresent) ToilHeadHandler.AttemptToDisableToilHeadTurrets(ref rng);
                         break;
                     case 7:
                         Log.LogInfo("Facility ghost attempts to disable landmines");
@@ -143,34 +143,8 @@ namespace BrutalCompanyMinus.Minus.Handlers
                                 _turret.EnterBerserkModeServerRpc((int)GameNetworkManager.Instance.localPlayerController.playerClientId);
                             }
                         }
-                        if (Compatibility.toilheadPresent) AttemptToRageToilHeadTurrets();
+                        if (Compatibility.toilheadPresent) ToilHeadHandler.AttemptToRageToilHeadTurrets(ref rng);
                         break;
-                }
-            }
-        }
-
-        private static void AttemptToDisableToilHeadTurrets()
-        {
-            ToilHeadTurretBehaviour[] turrets = GameObject.FindObjectsOfType<ToilHeadTurretBehaviour>();
-
-            foreach(ToilHeadTurretBehaviour turret in turrets)
-            {
-                if (Convert.ToBoolean(rng.Next(2))) RoundManager.Instance.StartCoroutine(DisableToilHeadTurret(turret));
-            }
-        }
-
-        private static void AttemptToRageToilHeadTurrets()
-        {
-            ToilHeadTurretBehaviour[] turrets = GameObject.FindObjectsOfType<ToilHeadTurretBehaviour>();
-
-            foreach (ToilHeadTurretBehaviour turret in turrets)
-            {
-                if (rng.NextDouble() <= rageTurretsChance)
-                {
-                    if (turret.turretMode == TurretMode.Berserk || turret.turretMode == TurretMode.Firing || !turret.turretActive) continue;
-
-                    turret.turretMode = TurretMode.Berserk;
-                    turret.EnterBerserkModeServerRpc();
                 }
             }
         }
@@ -180,14 +154,6 @@ namespace BrutalCompanyMinus.Minus.Handlers
             turret.ToggleTurretEnabled(false);
             yield return new WaitForSeconds(7.0f);
             turret.ToggleTurretEnabled(true);
-        }
-        
-        private static IEnumerator DisableToilHeadTurret(object toilheadTurretobj) // Harmony why do you make me do this crap???
-        {
-            ToilHeadTurretBehaviour toilheadTurret = (ToilHeadTurretBehaviour)toilheadTurretobj;
-            toilheadTurret.ToggleTurretEnabled(false);
-            yield return new WaitForSeconds(7.0f);
-            toilheadTurret.ToggleTurretEnabled(true);
         }
 
         private static IEnumerator DisableLandmine(Landmine landmine)

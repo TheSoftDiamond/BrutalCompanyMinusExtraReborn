@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Unity.Netcode;
 using UnityEngine;
+using static BrutalCompanyMinus.Net;
 
 namespace BrutalCompanyMinus.Minus.Events
 {
@@ -70,7 +71,7 @@ namespace BrutalCompanyMinus.Minus.Events
             ExecuteAllMonsterEvents();
             scrapTransmutationEvent.Execute();
 
-            Net.Instance.outsideObjectsToSpawn.Add(new OutsideObjectsToSpawn(UnityEngine.Random.Range(Getf(ScaleType.MinDensity), Getf(ScaleType.MaxDensity)), (int)Assets.ObjectName.GiantPumkin));
+            Net.Instance.outsideObjectsToSpawn.Add(new OutsideObjectsToSpawnMethod(UnityEngine.Random.Range(Getf(ScaleType.MinDensity), Getf(ScaleType.MaxDensity)), (int)Assets.ObjectName.GiantPumkin));
         }
     }
 }
