@@ -24,7 +24,7 @@ namespace BrutalCompanyMinus
         public static GameObject netObject { get; private set; }
 
         public NetworkList<Weather> currentWeatherMultipliers;
-        public NetworkList<OutsideObjectsToSpawn> outsideObjectsToSpawn;
+        public NetworkList<OutsideObjectsToSpawnMethod> outsideObjectsToSpawn;
         public NetworkList<CurrentWeatherEffect> currentWeatherEffects;
 
         public NetworkVariable<FixedString4096Bytes> textUI = new NetworkVariable<FixedString4096Bytes>();
@@ -38,19 +38,19 @@ namespace BrutalCompanyMinus
 
         private float currentIntervalTime = 0.0f;
 
-        #pragma warning disable IDE0051 // Remove unused private members
+#pragma warning disable IDE0051 // Remove unused private members
         private void Awake()
-        #pragma warning restore IDE0051 // Remove unused private members
+#pragma warning restore IDE0051 // Remove unused private members
         {
             // Initalize or it will break
             currentWeatherMultipliers = new NetworkList<Weather>();
-            outsideObjectsToSpawn = new NetworkList<OutsideObjectsToSpawn>();
+            outsideObjectsToSpawn = new NetworkList<OutsideObjectsToSpawnMethod>();
             currentWeatherEffects = new NetworkList<CurrentWeatherEffect>();
         }
 
-        #pragma warning disable IDE0051 // Remove unused private members
+#pragma warning disable IDE0051 // Remove unused private members
         private void Update()
-        #pragma warning restore IDE0051 // Remove unused private members
+#pragma warning restore IDE0051 // Remove unused private members
         {
             if (currentIntervalTime > 0.0f)
             {
@@ -103,6 +103,7 @@ namespace BrutalCompanyMinus
             }
 
             base.OnNetworkSpawn();
+
         }
 
         public override void OnNetworkDespawn()
@@ -121,7 +122,7 @@ namespace BrutalCompanyMinus
 
         [ClientRpc]
         public void GetSyncedTextClientRpc(FixedString4096Bytes textUI)
-        
+
         {
             Manager.textUI = textUI.Value;
         }
@@ -340,17 +341,18 @@ namespace BrutalCompanyMinus
         {
             DoorLock[] doors = GameObject.FindObjectsOfType<DoorLock>();
             System.Random rng = new System.Random(seed);
-            foreach(DoorLock door in doors)
+            foreach (DoorLock door in doors)
             {
                 if (door == null) continue;
                 if (rng.NextDouble() <= openCloseChance) continue;
 
-                if(messWithLock && rng.NextDouble() <= messWithLockChance)
+                if (messWithLock && rng.NextDouble() <= messWithLockChance)
                 {
-                    if(rng.Next(0, 2) == 0)
+                    if (rng.Next(0, 2) == 0)
                     {
                         door.LockDoor();
-                    } else
+                    }
+                    else
                     {
                         door.UnlockDoor();
                     }
@@ -370,7 +372,7 @@ namespace BrutalCompanyMinus
         {
             TerminalAccessibleObject[] doors = GameObject.FindObjectsOfType<TerminalAccessibleObject>();
 
-            foreach(TerminalAccessibleObject door in doors) door.SetDoorOpenServerRpc(true);
+            foreach (TerminalAccessibleObject door in doors) door.SetDoorOpenServerRpc(true);
 
             UnlockAndOpenAllDoorsClientRpc();
         }
@@ -380,7 +382,7 @@ namespace BrutalCompanyMinus
         {
             DoorLock[] doors = GameObject.FindObjectsOfType<DoorLock>();
 
-            foreach(DoorLock door in doors)
+            foreach (DoorLock door in doors)
             {
                 if (door == null) continue;
 
@@ -433,10 +435,10 @@ namespace BrutalCompanyMinus
             System.Random rng = new System.Random();
 
             AllWeather.raining = false;
-            foreach(RandomWeatherWithVariables randomWeather in RoundManager.Instance.currentLevel.randomWeathers)
+            foreach (RandomWeatherWithVariables randomWeather in RoundManager.Instance.currentLevel.randomWeathers)
             {
                 if (randomWeather.weatherType == RoundManager.Instance.currentLevel.currentWeather) continue;
-                switch(randomWeather.weatherType)
+                switch (randomWeather.weatherType)
                 {
                     case LevelWeatherType.Rainy:
                         AllWeather.raining = true;
@@ -487,7 +489,7 @@ namespace BrutalCompanyMinus
 
             NetworkObject netObj = null;
             networkObject.TryGet(out netObj);
-            if(netObj == null)
+            if (netObj == null)
             {
                 Log.LogError("NetworkObject in ShiftServerRpc() is null.");
                 return;
@@ -610,7 +612,7 @@ namespace BrutalCompanyMinus
 
         [ClientRpc]
         public void SetFlashlightsClientRpc(bool active)
-        { 
+        {
             FlashLightsFailure.Active = active;
         }
 
@@ -748,15 +750,16 @@ namespace BrutalCompanyMinus
         public void TeleportPlayerServerRPC(NetworkObjectReference obj, Vector3 pos) => TeleportPlayerClientRPC(obj, pos);
 
         [ClientRpc]
-        public void TeleportPlayerClientRPC(NetworkObjectReference obj, Vector3 pos) {
+        public void TeleportPlayerClientRPC(NetworkObjectReference obj, Vector3 pos)
+        {
             NetworkObject netObj = null;
             obj.TryGet(out netObj);
-            if(netObj == null)
+            if (netObj == null)
             {
                 Log.LogError("NetworkObject in TeleportPlayerClientRpc() is null.");
                 return;
             }
-            
+
             PlayerControllerB component = netObj.GetComponent<PlayerControllerB>();
             if (component != null)
             {
@@ -771,34 +774,38 @@ namespace BrutalCompanyMinus
         }
 
         [HarmonyPostfix]
+        [HarmonyPriority(Priority.VeryHigh)]
         [HarmonyPatch(typeof(GameNetworkManager), "Start")]
         private static void InitalizeServerObject()
         {
             if (netObject != null) return;
 
+
             netObject = (GameObject)Assets.bundle.LoadAsset("BrutalCompanyMinus");
+
             netObject.AddComponent<Net>();
             netObject.AddComponent<EnemySpawnCycle>();
-            //netObject.AddComponent<TimeChaosEvent>();
-
             NetworkManager.Singleton.AddNetworkPrefab(netObject);
         }
 
         [HarmonyPrefix]
+        [HarmonyPriority(Priority.VeryHigh)]
         [HarmonyPatch(typeof(Terminal), "Start")]
         private static void SpawnServerObject()
         {
+
             if (!FindObjectOfType<NetworkManager>().IsServer) return;
 
             GameObject net = Instantiate(netObject);
             net.GetComponent<NetworkObject>().Spawn(destroyWithScene: false);
+
         }
 
         [HarmonyPrefix]
         [HarmonyPatch(typeof(StartOfRound), "ShipLeave")]
         private static void OnGameEnd()
         {
-            if(NetworkManager.Singleton.IsServer)
+            if (NetworkManager.Singleton.IsServer)
             {
                 // Randomize weather multipliers
                 Instance.UpdateCurrentWeatherMultipliersServerRpc();
@@ -841,71 +848,71 @@ namespace BrutalCompanyMinus
                 HotBarPlusCompat.ResetHotbar();
             }
         }
-    }
 
-    public struct CurrentWeatherEffect : INetworkSerializable, IEquatable<CurrentWeatherEffect>
-    {
-        public FixedString128Bytes name;
-        public bool state;
-
-        public CurrentWeatherEffect(FixedString128Bytes name, bool state)
+        public struct CurrentWeatherEffect : INetworkSerializable, IEquatable<CurrentWeatherEffect>
         {
-            this.name = name;
-            this.state = state;
-        }
+            public FixedString128Bytes name;
+            public bool state;
 
-        public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
-        {
-            if (serializer.IsReader)
+            public CurrentWeatherEffect(FixedString128Bytes name, bool state)
             {
-                FastBufferReader reader = serializer.GetFastBufferReader();
-                reader.ReadValueSafe(out name);
-                reader.ReadValueSafe(out state);
+                this.name = name;
+                this.state = state;
             }
-            else
+
+            public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
             {
-                FastBufferWriter write = serializer.GetFastBufferWriter();
-                write.WriteValueSafe(name);
-                write.WriteValueSafe(state);
+                if (serializer.IsReader)
+                {
+                    FastBufferReader reader = serializer.GetFastBufferReader();
+                    reader.ReadValueSafe(out name);
+                    reader.ReadValueSafe(out state);
+                }
+                else
+                {
+                    FastBufferWriter write = serializer.GetFastBufferWriter();
+                    write.WriteValueSafe(name);
+                    write.WriteValueSafe(state);
+                }
             }
-        }
 
-        public bool Equals(CurrentWeatherEffect other)
-        {
-            return name == other.name;
-        }
-    }
-
-    public struct OutsideObjectsToSpawn : INetworkSerializable, IEquatable<OutsideObjectsToSpawn>
-    {
-        public float density;
-        public int objectEnumID;
-
-        public OutsideObjectsToSpawn(float density, int objectEnumID)
-        {
-            this.density = density;
-            this.objectEnumID = objectEnumID;
-        }
-
-        public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
-        {
-            if (serializer.IsReader)
+            public bool Equals(CurrentWeatherEffect other)
             {
-                FastBufferReader reader = serializer.GetFastBufferReader();
-                reader.ReadValueSafe(out density);
-                reader.ReadValueSafe(out objectEnumID);
-            }
-            else
-            {
-                FastBufferWriter write = serializer.GetFastBufferWriter();
-                write.WriteValueSafe(density);
-                write.WriteValueSafe(objectEnumID);
+                return name == other.name;
             }
         }
 
-        public bool Equals(OutsideObjectsToSpawn other)
+        public struct OutsideObjectsToSpawnMethod : INetworkSerializable, IEquatable<OutsideObjectsToSpawnMethod>
         {
-            return (objectEnumID == other.objectEnumID) && (density == other.density);
+            public float density;
+            public int objectEnumID;
+
+            public OutsideObjectsToSpawnMethod(float density, int objectEnumID)
+            {
+                this.density = density;
+                this.objectEnumID = objectEnumID;
+            }
+
+            public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+            {
+                if (serializer.IsReader)
+                {
+                    FastBufferReader reader = serializer.GetFastBufferReader();
+                    reader.ReadValueSafe(out density);
+                    reader.ReadValueSafe(out objectEnumID);
+                }
+                else
+                {
+                    FastBufferWriter write = serializer.GetFastBufferWriter();
+                    write.WriteValueSafe(density);
+                    write.WriteValueSafe(objectEnumID);
+                }
+            }
+
+            public bool Equals(OutsideObjectsToSpawnMethod other)
+            {
+                return (objectEnumID == other.objectEnumID) && (density == other.density);
+            }
         }
     }
 }
