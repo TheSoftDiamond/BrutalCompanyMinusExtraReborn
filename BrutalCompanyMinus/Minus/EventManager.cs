@@ -613,7 +613,7 @@ namespace BrutalCompanyMinus.Minus
 
         [HarmonyPrefix]
         [HarmonyPatch(typeof(RoundManager), nameof(RoundManager.LoadNewLevel))]
-        private static void ModifyLevel(ref SelectableLevel newLevel)
+        public static void ModifyLevel(ref SelectableLevel newLevel)
         {
             ExecuteOnShipLeave();
             UI.canClearText = false;

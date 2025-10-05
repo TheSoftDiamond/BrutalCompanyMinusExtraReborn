@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Unity.Netcode;
 using UnityEngine;
+using static BrutalCompanyMinus.Net;
 
 namespace BrutalCompanyMinus.Minus.Events
 {
@@ -34,7 +35,7 @@ namespace BrutalCompanyMinus.Minus.Events
         {
             if (LeaflessTrees.Instance.Executed || LeaflessBrownTrees.Instance.Executed) return;
 
-            Net.Instance.outsideObjectsToSpawn.Add(new OutsideObjectsToSpawn(UnityEngine.Random.Range(Getf(ScaleType.MinDensity) * 0.5f, Getf(ScaleType.MaxDensity) * 0.5f), (int)Assets.ObjectName.Tree));
+            Net.Instance.outsideObjectsToSpawn.Add(new OutsideObjectsToSpawnMethod(UnityEngine.Random.Range(Getf(ScaleType.MinDensity) * 0.5f, Getf(ScaleType.MaxDensity) * 0.5f), (int)Assets.ObjectName.Tree));
         }
     }
 }

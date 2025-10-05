@@ -18,6 +18,8 @@ namespace BrutalCompanyMinus
     [BepInDependency("uk.1a3.yesfox", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("zigzag.SelfSortingStorage", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("LethalPhones", BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency("com.github.zehsteam.ToilHead", BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency("kite.ZelevatorCode", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInPlugin(GUID, NAME, VERSION)]
     internal class Plugin : BaseUnityPlugin
     {
@@ -88,6 +90,11 @@ namespace BrutalCompanyMinus
             //{
                 //KidnapperFoxPatches.PatchAll(harmony);
             //}
+
+            if (Compatibility.IsModPresent("kite.ZelevatorCode"))
+            {
+                EndlessElevatorPatching.PatchAllElevator(harmony);
+            }   
 
             Log.LogInfo(NAME + " " + VERSION + " " + "is done patching.");
 
