@@ -16,7 +16,7 @@ namespace BrutalCompanyMinus.Minus.Events
             Instance = this;
 
             Weight = 2;
-            Descriptions = new List<string>() { "YARHAR", "Five nights...?", "It will be a nightmare time" };
+            Descriptions = new List<string>() { "The fox roams around", "He is here for the food", "What do you mean he's cute?" };
             ColorHex = "#FF0000";
             Type = EventType.Bad;
         }
