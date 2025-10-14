@@ -32,7 +32,7 @@ namespace BrutalCompanyMinus
 
         public enum ItemName
         {
-            LargeAxle, V_TypeEngine, PlasticFish, MetalSheet, LaserPointer, BigBolt, Bottles, Ring, SteeringWheel, CookieMoldPan, EggBeater, JarOfPickles, DustPan, AirHorn, ClownHorn, CashRegister, Candy, GoldBar, YieldSign, HomemadeFlashbang, Gift, Flask, ToyCube, Remote, ToyRobot, MagnifyingGlass, StopSign, TeaKettle, Mug, RedSoda, OldPhone, HairDryer, Brush, Bell, WhoopieCushion, Comedy, Tragedy, RubberDucky, ChemicalJug, FancyLamp, GoldenCup, Painting, Toothpaste, PillBottle, PerfumeBottle, Teeth, Magic7Ball, EasterEgg, ToyTrain, ToiletPaper, SoccerBall, PlasticCup, GarabgeLid, ControlPad, Clock, ZedDog, BabyKiwiEgg
+            LargeAxle, V_TypeEngine, PlasticFish, MetalSheet, LaserPointer, BigBolt, Bottles, Ring, SteeringWheel, CookieMoldPan, EggBeater, JarOfPickles, DustPan, AirHorn, ClownHorn, CashRegister, Candy, GoldBar, YieldSign, HomemadeFlashbang, Gift, Flask, ToyCube, Remote, ToyRobot, MagnifyingGlass, StopSign, TeaKettle, Mug, RedSoda, OldPhone, HairDryer, Brush, Bell, WhoopieCushion, Comedy, Tragedy, RubberDucky, ChemicalJug, FancyLamp, GoldenCup, Painting, Toothpaste, PillBottle, PerfumeBottle, Teeth, Magic7Ball, EasterEgg, ToyTrain, ToiletPaper, SoccerBall, PlasticCup, GarabgeLid, ControlPad, Clock, ZedDog, BabyKiwiEgg, SeveredThigh, SeveredHand, SeveredEar, SeveredBone, SeveredTongue, SeveredHeart, SeveredFoot, SeveredBoneRib
         }
         public static Dictionary<ItemName, string> ItemNameList = new Dictionary<ItemName, string>() {
             { ItemName.LargeAxle, "Cog1" }, { ItemName.V_TypeEngine, "EnginePart1"}, { ItemName.PlasticFish, "FishTestProp" }, { ItemName.MetalSheet, "MetalSheet" }, { ItemName.LaserPointer, "FlashLaserPointer" },
@@ -46,7 +46,7 @@ namespace BrutalCompanyMinus
             { ItemName.Painting, "FancyPainting" }, { ItemName.GoldenCup, "FancyCup" }, { ItemName.Toothpaste, "Toothpaste" }, { ItemName.PillBottle, "PillBottle" }, { ItemName.PerfumeBottle, "PerfumeBottle" },
             { ItemName.Teeth, "Dentures" }, { ItemName.Magic7Ball, "7Ball" }, { ItemName.EasterEgg, "EasterEgg" }, { ItemName.ToyTrain, "ToyTrain" }, { ItemName.ToiletPaper, "ToiletPaperRolls" },
             { ItemName.SoccerBall, "SoccerBall" }, { ItemName.PlasticCup, "PlasticCup" }, { ItemName.GarabgeLid, "GarbageLid" }, { ItemName.ControlPad, "ControlPad" }, { ItemName.Clock, "Clock" },
-            { ItemName.ZedDog, "ZedDog" }, { ItemName.BabyKiwiEgg, "BabyKiwiEgg" }
+            { ItemName.ZedDog, "ZedDog" }, { ItemName.BabyKiwiEgg, "BabyKiwiEgg" }, { ItemName.SeveredThigh, "SeveredThigh" }, { ItemName.SeveredHand, "SeveredHand" }, { ItemName.SeveredEar, "SeveredEar" }, { ItemName.SeveredBone, "SeveredBone" }, { ItemName.SeveredTongue, "SeveredTongue" }, { ItemName.SeveredHeart, "SeveredHeart" }, { ItemName.SeveredFoot, "SeveredFoot" }, { ItemName.SeveredBoneRib, "SeveredBoneRib" }
         };
         
         public enum ObjectName
