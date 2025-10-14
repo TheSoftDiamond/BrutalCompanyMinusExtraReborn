@@ -128,7 +128,10 @@
 	</Reference>  
 	<Reference Include="uk.1a3.yesfox">  
 		<HintPath>libs\yesfox.dll                              </HintPath>  
-	</Reference>  
+	</Reference>
+	<Reference Include="WeatherRegistry">
+		<HintPath>libs\WeatherRegistry-publicized.dll          </HintPath>
+	</Reference>
 </ItemGroup>  
 
 <PropertyGroup>  

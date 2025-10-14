@@ -69,6 +69,7 @@ namespace BrutalCompanyMinus.Minus
             new Events.ToiletPaper(),
             new Events.FootballScrap(),
             new Events.GarbageLid(),
+            new Events.SeveredBits(),
             // Bad
             new Events.HoardingBugs(),
             new Events.Dustpans(),
@@ -214,9 +215,14 @@ namespace BrutalCompanyMinus.Minus
             new Events.LeafBoys(),
             new Events.WelcomeToOoblterra(),
             new Events.PhonesOut(),
+            new Events.Barbers(),
+            new Events.SCP939(),
+            new Events.SCP682(),
             //new Events.KidnapperFox(),
-            //new Events.SolarFlare(),
-            //new Events.Heatwave(),
+            new Events.SolarFlare(),
+            new Events.Heatwave(),
+            new Events.Windy(),
+            new Events.MeteorShower(),
 
             //Very Bad
             new Events.Mantitoil(),
@@ -750,6 +756,14 @@ namespace BrutalCompanyMinus.Minus
             foreach (Keyframe key in newLevel.outsideEnemySpawnChanceThroughDay.keys) Log.LogInfo($"Time:{key.time} + $Value:{key.value}");
             Log.LogInfo("Daytime Spawn Curve");
             foreach (Keyframe key in newLevel.daytimeEnemySpawnChanceThroughDay.keys) Log.LogInfo($"Time:{key.time} + $Value:{key.value}");
+
+            /*Log.LogInfo("All Known Custom Weathers: ");
+            foreach (var weather in WeatherManager.Weathers)
+            {
+                Log.LogInfo(weather.Name);
+                Log.LogInfo(weather);
+            } */
+
         }
 
         internal static bool IsIgnoredMoon(string moonName)
