@@ -72,6 +72,9 @@ namespace BrutalCompanyMinus
             HotBarPlusPresent = false,
             KidnapperFoxPresent = false,
             EndlessElevatorPresent = false,
+            BarberFixesPresent = false,
+            SCP939Present = false,
+            SCP682Present = false,
             LethalElementsPresent = false;
 
 
@@ -142,7 +145,14 @@ namespace BrutalCompanyMinus
 
                     for (int i = 0; i < 5; i++)
                     {
-                        mimicNetworkSpawnChances[i] = (NetworkVariable<int>)mimicNetworker.GetField("SpawnWeight" + i, BindingFlags.Static | BindingFlags.Public).GetValue(null);
+                        try
+                        {
+                            mimicNetworkSpawnChances[i] = (NetworkVariable<int>)mimicNetworker.GetField("SpawnWeight" + i, BindingFlags.Static | BindingFlags.Public).GetValue(null);
+                        }
+                        catch
+                        {
+                            Log.LogError("Failed to get Mimic SpawnWeight" + i + " network variable");
+                        }
                     }
                     mimicNetworkSpawnChances[5] = (NetworkVariable<int>)mimicNetworker.GetField("SpawnWeightMax", BindingFlags.Static | BindingFlags.Public).GetValue(null);
 
@@ -237,6 +247,9 @@ namespace BrutalCompanyMinus
             SelfSortingStorage = IsModPresent("zigzag.SelfSortingStorage", "Self Sorting Storage Detected");
             KidnapperFoxPresent = IsModPresent("uk.1a3.yesfox", "Kidnapper Fox Detected");
             LethalElementsPresent = IsModPresent("voxx.LethalElementsPlugin", "Lethal Elements Detected");
+            BarberFixesPresent = IsModPresent("butterystancakes.lethalcompany.barberfixes", "Barber Fixes Detected");
+            SCP939Present = IsModPresent("project_scp.scp939", "SCP939 Detected");
+            SCP682Present = IsModPresent("ProjectSCP.SCP682", "SCP682 Detected");
             EndlessElevatorPresent = IsModPresent("kite.ZelevatorCode", "Endless Elevator Detected");
         }
 
