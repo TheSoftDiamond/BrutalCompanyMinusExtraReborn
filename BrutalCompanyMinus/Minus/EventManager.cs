@@ -218,7 +218,6 @@ namespace BrutalCompanyMinus.Minus
             new Events.Barbers(),
             new Events.SCP939(),
             new Events.SCP682(),
-            //new Events.KidnapperFox(),
             new Events.SolarFlare(),
             new Events.Heatwave(),
             new Events.Windy(),

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using BepInEx;
 using UnityEngine;
 
 namespace BrutalCompanyMinus.Minus.Events
@@ -21,7 +22,7 @@ namespace BrutalCompanyMinus.Minus.Events
             Type = EventType.Bad;
         }
 
-        public override bool AddEventIfOnly() => Compatibility.KidnapperFoxPresent;
+        public override bool AddEventIfOnly() => (Compatibility.KidnapperFoxPresent || Assets.ReadSettingEarly(Paths.ConfigPath + "\\BrutalCompanyMinusExtraReborn\\CoreProperties.cfg", "Enable Special Events?"));
 
         public override void Execute()
         {
