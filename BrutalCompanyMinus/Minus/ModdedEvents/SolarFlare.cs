@@ -19,7 +19,7 @@ namespace BrutalCompanyMinus.Minus.Events
             ColorHex = "#FF0000";
             Type = EventType.Bad;
 
-            EventsToRemove = new List<string>() { nameof(Heatwave), nameof(MeteorShower), nameof(Windy), nameof(Gloomy), nameof(Raining), nameof(AllWeather) };
+            EventsToRemove = new List<string>() { nameof(Hurricane), nameof(Hallowed), nameof(Forsaken), nameof(BloodMoon), nameof(MajoraMoon), nameof(Heatwave), nameof(MeteorShower), nameof(Windy), nameof(Gloomy), nameof(Raining), nameof(AllWeather) };
         }
 
         public override bool AddEventIfOnly() => Compatibility.LethalElementsPresent;
