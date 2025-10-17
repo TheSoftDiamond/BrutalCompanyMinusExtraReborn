@@ -22,6 +22,7 @@ namespace BrutalCompanyMinus.Minus.Events
         public static SpawnCycle insideHellSpawnCycle, outsideHellSpawnCycle; // I need to make these configurable
 
         public static bool Active = false, SpawnCycle = false;
+        private string currentIngameWeather;
 
         public override void Initalize()
         {
@@ -32,7 +33,7 @@ namespace BrutalCompanyMinus.Minus.Events
             ColorHex = "#280000";
             Type = EventType.VeryBad;
 
-            EventsToRemove = new List<string>() { nameof(Trees), nameof(LeaflessBrownTrees), nameof(Gloomy), nameof(Raining), nameof(HeavyRain), nameof(Warzone), nameof(EarlyShip), nameof(LateShip), nameof(VeryEarlyShip), nameof(VeryLateShip) };
+            EventsToRemove = new List<string>() { nameof(Trees), nameof(LeaflessBrownTrees), nameof(Gloomy), nameof(Raining), nameof(HeavyRain), nameof(Warzone), nameof(EarlyShip), nameof(LateShip), nameof(VeryEarlyShip), nameof(VeryLateShip), nameof(MajoraMoon) };
             EventsToSpawnWith = new List<string>() { nameof(LeaflessTrees), nameof(FacilityGhost), nameof(Spiders), nameof(Thumpers), nameof(Landmines) };
 
             monsterEvents = new List<MonsterEvent>(){ new MonsterEvent(
@@ -297,6 +298,8 @@ namespace BrutalCompanyMinus.Minus.Events
 
         public override void Execute()
         {
+            currentIngameWeather = StartOfRound.Instance.currentLevel.currentWeather.ToString();
+
             RoundManager.Instance.currentLevel.enemySpawnChanceThroughoutDay = new AnimationCurve(new Keyframe(0.0f, -100.0f), new Keyframe(1.0f, -100.0f));
             RoundManager.Instance.currentLevel.outsideEnemySpawnChanceThroughDay = new AnimationCurve(new Keyframe(0f, -100.0f), new Keyframe(1.0f, -100.0f));
 
@@ -307,15 +310,19 @@ namespace BrutalCompanyMinus.Minus.Events
             insideHellSpawnCycle.nothingWeight = 100 / Getf(ScaleType.SpawnMultiplier);
             outsideHellSpawnCycle.nothingWeight = 100 / Getf(ScaleType.SpawnMultiplier);
 
-            if (Configuration.HellTimeAdjustment.Value) 
+            currentIngameWeather = StartOfRound.Instance.currentLevel.currentWeather.ToString();
+            if (currentIngameWeather != "Majora Moon")
             {
-                // For slower moving time
-                Net.Instance.MoveTimeServerRpc(UnityEngine.Random.Range(Getf(ScaleType.TimeMin), Getf(ScaleType.TimeMax)), 0.139534883721f);
-            }
-            else
-            {
-                // For regular moving time
-                Net.Instance.MoveTimeServerRpc(UnityEngine.Random.Range(Getf(ScaleType.TimeMin), Getf(ScaleType.TimeMax)));
+                if (Configuration.HellTimeAdjustment.Value)
+                {
+                    // For slower moving time
+                    Net.Instance.MoveTimeServerRpc(UnityEngine.Random.Range(Getf(ScaleType.TimeMin), Getf(ScaleType.TimeMax)), 0.139534883721f);
+                }
+                else
+                {
+                    // For regular moving time
+                    Net.Instance.MoveTimeServerRpc(UnityEngine.Random.Range(Getf(ScaleType.TimeMin), Getf(ScaleType.TimeMax)));
+                }
             }
 
             Manager.SetAtmosphere("bloodyrain", true);
