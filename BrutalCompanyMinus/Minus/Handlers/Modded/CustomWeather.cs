@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using WeatherRegistry;
 using System.Linq;
-using static UnityEngine.Rendering.HighDefinition.ScalableSettingLevelParameter;
 
 namespace BrutalCompanyMinus.Minus.Handlers.Modded
 {
@@ -33,6 +32,30 @@ namespace BrutalCompanyMinus.Minus.Handlers.Modded
             catch (Exception ex)
             {
                 Log.LogError($"Error setting '{WeatherName}' weather: {ex.Message}");
+            }
+        }
+
+        public static bool isWeatherPresent(string WeatherName)
+        {
+            if (!Compatibility.IsModPresent("mrov.WeatherRegistry"))
+            {
+                return false;
+            }
+
+            try
+            {
+                WeatherRegistry.Weather weather = WeatherManager.Weathers.First(w => w.Name.Equals(WeatherName, StringComparison.OrdinalIgnoreCase));
+                if (weather == null)
+                {
+                    Log.LogError($"Weather '{WeatherName}' not found.");
+                    return false;
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Log.LogError($"Error adding '{WeatherName}' weather: {ex.Message}");
+                return false;
             }
         }
 
