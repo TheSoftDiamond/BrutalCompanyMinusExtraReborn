@@ -78,6 +78,11 @@ namespace BrutalCompanyMinus.Minus.CustomEvents
                         monsterEvents.Add(new MonsterEvent(enemy.Name, insideRarity, outsideRarity, minInside, maxInside, minOutside, maxOutside));
                     }
                 }
+
+                if (!string.IsNullOrWhiteSpace(eventData.Weather))
+                {
+                    Handlers.Modded.CustomWeather.SetCustomWeather(eventData.Weather);
+                }
                 
                 if (eventData.Hazards != null && eventData.Hazards.Count > 0)
                 {
@@ -177,7 +182,7 @@ namespace BrutalCompanyMinus.Minus.CustomEvents
         /// </summary>
         private void SanitizeName()
         {
-            //This is done because BepinEx Configurations does not allow these special characters
+            //This is done because BepinEx Configurations do not allow these special characters
             string origName = name;
             name = name.Replace("\n", "")
                 .Replace("\t", "")
