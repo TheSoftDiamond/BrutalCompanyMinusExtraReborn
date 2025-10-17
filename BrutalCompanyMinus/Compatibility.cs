@@ -52,6 +52,7 @@ namespace BrutalCompanyMinus
             SurfacedPresent = false,
             VarietyPresent = false,
             CodeRebirthPresent = false,
+            LegendWeathersPresent = false,
             ShipInventoryPresent = false,
             SelfSortingStorage = false,
             SuperEclipsePresent = false,
@@ -250,6 +251,7 @@ namespace BrutalCompanyMinus
             BarberFixesPresent = IsModPresent("butterystancakes.lethalcompany.barberfixes", "Barber Fixes Detected");
             SCP939Present = IsModPresent("project_scp.scp939", "SCP939 Detected");
             SCP682Present = IsModPresent("ProjectSCP.SCP682", "SCP682 Detected");
+            LegendWeathersPresent = IsModPresent("zigzag.legendweathers", "Legend Weathers Detected");
             EndlessElevatorPresent = IsModPresent("kite.ZelevatorCode", "Endless Elevator Detected");
         }
 
