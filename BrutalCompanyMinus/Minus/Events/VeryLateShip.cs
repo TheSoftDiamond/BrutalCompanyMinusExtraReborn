@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Unity.Netcode;
 using UnityEngine;
+using WeatherRegistry.Definitions;
 
 namespace BrutalCompanyMinus.Minus.Events
 {
@@ -14,6 +15,8 @@ namespace BrutalCompanyMinus.Minus.Events
         public override string Name() => nameof(VeryLateShip);
 
         public static VeryLateShip Instance;
+        private string currentIngameWeather;
+        private string currentSelectableLevel;
 
         public override void Initalize()
         {
@@ -27,9 +30,25 @@ namespace BrutalCompanyMinus.Minus.Events
             ScaleList.Add(ScaleType.TimeMin, new Scale(780f, 0f, 780f, 780f));
             ScaleList.Add(ScaleType.TimeMax, new Scale(860f, 0f, 860f, 860f));
 
-            EventsToRemove = new List<string>() { nameof(VeryEarlyShip), nameof(EarlyShip), nameof(LateShip), nameof(Hell) };
+            EventsToRemove = new List<string>() { nameof(VeryEarlyShip), nameof(EarlyShip), nameof(LateShip), nameof(Hell), nameof(MajoraMoon) };
         }
 
+        public override bool AddEventIfOnly()
+        {
+            currentIngameWeather = StartOfRound.Instance.currentLevel.currentWeather.ToString();
+            currentSelectableLevel = Manager.currentLevel.currentWeather.ToString();
+
+            if (currentIngameWeather == "Majora Moon" || currentSelectableLevel == "Majora Moon")
+            {
+                // No effect during Majora Moon weather
+                if (Configuration.ExtraLogging.Value)
+                {
+                    Log.LogInfo("Event not added due to Majora Moon weather.");
+                }
+                return false;
+            }
+            return true;
+        }
         public override void Execute()
         {
             if (Configuration.VeryLateShipAdjustment.Value)

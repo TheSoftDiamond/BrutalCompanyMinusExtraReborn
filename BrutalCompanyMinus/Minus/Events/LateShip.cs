@@ -7,6 +7,8 @@ namespace BrutalCompanyMinus.Minus.Events
         public override string Name() => nameof(LateShip);
 
         public static LateShip Instance;
+        private string currentIngameWeather;
+        private string currentSelectableLevel;
 
         public override void Initalize()
         {
@@ -17,12 +19,32 @@ namespace BrutalCompanyMinus.Minus.Events
             ColorHex = "#FF0000";
             Type = EventType.Bad;
 
-            EventsToRemove = new List<string>() { nameof(VeryEarlyShip), nameof(EarlyShip), nameof(VeryLateShip), nameof(Hell) };
+            EventsToRemove = new List<string>() { nameof(VeryEarlyShip), nameof(EarlyShip), nameof(VeryLateShip), nameof(Hell), nameof(MajoraMoon) };
 
             ScaleList.Add(ScaleType.TimeMin, new Scale(50.0f, 1.0f, 50.0f, 150.0f));
             ScaleList.Add(ScaleType.TimeMax, new Scale(60.0f, 1.2f, 60.0f, 180.0f));
         }
 
-        public override void Execute() => Net.Instance.MoveTimeServerRpc(UnityEngine.Random.Range(Getf(ScaleType.TimeMin), Getf(ScaleType.TimeMax)));
+        public override bool AddEventIfOnly()
+        {
+            currentIngameWeather = StartOfRound.Instance.currentLevel.currentWeather.ToString();
+            currentSelectableLevel = Manager.currentLevel.currentWeather.ToString();
+
+            if (currentIngameWeather == "Majora Moon" || currentSelectableLevel == "Majora Moon")
+            {
+                // No effect during Majora Moon weather
+                if (Configuration.ExtraLogging.Value)
+                {
+                    Log.LogInfo("Event not added due to Majora Moon weather.");
+                }
+                return false;
+            }
+            return true;
+        }
+
+        public override void Execute()
+        {
+            Net.Instance.MoveTimeServerRpc(UnityEngine.Random.Range(Getf(ScaleType.TimeMin), Getf(ScaleType.TimeMax)));
+        }
     }
 }
