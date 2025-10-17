@@ -193,6 +193,7 @@ namespace BrutalCompanyMinus.Minus
 
             //Bad
             new Events.Lockers(),
+            new Events.Hallowed(),
             new Events.TakeyGokuBracken(),
             new Events.Cleaners(),
             new Events.ImmortalSnail(),
@@ -222,6 +223,7 @@ namespace BrutalCompanyMinus.Minus
             new Events.Heatwave(),
             new Events.Windy(),
             new Events.MeteorShower(),
+            new Events.Forsaken(),
 
             //Very Bad
             new Events.Mantitoil(),
@@ -245,6 +247,9 @@ namespace BrutalCompanyMinus.Minus
             new Events.ItsPlaytime(),
             new Events.Walkers(),
             new Events.SoulDev(),
+            new Events.MajoraMoon(),
+            new Events.BloodMoon(),
+            new Events.Hurricane(),
 
             //No Enemy
             new Events.NoMantitoil(),
