@@ -80,6 +80,7 @@ namespace BrutalCompanyMinus.Minus.Handlers.CustomEvents
             public List<string>? AddEventIfOnly;
             public ItemEventData? Items;
             public List<EnemyData>? Enemies;
+            public string? Weather;
 
             [JsonConverter(typeof(HazardConverter))]
             public List<BaseHazardData>? Hazards;
