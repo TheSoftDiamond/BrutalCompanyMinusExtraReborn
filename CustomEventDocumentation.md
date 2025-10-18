@@ -59,13 +59,13 @@ The custom event system handles the following functionalities
 - **Hazard Support**: Controls inside and outisde hazards with properties such as density, amount.
 - **Event Chaining**: Supports spawning events in with other events at the same time, both official and custom.
 - **Customization**: Customize the weight, description, mod requirements, color, event types, and name.
+- **Custom Weather Support**: Select an weather to occur. Requires WeatherRegistry active in the game.
 
 ## Limitations
 
 There are limitations however that the custom event cannot support due to how its created. If you are looking for an more advanced system, consider making a mod based on the [BCME-ExternalModule](https://thunderstore.io/c/lethal-company/p/UnloadedHangar/BCME_ExternalModule/)
 - **Complex Logic**: The event system is not capable of events that require conditional triggers or complex logic.
 - **Time-based events**: Cannot handle time-based events.
-- **Weather support**: Does not currently support weather integration.
 
 ## Retrieving Asset Names
 - **Enemies and Items**: You can use the `menemies` and `mitems` commands respectively in the terminal to retrieve their names.
@@ -257,6 +257,7 @@ You are only required at minimum to have the following in your json file (Other 
             "EVENT TIME"
         ],
         "Enabled": true,
+        "Weather": "StormyWeatherName"
         "AddEventIfOnly": ["ModPluginGUIDHere"],
         "Items": {
             "TransmuteAmount": [
@@ -385,6 +386,7 @@ You are only required at minimum to have the following in your json file (Other 
       "String"
     ],
     "Enabled": Boolean,
+    "Weather": String,
     "AddEventIfOnly": [
       "String"
     ],
