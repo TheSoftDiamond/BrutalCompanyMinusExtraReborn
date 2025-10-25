@@ -573,18 +573,36 @@ namespace BrutalCompanyMinus.Minus
             if (Configuration.enablePlayerScaling.Value)
             {
                 float scalingFactor = Configuration.playerScalingMultiplier.Value;
-                int BasePlayerAmount = Math.Max(1, Configuration.basePlayerAmount.Value);
+                //int BasePlayerAmount = Math.Max(1, Configuration.basePlayerAmount.Value);
+                int BasePlayerAmount = Configuration.basePlayerAmount.Value; // If negative numbers are used, it simulates there being more players than there actually are.
                 int PlayersOnline = StartOfRound.Instance.allPlayerScripts.Where(x => x.isPlayerDead || x.isPlayerControlled).Count(); //It just works
+                int playerDelta = (PlayersOnline - BasePlayerAmount);
 
                 if (Configuration.playerScalingType.Value.ToLower() == "linear")
                 {
-                    int playerDelta = (PlayersOnline - BasePlayerAmount);
                     difficulty *= 1 + (playerDelta * (scalingFactor - 1));
                 }
                 else if (Configuration.playerScalingType.Value.ToLower() == "exponential")
                 {
-                    int playerDelta = (PlayersOnline - BasePlayerAmount);
                     difficulty *= Mathf.Pow(scalingFactor, playerDelta);
+                }
+                else if (Configuration.playerScalingType.Value.ToLower() == "logarithmic")
+                {
+                    // We use Max to avoid negative values which would be undefined.
+                    // Scaling factors (both negative and positive) closer to 0 will have less impact, while those further from 0 will have more impact.
+                    // The higher the number gets from the base, the faster it slows down the impact. But below the cap it's constant.
+                    difficulty *= 1 + (Mathf.Log(Mathf.Max(playerDelta, 1)) *scalingFactor);
+                }
+                else if (Configuration.playerScalingType.Value.ToLower() == "cubic")
+                {
+                    // Steeper curves as the number goes away from the base player amount.
+                    // Values closer to 0 are recommended for more gradual changes.
+                    difficulty *= 1 + (Mathf.Pow(playerDelta, 3) * scalingFactor);
+                }
+                else
+                {
+                    //Fallback to linear
+                    difficulty *= 1 + (playerDelta * (scalingFactor - 1));
                 }
             }
             

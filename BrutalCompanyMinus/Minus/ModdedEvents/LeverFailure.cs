@@ -58,6 +58,7 @@ namespace BrutalCompanyMinus.Minus.Events
 
             }
             LeverActive = 0;
+
         }
         public override void OnShipLeave()
         {

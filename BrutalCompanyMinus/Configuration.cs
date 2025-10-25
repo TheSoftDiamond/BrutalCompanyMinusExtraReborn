@@ -181,7 +181,7 @@ namespace BrutalCompanyMinus
             factorySizeMultiplier = getScale(difficultyConfig.Bind("Difficulty", "Factory Size multiplier scale", "1.0, 0, 1.0, 1.0", "Factory size multiplier. Use at your own risk. May not load at all or will take a very long time to generate." + scaleDescription).Value);
 
             enablePlayerScaling = difficultyConfig.Bind("Player Scaling", "Enable player scaling?", false, "Enable player scaling");
-            playerScalingType = difficultyConfig.Bind("Player Scaling", "Player scaling type", "Linear", "Type of scaling for player amount. Options: Linear, Exponential");
+            playerScalingType = difficultyConfig.Bind("Player Scaling", "Player scaling type", "Linear", "Type of scaling for player amount. Options: Linear, Exponential, Logarithmic, Cubic");
             playerScalingMultiplier = difficultyConfig.Bind("Player Scaling", "Player scaling multiplier", 1.0f, "Multiplier for player scaling");
             basePlayerAmount = difficultyConfig.Bind("Player Scaling", "Base player amount", 4, "Base player amount");
 

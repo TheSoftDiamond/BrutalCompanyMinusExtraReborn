@@ -74,10 +74,10 @@ namespace BrutalCompanyMinus
                             if (panelScrollBar == null) panelScrollBar = comp.GetComponent<Scrollbar>();
                             break;
                         case "UpArrowPannel":
-                            if(upArrowPanel == null) upArrowPanel = comp.gameObject;
+                            if (upArrowPanel == null) upArrowPanel = comp.gameObject;
                             break;
                         case "DownArrowPanel":
-                            if(downArrowPanel == null) downArrowPanel = comp.gameObject;
+                            if (downArrowPanel == null) downArrowPanel = comp.gameObject;
                             break;
                         case "UpArrow":
                             if (upArrow == null) upArrow = comp.GetComponent<TextMeshProUGUI>();
@@ -86,7 +86,8 @@ namespace BrutalCompanyMinus
                             if (downArrow == null) downArrow = comp.GetComponent<TextMeshProUGUI>();
                             break;
                     }
-                } catch
+                }
+                catch
                 {
                     Log.LogError("Failed to capture EventUI component/s.");
                 }
@@ -123,12 +124,13 @@ namespace BrutalCompanyMinus
 
             if (panelBackground.activeSelf && downKeyControl != null && upKeyControl != null)
             {
-                if(downKeyControl.isPressed)
+                if (downKeyControl.isPressed)
                 {
                     showCaseEvents = false;
                     downArrow.color = new Color(0.0f, 1.0f, 0.0f);
                     panelScrollBar.value -= Time.deltaTime * Configuration.scrollSpeed.Value;
-                } else
+                }
+                else
                 {
                     downArrow.color = new Color(0.0f, 0.6f, 0.0f);
                 }
@@ -138,7 +140,8 @@ namespace BrutalCompanyMinus
                     showCaseEvents = false;
                     upArrow.color = new Color(0.0f, 1.0f, 0.0f);
                     panelScrollBar.value += Time.deltaTime * Configuration.scrollSpeed.Value;
-                } else
+                }
+                else
                 {
                     upArrow.color = new Color(0.0f, 0.6f, 0.0f);
                 }
@@ -173,8 +176,8 @@ namespace BrutalCompanyMinus
                 text += GetDifficultyText();
 
                 text += "<br><br>Other:";
-                
-                text += 
+
+                text +=
                     $"<br> -Scrap Value: x{ScrapValueMultiplier:F2}" +
                     $"<br> -Scrap Amount: x{(RoundManager.Instance.scrapAmountMultiplier * Manager.scrapAmountMultiplier):F2}" +
                     $"<br> -Factory Size: x{RoundManager.Instance.currentLevel.factorySizeMultiplier:F2}" +
@@ -203,7 +206,8 @@ namespace BrutalCompanyMinus
             try
             {
                 ClearText();
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 Log.LogError("Failed to clear text: " + e.Message);
             }
@@ -211,7 +215,7 @@ namespace BrutalCompanyMinus
 
         public static void ClearText()
         {
-            if(Configuration.DisplayExtraPropertiesAfterShipLeaves.Value)
+            if (Configuration.DisplayExtraPropertiesAfterShipLeaves.Value)
             {
                 string text = "";
 
@@ -219,7 +223,7 @@ namespace BrutalCompanyMinus
                 if (!Configuration.useCustomWeights.Value)
                 {
                     EventManager.UpdateAllEventWeights();
-                    text += 
+                    text +=
                         $"<br>EventType Chances:" +
                         $"<br> -<color=#800000>VeryBad</color>:  {Helper.GetPercentage(EventManager.eventTypeRarities[0])}" +
                         $"<br> -<color=#FF0000>Bad</color>:      {Helper.GetPercentage(EventManager.eventTypeRarities[1])}" +
@@ -232,7 +236,8 @@ namespace BrutalCompanyMinus
                 text += GetDifficultyText();
 
                 Net.Instance.textUI.Value = new FixedString4096Bytes(text);
-            } else
+            }
+            else
             {
                 Net.Instance.textUI.Value = new FixedString4096Bytes(" ");
             }
@@ -244,21 +249,22 @@ namespace BrutalCompanyMinus
                 $"<br>Difficulty: {Helper.GetDifficultyText()}" +
                 $"<br> -Difficulty:  <color=#{Helper.GetDifficultyColorHex(Manager.difficulty, Configuration.difficultyMaxCap.Value)}>{Manager.difficulty:F1}</color>";
 
-            if (Configuration.scaleByDaysPassed.Value)  text += $"<br> -Day:        <color=#{Helper.GetDifficultyColorHex(Manager.daysDifficulty, Configuration.daysPassedDifficultyCap.Value)}>{plusMinusExclusive(Manager.daysDifficulty)}{Manager.daysDifficulty:F1}</color>";
-            if (Configuration.scaleByQuota.Value)       text += $"<br> -Quota:      <color=#{Helper.GetDifficultyColorHex(Manager.quotaDifficulty, Configuration.quotaDifficultyCap.Value)}>{plusMinusExclusive(Manager.quotaDifficulty)}{Manager.quotaDifficulty:F1}</color>";
+            if (Configuration.scaleByDaysPassed.Value) text += $"<br> -Day:        <color=#{Helper.GetDifficultyColorHex(Manager.daysDifficulty, Configuration.daysPassedDifficultyCap.Value)}>{plusMinusExclusive(Manager.daysDifficulty)}{Manager.daysDifficulty:F1}</color>";
+            if (Configuration.scaleByQuota.Value) text += $"<br> -Quota:      <color=#{Helper.GetDifficultyColorHex(Manager.quotaDifficulty, Configuration.quotaDifficultyCap.Value)}>{plusMinusExclusive(Manager.quotaDifficulty)}{Manager.quotaDifficulty:F1}</color>";
             if (Configuration.scaleByScrapInShip.Value) text += $"<br> -Ship Scrap: <color=#{Helper.GetDifficultyColorHex(Manager.scrapInShipDifficulty, Configuration.scrapInShipDifficultyCap.Value)}>{plusMinusExclusive(Manager.scrapInShipDifficulty)}{Manager.scrapInShipDifficulty:F1}</color>";
-            if (Configuration.scaleByMoonGrade.Value)   text += $"<br> -Moon risk:  <color=#{Helper.GetDifficultyColorHex(Manager.moonGradeDifficulty, Configuration.gradeAdditives["S+++"])}>{plusMinusExclusive(Manager.moonGradeDifficulty)}{Manager.moonGradeDifficulty:F1}</color>";
-            if (Configuration.scaleByWeather.Value)     text += $"<br> -Weather:    <color=#{Helper.GetDifficultyColorHex(Manager.weatherDifficulty, 7.0f)}>{plusMinusExclusive(Manager.weatherDifficulty)}{Manager.weatherDifficulty:F1}</color>";
+            if (Configuration.scaleByMoonGrade.Value) text += $"<br> -Moon risk:  <color=#{Helper.GetDifficultyColorHex(Manager.moonGradeDifficulty, Configuration.gradeAdditives["S+++"])}>{plusMinusExclusive(Manager.moonGradeDifficulty)}{Manager.moonGradeDifficulty:F1}</color>";
+            if (Configuration.scaleByWeather.Value) text += $"<br> -Weather:    <color=#{Helper.GetDifficultyColorHex(Manager.weatherDifficulty, 7.0f)}>{plusMinusExclusive(Manager.weatherDifficulty)}{Manager.weatherDifficulty:F1}</color>";
             return text;
         }
 
         public void OnKeyboardInput(char input)
         {
             bool pressed = false;
-            if(keyControl != null)
+            if (keyControl != null)
             {
                 pressed = keyControl.isPressed;
-            } else
+            }
+            else
             {
                 pressed = (input.ToString().ToUpper() == key.ToUpper());
             }
@@ -283,7 +289,7 @@ namespace BrutalCompanyMinus
 
         public void TogglePanel(bool state)
         {
-            if(Configuration.DisplayExtraPropertiesAfterShipLeaves.Value && Net.Instance.textUI.Value.IsEmpty) ClearTextServerRpc();
+            if (Configuration.DisplayExtraPropertiesAfterShipLeaves.Value && Net.Instance.textUI.Value.IsEmpty) ClearTextServerRpc();
 
             panelBackground.SetActive(state);
             upArrowPanel.SetActive(state);
@@ -299,7 +305,8 @@ namespace BrutalCompanyMinus
             try
             {
                 ClearText();
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 __instance.StartCoroutine(ClearAfterDelay());
             }
@@ -311,7 +318,8 @@ namespace BrutalCompanyMinus
             try
             {
                 ClearText();
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 Log.LogError("Encountered an error in the ClearAfterDelay coroutine: " + e.Message);
             }
@@ -331,7 +339,7 @@ namespace BrutalCompanyMinus
                 return;
             }
 
-            if(Configuration.EnableUI.Value) GenerateText(EventManager.currentEvents);
+            if (Configuration.EnableUI.Value) GenerateText(EventManager.currentEvents);
 
             if (Configuration.showEventsInChat.Value)
             {
@@ -352,7 +360,8 @@ namespace BrutalCompanyMinus
             try
             {
                 Instance.keyPressEnabledTerminal = !___terminalInUse;
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 Log.LogError("Failed to update keyPressEnabledTerminal: " + e.Message);
             }
@@ -365,7 +374,8 @@ namespace BrutalCompanyMinus
             try
             {
                 Instance.keyPressEnabledSettings = !___quickMenuManager.isMenuOpen;
-            } catch (Exception e) 
+            }
+            catch (Exception e)
             {
                 Log.LogError("Failed to update keyPressEnabledSettings: " + e.Message);
             }
@@ -378,7 +388,8 @@ namespace BrutalCompanyMinus
             try
             {
                 Instance.keyPressEnabledTyping = !___localPlayer.isTypingChat;
-            } catch (Exception e) 
+            }
+            catch (Exception e)
             {
                 //Log.LogError("Failed to update keyPressEnabledTyping: " + e.Message);
             }

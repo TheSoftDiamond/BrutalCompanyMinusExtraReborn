@@ -78,11 +78,6 @@ namespace BrutalCompanyMinus.Minus.CustomEvents
                         monsterEvents.Add(new MonsterEvent(enemy.Name, insideRarity, outsideRarity, minInside, maxInside, minOutside, maxOutside));
                     }
                 }
-
-                if (!string.IsNullOrWhiteSpace(eventData.Weather))
-                {
-                    Handlers.Modded.CustomWeather.SetCustomWeather(eventData.Weather);
-                }
                 
                 if (eventData.Hazards != null && eventData.Hazards.Count > 0)
                 {
@@ -168,6 +163,11 @@ namespace BrutalCompanyMinus.Minus.CustomEvents
             {
                 Manager.scrapAmountMultiplier *= Getf(ScaleType.ScrapAmount);
                 scrapTransmutationEvent.Execute();
+            }
+
+            if (!string.IsNullOrWhiteSpace(eventData.Weather))
+            {
+                Handlers.Modded.CustomWeather.SetCustomWeather(eventData.Weather);
             }
 
             //Hazards

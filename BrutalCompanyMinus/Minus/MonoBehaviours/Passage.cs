@@ -184,7 +184,7 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
                 for (int j = 0; j < 100; j++) // 100 Attempts
                 {
                     rng = new System.Random(seed++);
-                    Vector3 randomNode = insideSpawnNodes[rng.Next(outsideSpawnNodes.Count)];
+                    Vector3 randomNode = insideSpawnNodes[rng.Next(insideSpawnNodes.Count)];
 
                     if (!Helper.IsSafe(randomNode, spawnDenialNodes, 30.0f) || !Helper.IsSafe(randomNode, bunkerEscapePositions, 15.0f) || !Helper.IsSafe(randomNode, spikeTraps, 3.0f) || !Helper.IsSafe(randomNode, landmines, 0.5f)) continue;
 
