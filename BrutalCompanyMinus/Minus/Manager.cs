@@ -485,6 +485,16 @@ namespace BrutalCompanyMinus.Minus
             transmuteScrap = true;
             scrapTransmuteAmount.Add(Mathf.Clamp(amount, 0.0f, 1.0f));
             ScrapToTransmuteTo.AddRange(Items);
+
+            if (Configuration.ExtraLogging.Value)
+            {
+                var itemNames = new List<string>();
+                foreach (var item in Items)
+                {
+                    itemNames.Add($"{item.spawnableItem.name} (Rarity: {item.rarity})");
+                }
+                Log.LogInfo($"TransmuteScrap called with amount: {amount}, Items: {string.Join(", ", itemNames)}");
+            }
         }
 
         /// <summary>
@@ -605,9 +615,15 @@ namespace BrutalCompanyMinus.Minus
                     difficulty *= 1 + (playerDelta * (scalingFactor - 1));
                 }
             }
-            
 
-            difficulty = Mathf.Clamp(difficulty, 0.0f, Configuration.difficultyMaxCap.Value);
+            if (Configuration.ignoreMaxCap.Value)
+            {
+                difficulty = Mathf.Clamp(difficulty, 0.0f, float.MaxValue);
+            }
+            else
+            {
+                difficulty = Mathf.Clamp(difficulty, 0.0f, Configuration.difficultyMaxCap.Value);
+            }
         }
 
         internal static float GetScrapInShip()
