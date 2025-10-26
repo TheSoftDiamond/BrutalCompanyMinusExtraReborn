@@ -115,6 +115,8 @@ namespace BrutalCompanyMinus.Minus.Handlers
             {
                 Manager.currentLevel.factorySizeMultiplier = 1f;
             }
+
+            // Reset scrap modifications
             Manager.scrapAmountMultiplier = 1.0f;
             Manager.scrapValueMultiplier = 1.0f;
             Manager.randomItemsToSpawnOutsideCount = 0;
@@ -129,9 +131,9 @@ namespace BrutalCompanyMinus.Minus.Handlers
         [HarmonyPatch(typeof(RoundManager), "waitForScrapToSpawnToSync")]
         public static void OnwaitForScrapToSpawnToSync(ref NetworkObjectReference[] spawnedScrap, ref int[] scrapValues) // Scrap transmutation + Scrap multipliers
         {
-            if (spawnedScrap.Length == 0) return;
+            if (spawnedScrap.Length == 0) return; // If no scrap spawned, return -- No point in continuing
 
-            for(int i = 0; i < scrapValues.Length; i++)
+            for (int i = 0; i < scrapValues.Length; i++)
             {
                 scrapValues[i] = (int)(scrapValues[i] * Manager.scrapValueMultiplier);
             }
@@ -179,13 +181,13 @@ namespace BrutalCompanyMinus.Minus.Handlers
 
             IncreaseApparaticeScrapValue();
 
-            if (!Manager.transmuteScrap) return;
-            if(Manager.ScrapToTransmuteTo.Count == 0)
+            if (!Manager.transmuteScrap) return; // If no transmutation events are active, return
+            if (Manager.ScrapToTransmuteTo.Count == 0) // Sanity check
             {
                 Log.LogError("ScrapToTransmuteTo Count is 0, returning.");
                 return;
             }
-            if(Manager.scrapTransmuteAmount.Count == 0)
+            if(Manager.scrapTransmuteAmount.Count == 0) // Sanity check
             {
                 Log.LogError("scrapTransmuteAmount Count is 0, returning.");
                 return;
@@ -196,6 +198,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
             amount /= Manager.scrapTransmuteAmount.Count;
             Manager.scrapTransmuteAmount.Clear();
             int scrapToRemove = Mathf.Clamp((int)(spawnedScrap.Length * amount) + 1, 1, spawnedScrap.Length);
+            int scrapRemoved = 0;
 
             Log.LogInfo($"Transmuting {scrapToRemove} scrap.");
 
@@ -203,9 +206,22 @@ namespace BrutalCompanyMinus.Minus.Handlers
             for (int i = 0; i < scrapToRemove; i++)
             {
                 if (!spawnedScrap[i].TryGet(out NetworkObject netObj)) continue;
+                string? itemNameObj = netObj.GetComponent<GrabbableObject>()?.itemProperties.itemName;
+
+                if (Configuration.ExtraLogging.Value)
+                {
+                    Log.LogInfo($"Attempting to transmute scrap item: {itemNameObj!}");
+                }
+
+                if (isIgnoredItem(itemNameObj!)) continue;
+
                 oldScrapPositions.Add(netObj.transform.position);
+
                 netObj.Despawn(destroy: true);
+                scrapRemoved++;
             }
+
+            scrapToRemove = scrapRemoved;
 
             // Create new
             List<NetworkObjectReference> newNetObjects = new List<NetworkObjectReference>();
@@ -264,6 +280,29 @@ namespace BrutalCompanyMinus.Minus.Handlers
             // Replace spawnedScrap, scrapValues
             spawnedScrap = newNetObjects.ToArray();
             scrapValues = newScrapValues.ToArray();
+        }
+
+        internal static bool isIgnoredItem(string itemNameToIgnore)
+        {
+            bool skipItemTransmute = false;
+            Log.LogInfo("Got item: " + itemNameToIgnore);
+            string itemsToIgnore = Configuration.transmutationBlacklist.GetSerializedValue();
+            string[] ignoredItems = string.IsNullOrEmpty(itemsToIgnore)
+                ? new string[0]
+                : itemsToIgnore.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                              .Select(itemName => itemName.Trim())
+                              .ToArray();
+            if (Configuration.ExtraLogging.Value)
+            {
+                Log.LogInfo("List of items to ignore transmute: " + string.Join(", ", ignoredItems));
+            }
+
+            if (ignoredItems.Contains(itemNameToIgnore))
+            {
+                    skipItemTransmute = true;
+                    Log.LogInfo("Item is on list of items to ignore transmute. Skipping Transmute");
+            }
+            return skipItemTransmute;
         }
 
         private static void IncreaseApparaticeScrapValue()
