@@ -8,8 +8,9 @@ BCMER has a website! You can find it at [https://bcmer.softdiamond.net/](https:/
   
   - UnloadedHangar, for allowing me to continue the project and help develop on it.
   - bmnr2819, for their contributions and help with testing.
-  - KanoliAvali, for their contribution and help with testing
+  - KanoliAvali, for their contribution and help with testing.
   - Zehs, for their contributions and major code optimizations.
+  - Jayce, for testing and pointing out some feature ideas and optimizations.
 
 </details>
 
@@ -127,9 +128,11 @@ The player scaling function is turned off by default. It is a powerful tool that
   - Recommended to keep around 1, but depends on how your configs are set.
   - Below 1: Lower player counts become harder, while higher player counts become easier
   - Above 1: Lower player counts become easier, while higher player counts become harder
-- **Linear** or **Exponential** Growth on the formula
-  - Linear grows at a constant smooth rate, useful for smooth changes in difficulty.
-  - Exponential grows at a steeper rate, useful for steep changes in difficulty.
+- **Linear**, **Exponential**, **Logarithmic**, or **Cubic** Growth on the formula
+  - Linear Grows at a constant smooth rate, useful for smooth changes in difficulty.
+  - Exponential: Grows at a steeper rate, useful for steep changes in difficulty.
+  - Logarithmic: The further from the player base, the slower it increases. Useful for less steep changes depending on expected player count.
+  - Cubic: The further from the base player amount, it increases dramatically while values closer do not increase as dramatically.
 
 Calculating Player Delta:
 ![Screenshot](https://softdiamond.net/BCMERAssets/playerDelta.png)
@@ -137,8 +140,13 @@ Calculating Player Delta:
 Linear Function:
 ![Screenshot](https://softdiamond.net/BCMERAssets/theLinear.png)
 
-Exponential Function:
-![Screenshot](https://softdiamond.net/BCMERAssets/theequation.png)
+Logarithmic Function:
+![Screenshot](https://softdiamond.net/BCMERAssets/logformula.png)
+
+Cubic Function:
+![Screenshot](https://softdiamond.net/BCMERAssets/cubic.png)
+
+
 
 
   - This is what can be shown in the UI

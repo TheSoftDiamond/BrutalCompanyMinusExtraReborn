@@ -2,6 +2,117 @@
 
 <details>
 
+  <summary>1.26.7</summary>
+
+# Additions
+
+  - Blacklist for transmutation items. At this time, does not call from mitems yet. but calls from the GrabbableObject's itemproperties.ItemName. Potentially plan to fix this in due time or print out all GrabbableObject scrap items.
+  - More logging when it comes to scrap transmutes.
+
+# Fixes
+
+  - An issue with difficulty capping has been fixed, and as a plus is raised to the max float for an upper limit if uncapped.
+
+</details>
+<details>
+
+  <summary>1.26.6</summary>
+
+# Additions
+
+  - Logarithmic Player Scaling: Caps at values below the current difficulty when there is less players on than the base players amount to avoid issues with mathematics (Plus I don't want to calculate weird imaginary numbers). The higher the online players is from the base amount of players, the faster it slows down the scaling. Scaling factors both positive/negative close to 0 will have less impact of the overall difficulty.
+  - Cubic Player Scaling: Steeper curves the further the amount of players online is from the base player amount. Values closer to 0 for the scaling factor will cause more gradual changes.
+
+# Changes
+
+  - Player Scaling supports negative base player amounts. This is useful for simulating there being more players on then there actually are. which in turn, makes it difficult/easier earlier depending on player scaling factors.
+  - Incorrect names for the scaling formula will result in the game selecting linear mode.
+
+# Fixes
+
+  - An issue related to the more exits event should now be fixed which was causing game to spew errors when creating passages.
+
+</details>
+<details>
+
+  <summary>1.26.5</summary>
+
+# Additions
+
+  - Custom Events should properly handle custom weather now. Please note that only custom weather can be used per event at this time.
+
+</details>
+<details>
+
+  <summary>1.26.4</summary>
+
+# Additions
+
+  - Added Blood Moon Weather
+  - Added Majora's Moon Weather (LateShip and VeryLateShip will not roll. Hell will have its time event stuff not occur)
+  - Added Forsaken Weather
+  - Added Hurricane Weather
+  - Added Hallowed Weather
+  - Semi-added custom support for weathers in custom events -- still seems slightly broken. will do more testing.
+
+</details>
+<details>
+
+  <summary>1.26.3</summary>
+
+# Fixes
+
+  - Fixed an event description desync that could occur due to YesFox mod being present
+
+</details>
+
+
+<details>
+
+  <summary>1.26.2</summary>
+
+A huge update that adds a lot of events!
+
+# Additions
+
+  - Added SCP939 Event (Needs SCP939 Mod)
+  - Added SCP682 Event (Needs SCP682 Mod)
+  - Readded Barber Events (Needs BarberFixes for it to run) 
+  - Added Windy Custom Weather Event (CodeRebirth)
+  - Added Meteor Shower Custom Weather Event (CodeRebirth)
+  - Added SolarFlare Custom Weather Event (LethalElements)
+  - Added Heatwave Custom Weather Event (LethalElements)
+  - BCMER now has a custom weather handler
+
+# Fixes
+
+  - Descriptions and loading related to KidnapperFox Event
+
+</details>
+
+<details>
+
+  <summary>1.26.1</summary>
+
+# Additions
+
+  - Added SeveredBits (Neutral)
+
+</details>
+
+<details>
+
+  <summary>1.26.0 (V73+)</summary>
+
+# Fixes
+
+  - Built for V73.
+
+</details>
+
+
+<details>
+
   <summary>1.25.3</summary>
 
 # Additions
@@ -19,6 +130,7 @@
   - Microwave is now considered for ship difficulty scrap counting.
 
 </details>
+
 <details>
 
   <summary>1.25.2</summary>
