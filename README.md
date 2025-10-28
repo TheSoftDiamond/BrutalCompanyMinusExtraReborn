@@ -48,6 +48,8 @@ The levels of compatibility are color coded to represent the level of compatibil
 | [YesFox](https://thunderstore.io/c/lethal-company/p/Dev1A3/YesFox/) | 🟣 (Planned) | May require additional patching. Currently the Kidnapper Fox only spawns if natural spawn conditions exist. |
 | [VeryLateCompany](https://thunderstore.io/c/lethal-company/p/McBowie/VeryLateCompany/) | 🟠 (Partial) | Some events may not work as expected. Expect potential desyncs. |
 | [Late Company](https://thunderstore.io/c/lethal-company/p/anormaltwig/LateCompany/) | 🟢 (Compatible) | Works perfectly fine. At worst, potentially not recieving event UI until ship lever is pulled. |
+| [WeatherRegistry](https://thunderstore.io/c/lethal-company/p/mrov/WeatherRegistry/) | 🟢 (Compatible) | Custom Weathers can be used inside Custom Events. |
+| [Combined Weathers Toolkit](https://thunderstore.io/c/lethal-company/p/Zigzag/Combined_Weathers_Toolkit/) | 🟢 (Compatible) | Registered via WeatherRegistry for weathers, and these themselves can be used in Custom Events. |
 
 </details>
 <details>
@@ -139,6 +141,9 @@ Calculating Player Delta:
 
 Linear Function:
 ![Screenshot](https://softdiamond.net/BCMERAssets/theLinear.png)
+
+Exponential Function:
+![Screenshot](https://softdiamond.net/BCMERAssets/theequation.png)
 
 Logarithmic Function:
 ![Screenshot](https://softdiamond.net/BCMERAssets/logformula.png)
