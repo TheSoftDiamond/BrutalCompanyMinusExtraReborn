@@ -24,7 +24,6 @@ using BrutalCompanyMinus.Minus.MonoBehaviours;
 using BrutalCompanyMinus.Minus.Events;
 using Unity.Collections;
 using BrutalCompanyMinus;
-using System.Linq.Expressions;
 using BrutalCompanyMinus.Minus.Handlers.Modded;
 using UnityEngine.UIElements;
 using static BrutalCompanyMinus.Net;
@@ -601,7 +600,7 @@ namespace BrutalCompanyMinus.Minus
                     // We use Max to avoid negative values which would be undefined.
                     // Scaling factors (both negative and positive) closer to 0 will have less impact, while those further from 0 will have more impact.
                     // The higher the number gets from the base, the faster it slows down the impact. But below the cap it's constant.
-                    difficulty *= 1 + (Mathf.Log(Mathf.Max(playerDelta, 1)) *scalingFactor);
+                    difficulty *= 1 + (Mathf.Log(Mathf.Max(playerDelta, 1)) * scalingFactor);
                 }
                 else if (Configuration.playerScalingType.Value.ToLower() == "cubic")
                 {
@@ -637,6 +636,10 @@ namespace BrutalCompanyMinus.Minus
             foreach (GrabbableObject item in itemsInShip)
             {
                 if (item != null) count += item.scrapValue;
+                if (Configuration.ExtraLogging.Value)
+                {
+                    Log.LogInfo($"Found item in ship with scrap value: {item.scrapValue}");
+                }
             }
 
             GameObject companyCruiser = Assets.cruiser;
@@ -647,6 +650,10 @@ namespace BrutalCompanyMinus.Minus
                 foreach (GrabbableObject item in itemsInCruiser)
                 {
                     if (item != null) count += item.scrapValue;
+                    if (Configuration.ExtraLogging.Value)
+                    {
+                        Log.LogInfo($"Found item in cruiser with scrap value: {item.scrapValue}");
+                    }
                 }
             }
 
@@ -657,24 +664,26 @@ namespace BrutalCompanyMinus.Minus
                 foreach (GrabbableObject item in itemsInMicrowave)
                 {
                     if (item != null) count += item.scrapValue;
+                    if (Configuration.ExtraLogging.Value)
+                    {
+                        Log.LogInfo($"Found item in Microwave with scrap value: {item.scrapValue}");
+                    }
                 }
             }
-
-
-            //else Log.LogDebug("No cruiser found");
 
             if (Compatibility.ShipInventoryPresent)
             {
                 count += ShipInventoryCompat.GetShipInventoryScrapValue();
             }
 
-            //if (Compatibility.SelfSortingStorage)
-            //{
-            //    count += SelfSortingStorageCompat.GetSelfSortingStorageScrapValue();
-            //}
+            if (Compatibility.SelfSortingStorage)
+            {
+                count += SelfSortingStorageCompat.GetSelfSortingStorageScrapValue();
+            }
 
             return count;
         }
+            
 
         internal static void SampleMap()
         {
