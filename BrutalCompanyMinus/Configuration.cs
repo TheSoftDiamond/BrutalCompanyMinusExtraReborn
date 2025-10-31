@@ -70,6 +70,7 @@ namespace BrutalCompanyMinus
         public static ConfigEntry<string> playerScalingType;
         public static ConfigEntry<float> playerScalingMultiplier;
         public static ConfigEntry<int> basePlayerAmount;
+        public static ConfigEntry<string> customFormula;
 
         // Weather settings
         public static ConfigEntry<bool> useWeatherMultipliers, randomizeWeatherMultipliers, enableTerminalText;
@@ -182,10 +183,10 @@ namespace BrutalCompanyMinus
             factorySizeMultiplier = getScale(difficultyConfig.Bind("Difficulty", "Factory Size multiplier scale", "1.0, 0, 1.0, 1.0", "Factory size multiplier. Use at your own risk. May not load at all or will take a very long time to generate." + scaleDescription).Value);
 
             enablePlayerScaling = difficultyConfig.Bind("Player Scaling", "Enable player scaling?", false, "Enable player scaling");
-            playerScalingType = difficultyConfig.Bind("Player Scaling", "Player scaling type", "Linear", "Type of scaling for player amount. Options: Linear, Exponential, Logarithmic, Cubic");
+            playerScalingType = difficultyConfig.Bind("Player Scaling", "Player scaling type", "Linear", "Type of scaling for player amount. Options: Linear, Exponential, Logarithmic, Cubic, Custom");
             playerScalingMultiplier = difficultyConfig.Bind("Player Scaling", "Player scaling multiplier", 1.0f, "Multiplier for player scaling");
             basePlayerAmount = difficultyConfig.Bind("Player Scaling", "Base player amount", 4, "Base player amount");
-
+            customFormula = difficultyConfig.Bind("Player Scaling", "Custom Formula", "", "Custom formula for player scaling. Use 'P' for Player Delta, and use 'S' for Player Scale Factor. Requires Custom set as the formula.");
 
             Scale bindEventTypeScrapAmountMultiplier(EventType difficulty)
                 => getScale(difficultyConfig.Bind("_EventType Scrap Multipliers", difficulty + " scrap amount scale", "1, 0.0, 1, 1", scaleDescription).Value);
@@ -375,6 +376,7 @@ namespace BrutalCompanyMinus
             EventManager.events.AddRange(EventManager.vanillaEvents);
             EventManager.events.AddRange(EventManager.moddedEvents);
             EventManager.events.AddRange(EventManager.customEvents);
+            //EventManager.events.AddRange(EventManager.ExternalEvents);
 
             // Specific event settings
             Minus.Handlers.FacilityGhost.actionTimeCooldown = eventConfig.Bind(nameof(FacilityGhost), "Normal Action Time Interval", 15.0f, "How often does it take for the ghost to make a decision?").Value;
