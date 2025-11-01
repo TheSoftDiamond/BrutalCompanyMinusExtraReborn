@@ -135,6 +135,10 @@
 	</Reference>
 </ItemGroup>  
 
+<ItemGroup>
+  <Folder Include="Minus\Handlers\ExternalEvents\" />
+</ItemGroup>  
+
 <PropertyGroup>  
 	<!-- Steam library folder -->  
 	<SteamLibrary>D:\SteamLibrary\steamapps\common</SteamLibrary>  

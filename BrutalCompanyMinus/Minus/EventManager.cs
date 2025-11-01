@@ -265,7 +265,7 @@ namespace BrutalCompanyMinus.Minus
         };
         #endregion
 
-        public static List<MEvent> ExternalEvents = new List<MEvent>() { };
+        //public static List<MEvent> ExternalEvents = new List<MEvent>() { };
 
         internal static List<MEvent> customEvents = new List<MEvent>();
 
@@ -436,10 +436,10 @@ namespace BrutalCompanyMinus.Minus
                 e.OnShipLeave();
             }
 
-            foreach(MEvent e in ExternalEvents)
-            {
-                e.OnShipLeave();
-            }
+            //foreach(MEvent e in ExternalEvents)
+            //{
+            //    e.OnShipLeave();
+            //}
         }
 
         internal static void ExecuteOnGameStart()
@@ -465,10 +465,10 @@ namespace BrutalCompanyMinus.Minus
                 e.OnGameStart();
             }
 
-            foreach (MEvent e in ExternalEvents)
-            {
-                e.OnGameStart();
-            }
+            //foreach (MEvent e in ExternalEvents)
+            //{
+            //    e.OnGameStart();
+            //}
         }
 
         internal static void ExecuteOnLocalDisconnect()
@@ -489,15 +489,10 @@ namespace BrutalCompanyMinus.Minus
                 e.OnLocalDisconnect();
             }
 
-            foreach (MEvent e in customEvents)
-            {
-                e.OnLocalDisconnect();
-            }
-
-            foreach (MEvent e in ExternalEvents)
-            {
-                e.OnLocalDisconnect();
-            }
+            //foreach (MEvent e in ExternalEvents)
+            //{
+            //    e.OnLocalDisconnect();
+            //}
         }
 
         internal static void UpdateAllEventWeights()

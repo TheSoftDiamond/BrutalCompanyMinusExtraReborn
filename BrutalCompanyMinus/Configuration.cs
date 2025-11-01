@@ -100,7 +100,7 @@ namespace BrutalCompanyMinus
 
         // Custom Events and Settings
         public static string customEventsFolder = Paths.ConfigPath + "\\BrutalCompanyMinusExtraReborn\\CustomEvents";
-        
+
         // Core Properties
         public static ConfigEntry<bool> enableCustomEvents;
         public static ConfigEntry<bool> ExtraLogging;
