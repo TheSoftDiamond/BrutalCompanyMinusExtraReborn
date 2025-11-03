@@ -17,7 +17,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
     [HarmonyPatch(typeof(animatedSun))]
     internal class AnimatedSunPatches
     {
-
+        //Part of Icarus
         [HarmonyPostfix]
         [HarmonyPatch("Update")]
         private static void AnimatedSunRed(animatedSun __instance)

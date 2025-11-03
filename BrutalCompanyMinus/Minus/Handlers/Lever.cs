@@ -25,7 +25,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
 
 
                 HUDManager.Instance.globalNotificationText.text =
-                    "SHIP CORE DEPLETION:\nAWAIT 12PM EMERGENCY AUTOPILOT";
+                    "SHIP CORE DEPLETION:\nAWAIT 12AM EMERGENCY AUTOPILOT";
 
                 HUDManager.Instance.globalNotificationAnimator.SetTrigger("TriggerNotif");
                 HUDManager.Instance.UIAudio.PlayOneShot(

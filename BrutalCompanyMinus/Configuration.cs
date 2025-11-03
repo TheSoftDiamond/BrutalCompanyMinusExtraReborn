@@ -282,6 +282,7 @@ namespace BrutalCompanyMinus
                 Log.LogWarning("Failed to create custom events folder: " + e.Message);
             }
 
+            //Leftover from "Streamer Events" feature, non-functional
             /*   EnableStreamerEvents = extensiveSettingsConfig.Bind("Extra Options", "Enable Streamer events?", true, "Enables streamer specific events");*/
 
 

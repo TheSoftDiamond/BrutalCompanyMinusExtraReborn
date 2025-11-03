@@ -3,7 +3,6 @@ using BrutalCompanyMinus.Minus.Events;
 using BrutalCompanyMinus.Minus.Handlers;
 using BrutalCompanyMinus.Minus.Handlers.Modded;
 using BrutalCompanyMinus.Minus.MonoBehaviours;
-using com.github.zehsteam.TakeyPlush;
 using GameNetcodeStuff;
 using HarmonyLib;
 using System;
