@@ -322,6 +322,11 @@ namespace BrutalCompanyMinus.Minus
             return _events[_events.Count - 1];
         }
 
+        /// <summary>
+        /// Choose events for the round
+        /// </summary>
+        /// <param name="additionalEvents"></param>
+        /// <returns></returns>
         internal static List<MEvent> ChooseEvents(out List<MEvent> additionalEvents)
         {
             currentEvents.Clear();
@@ -349,6 +354,13 @@ namespace BrutalCompanyMinus.Minus
                 MEvent newEvent = RandomWeightedEvent(eventsToChooseForm, rng);
 
                 if (!newEvent.AddEventIfOnly()) // If event condition is false, remove event from eventsToChoosefrom and iterate again
+                {
+                    i--;
+                    eventsToChooseForm.RemoveAll(x => x.Name() == newEvent.Name());
+                    continue;
+                }
+
+                if (IsIgnoredEventByMoonBlacklist(newEvent))
                 {
                     i--;
                     eventsToChooseForm.RemoveAll(x => x.Name() == newEvent.Name());
@@ -413,6 +425,9 @@ namespace BrutalCompanyMinus.Minus
             }
         }
 
+        /// <summary>
+        /// Execute on ship leave
+        /// </summary>
         internal static void ExecuteOnShipLeave()
         {
             Log.LogInfo("Executing OnShipLeave for all events()");
@@ -442,6 +457,9 @@ namespace BrutalCompanyMinus.Minus
             //}
         }
 
+        /// <summary>
+        /// Execute on game start
+        /// </summary>
         internal static void ExecuteOnGameStart()
         {
             Log.LogInfo("Executing OnGameStart for all events()");
@@ -471,6 +489,9 @@ namespace BrutalCompanyMinus.Minus
             //}
         }
 
+        /// <summary>
+        /// Execute on local disconnect
+        /// </summary>
         internal static void ExecuteOnLocalDisconnect()
         {
             Log.LogInfo("Executing OnLocalDisconnect for all events()");
@@ -488,7 +509,7 @@ namespace BrutalCompanyMinus.Minus
             {
                 e.OnLocalDisconnect();
             }
-
+            
             //foreach (MEvent e in ExternalEvents)
             //{
             //    e.OnLocalDisconnect();
@@ -616,6 +637,10 @@ namespace BrutalCompanyMinus.Minus
             }
         }
 
+        /// <summary>
+        /// Modify level on load
+        /// </summary>
+        /// <param name="newLevel"></param>
         [HarmonyPrefix]
         [HarmonyPatch(typeof(RoundManager), nameof(RoundManager.LoadNewLevel))]
         public static void ModifyLevel(ref SelectableLevel newLevel)
@@ -765,6 +790,11 @@ namespace BrutalCompanyMinus.Minus
 
         }
 
+        /// <summary>
+        /// Check if moon is ignored from events
+        /// </summary>
+        /// <param name="moonName"></param>
+        /// <returns></returns>
         internal static bool IsIgnoredMoon(string moonName)
         {
             string moonsToIgnore = Configuration.MoonsToIgnore.GetSerializedValue();
@@ -789,6 +819,27 @@ namespace BrutalCompanyMinus.Minus
             }
 
             return skipEventActivation;
+        }
+
+        /// <summary>
+        /// Check if event is ignored by moon blacklist
+        /// </summary>
+        /// <param name="mEvent"></param>
+        /// <returns></returns>
+        internal static bool IsIgnoredEventByMoonBlacklist(MEvent mEvent)
+        {
+            string currentMoon = Manager.currentLevel.PlanetName.Replace(" ", string.Empty).ToString();
+            //Log.LogWarning($"{mEvent.Name()} Moon Blacklist: {string.Join(", ", mEvent.MoonBlacklist)}");
+            //Log.LogWarning("Current Moon: " + currentMoon);
+
+            // Check is current moon in blacklist
+
+            if (mEvent.MoonBlacklist.Contains(currentMoon))
+            {
+                Log.LogInfo($"Event {mEvent.Name()} is ignored due to moon blacklist.");
+                return true;
+            }
+            return false;
         }
     }
 }

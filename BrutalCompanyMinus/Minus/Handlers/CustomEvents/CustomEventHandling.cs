@@ -87,6 +87,7 @@ namespace BrutalCompanyMinus.Minus.Handlers.CustomEvents
 
             public List<string>? EventsToRemove;
             public List<string>? EventsToSpawnWith;
+            public List<string>? MoonBlacklist;
         }
 
         public class ItemEventData

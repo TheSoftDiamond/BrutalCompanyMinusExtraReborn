@@ -258,6 +258,7 @@ You are only required at minimum to have the following in your json file (Other 
         ],
         "Enabled": true,
         "Weather": "StormyWeatherName"
+        ""MoonBlacklist": ["planetName"],
         "AddEventIfOnly": ["ModPluginGUIDHere"],
         "Items": {
             "TransmuteAmount": [
@@ -387,6 +388,7 @@ You are only required at minimum to have the following in your json file (Other 
     ],
     "Enabled": Boolean,
     "Weather": String,
+    "MoonBlacklist": ["String", "String"],
     "AddEventIfOnly": [
       "String"
     ],

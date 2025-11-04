@@ -118,6 +118,11 @@ namespace BrutalCompanyMinus.Minus.CustomEvents
                     EventsToSpawnWith = eventData.EventsToSpawnWith;
                 }
 
+                if (eventData.MoonBlacklist != null && eventData.MoonBlacklist.Count > 0)
+                {
+                    MoonBlacklist = eventData.MoonBlacklist;
+                }
+
                 Log.LogInfo($"{name} event initialized");
             }
             else

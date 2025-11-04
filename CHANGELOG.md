@@ -2,6 +2,40 @@
 
 <details>
 
+  <summary>1.26.10</summary>
+
+# Additions
+
+ - ALL Events now support moon blacklisting on a per event basis, this also works for custom events. Use planetName variable, so for example, Vow is "56 Vow".
+
+</details>
+
+<details>
+
+  <summary>1.26.9</summary>
+
+# Changes
+
+ - Changelog Fix because whoops
+
+</details>
+<details>
+
+  <summary>1.26.8</summary>
+
+# Changes
+
+  - Added more compat for readme section
+  - Updated LethalNetworkAPI recommended version
+  - Updated TerminalAPI recommended version
+
+# Fixes
+
+  - Readme issue because apparently I deleted a section
+
+</details>
+<details>
+
   <summary>1.26.7</summary>
 
 # Additions
