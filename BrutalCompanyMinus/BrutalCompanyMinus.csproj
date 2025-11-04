@@ -75,7 +75,6 @@
 </ItemGroup>  
 
 <ItemGroup>  
-	<PackageReference Include="Jace" Version="1.0.0" />  
 	<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />  
 	<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />  
 	<PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.5.0-beta.1" PrivateAssets="all" />  
@@ -129,6 +128,9 @@
 	</Reference>  
 	<Reference Include="uk.1a3.yesfox">  
 		<HintPath>libs\yesfox.dll                              </HintPath>  
+	</Reference>
+	<Reference Include="CombinedWeathersToolkit">
+		<HintPath>libs\CCombinedWeathersToolkit-publicized.dll </HintPath>
 	</Reference>
 	<Reference Include="WeatherRegistry">
 		<HintPath>libs\WeatherRegistry-publicized.dll          </HintPath>

@@ -81,5 +81,13 @@ namespace BrutalCompanyMinus.Minus.Handlers.Modded
                 Log.LogError($"Error adding '{WeatherName}' weather: {ex.Message}");
             }
         }
+
+        public static void RegisterWeathers()
+        {
+            if (!Compatibility.IsModPresent("zigzag.combinedweatherstoolkit"))
+            {
+                return;
+            }
+        }
     }
 }

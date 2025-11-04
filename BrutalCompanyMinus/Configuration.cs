@@ -32,6 +32,7 @@ namespace BrutalCompanyMinus
         public static List<Dictionary<ScaleType, Scale>> eventScales = new List<Dictionary<ScaleType, Scale>>();
         public static List<ConfigEntry<bool>> eventEnables = new List<ConfigEntry<bool>>();
         public static List<List<string>> eventsToRemove = new List<List<string>>(), eventsToSpawnWith = new List<List<string>>();
+        public static List<List<string>> moonBlacklist = new List<List<string>>();
         public static List<List<MonsterEvent>> monsterEvents = new List<List<MonsterEvent>>();
         public static List<ScrapTransmutationEvent> transmutationEvents = new List<ScrapTransmutationEvent>();
 
@@ -70,7 +71,6 @@ namespace BrutalCompanyMinus
         public static ConfigEntry<string> playerScalingType;
         public static ConfigEntry<float> playerScalingMultiplier;
         public static ConfigEntry<int> basePlayerAmount;
-        public static ConfigEntry<string> customFormula;
 
         // Weather settings
         public static ConfigEntry<bool> useWeatherMultipliers, randomizeWeatherMultipliers, enableTerminalText;
@@ -111,6 +111,7 @@ namespace BrutalCompanyMinus
         public static ConfigEntry<bool> VeryLateShipAdjustment;
         public static ConfigEntry<bool> dontHandlePower;
         public static ConfigEntry<bool> dontHandleSpawnCurves;
+        public static ConfigEntry<bool> deferWeatherToMods;
         public static ConfigEntry<bool> enableSpecialEvents;
         public static Scale timeChaosScale = new Scale();
         public static ConfigEntry<string> transmutationBlacklist;
@@ -183,10 +184,9 @@ namespace BrutalCompanyMinus
             factorySizeMultiplier = getScale(difficultyConfig.Bind("Difficulty", "Factory Size multiplier scale", "1.0, 0, 1.0, 1.0", "Factory size multiplier. Use at your own risk. May not load at all or will take a very long time to generate." + scaleDescription).Value);
 
             enablePlayerScaling = difficultyConfig.Bind("Player Scaling", "Enable player scaling?", false, "Enable player scaling");
-            playerScalingType = difficultyConfig.Bind("Player Scaling", "Player scaling type", "Linear", "Type of scaling for player amount. Options: Linear, Exponential, Logarithmic, Cubic, Custom");
+            playerScalingType = difficultyConfig.Bind("Player Scaling", "Player scaling type", "Linear", "Type of scaling for player amount. Options: Linear, Exponential, Logarithmic, Cubic");
             playerScalingMultiplier = difficultyConfig.Bind("Player Scaling", "Player scaling multiplier", 1.0f, "Multiplier for player scaling");
             basePlayerAmount = difficultyConfig.Bind("Player Scaling", "Base player amount", 4, "Base player amount");
-            customFormula = difficultyConfig.Bind("Player Scaling", "Custom Formula", "", "Custom formula for player scaling. Use 'P' for Player Delta, and use 'S' for Player Scale Factor. Requires Custom set as the formula.");
 
             Scale bindEventTypeScrapAmountMultiplier(EventType difficulty)
                 => getScale(difficultyConfig.Bind("_EventType Scrap Multipliers", difficulty + " scrap amount scale", "1, 0.0, 1, 1", scaleDescription).Value);
@@ -262,6 +262,7 @@ namespace BrutalCompanyMinus
             VeryLateShipAdjustment = CorePropertiesConfig.Bind("Events Features", "Enable Very Late Ship Time Adjustment?", true, "When the VeryLateShip event occurs, should the time be adjusted to be normal? Disable if you wish to suffer.");
             dontHandlePower = CorePropertiesConfig.Bind("Mod Compatibility", "Experimental Dont Handle Power?", false, "If you wish to let other mods handle power levels, enable this. Some settings may affect this.");
             dontHandleSpawnCurves = CorePropertiesConfig.Bind("Mod Compatibility", "Experimental Dont Handle Spawn Chance?", false, "If you wish to let other mods handle spawn curves, enable this. Some settings may affect this.");
+            deferWeatherToMods = CorePropertiesConfig.Bind("Mod Compatibility", "Defer Weather To Weather ToolKit Mod?", false, "If you wish to let other mods handle weather effects, enable this.");
             enableSpecialEvents = CorePropertiesConfig.Bind("Events Features", "Enable Special Events?", false, "Enables special events to be loaded.");
             transmutationBlacklist = CorePropertiesConfig.Bind("Events Features", "Transmutation Blacklist", "", "Blacklist items here to prevent them from being used in scrap transmutation. Uses MITEMS Item Name");
 
@@ -306,9 +307,10 @@ namespace BrutalCompanyMinus
                     }
                     eventScales.Add(scales);
 
-                    // EventsToRemove and EventsToSpawnWith
+                    // EventsToRemove and EventsToSpawnWith and Moon Blacklist
                     eventsToRemove.Add(ListToStrings(toConfig.Bind(e.Name(), "Events To Remove", StringsToList(e.EventsToRemove, ", "), "Will prevent said event(s) from occuring.").Value));
                     eventsToSpawnWith.Add(ListToStrings(toConfig.Bind(e.Name(), "Events To Spawn With", StringsToList(e.EventsToSpawnWith, ", "), "Will spawn said events(s).").Value));
+                    moonBlacklist.Add(ListToStrings(toConfig.Bind(e.Name(), "Moons To Not Spawn On", StringsToList(e.MoonBlacklist, ", "), "Event will not spawn on these moons. Seperate by comma for each moon name.").Value));
 
                     // Monster events
                     List<MonsterEvent> newMonsterEvents = new List<MonsterEvent>();
@@ -454,6 +456,7 @@ namespace BrutalCompanyMinus
                 EventManager.events[i].Enabled = eventEnables[i].Value;
                 EventManager.events[i].EventsToRemove = eventsToRemove[i];
                 EventManager.events[i].EventsToSpawnWith = eventsToSpawnWith[i];
+                EventManager.events[i].MoonBlacklist = moonBlacklist[i];
                 EventManager.events[i].monsterEvents = monsterEvents[i];
                 EventManager.events[i].scrapTransmutationEvent = transmutationEvents[i];
             }

@@ -76,7 +76,9 @@ namespace BrutalCompanyMinus
             BarberFixesPresent = false,
             SCP939Present = false,
             SCP682Present = false,
+            combinedWeatherToolKitPresent = false,
             LethalElementsPresent = false;
+            
 
 
 
@@ -198,6 +200,12 @@ namespace BrutalCompanyMinus
                 }
             }
 
+            Assembly combinedWeatherToolKit = GetAssembly("zigzag.combinedweatherstoolkit");
+            if (combinedWeatherToolKit != null)
+            {
+                Minus.Handlers.Modded.CustomWeather.RegisterWeathers();
+            }
+
             lethalEscapePresent = IsModPresent("xCeezy.LethalEscape", "Will prevent SafeOutside event from occuring.") || IsModPresent("AudioKnight.StarlancerEnemyEscape", "Will prevent SafeOutside event from occuring");
             lethalThingsPresent = IsModPresent("evaisa.lethalthings", "Roomba and TeleporterTraps event will now occur.");
             diversityPresent = IsModPresent("Chaos.Diversity", "Walker event will now occur.");
@@ -253,6 +261,7 @@ namespace BrutalCompanyMinus
             SCP682Present = IsModPresent("ProjectSCP.SCP682", "SCP682 Detected");
             LegendWeathersPresent = IsModPresent("zigzag.legendweathers", "Legend Weathers Detected");
             EndlessElevatorPresent = IsModPresent("kite.ZelevatorCode", "Endless Elevator Detected");
+            combinedWeatherToolKitPresent = IsModPresent("zigzag.combinedweatherstoolkit", "Combined Weathers Toolkit Detected");
         }
 
         private static Assembly GetAssembly(string name)

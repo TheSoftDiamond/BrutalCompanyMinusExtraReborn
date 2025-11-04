@@ -27,8 +27,7 @@ using BrutalCompanyMinus;
 using BrutalCompanyMinus.Minus.Handlers.Modded;
 using UnityEngine.UIElements;
 using static BrutalCompanyMinus.Net;
-
-
+using BepInEx;
 
 namespace BrutalCompanyMinus.Minus
 {
@@ -544,7 +543,9 @@ namespace BrutalCompanyMinus.Minus
 
         internal static void ComputeDifficultyValues()
         {
+            
             difficulty = 0.0f;
+
 
             if (Configuration.scaleByDaysPassed.Value)
             {
@@ -582,7 +583,6 @@ namespace BrutalCompanyMinus.Minus
             if (Configuration.enablePlayerScaling.Value)
             {
                 float scalingFactor = Configuration.playerScalingMultiplier.Value;
-                //int BasePlayerAmount = Math.Max(1, Configuration.basePlayerAmount.Value);
                 int BasePlayerAmount = Configuration.basePlayerAmount.Value; // If negative numbers are used, it simulates there being more players than there actually are.
                 int PlayersOnline = StartOfRound.Instance.allPlayerScripts.Where(x => x.isPlayerDead || x.isPlayerControlled).Count(); //It just works
                 int playerDelta = (PlayersOnline - BasePlayerAmount);
@@ -676,10 +676,12 @@ namespace BrutalCompanyMinus.Minus
                 count += ShipInventoryCompat.GetShipInventoryScrapValue();
             }
 
+            /*
             if (Compatibility.SelfSortingStorage)
             {
                 count += SelfSortingStorageCompat.GetSelfSortingStorageScrapValue();
             }
+            */
 
             return count;
         }
