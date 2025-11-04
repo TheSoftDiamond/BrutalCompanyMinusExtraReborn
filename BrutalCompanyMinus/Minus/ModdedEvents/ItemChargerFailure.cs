@@ -39,7 +39,7 @@ namespace BrutalCompanyMinus.Minus.Events
 
         public override void OnGameStart() //Patch to reset the network int value
         {
-            ItemChargerUnityNet.Value = false; //Using Net throws an error
+            ItemChargerUnityNet.Value = false; //Using Net throws an error, also there is no need to network this
         }
     }
 }

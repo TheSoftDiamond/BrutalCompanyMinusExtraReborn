@@ -37,7 +37,7 @@ namespace BrutalCompanyMinus.Minus.Events
         }
         public override void OnGameStart()
         {
-            CameraUnityNet.Value = false;
+            CameraUnityNet.Value = false; //Using Net throws an error, also there is no need to network this
         }
     }
 }

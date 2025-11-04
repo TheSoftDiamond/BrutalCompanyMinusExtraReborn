@@ -38,7 +38,7 @@ namespace BrutalCompanyMinus.Minus.Events
         }
         public override void OnGameStart()
         {
-            TerminalUnityNet.Value = false; //Using Net throws an error
+            TerminalUnityNet.Value = false; //Using Net throws an error, also there is no need to network this
         }
     }
 }

@@ -39,7 +39,7 @@ namespace BrutalCompanyMinus.Minus.Events
         }
         public override void OnGameStart()
         {
-            TeleporterUnityNet.Value = false; //Using Net throws an error
+            TeleporterUnityNet.Value = false; //Using Net throws an error, also there is no need to network this
         }
     }
 }

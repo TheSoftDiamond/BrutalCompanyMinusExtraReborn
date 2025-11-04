@@ -1035,6 +1035,18 @@ namespace BrutalCompanyMinus
         }
 
         [ServerRpc(RequireOwnership = false)]
+        public void SetJetpackUnityNetServerRpc(bool value)
+        {
+            SetJetpackUnityNetClientRpc(value);
+        }
+
+        [ClientRpc]
+        public void SetJetpackUnityNetClientRpc(bool value)
+        {
+            JetpackFailure.JetpackUnityNet.Value = value;
+        }
+
+        [ServerRpc(RequireOwnership = false)]
         public void SyncLeverTooltipServerRpc(string text)
         {
             SyncLeverTooltipClientRpc(text);

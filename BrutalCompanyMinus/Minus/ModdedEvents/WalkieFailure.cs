@@ -37,7 +37,7 @@ namespace BrutalCompanyMinus.Minus.Events
         }
         public override void OnGameStart() //Patch to reset the network int value
         {
-            WalkiesUnityNet.Value = false; //Using Net throws an error
+            WalkiesUnityNet.Value = false; //Using Net throws an error, also there is no need to network this
         }
     }
 }
