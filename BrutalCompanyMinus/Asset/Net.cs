@@ -913,5 +913,146 @@ namespace BrutalCompanyMinus
                 return (objectEnumID == other.objectEnumID) && (density == other.density);
             }
         }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void SetItemChargerUnityNetServerRpc(bool value)
+        {
+            SetItemChargerUnityNetClientRpc(value);
+        }
+
+        [ClientRpc]
+        public void SetItemChargerUnityNetClientRpc(bool value)
+        {
+            ItemChargerFailure.ItemChargerUnityNet.Value = value;
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void SetDoorUnityNetServerRpc(bool value)
+        {
+            SetDoorUnityNetClientRpc(value);
+        }
+
+        [ClientRpc]
+        public void SetDoorUnityNetClientRpc(bool value)
+        {
+            DoorFailure.DoorUnityNet.Value = value;
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void SetDoorOvUnityNetServerRpc(bool value)
+        {
+            SetDoorOvUnityNetClientRpc(value);
+        }
+
+        [ClientRpc]
+        public void SetDoorOvUnityNetClientRpc(bool value)
+        {
+            DoorOverdriveEv.DoorOvUnityNet.Value = value;
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void SetTerminalUnityNetServerRpc(bool value)
+        {
+            SetTerminalUnityNetClientRpc(value);
+        }
+
+        [ClientRpc]
+        public void SetTerminalUnityNetClientRpc(bool value)
+        {
+            TerminalFailure.TerminalUnityNet.Value = value;
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void SetWalkiesUnityNetServerRpc(bool value)
+        {
+            SetWalkiesUnityNetClientRpc(value);
+        }
+
+        [ClientRpc]
+        public void SetWalkiesUnityNetClientRpc(bool value)
+        {
+            WalkieFailure.WalkiesUnityNet.Value = value;
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void SetTeleporterUnityNetServerRpc(bool value)
+        {
+            SetTeleporterUnityNetClientRpc(value);
+        }
+
+        [ClientRpc]
+        public void SetTeleporterUnityNetClientRpc(bool value)
+        {
+            TeleporterFailure.TeleporterUnityNet.Value = value;
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void SetTargetingUnityNetServerRpc(bool value)
+        {
+            SetTargetingUnityNetClientRpc(value);
+        }
+
+        [ClientRpc]
+        public void SetTargetingUnityNetClientRpc(bool value)
+        {
+            TargetingFailure.TargetingUnityNet.Value = value;
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void SetCameraUnityNetServerRpc(bool value)
+        {
+            SetCameraUnityNetClientRpc(value);
+        }
+
+        [ClientRpc]
+        public void SetCameraUnityNetClientRpc(bool value)
+        {
+            ManualCameraFailure.CameraUnityNet.Value = value;
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void SetLeverUnityNetServerRpc(bool value)
+        {
+            SetLeverUnityNetClientRpc(value);
+        }
+
+        [ClientRpc]
+        public void SetLeverUnityNetClientRpc(bool value)
+        {
+            LeverFailure.LeverUnityNet.Value = value;
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void SetCircuitUnityNetServerRpc(bool value)
+        {
+            SetCircuitUnityNetClientRpc(value);
+        }
+
+        [ClientRpc]
+        public void SetCircuitUnityNetClientRpc(bool value)
+        {
+            DoorCircuitFailure.CircuitUnityNet.Value = value;
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void SyncLeverTooltipServerRpc(string text)
+        {
+            SyncLeverTooltipClientRpc(text);
+        }
+
+        [ClientRpc]
+        public void SyncLeverTooltipClientRpc(string text)
+        {
+            try
+            {
+                StartMatchLever lever = GameObject.FindObjectOfType<StartMatchLever>();
+                lever.triggerScript.disabledHoverTip = text;
+            }
+            catch (Exception e)
+            { 
+                Log.LogError(e);
+            }
+        }
+
     }
 }

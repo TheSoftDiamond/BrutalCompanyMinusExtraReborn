@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using Unity.Netcode;
 using UnityEngine;
 using HarmonyLib;
-using LethalNetworkAPI;
 using GameNetcodeStuff;
 using BrutalCompanyMinus.Minus.Handlers.Modded;
 using BrutalCompanyMinus;
