@@ -1,11 +1,4 @@
-﻿using BrutalCompanyMinus.Minus.MonoBehaviours;
-using HarmonyLib;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Text;
-using UnityEngine;
-using BrutalCompanyMinus.Minus.Events;
+﻿using HarmonyLib;
 using static BrutalCompanyMinus.Minus.Events.WalkieFailure;
 
 namespace BrutalCompanyMinus.Minus.Handlers
@@ -17,16 +10,12 @@ namespace BrutalCompanyMinus.Minus.Handlers
         [HarmonyPatch("ItemActivate")]
         private static bool InterruptItemActivate(WalkieTalkie __instance)
         {
-            // Interrupt the walkie if a distortion malfunction has triggered.
-            if (WalkiesNet.Value == 0)
+            if (WalkiesUnityNet.Value == true)
             {
-                // Play a sound and dicharge the batteries.
                 __instance.thisAudio.PlayOneShot(__instance.playerDieOnWalkieTalkieSFX);
                 __instance.UseUpBatteries();
-
                 return false;
             }
-
             return true;
         }
     }

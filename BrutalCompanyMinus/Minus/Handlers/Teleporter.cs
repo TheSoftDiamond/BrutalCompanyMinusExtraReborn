@@ -1,10 +1,5 @@
-﻿using BrutalCompanyMinus.Minus.MonoBehaviours;
-using HarmonyLib;
-using System.Collections;
-using System.Collections.Generic;
-using System.Text;
+﻿using HarmonyLib;
 using UnityEngine;
-using BrutalCompanyMinus.Minus.Events;
 using GameNetcodeStuff;
 using System.Linq;
 using static BrutalCompanyMinus.Minus.Events.TeleporterFailure;
@@ -20,10 +15,8 @@ namespace BrutalCompanyMinus.Minus.Handlers
         [HarmonyPatch("PressTeleportButtonOnLocalClient")]
         private static bool InterruptPressTeleportButton(ShipTeleporter __instance)
         {
-            // Interrupt the teleporter if the teleporter or power malfunction has triggered.
-            if (TeleportNet.Value == 0)
+            if (TeleporterUnityNet.Value == true)
             {
-                // Still do the animation and play the sound.
                 __instance.buttonAnimator.SetTrigger("press");
                 __instance.buttonAudio.PlayOneShot(__instance.buttonPressSFX);
 
@@ -37,8 +30,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
         [HarmonyPatch("PressTeleportButtonOnLocalClient")]
         private static void RandomizePressTeleportButton()
         {
-            // When the distortion malfunction is active, set the teleporting player to a random one.
-            if (TargetingNet.Value == 0)
+            if (TargetingUnityNet.Value == true)
             {
                 PlayerControllerB[] players = GameObject
                     .FindObjectsByType<PlayerControllerB>(FindObjectsSortMode.None)
@@ -47,7 +39,6 @@ namespace BrutalCompanyMinus.Minus.Handlers
 
                 if (players.Length > 0)
                 {
-                    // Select a random player.
                     StartOfRound.Instance.mapScreen.targetedPlayer = players[
                         Random.Range(0, players.Length)
                     ];

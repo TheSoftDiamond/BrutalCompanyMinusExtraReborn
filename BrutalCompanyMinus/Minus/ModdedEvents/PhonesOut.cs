@@ -1,22 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Unity.Netcode;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using LethalNetworkAPI;
-using GameNetcodeStuff;
 using BrutalCompanyMinus.Minus.Handlers.Modded;
-using BrutalCompanyMinus;
-using Steamworks.Ugc;
-using BrutalCompanyMinus.Minus.Handlers;
-using System.ComponentModel.Design;
-using BrutalCompanyMinus.Minus.MonoBehaviours;
-using Scoops.misc;
-using HarmonyLib;
-using System.Runtime.CompilerServices;
 
 namespace BrutalCompanyMinus.Minus.Events
 {
