@@ -17,9 +17,10 @@ BCMER has a website! You can find it at [https://bcmer.softdiamond.net/](https:/
 - This mod is required on all clients
 - This mod will make the game harder. Download if you want to suffer.
 - Configs are fully generated when loading moons.
-- Highly customizable!
+- Highly customizable! Nearly everything can be configured.
 - Modded event support when said mods installed.
-- Supports external event injection
+- Supports custom events that can be created as json files
+- Supports external event injection (COMING SOON)
 
 ## Mod Compatibility and Recommended Mods
 <details>
@@ -423,7 +424,6 @@ Cubic Function:
 | Cleaners | Spawns cleaners inside |
 | Mobile Turrets | Spawns Walking turrets Inside |
 | Shockwave Drones | Spawns ShockwaveDrones inside |
-| TakeyGokuBracken[Requires: BCME - ExternalModule] | Spawns quite a lot TakeyGokuBracken enemies |
 | Baldi | Baldi will chase you throughout the facility |
 | YeetBomb | Prpulsion Mines Everywhere |
 | Seamine | Seamines... EVERYWHERE outside |
@@ -464,11 +464,9 @@ Cubic Function:
 </details>
 
 <details>
-  <summary><b>External Events Support</b></summary>
+  <summary><b>External Events Support (WORK IN PROGRESS)</b></summary>
 
-  - As of 0.19.1 this mod supports external events injection from other mods meaning
- other modders can add their own events with their own extension mod.
-  - If you want to make your own extension mod then you can decompile official extension [BCME - ExternalModule](https://thunderstore.io/c/lethal-company/p/UnloadedHangar/BCME_ExternalModule/) and see for your self how it works.
+  - WORK IN PROGRESS
 
 </details>
 
@@ -499,6 +497,8 @@ Location: BrutalCompanyMinusExtraReborn\CoreProperties.cfg`
 `Enable VeryLateShip Time Adjustment` : Adjust whether or not VeryLateShip Event uses regular Lethal Company time scale, or an adjusted one for the event. Defaults to True (adjusted scale for event).
 
 `Enable Special Events` : Should Special Events be loaded? These are special events made for the game that may not be desirable in regular sessions (Such as very unfair mechanics) or are not fully implemented (this could be because of slight issues related to the event, or just not fully polished like other events are).
+
+`Transmutation Blacklist` : Specify a list of items to not transmute. This is only useful if you run scrap transmutation events from Brutal or any custom events with them. Uses itemProperties.itemName Component Name.
 
 #### Debugging
 
