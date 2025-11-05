@@ -811,7 +811,9 @@ namespace BrutalCompanyMinus.Minus
 
             foreach (string moon in ignoredMoons)
             {
-                if (moonName == moon)
+                string moonNameNoNumbers = Regex.Replace(moonName, @"\d", string.Empty).Trim();
+                string ignoredMoonNoNumbers = Regex.Replace(moon, @"\d", string.Empty).Trim();
+                if (moonName == moon || moonNameNoNumbers == ignoredMoonNoNumbers)
                 {
                     skipEventActivation = true;
                     Log.LogInfo("Moon is on list of moons to ignore events. Skipping Events");
