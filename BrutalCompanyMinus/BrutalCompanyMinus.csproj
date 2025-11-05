@@ -87,9 +87,6 @@
 </ItemGroup>  
 
 <ItemGroup>
-	<Reference Include="BCMECodeSecurityCheck">  
-		<HintPath>libs\BCMECodeSecurityCheck.dll               </HintPath>  
-	</Reference>  
 	<Reference Include="com.github.zehsteam.BlahajPlush">  
 		<HintPath>libs\com.github.zehsteam.BlahajPlush.dll     </HintPath>  
 	</Reference>  
