@@ -7,6 +7,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Security;
 using System.Text;
+using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.InputSystem.Utilities;
 
@@ -829,12 +830,14 @@ namespace BrutalCompanyMinus.Minus
         internal static bool IsIgnoredEventByMoonBlacklist(MEvent mEvent)
         {
             string currentMoon = Manager.currentLevel.PlanetName.Replace(" ", string.Empty).ToString();
+            string currentMoonNoNumbers = Regex.Replace(currentMoon, @"\d", string.Empty).Trim();
+
             //Log.LogWarning($"{mEvent.Name()} Moon Blacklist: {string.Join(", ", mEvent.MoonBlacklist)}");
             //Log.LogWarning("Current Moon: " + currentMoon);
 
             // Check is current moon in blacklist
 
-            if (mEvent.MoonBlacklist.Contains(currentMoon))
+            if (mEvent.MoonBlacklist.Contains(currentMoon) || mEvent.MoonBlacklist.Contains(currentMoonNoNumbers))
             {
                 Log.LogInfo($"Event {mEvent.Name()} is ignored due to moon blacklist.");
                 return true;
