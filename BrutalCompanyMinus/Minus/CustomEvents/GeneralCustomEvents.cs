@@ -172,7 +172,10 @@ namespace BrutalCompanyMinus.Minus.CustomEvents
 
             if (!string.IsNullOrWhiteSpace(eventData.Weather))
             {
-                Handlers.Modded.CustomWeather.SetCustomWeather(eventData.Weather);
+                if (Compatibility.IsModPresent("mrov.WeatherRegistry"))
+                {
+                    Handlers.Modded.CustomWeather.SetCustomWeather(eventData.Weather);
+                }
             }
 
             //Hazards
