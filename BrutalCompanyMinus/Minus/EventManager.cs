@@ -839,7 +839,7 @@ namespace BrutalCompanyMinus.Minus
 
             // Check is current moon in blacklist
 
-            if (mEvent.MoonBlacklist.Contains(currentMoon) || mEvent.MoonBlacklist.Contains(currentMoonNoNumbers))
+            if (mEvent.MoonBlacklist.Contains(currentMoon, StringComparer.OrdinalIgnoreCase) || mEvent.MoonBlacklist.Contains(currentMoonNoNumbers, StringComparer.OrdinalIgnoreCase))
             {
                 Log.LogInfo($"Event {mEvent.Name()} is ignored due to moon blacklist.");
                 return true;
