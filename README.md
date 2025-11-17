@@ -679,7 +679,17 @@ Location: `BrutalCompanyMinusExtraReborn\Weather_Settings.cfg`
 ## UI config
 Location: `BrutalCompanyMinusExtraReborn\UI_Settings.cfg`
 
-`UI Key`: They key used to toggle the UI.
+`Toggle UI Key`: They key used to toggle the UI.
+
+`UI Color Hex`: The color Brutal will use when the menu is active.
+
+`UI Color Reduction Factor`: The reduction factor used on the color when the menu is inactive.
+
+`UI Arrow Color Hex`: The color Brutal will use for the up and down arrows when inactive.
+
+`UI Arrow Color Amplification`: When the scroll arrows are used, multiply by this color the active direction.
+
+`UI Text Color Hex`: The color all text will use. Text that changes color with difficulty will not change.
 
 `Normalize Scrap Value Display`: In game default scrap value multiplier is 0.4, having this enabled will multiply the display value by 2.5 to make it look normal.
 
