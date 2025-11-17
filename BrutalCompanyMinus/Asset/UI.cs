@@ -112,7 +112,7 @@ namespace BrutalCompanyMinus
                                 try 
                                 { 
                                     colorHex = Configuration.color.Value;
-                                    uiColorReduction = Mathf.Clamp(Configuration.uiColorReduction.Value, 0, 1);
+                                    uiColorReduction = Mathf.Max(Configuration.uiColorReduction.Value, 0);
                                     //Turn the string into hex color
                                     try
                                     {
@@ -192,7 +192,7 @@ namespace BrutalCompanyMinus
                             try
                             {
                                 colorArrowHex = Configuration.colorArrows.Value;
-                                arrowColorActive = Configuration.colorArrowsIncrease.Value;
+                                arrowColorActive = Mathf.Max(Configuration.colorArrowsIncrease.Value, 0);
                                 try
                                 {
                                     hexArrowColor = Convert.ToInt32(colorArrowHex.Replace("#", ""), 16);
