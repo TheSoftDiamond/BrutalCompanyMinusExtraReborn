@@ -39,12 +39,57 @@ namespace BrutalCompanyMinus
 
         public static bool canClearText = true;
 
+        // Color settings for the UI letter
+        public static string colorHex = "00A000";
+
+        public static float uiColorReduction = 0.6275f;
+
+        public static Color letterColor = new Color(0.0f, 0.6275f, 0.0f);
+
+        public static int hexColor = 0x00A000;
+
+        // Arrow color settings
+
+        public static string colorArrowHex = "00A000";
+
+        public static Color arrowColor = new Color(0.0f, 0.6275f, 0.0f);
+
+        public static float arrowColorActive = 255f/160f; // Inverse of 0.6275f
+
+        public static int hexArrowColor = 0x00A000;
+
+        // Text color
+
+        public static string colorTextHex = "00FF00";
+
+        // Menu Color
+
+        //public static string menuColorHex = "000000";
+
+        //public static float menuColorAlpha = 0.498f;
+
+        //public static Color MenuColor = new Color(0.0f, 0.0f, 0.0f, 0.498f);
+
+        //public static int hexMenuColor = 0x000000;
+
+        //public static Image menuAsset;
+
         public void Start()
         {
             Instance = this;
 
             showCaseEventTime = Configuration.UITime.Value;
             Net.Instance.textUI.OnValueChanged += (previous, current) => panelText.text = current.ToString(); // For Text update
+
+            // Try get hex color text from config
+            try
+            {
+                colorTextHex = Configuration.colorText.Value.Replace("#", "");
+            }
+            catch
+            {
+                Log.LogWarning("Failed to get text color configuration, using default color.");
+            }
 
             Component[] components = UI.eventUIObject.GetComponentsInChildren<Component>(true);
             foreach (Component comp in components)
@@ -64,6 +109,37 @@ namespace BrutalCompanyMinus
                             {
                                 letter = comp.GetComponent<TextMeshProUGUI>();
                                 key = Configuration.UIKey.Value.ToUpper();
+                                try 
+                                { 
+                                    colorHex = Configuration.color.Value;
+                                    uiColorReduction = Mathf.Clamp(Configuration.uiColorReduction.Value, 0, 1);
+                                    //Turn the string into hex color
+                                    try
+                                    {
+                                        hexColor = Convert.ToInt32(colorHex.Replace("#", ""), 16);
+                                        // Convert hex to Color
+
+                                        letterColor = new Color(
+                                            ((hexColor >> 16) & 0xFF) / 255f * uiColorReduction,
+                                            ((hexColor >> 8) & 0xFF) / 255f * uiColorReduction,
+                                            (hexColor & 0xFF) / 255f * uiColorReduction
+                                        );
+
+                                        letter.color = letterColor;
+
+                                        Log.LogDebug("Set UI letter color to: " + colorHex);
+                                    }
+                                    catch 
+                                    {
+                                        letter.color = new Color(0.0f, 0.6275f, 0.0f);
+                                        Log.LogWarning("Failed to parse color hex string, using default color.");
+                                    }
+                                }
+                                catch 
+                                {
+                                    letter.color = new Color(0.0f, 0.6275f, 0.0f);
+                                    Log.LogWarning("Failed to get color configurations correctly, using default color.");
+                                }
                                 letter.text = key;
                             }
                             break;
@@ -81,9 +157,67 @@ namespace BrutalCompanyMinus
                             break;
                         case "UpArrow":
                             if (upArrow == null) upArrow = comp.GetComponent<TextMeshProUGUI>();
+                            try
+                            {
+                                colorArrowHex = Configuration.colorArrows.Value;
+                                arrowColorActive = Configuration.colorArrowsIncrease.Value;
+                                try
+                                {
+                                    hexArrowColor = Convert.ToInt32(colorArrowHex.Replace("#", ""), 16);
+                                    // Convert hex to Color
+
+                                    arrowColor = new Color(
+                                        ((hexArrowColor >> 16) & 0xFF) / 255f,
+                                        ((hexArrowColor >> 8) & 0xFF) / 255f,
+                                        (hexArrowColor & 0xFF) / 255f
+                                    );
+
+                                    upArrow.color = arrowColor;
+
+                                    Log.LogDebug("Set UI Up Arrow color to: " + colorArrowHex);
+                                }
+                                catch
+                                {
+                                    upArrow.color = new Color(0.0f, 0.6275f, 0.0f);
+                                    Log.LogWarning("Failed to parse color hex string, using default color.");
+                                }
+                            }
+                            catch
+                            {
+                                Log.LogWarning("Failed to get arrow color configuration, using default color.");
+                            }
                             break;
                         case "DownArrow":
                             if (downArrow == null) downArrow = comp.GetComponent<TextMeshProUGUI>();
+                            try
+                            {
+                                colorArrowHex = Configuration.colorArrows.Value;
+                                arrowColorActive = Configuration.colorArrowsIncrease.Value;
+                                try
+                                {
+                                    hexArrowColor = Convert.ToInt32(colorArrowHex.Replace("#", ""), 16);
+                                    // Convert hex to Color
+
+                                    arrowColor = new Color(
+                                        ((hexArrowColor >> 16) & 0xFF) / 255f,
+                                        ((hexArrowColor >> 8) & 0xFF) / 255f,
+                                        (hexArrowColor & 0xFF) / 255f
+                                    );
+
+                                    downArrow.color = arrowColor;
+
+                                    Log.LogDebug("Set UI Down Arrow color to: " + colorArrowHex);
+                                }
+                                catch
+                                {
+                                    downArrow.color = new Color(0.0f, 0.6275f, 0.0f);
+                                    Log.LogWarning("Failed to parse color hex string, using default color.");
+                                }
+                            }
+                            catch
+                            {
+                                Log.LogWarning("Failed to get arrow color configuration, using default color.");
+                            }
                             break;
                     }
                 }
@@ -127,23 +261,67 @@ namespace BrutalCompanyMinus
                 if (downKeyControl.isPressed)
                 {
                     showCaseEvents = false;
-                    downArrow.color = new Color(0.0f, 1.0f, 0.0f);
+                    try
+                    {
+                        downArrow.color = new Color(
+                                        ((hexArrowColor >> 16) & 0xFF) / 255f * arrowColorActive,
+                                        ((hexArrowColor >> 8) & 0xFF) / 255f * arrowColorActive,
+                                        (hexArrowColor & 0xFF) / 255f * arrowColorActive
+                                    );
+                    }
+                    catch
+                    {
+                        downArrow.color = new Color(0.0f, 1.0f, 0.0f);
+                    }
                     panelScrollBar.value -= Time.deltaTime * Configuration.scrollSpeed.Value;
                 }
                 else
                 {
-                    downArrow.color = new Color(0.0f, 0.6f, 0.0f);
+                    try
+                    {
+                        downArrow.color = new Color(
+                                        ((hexArrowColor >> 16) & 0xFF) / 255f,
+                                        ((hexArrowColor >> 8) & 0xFF) / 255f,
+                                        (hexArrowColor & 0xFF) / 255f
+                                    );
+                    }
+                    catch
+                    {
+                        downArrow.color = new Color(0.0f, 0.6f, 0.0f);
+                    }
                 }
 
                 if (upKeyControl.isPressed)
                 {
                     showCaseEvents = false;
-                    upArrow.color = new Color(0.0f, 1.0f, 0.0f);
+                    try
+                    {
+                        upArrow.color = new Color(
+                                        ((hexArrowColor >> 16) & 0xFF) / 255f * arrowColorActive,
+                                        ((hexArrowColor >> 8) & 0xFF) / 255f * arrowColorActive,
+                                        (hexArrowColor & 0xFF) / 255f * arrowColorActive
+                                    );
+                    }
+                    catch
+                    {
+                        upArrow.color = new Color(0.0f, 1.0f, 0.0f);
+                    }
                     panelScrollBar.value += Time.deltaTime * Configuration.scrollSpeed.Value;
                 }
                 else
                 {
-                    upArrow.color = new Color(0.0f, 0.6f, 0.0f);
+                    try
+                    {
+                        upArrow.color = new Color(
+                                        ((hexArrowColor >> 16) & 0xFF) / 255f,
+                                        ((hexArrowColor >> 8) & 0xFF) / 255f,
+                                        (hexArrowColor & 0xFF) / 255f
+                                    );
+                    }
+                    catch
+                    {
+                        upArrow.color = new Color(0.0f, 0.6f, 0.0f);
+                    }
                 }
             }
         }
@@ -161,10 +339,10 @@ namespace BrutalCompanyMinus
         public static void GenerateText(List<MEvent> events)
         {
             // Generate Text
-            string text = "<br>Events:<br>";
+            string text = $"<br><color=#{colorTextHex}>Events:</color><br>";
             foreach (string eventDescription in EventManager.currentEventDescriptions)
             {
-                text += $"-{eventDescription}<br>";
+                text += $"<color=#{colorTextHex}>-</color>{eventDescription}<br>";
             }
 
             // Extra properties
@@ -175,15 +353,15 @@ namespace BrutalCompanyMinus
 
                 text += GetDifficultyText();
 
-                text += "<br><br>Other:";
+                text += $"<br><br><color=#{colorTextHex}>Other:</color>";
 
                 text +=
-                    $"<br> -Scrap Value: x{ScrapValueMultiplier:F2}" +
-                    $"<br> -Scrap Amount: x{(RoundManager.Instance.scrapAmountMultiplier * Manager.scrapAmountMultiplier):F2}" +
-                    $"<br> -Factory Size: x{RoundManager.Instance.currentLevel.factorySizeMultiplier:F2}" +
-                    $"<br> -Spawn Chance: x{Manager.spawnChanceMultiplier:F2}" +
-                    $"<br> -Spawn Cap: x{Manager.spawncapMultipler:F2}" +
-                    $"<br> -Bonus enemy hp: {plusMinus(Manager.bonusEnemyHp)}"
+                    $"<br><color=#{colorTextHex}> -Scrap Value: x{ScrapValueMultiplier:F2}</color>" +
+                    $"<br><color=#{colorTextHex}> -Scrap Amount: x{(RoundManager.Instance.scrapAmountMultiplier * Manager.scrapAmountMultiplier):F2}</color>" +
+                    $"<br><color=#{colorTextHex}> -Factory Size: x{RoundManager.Instance.currentLevel.factorySizeMultiplier:F2}</color>" +
+                    $"<br><color=#{colorTextHex}> -Spawn Chance: x{Manager.spawnChanceMultiplier:F2}</color>" +
+                    $"<br><color=#{colorTextHex}> -Spawn Cap: x{Manager.spawncapMultipler:F2}</color>" +
+                    $"<br><color=#{colorTextHex}> -Bonus enemy hp: {plusMinus(Manager.bonusEnemyHp)}</color>"
                     ;
             }
 
@@ -224,13 +402,13 @@ namespace BrutalCompanyMinus
                 {
                     EventManager.UpdateAllEventWeights();
                     text +=
-                        $"<br>EventType Chances:" +
-                        $"<br> -<color=#800000>VeryBad</color>:  {Helper.GetPercentage(EventManager.eventTypeRarities[0])}" +
-                        $"<br> -<color=#FF0000>Bad</color>:      {Helper.GetPercentage(EventManager.eventTypeRarities[1])}" +
-                        $"<br> -<color=#FFFFFF>Neutral</color>:  {Helper.GetPercentage(EventManager.eventTypeRarities[2])}" +
-                        $"<br> -<color=#008000>Good</color>:     {Helper.GetPercentage(EventManager.eventTypeRarities[3])}" +
-                        $"<br> -<color=#00FF00>VeryGood</color>: {Helper.GetPercentage(EventManager.eventTypeRarities[4])}" +
-                        $"<br> -<color=#008000>Remove</color>:   {Helper.GetPercentage(EventManager.eventTypeRarities[5])}<br>";
+                        $"<br><color=#{colorTextHex}>EventType Chances:</color>" +
+                        $"<br> <color=#{colorTextHex}>-</color><color=#800000>VeryBad</color><color=#{colorTextHex}>:  {Helper.GetPercentage(EventManager.eventTypeRarities[0])}</color>" +
+                        $"<br> <color=#{colorTextHex}>-</color><color=#FF0000>Bad</color><color=#{colorTextHex}>:      {Helper.GetPercentage(EventManager.eventTypeRarities[1])}</color>" +
+                        $"<br> <color=#{colorTextHex}>-</color><color=#FFFFFF>Neutral</color><color=#{colorTextHex}>:  {Helper.GetPercentage(EventManager.eventTypeRarities[2])}</color>" +
+                        $"<br> <color=#{colorTextHex}>-</color><color=#008000>Good</color><color=#{colorTextHex}>:     {Helper.GetPercentage(EventManager.eventTypeRarities[3])}</color>" +
+                        $"<br> <color=#{colorTextHex}>-</color><color=#00FF00>VeryGood</color><color=#{colorTextHex}>: {Helper.GetPercentage(EventManager.eventTypeRarities[4])}</color>" +
+                        $"<br> <color=#{colorTextHex}>-</color><color=#008000>Remove</color><color=#{colorTextHex}>:   {Helper.GetPercentage(EventManager.eventTypeRarities[5])}</color><br>";
                 }
 
                 text += GetDifficultyText();
@@ -246,14 +424,14 @@ namespace BrutalCompanyMinus
         private static string GetDifficultyText()
         {
             string text =
-                $"<br>Difficulty: {Helper.GetDifficultyText()}" +
-                $"<br> -Difficulty:  <color=#{Helper.GetDifficultyColorHex(Manager.difficulty, Configuration.difficultyMaxCap.Value)}>{Manager.difficulty:F1}</color>";
+                $"<br><color=#{colorTextHex}>Difficulty:</color> {Helper.GetDifficultyText()}" +
+                $"<br><color=#{colorTextHex}> -Difficulty:</color>  <color=#{Helper.GetDifficultyColorHex(Manager.difficulty, Configuration.difficultyMaxCap.Value)}>{Manager.difficulty:F1}</color>";
 
-            if (Configuration.scaleByDaysPassed.Value) text += $"<br> -Day:        <color=#{Helper.GetDifficultyColorHex(Manager.daysDifficulty, Configuration.daysPassedDifficultyCap.Value)}>{plusMinusExclusive(Manager.daysDifficulty)}{Manager.daysDifficulty:F1}</color>";
-            if (Configuration.scaleByQuota.Value) text += $"<br> -Quota:      <color=#{Helper.GetDifficultyColorHex(Manager.quotaDifficulty, Configuration.quotaDifficultyCap.Value)}>{plusMinusExclusive(Manager.quotaDifficulty)}{Manager.quotaDifficulty:F1}</color>";
-            if (Configuration.scaleByScrapInShip.Value) text += $"<br> -Ship Scrap: <color=#{Helper.GetDifficultyColorHex(Manager.scrapInShipDifficulty, Configuration.scrapInShipDifficultyCap.Value)}>{plusMinusExclusive(Manager.scrapInShipDifficulty)}{Manager.scrapInShipDifficulty:F1}</color>";
-            if (Configuration.scaleByMoonGrade.Value) text += $"<br> -Moon risk:  <color=#{Helper.GetDifficultyColorHex(Manager.moonGradeDifficulty, Configuration.gradeAdditives["S+++"])}>{plusMinusExclusive(Manager.moonGradeDifficulty)}{Manager.moonGradeDifficulty:F1}</color>";
-            if (Configuration.scaleByWeather.Value) text += $"<br> -Weather:    <color=#{Helper.GetDifficultyColorHex(Manager.weatherDifficulty, 7.0f)}>{plusMinusExclusive(Manager.weatherDifficulty)}{Manager.weatherDifficulty:F1}</color>";
+            if (Configuration.scaleByDaysPassed.Value) text += $"<br><color=#{colorTextHex}> -Day:        </color><color=#{Helper.GetDifficultyColorHex(Manager.daysDifficulty, Configuration.daysPassedDifficultyCap.Value)}>{plusMinusExclusive(Manager.daysDifficulty)}{Manager.daysDifficulty:F1}</color>";
+            if (Configuration.scaleByQuota.Value) text += $"<br><color=#{colorTextHex}> -Quota:      </color><color=#{Helper.GetDifficultyColorHex(Manager.quotaDifficulty, Configuration.quotaDifficultyCap.Value)}>{plusMinusExclusive(Manager.quotaDifficulty)}{Manager.quotaDifficulty:F1}</color>";
+            if (Configuration.scaleByScrapInShip.Value) text += $"<br><color=#{colorTextHex}> -Ship Scrap: </color><color=#{Helper.GetDifficultyColorHex(Manager.scrapInShipDifficulty, Configuration.scrapInShipDifficultyCap.Value)}>{plusMinusExclusive(Manager.scrapInShipDifficulty)}{Manager.scrapInShipDifficulty:F1}</color>";
+            if (Configuration.scaleByMoonGrade.Value) text += $"<br><color=#{colorTextHex}> -Moon risk:  </color><color=#{Helper.GetDifficultyColorHex(Manager.moonGradeDifficulty, Configuration.gradeAdditives["S+++"])}>{plusMinusExclusive(Manager.moonGradeDifficulty)}{Manager.moonGradeDifficulty:F1}</color>";
+            if (Configuration.scaleByWeather.Value) text += $"<br><color=#{colorTextHex}> -Weather:    </color><color=#{Helper.GetDifficultyColorHex(Manager.weatherDifficulty, 7.0f)}>{plusMinusExclusive(Manager.weatherDifficulty)}{Manager.weatherDifficulty:F1}</color>";
             return text;
         }
 
@@ -294,7 +472,19 @@ namespace BrutalCompanyMinus
             panelBackground.SetActive(state);
             upArrowPanel.SetActive(state);
             downArrowPanel.SetActive(state);
-            letter.color = new Color(0, state ? 1.0f : 0.6f, 0);
+            try
+            {
+                letter.color = new Color(
+                    state ? ((hexColor >> 16) & 0xFF) / 255f : ((hexColor >> 16) & 0xFF) / 255f * uiColorReduction,
+                    state ? ((hexColor >> 8) & 0xFF) / 255f : ((hexColor >> 8) & 0xFF) / 255f * uiColorReduction,
+                    state ? (hexColor & 0xFF) / 255f : (hexColor & 0xFF) / 255f * uiColorReduction
+                );
+            }
+            catch
+            {
+                //Log.LogWarning("Failed to set letter color using hexColor. Falling back to default green.");
+                letter.color = new Color(0.0f, state ? 1.0f : 0.6275f, 0.0f);
+            }
         }
 
         [HarmonyPostfix]

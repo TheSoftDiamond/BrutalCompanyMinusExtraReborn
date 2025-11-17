@@ -81,6 +81,13 @@ namespace BrutalCompanyMinus
         public static ConfigEntry<string> UIKey;
         public static ConfigEntry<bool> NormaliseScrapValueDisplay, EnableUI, ShowUILetterBox, ShowExtraProperties, PopUpUI, DisplayUIAfterShipLeaves, DisplayExtraPropertiesAfterShipLeaves, displayEvents;
         public static ConfigEntry<float> UITime, scrollSpeed;
+        public static ConfigEntry<string> color;
+        public static ConfigEntry<float> uiColorReduction;
+        public static ConfigEntry<float> colorArrowsIncrease;
+        public static ConfigEntry<string> colorArrows;
+        public static ConfigEntry<string> colorText;
+        //public static ConfigEntry<string> menuColor;
+        //public static ConfigEntry<float> menuTransparency;
 
         // Custom assets settings
         public static ConfigEntry<int> nutSlayerLives, nutSlayerHp;
@@ -241,7 +248,15 @@ namespace BrutalCompanyMinus
 
             // UI Settings
             UIKey = uiConfig.Bind("UI Options", "Toggle UI Key", "K");
-            NormaliseScrapValueDisplay = uiConfig.Bind("UI Options", "Normlize scrap value display number?", true, "In game default value is 0.4, having this set to true will multiply the 'displayed value' by 2.5 so it looks normal.");
+            color = uiConfig.Bind("UI Options", "UI Color Hex", "00A000", "Color hex for UI elements.");
+            uiColorReduction = uiConfig.Bind("UI Options", "UI Color Reduction Factor", 0.6275f, "Changes the color of the UI element when not active (0-1).");
+            colorArrows = uiConfig.Bind("UI Options", "UI Arrow Color Hex", "00A000", "Color hex for UI arrows.");
+            colorArrowsIncrease = uiConfig.Bind("UI Options", "UI Arrow Color Amplification", 255f/160f, "Mutliplies the color by this number when UI arrows are active.");
+            colorText = uiConfig.Bind("UI Options", "UI Text Color Hex", "00FF00", "Color hex for UI text.");
+            //menuColor = uiConfig.Bind("UI Options", "UI Menu Color Hex", "000000", "Color hex for UI menu background.");
+            //menuTransparency = uiConfig.Bind("UI Options", "UI Menu Transparency", 0.498f, "Transparency for UI menu background. (0-1)");
+
+            NormaliseScrapValueDisplay = uiConfig.Bind("UI Options", "Normalize scrap value display number?", true, "In game default value is 0.4, having this set to true will multiply the 'displayed value' by 2.5 so it looks normal.");
             EnableUI = uiConfig.Bind("UI Options", "Enable UI?", true);
             ShowUILetterBox = uiConfig.Bind("UI Options", "Display UI Letter Box?", true);
             ShowExtraProperties = uiConfig.Bind("UI Options", "Display extra properties", true, "Display extra properties on UI such as scrap value and amount multipliers.");
