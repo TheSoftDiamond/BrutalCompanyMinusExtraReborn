@@ -50,8 +50,15 @@ namespace BrutalCompanyMinus
         public static ConfigEntry<bool> enableQuotaChanges;
         public static ConfigEntry<int> deadLineDaysAmount, startingCredits, startingQuota, baseIncrease, increaseSteepness;
         public static Scale
-            spawnChanceMultiplierScaling = new Scale(), insideEnemyMaxPowerCountScaling = new Scale(), outsideEnemyPowerCountScaling = new Scale(), enemyBonusHpScaling = new Scale(), spawnCapMultiplier = new Scale(),
-            scrapAmountMultiplier = new Scale(), scrapValueMultiplier = new Scale(), insideSpawnChanceAdditive = new Scale(), outsideSpawnChanceAdditive = new Scale();
+            spawnChanceMultiplierScaling = new Scale(), 
+            insideEnemyMaxPowerCountScaling = new Scale(), 
+            outsideEnemyPowerCountScaling = new Scale(), 
+            enemyBonusHpScaling = new Scale(), 
+            spawnCapMultiplier = new Scale(),
+            scrapAmountMultiplier = new Scale(), 
+            scrapValueMultiplier = new Scale(), 
+            insideSpawnChanceAdditive = new Scale(), 
+            outsideSpawnChanceAdditive = new Scale();
         public static ConfigEntry<bool> ignoreMaxCap;
         public static ConfigEntry<float> difficultyMaxCap;
         public static ConfigEntry<float> scrapValueMax;
@@ -93,6 +100,7 @@ namespace BrutalCompanyMinus
         public static ConfigEntry<int> nutSlayerLives, nutSlayerHp;
         public static ConfigEntry<float> nutSlayerMovementSpeed;
         public static ConfigEntry<bool> nutSlayerImmortal;
+        public static ConfigEntry<bool> onlyPlayersAttackSlayer;
         public static ConfigEntry<int> slayerShotgunMinValue, slayerShotgunMaxValue;
 
         // All enemies settings
@@ -122,6 +130,8 @@ namespace BrutalCompanyMinus
         public static ConfigEntry<bool> enableSpecialEvents;
         public static Scale timeChaosScale = new Scale();
         public static ConfigEntry<string> transmutationBlacklist;
+        public static ConfigEntry<bool> enableNewEventOnNewLoad;
+        public static ConfigEntry<bool> handleScanCommand;
 
 
         /*   public static ConfigEntry<bool> EnableStreamerEvents;*/
@@ -147,8 +157,6 @@ namespace BrutalCompanyMinus
             difficultyTransitions = GetDifficultyTransitionsFromString(difficultyConfig.Bind("Difficulty Scaling", "Difficulty Transitions", "Easy,00FF00,0|Medium,008000,15|Hard,FF0000,30|Very Hard,800000,50|Insane,140000,75", "Format: NAME,HEX,ABOVE, above is the value the name will be shown at.").Value);
             ignoreMaxCap = difficultyConfig.Bind("Difficulty Scaling", "Ignore max cap?", false, "Will ignore max cap if true, upperlimit is dictated by difficulty max cap setting as well.");
             difficultyMaxCap = difficultyConfig.Bind("Difficulty Scaling", "Difficulty max cap", 100.0f, "The difficulty value wont go beyond this.");
-
-
             scaleByDaysPassed = difficultyConfig.Bind("Difficulty Scaling", "Scale by days passed?", true, "Will add to difficulty depending on how many days have passed.");
             daysPassedDifficultyMultiplier = difficultyConfig.Bind("Difficulty Scaling", "Difficulty per days passed?", 1.0f, "");
             daysPassedDifficultyCap = difficultyConfig.Bind("Difficulty Scaling", "Days passed difficulty cap", 60.0f, "Days passed difficulty scaling wont add beyond this.");
@@ -213,6 +221,7 @@ namespace BrutalCompanyMinus
             nutSlayerHp = customAssetsConfig.Bind("NutSlayer", "Hp", 6);
             nutSlayerMovementSpeed = customAssetsConfig.Bind("NutSlayer", "Speed?", 9.5f);
             nutSlayerImmortal = customAssetsConfig.Bind("NutSlayer", "Immortal?", true);
+            onlyPlayersAttackSlayer = customAssetsConfig.Bind("NutSlayer", "Only players can attack NutSlayer?", false, "Does nothing if Nutslayer is immortal.");
             grabbableTurret.minValue = customAssetsConfig.Bind("Grabbable Landmine", "Min value", 50).Value;
             grabbableTurret.maxValue = customAssetsConfig.Bind("Grabbable Landmine", "Max value", 75).Value;
             grabbableLandmine.minValue = customAssetsConfig.Bind("Grabbable Turret", "Min value", 100).Value;
@@ -277,10 +286,11 @@ namespace BrutalCompanyMinus
             VeryLateShipAdjustment = CorePropertiesConfig.Bind("Events Features", "Enable Very Late Ship Time Adjustment?", true, "When the VeryLateShip event occurs, should the time be adjusted to be normal? Disable if you wish to suffer.");
             dontHandlePower = CorePropertiesConfig.Bind("Mod Compatibility", "Experimental Dont Handle Power?", false, "If you wish to let other mods handle power levels, enable this. Some settings may affect this.");
             dontHandleSpawnCurves = CorePropertiesConfig.Bind("Mod Compatibility", "Experimental Dont Handle Spawn Chance?", false, "If you wish to let other mods handle spawn curves, enable this. Some settings may affect this.");
-            deferWeatherToMods = CorePropertiesConfig.Bind("Mod Compatibility", "Defer Weather To Weather ToolKit Mod?", false, "If you wish to let other mods handle weather effects, enable this.");
+            deferWeatherToMods = CorePropertiesConfig.Bind("Mod Compatibility", "Defer Weather To Weather ToolKit Mod?", false, "If you wish to let other mods handle Brutal's weather setting effects, enable this. This has no effect on custom events as those use weather toolkit by default.");
             enableSpecialEvents = CorePropertiesConfig.Bind("Events Features", "Enable Special Events?", false, "Enables special events to be loaded.");
             transmutationBlacklist = CorePropertiesConfig.Bind("Events Features", "Transmutation Blacklist", "", "Blacklist items here to prevent them from being used in scrap transmutation. Uses itemProperties.itemName Component Name.");
-
+            enableNewEventOnNewLoad = CorePropertiesConfig.Bind("Mod Compatibility", "Events Reroll on Dynamic Interior", false , "For mods like Zeranos that support changing the dungeon layout every floor... should Brutal load new events for them? This feature might break.");
+            handleScanCommand = CorePropertiesConfig.Bind("Mod Compatibility", "Let Brutal handle the SCAN command?", true, "If enabled, Brutal will handle the scan command with accurate scrap values to its modifiers. If you have other mods that handle this feature, disable it. Please note, if disabled, the scan command will not show the proper values for scrap value.");
 
             //todo - add settings for events and modded events that mess with features like time
 
