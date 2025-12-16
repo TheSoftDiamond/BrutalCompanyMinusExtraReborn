@@ -51,6 +51,8 @@ The levels of compatibility are color coded to represent the level of compatibil
 | [Late Company](https://thunderstore.io/c/lethal-company/p/anormaltwig/LateCompany/) | 🟢 (Compatible) | Works perfectly fine. At worst, potentially not recieving event UI until ship lever is pulled. |
 | [WeatherRegistry](https://thunderstore.io/c/lethal-company/p/mrov/WeatherRegistry/) | 🟢 (Compatible) | Custom Weathers can be used inside Custom Events. |
 | [Combined Weathers Toolkit](https://thunderstore.io/c/lethal-company/p/Zigzag/Combined_Weathers_Toolkit/) | 🟢 (Compatible) | Registered via WeatherRegistry for weathers, and these themselves can be used in Custom Events. |
+| [DawnLib](https://thunderstore.io/c/lethal-company/p/TeamXiaolan/DawnLib/) | 🟣 (Planned) | Support for Hazards is to be done sometime in the future. |
+| [LunarConfig](https://thunderstore.io/c/lethal-company/p/Crafty/LunarConfig/) | 🟠 (Partial) | Some variables set may conflict or outright overwrite Brutal settings |
 
 </details>
 <details>
