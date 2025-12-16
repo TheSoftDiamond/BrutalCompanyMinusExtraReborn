@@ -39,6 +39,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
         {
             EventManager.ExecuteOnShipLeave();
             EventManager.currentEvents.Clear();
+            EventManager.sideEvents.Clear(); // sanity check
 
             Net.Instance.ClearGameObjectsServerRpc(); // Clear all previously placed objects on all clients
 
@@ -135,7 +136,15 @@ namespace BrutalCompanyMinus.Minus.Handlers
 
             for (int i = 0; i < scrapValues.Length; i++)
             {
+                if (Configuration.ExtraLogging.Value)
+                {
+                    Log.LogDebug($"Old scrap value: {scrapValues[i]}");
+                }
                 scrapValues[i] = (int)(scrapValues[i] * Manager.scrapValueMultiplier);
+                if (Configuration.ExtraLogging.Value)
+                {
+                    Log.LogDebug("New scrap value: " + scrapValues[i]);
+                }
             }
 
             int scrapDiffernce = (int)(spawnedScrap.Length * (Manager.scrapAmountMultiplier - 1));
