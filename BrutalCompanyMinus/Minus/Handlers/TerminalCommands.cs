@@ -8,6 +8,7 @@ using HarmonyLib;
 using JetBrains.Annotations;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.UI;
 using static BrutalCompanyMinus.Assets;
 
 namespace BrutalCompanyMinus.Minus.Handlers
@@ -60,6 +61,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
             new MCommand()
             {
                 command = "MEVENT",
+                tag = "SERVER",
                 shortinfo = "Forces a mEvent to occur for next day.",
                 info = "MEVENT [mEvent]\n    mEvent - the name of said event.\n\nMEVENT [mEvent 1] [mEvent 2] ... [mEvent n]\n    this can take multiple events.",
                 execute = new Action<string[]>((arguments) =>
@@ -105,6 +107,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
             new MCommand()
             {
                 command = "MCLEAR",
+                tag = "SERVER",
                 shortinfo = "Clears the forced event list.",
                 info = "MCLEAR\n   Clears the forced event list from MEVENT.",
                 execute = new Action<string[]>((arguments) =>
@@ -119,6 +122,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
             new MCommand()
             {
                 command = "MEVENTS",
+                tag = "SERVER",
                 shortinfo = "Displays all events.",
                 info = "MEVENTS\n   This will display all events, excluding disabled ones and modded ones where said mod isn't present.\n\nMEVENTS [Name]\n   Displays properties of said event.",
                 execute = new Action<string[]>((arguments) =>
@@ -195,6 +199,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
             new MCommand()
             {
                 command = "MPAY",
+                tag = "SERVER",
                 shortinfo = "Adds or subtracts credits.",
                 info = "MPAY [Amount]\n   Amount is the quantity of credits added or subtracted.",
                 execute = new Action<string[]>((arguments) =>
@@ -221,6 +226,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
             new MCommand()
             {
                 command = "MENEMIES",
+                tag = "SERVER",
                 shortinfo = "Displays all enemies.",
                 info = "MENEMIES\n   Will display the names of every enemy grabbed by this mod.",
                 execute = new Action<string[]>((arguments) =>
@@ -247,6 +253,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
             new MCommand()
             {
                 command = "MITEMS",
+                tag = "SERVER",
                 shortinfo = "Displays all items.",
                 info = "MITEMS\n   Will display the names of every item grabbed by this mod.",
                 execute = new Action<string[]>((arguments) =>
@@ -273,6 +280,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
             new MCommand()
             {
                 command = "MMOONS",
+                tag = "SERVER",
                 shortinfo = "Displays all moons.",
                 info = "MMOONS\n   This will display the names of every moon\nMMOONS [name/id]\n   This will dump all information about said moon into the console.",
                 execute = new Action<string[]>((arguments) =>
@@ -450,7 +458,58 @@ namespace BrutalCompanyMinus.Minus.Handlers
                         }
                     }
                 })
-            }
+            },
+            #endregion
+
+            #region Client Safe Commands
+
+            #region MScan
+            new MCommand()
+            {
+                command = "MSCAN",
+                shortinfo = "Provides a scan of all the items that are not on ship",
+                info = "MSCAN [Command]\n   Command - Provides an accurate scan on all items not on ship.",
+                execute = new Action<string[]>((arguments) =>
+                {
+                    if(arguments.Length >= 0)
+                    {
+                        string text = "";
+
+                        int itemCount = 0;
+                        int totalWorth = 0;
+                        GrabbableObject[] allItemsOutsideShip = GameObject.FindObjectsOfType<GrabbableObject>();
+                        foreach(GrabbableObject item in allItemsOutsideShip)
+                        {
+                            if (item != null)
+                            { 
+                                if (item.itemProperties.isScrap && !item.isInElevator &&  !item.isInShipRoom)
+                                {
+                                    itemCount++;
+                                    totalWorth += item.scrapValue;
+                                }
+                            }
+                        }
+                        {
+                            text += $"There are {itemCount} items outside the ship, totaling a total of {totalWorth} altogether.";
+                        }
+                        Respond(text);
+                    }
+                })
+            },
+
+
+            #endregion
+
+            #endregion
+
+            #region Developer Commands
+
+            #region MExtend
+            #endregion
+
+            #region MRevive
+            #endregion
+
             #endregion
         };
 
@@ -466,6 +525,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
         public class MCommand
         {
             public string command;
+            public string tag;
 
             public string shortinfo;
             public string info;
@@ -477,17 +537,27 @@ namespace BrutalCompanyMinus.Minus.Handlers
         [HarmonyPatch(typeof(Terminal), "ParsePlayerSentence")]
         private static void OnParsePlayerSentence(ref Terminal __instance, ref TerminalNode __result)
         {
-            if (!NetworkManager.Singleton.IsServer) return;
+            //if (!NetworkManager.Singleton.IsServer) return;  
 
             string[] text = __instance.screenText.text[^__instance.textAdded..].Split(" ");
             if (text.Length == 0) return;
 
-            string command = text[0];
+            string command = text[0].ToUpper();
             string[] arguments = text[1..];
 
-            foreach(MCommand mCommand in mCommands)
+            if (Configuration.handleScanCommand.Value && command.ToLower() == "scan") // Handle vanilla scan command
             {
-                if (mCommand.command.ToLower() != command) continue;
+                command = "mscan";
+            }
+
+            foreach (MCommand mCommand in mCommands)
+            {
+                if (mCommand.command.ToLower() != command.ToLower()) continue;
+
+                if (!NetworkManager.Singleton.IsServer && mCommand.tag.ToLower() == "server") // Only allow server commands on server
+                {
+                    return;
+                }
 
                 mCommand.execute(arguments);
             }
