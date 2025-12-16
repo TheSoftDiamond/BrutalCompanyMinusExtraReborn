@@ -37,6 +37,18 @@ namespace BrutalCompanyMinus
 
         private float currentIntervalTime = 0.0f;
 
+        public NetworkVariable<bool> LeverUnityNet = new NetworkVariable<bool>(false);
+        public NetworkVariable<bool> WalkiesUnityNet = new NetworkVariable<bool>(false);
+        public NetworkVariable<bool> JetpackUnityNet = new NetworkVariable<bool>(false);
+        public NetworkVariable<bool> TerminalUnityNet = new NetworkVariable<bool>(false);
+        public NetworkVariable<bool> TargetingUnityNet = new NetworkVariable<bool>(false);
+        public NetworkVariable<bool> TeleporterUnityNet = new NetworkVariable<bool>(false);
+        public NetworkVariable<bool> ItemChargerUnityNet = new NetworkVariable<bool>(false);
+        public NetworkVariable<bool> CircuitUnityNet = new NetworkVariable<bool>(false);
+        public NetworkVariable<bool> DoorOvUnityNet = new NetworkVariable<bool>(false);
+        public NetworkVariable<bool> DoorUnityNet = new NetworkVariable<bool>(false);
+        public NetworkVariable<bool> CameraUnityNet = new NetworkVariable<bool>(false);
+
 #pragma warning disable IDE0051 // Remove unused private members
         private void Awake()
 #pragma warning restore IDE0051 // Remove unused private members
@@ -45,6 +57,8 @@ namespace BrutalCompanyMinus
             currentWeatherMultipliers = new NetworkList<Weather>();
             outsideObjectsToSpawn = new NetworkList<OutsideObjectsToSpawnMethod>();
             currentWeatherEffects = new NetworkList<CurrentWeatherEffect>();
+
+            Log.LogWarning("Net object Awake called");
         }
 
 #pragma warning disable IDE0051 // Remove unused private members
@@ -301,10 +315,17 @@ namespace BrutalCompanyMinus
         public void SetAllWeatherActiveClientRpc(bool state) => Minus.Events.AllWeather.Active = state;
 
         [ServerRpc(RequireOwnership = false)]
-        public void SetTimeChaosActiveServerRpc(bool state) => SetTimeChaosActiveClientRpc(state);
+        public void SetEventActiveServerRPC(string eventName, bool state) => SetEventActiveClientRPC(eventName, state);
 
         [ClientRpc]
-        public void SetTimeChaosActiveClientRpc(bool state) => Minus.Events.TimeChaos.Active = state;
+        public void SetEventActiveClientRPC(string eventName, bool state)
+        {
+            MEvent mEvent = MEvent.GetEvent(eventName);
+            if (mEvent != null)
+            {
+                mEvent.Active = state;
+            }
+        }
 
         [ServerRpc(RequireOwnership = false)]
         public void MessWithLightsServerRpc() => MessWithLightsClientRpc();
@@ -769,6 +790,12 @@ namespace BrutalCompanyMinus
                 component.velocityLastFrame = Vector3.zero;
                 component.TeleportPlayer(pos);
                 component.beamOutParticle.Play();
+
+                var presets = UnityEngine.Object.FindObjectOfType<AudioReverbPresets>();
+                if (presets != null)
+                {
+                    presets.audioPresets[2].ChangeAudioReverbForPlayer(component);
+                }
             }
         }
 
@@ -815,33 +842,48 @@ namespace BrutalCompanyMinus
             }
         }
 
+        [ServerRpc(RequireOwnership = false)]
+        public void ResizeHotbarRandomlyServerRpc()
+        {
+            ResizeHotbarRandomlyClientRpc();
+        }
+
         [ClientRpc]
         public void ResizeHotbarRandomlyClientRpc()
         {
-            if (IsServer) return;
-
             if (Compatibility.HotBarPlusPresent)
             {
                 HotBarPlusCompat.ResizeHotbarRandomly();
             }
         }
 
+        [ServerRpc(RequireOwnership = false)]
+        public void ResizeHotbarRandomlySmallServerRpc()
+        {
+            ResizeHotbarRandomlySmallClientRpc();
+        }
+
         [ClientRpc]
         public void ResizeHotbarRandomlySmallClientRpc()
         {
-            if (IsServer) return;
-
             if (Compatibility.HotBarPlusPresent)
             {
                 HotBarPlusCompat.ResizeHotbarRandomlySmall();
             }
         }
 
+        [ServerRpc(RequireOwnership = false)]
+        public void ResetHotbarServerRpc()
+        {
+            if (Compatibility.HotBarPlusPresent)
+            {
+                ResetHotbarClientRpc();
+            }
+        }
+
         [ClientRpc]
         public void ResetHotbarClientRpc()
         {
-            if (IsServer) return;
-
             if (Compatibility.HotBarPlusPresent)
             {
                 HotBarPlusCompat.ResetHotbar();
@@ -915,135 +957,35 @@ namespace BrutalCompanyMinus
         }
 
         [ServerRpc(RequireOwnership = false)]
-        public void SetItemChargerUnityNetServerRpc(bool value)
+        public void SetCruiserOfflineServerRpc()
         {
-            SetItemChargerUnityNetClientRpc(value);
+            SetCruiserOfflineClientRpc();
         }
 
         [ClientRpc]
-        public void SetItemChargerUnityNetClientRpc(bool value)
+        public void SetCruiserOfflineClientRpc()
         {
-            ItemChargerFailure.ItemChargerUnityNet.Value = value;
-        }
-
-        [ServerRpc(RequireOwnership = false)]
-        public void SetDoorUnityNetServerRpc(bool value)
-        {
-            SetDoorUnityNetClientRpc(value);
-        }
-
-        [ClientRpc]
-        public void SetDoorUnityNetClientRpc(bool value)
-        {
-            DoorFailure.DoorUnityNet.Value = value;
-        }
-
-        [ServerRpc(RequireOwnership = false)]
-        public void SetDoorOvUnityNetServerRpc(bool value)
-        {
-            SetDoorOvUnityNetClientRpc(value);
-        }
-
-        [ClientRpc]
-        public void SetDoorOvUnityNetClientRpc(bool value)
-        {
-            DoorOverdriveEv.DoorOvUnityNet.Value = value;
-        }
-
-        [ServerRpc(RequireOwnership = false)]
-        public void SetTerminalUnityNetServerRpc(bool value)
-        {
-            SetTerminalUnityNetClientRpc(value);
-        }
-
-        [ClientRpc]
-        public void SetTerminalUnityNetClientRpc(bool value)
-        {
-            TerminalFailure.TerminalUnityNet.Value = value;
-        }
-
-        [ServerRpc(RequireOwnership = false)]
-        public void SetWalkiesUnityNetServerRpc(bool value)
-        {
-            SetWalkiesUnityNetClientRpc(value);
-        }
-
-        [ClientRpc]
-        public void SetWalkiesUnityNetClientRpc(bool value)
-        {
-            WalkieFailure.WalkiesUnityNet.Value = value;
-        }
-
-        [ServerRpc(RequireOwnership = false)]
-        public void SetTeleporterUnityNetServerRpc(bool value)
-        {
-            SetTeleporterUnityNetClientRpc(value);
-        }
-
-        [ClientRpc]
-        public void SetTeleporterUnityNetClientRpc(bool value)
-        {
-            TeleporterFailure.TeleporterUnityNet.Value = value;
-        }
-
-        [ServerRpc(RequireOwnership = false)]
-        public void SetTargetingUnityNetServerRpc(bool value)
-        {
-            SetTargetingUnityNetClientRpc(value);
-        }
-
-        [ClientRpc]
-        public void SetTargetingUnityNetClientRpc(bool value)
-        {
-            TargetingFailure.TargetingUnityNet.Value = value;
-        }
-
-        [ServerRpc(RequireOwnership = false)]
-        public void SetCameraUnityNetServerRpc(bool value)
-        {
-            SetCameraUnityNetClientRpc(value);
-        }
-
-        [ClientRpc]
-        public void SetCameraUnityNetClientRpc(bool value)
-        {
-            ManualCameraFailure.CameraUnityNet.Value = value;
-        }
-
-        [ServerRpc(RequireOwnership = false)]
-        public void SetLeverUnityNetServerRpc(bool value)
-        {
-            SetLeverUnityNetClientRpc(value);
-        }
-
-        [ClientRpc]
-        public void SetLeverUnityNetClientRpc(bool value)
-        {
-            LeverFailure.LeverUnityNet.Value = value;
-        }
-
-        [ServerRpc(RequireOwnership = false)]
-        public void SetCircuitUnityNetServerRpc(bool value)
-        {
-            SetCircuitUnityNetClientRpc(value);
-        }
-
-        [ClientRpc]
-        public void SetCircuitUnityNetClientRpc(bool value)
-        {
-            DoorCircuitFailure.CircuitUnityNet.Value = value;
-        }
-
-        [ServerRpc(RequireOwnership = false)]
-        public void SetJetpackUnityNetServerRpc(bool value)
-        {
-            SetJetpackUnityNetClientRpc(value);
-        }
-
-        [ClientRpc]
-        public void SetJetpackUnityNetClientRpc(bool value)
-        {
-            JetpackFailure.JetpackUnityNet.Value = value;
+            try
+            {
+                GameObject companyCruiser = Assets.cruiser;
+                if (companyCruiser != null)
+                {
+                    Log.LogInfo("Cruiser found, attempting to set ignition off.");
+                    try
+                    {
+                        VehicleController controller = Assets.cruiser.GetComponent<VehicleController>();
+                        controller.SetIgnition(false);
+                    }
+                    catch (Exception e)
+                    {
+                        Log.LogError("Error setting cruiser ignition " + e.Message);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Log.LogError("Error finding cruiser or setting ignition " + e.Message);
+            }
         }
 
         [ServerRpc(RequireOwnership = false)]
