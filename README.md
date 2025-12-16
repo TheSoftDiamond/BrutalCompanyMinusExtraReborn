@@ -516,6 +516,12 @@ Location: BrutalCompanyMinusExtraReborn\CoreProperties.cfg`
 
 `Experimental dont handle spawn chance`: Makes it so Brutal does not handle spawn curves, save for a few settings the user may want that interact with spawn curves.
 
+`Defer weather to weather toolkit mod`: Let's Weather Toolkit handle the setting of the weathers for Brutal's vanilla weather events. This has no effect on custom events.
+
+`Events reroll on dynamic interior`: Currently only supports Zeranos moon, but allows events to reroll on every interior change on the moon.
+
+`Let Brutal handle the SCAN command?`: Let's Brutal handle the scan command so that events can display the correct scrap values with respect to scrap value modifiers.
+
 ## Difficulty Config 
 Location: `BrutalCompanyMinusExtraReborn\Difficulty_Settings.cfg`
 
