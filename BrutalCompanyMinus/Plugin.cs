@@ -11,7 +11,7 @@ using static BrutalCompanyMinus.Configuration;
 
 namespace BrutalCompanyMinus
 {
-    [BepInDependency("ShipInventory", BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency("org.lethalcompanymodding.shipinventoryupdated", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("FlipMods.HotbarPlus", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("mrov.WeatherRegistry", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("voxx.LethalElementsPlugin", BepInDependency.DependencyFlags.SoftDependency)]
@@ -26,7 +26,7 @@ namespace BrutalCompanyMinus
     {
         private const string GUID = "SoftDiamond.BrutalCompanyMinusExtraReborn";
         private const string NAME = "BrutalCompanyMinusExtraReborn";
-        private const string VERSION = "1.27.1";
+        private const string VERSION = "1.28.0";
 
         internal static Plugin Instance { get; private set; }
 
