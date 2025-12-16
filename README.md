@@ -11,6 +11,7 @@ BCMER has a website! You can find it at [https://bcmer.softdiamond.net/](https:/
   - KanoliAvali, for their contribution and help with testing.
   - Zehs, for their contributions and major code optimizations.
   - Jayce, for testing and pointing out some feature ideas and optimizations.
+  - mr.hat, for helping me find several bugs in the code.
 
 </details>
 
@@ -20,7 +21,7 @@ BCMER has a website! You can find it at [https://bcmer.softdiamond.net/](https:/
 - Highly customizable! Nearly everything can be configured.
 - Modded event support when said mods installed.
 - Supports custom events that can be created as json files
-- Supports external event injection (COMING SOON)
+- (Planned) Supports external event injection and features
 
 ## Mod Compatibility and Recommended Mods
 <details>
@@ -48,7 +49,7 @@ The levels of compatibility are color coded to represent the level of compatibil
 | [GeneralImprovements](https://thunderstore.io/c/lethal-company/p/ShaosilGaming/GeneralImprovements/) | 🟠 (Partial) | Intro skip feature from GeneralImprovements causes issues with BCMER |
 | [YesFox](https://thunderstore.io/c/lethal-company/p/Dev1A3/YesFox/) | 🟣 (Planned) | May require additional patching. Currently the Kidnapper Fox only spawns if natural spawn conditions exist. |
 | [VeryLateCompany](https://thunderstore.io/c/lethal-company/p/McBowie/VeryLateCompany/) | 🟠 (Partial) | Some events may not work as expected. Expect potential desyncs. |
-| [Late Company](https://thunderstore.io/c/lethal-company/p/anormaltwig/LateCompany/) | 🟢 (Compatible) | Works perfectly fine. At worst, potentially not recieving event UI until ship lever is pulled. |
+| [Lobby Control](https://thunderstore.io/c/lethal-company/p/mattymatty/LobbyControl/) | 🟢 (Compatible) | Works perfectly fine. At worst, potentially not recieving event UI until ship lever is pulled. |
 | [WeatherRegistry](https://thunderstore.io/c/lethal-company/p/mrov/WeatherRegistry/) | 🟢 (Compatible) | Custom Weathers can be used inside Custom Events. |
 | [Combined Weathers Toolkit](https://thunderstore.io/c/lethal-company/p/Zigzag/Combined_Weathers_Toolkit/) | 🟢 (Compatible) | Registered via WeatherRegistry for weathers, and these themselves can be used in Custom Events. |
 | [DawnLib](https://thunderstore.io/c/lethal-company/p/TeamXiaolan/DawnLib/) | 🟣 (Planned) | Support for Hazards is to be done sometime in the future. |
