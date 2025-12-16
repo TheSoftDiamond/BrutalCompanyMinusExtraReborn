@@ -37,11 +37,20 @@ namespace BrutalCompanyMinus.Minus.Handlers.Modded
             }
         }
 
-        public static bool GenerateBrutalEvents()
-        {  
-            SelectableLevel newLevel = new SelectableLevel();
-            EventManager.ModifyLevel(ref newLevel);
-            return true;
+        public static void GenerateBrutalEvents()
+        {
+            if (Configuration.enableNewEventOnNewLoad.Value)
+            {
+                try
+                {
+                    SelectableLevel newLevel = Manager.currentLevel;
+                    EventManager.ModifyLevel(ref newLevel);
+                }
+                catch (Exception e)
+                {
+                    Log.LogError($"Error occurred with GenerateBrutalEvents: {e}");
+                }
+            }
         }
     }
 }
