@@ -49,7 +49,6 @@ namespace BrutalCompanyMinus.Minus
             new Events.MoreExits(),
             new Events.DoorOverdriveEv(),
             new Events.ZedDog(),
-            new Events.ZombiePlush(),
             // Neutral
             new Events.Nothing(),
             new Events.Locusts(),
@@ -100,6 +99,7 @@ namespace BrutalCompanyMinus.Minus
             new Events.HolidaySeason(),
             new Events.TurretsEverywhere(),
             new Events.ItemChargerFailure(),
+            new Events.CruiserFailure(),
             new Events.TeleporterFailure(),
             new Events.TerminalFailure(),
             new Events.DoorFailure(),
@@ -107,14 +107,14 @@ namespace BrutalCompanyMinus.Minus
             new Events.ManualCameraFailure(),
             new Events.LeverFailure(),
             new Events.WelcomeToTheFactory(),
-            new Events.TargetingFailure(),
+            new Events.TargetingFailureEvent(),
             new Events.FlashLightsFailure(),
             new Events.JetpackFailure(),
             new Events.DoorCircuitFailure(),
             new Events.Meteors(),
-            new Events.Mimics(),
-            new Events.MobileTurrets(),
             new Events.AntiBounty(),
+            new Events.TargetingFailureEvent(),
+            new Events.TeleporterTraps(),
             // Very Bad
             new Events.Nutcracker(),
             new Events.KiwiBird(),// Requires Special Events
@@ -166,8 +166,9 @@ namespace BrutalCompanyMinus.Minus
             new Events.NoTurrets(),
             new Events.NoLandmines(),
             new Events.NoOldBird(),
-            new Events.NoMimics(),
-            new Events.NoButlers()
+            new Events.NoButlers(),
+            new Events.NoBirds(),
+            new Events.NoSpikeTraps(),
 
         };
 
@@ -186,6 +187,7 @@ namespace BrutalCompanyMinus.Minus
 
             //Good
             new Events.Dice(),
+            new Events.ZombiePlush(),
             new Events.Nemo(),
             new Events.HotBarMania(),
 
@@ -220,11 +222,13 @@ namespace BrutalCompanyMinus.Minus
             new Events.Barbers(),
             new Events.SCP939(),
             new Events.SCP682(),
+            new Events.Mimics(),
             new Events.SolarFlare(),
             new Events.Heatwave(),
             new Events.Windy(),
             new Events.MeteorShower(),
             new Events.Forsaken(),
+            new Events.MobileTurrets(),
 
             //Very Bad
             new Events.Mantitoil(),
@@ -261,6 +265,7 @@ namespace BrutalCompanyMinus.Minus
             new Events.NoImmortalSnails(),
             new Events.NoLockers(),
             new Events.NoShyGuy(),
+            new Events.NoMimics(),
             new Events.NoPeepers()
 
         };
@@ -279,6 +284,8 @@ namespace BrutalCompanyMinus.Minus
         internal static List<MEvent> forcedEvents = new List<MEvent>();
 
         internal static List<MEvent> allVeryGood = new List<MEvent>(), allGood = new List<MEvent>(), allNeutral = new List<MEvent>(), allBad = new List<MEvent>(), allVeryBad = new List<MEvent>(), allRemove = new List<MEvent>();
+
+        internal static List<MEvent> sideEvents = new List<MEvent>();
 
         //internal static List<CustomEvents> customEventsList = new List<CustomEvents>();
 
@@ -331,6 +338,7 @@ namespace BrutalCompanyMinus.Minus
         internal static List<MEvent> ChooseEvents(out List<MEvent> additionalEvents)
         {
             currentEvents.Clear();
+            sideEvents.Clear();
 
             List<MEvent> chosenEvents = new List<MEvent>();
             List<MEvent> eventsToChooseForm = new List<MEvent>();
@@ -399,6 +407,9 @@ namespace BrutalCompanyMinus.Minus
                 {
                     int index = eventsToSpawnWith.FindIndex(x => x.Name() == eventToSpawnWith);
                     if (index == -1) eventsToSpawnWith.Add(MEvent.GetEvent(eventToSpawnWith)); // If dosen't exist in list, add.
+                    index = sideEvents.FindIndex(x => x.Name() == eventToSpawnWith);
+                    if (index == -1) sideEvents.Add(MEvent.GetEvent(eventToSpawnWith)); // If dosen't exist in list, add.
+
                 }
             }
 
@@ -464,6 +475,14 @@ namespace BrutalCompanyMinus.Minus
         internal static void ExecuteOnGameStart()
         {
             Log.LogInfo("Executing OnGameStart for all events()");
+            if (currentEvents != null)
+            {
+                currentEvents.Clear(); // sanity check
+            }
+            if (sideEvents != null)
+            {
+                sideEvents.Clear(); // sanity check
+            }
             foreach (MEvent e in events)
             {
                 e.OnGameStart();
@@ -781,7 +800,6 @@ namespace BrutalCompanyMinus.Minus
             foreach (Keyframe key in newLevel.outsideEnemySpawnChanceThroughDay.keys) Log.LogInfo($"Time:{key.time} + $Value:{key.value}");
             Log.LogInfo("Daytime Spawn Curve");
             foreach (Keyframe key in newLevel.daytimeEnemySpawnChanceThroughDay.keys) Log.LogInfo($"Time:{key.time} + $Value:{key.value}");
-
             /*Log.LogInfo("All Known Custom Weathers: ");
             foreach (var weather in WeatherManager.Weathers)
             {
