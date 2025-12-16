@@ -244,7 +244,7 @@ namespace BrutalCompanyMinus
             PlaytimePresent = IsModPresent("Nuclear_Fox.LethalPlaytime", "Lethal Playtime Detected");
             CrittersPresent = IsModPresent("Nuclear_Fox.SmilingCritters", "Critters Present");
             NeedyCatsPresent = IsModPresent("Jordo.NeedyCats", "Needy Cats Detected");
-            ShipInventoryPresent = IsModPresent("ShipInventory", "Ship Inventory Detected. Including in inventory checks");
+            ShipInventoryPresent = IsModPresent("org.lethalcompanymodding.shipinventoryupdated", "Ship Inventory Detected. Including in inventory checks");
             HotBarPlusPresent = IsModPresent("FlipMods.HotbarPlus", "HotBarPlus Detected.");
             yesFoxPresent = IsModPresent("uk.1a3.yesfox", "Yes Fox Detected");
             soulDevPresent = IsModPresent("SoulDev", "Soul Dev Detected");
