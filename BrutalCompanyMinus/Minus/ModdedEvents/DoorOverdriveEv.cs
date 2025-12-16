@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using BrutalCompanyMinus.Minus.MonoBehaviours;
 using Unity.Netcode;
+using UnityEngine;
 
 namespace BrutalCompanyMinus.Minus.Events
 {
@@ -9,13 +11,11 @@ namespace BrutalCompanyMinus.Minus.Events
 
         public static DoorOverdriveEv Instance;
 
-        public static Unity.Netcode.NetworkVariable<bool> DoorOvUnityNet = new NetworkVariable<bool> { Value = false };
-
         public override void Initalize()
         {
             Instance = this;
 
-            Weight = 2; //7
+            Weight = 2;
             Descriptions = new List<string>() { "Door system: OVERDRIVE", "Door overdrive" };
             ColorHex = "#008000";
             Type = EventType.Good;
@@ -23,36 +23,19 @@ namespace BrutalCompanyMinus.Minus.Events
             EventsToRemove = new List<string>() { nameof(DoorFailure), nameof(ShipCoreFailure) };
         }
 
-        public override bool AddEventIfOnly()
-        {
-            if (Compatibility.crowdControlPresent == true)
-            {
-                return false;
-            }
-            else if (Compatibility.crowdControlPresent != true)
-            {
-                return true;
-            }
-            return false;
-        }
-
         public override void Execute()
         {
-            if (NetworkManager.Singleton.IsHost)
-            {
-                Net.Instance.SetDoorOvUnityNetServerRpc(true);
-            }
+            Active = true;
+            GameObject netObject = new GameObject("DoorOverdriveEvEvent");
+            netObject.AddComponent<DoorOverDriveNet>();
         }
         public override void OnShipLeave() //Patch to reset the network int value
         {
-            if (NetworkManager.Singleton.IsHost)
-            {
-                Net.Instance.SetDoorOvUnityNetServerRpc(false);
-            }
+            Active = false;
         }
         public override void OnGameStart() //Patch to reset the network int value
         {
-            DoorOvUnityNet.Value = false; //Using Net throws an error, also there is no need to network this
+            Active = false;
         }
     }
 }

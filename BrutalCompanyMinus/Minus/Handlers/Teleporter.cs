@@ -3,7 +3,8 @@ using UnityEngine;
 using GameNetcodeStuff;
 using System.Linq;
 using static BrutalCompanyMinus.Minus.Events.TeleporterFailure;
-using static BrutalCompanyMinus.Minus.Events.TargetingFailure;
+using static BrutalCompanyMinus.Minus.Events.TargetingFailureEvent;
+using BrutalCompanyMinus.Minus.Events;
 
 
 namespace BrutalCompanyMinus.Minus.Handlers
@@ -15,7 +16,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
         [HarmonyPatch("PressTeleportButtonOnLocalClient")]
         private static bool InterruptPressTeleportButton(ShipTeleporter __instance)
         {
-            if (TeleporterUnityNet.Value == true)
+            if (Events.TeleporterFailure.Instance.Active)
             {
                 __instance.buttonAnimator.SetTrigger("press");
                 __instance.buttonAudio.PlayOneShot(__instance.buttonPressSFX);
@@ -30,7 +31,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
         [HarmonyPatch("PressTeleportButtonOnLocalClient")]
         private static void RandomizePressTeleportButton()
         {
-            if (TargetingUnityNet.Value == true)
+            if (Events.TargetingFailureEvent.Instance.Active)
             {
                 PlayerControllerB[] players = GameObject
                     .FindObjectsByType<PlayerControllerB>(FindObjectsSortMode.None)

@@ -11,7 +11,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
         [HarmonyPatch("PullLever")]
         private static bool InterruptPullLever(StartMatchLever __instance)
         {
-            if (LeverUnityNet.Value == true && EventManager.currentEvents.Contains(ShipCoreFailure.Instance))
+            if (EventManager.sideEvents.Contains(LeverFailure.Instance))
             {
                 HUDManager.Instance.globalNotificationText.text =
                     "SHIP CORE DEPLETION:\nAWAIT 12AM EMERGENCY AUTOPILOT";
@@ -25,7 +25,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
                 return false;
 
             }
-            else if (LeverUnityNet.Value == true)
+            else if (Events.LeverFailure.Instance.Active)
             {
                 HUDManager.Instance.globalNotificationText.text =
                     "SHIP LEVER HYDRAULICS JAM:\nAWAIT 12AM EMERGENCY AUTOPILOT";

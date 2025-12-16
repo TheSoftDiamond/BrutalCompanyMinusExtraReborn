@@ -48,7 +48,7 @@ namespace BrutalCompanyMinus.Minus.Events
             GameObject flashlightObject = new GameObject("FlashlightsFailureObject");
 
             // Add the FlashlightItemChargerPatches component to the GameObject
-            flashlightObject.AddComponent<FlashlightItemChargerPatches>();
+            flashlightObject.AddComponent<FlashlightItemsNet>();
         }
         public override void OnShipLeave()
         {

@@ -19,8 +19,6 @@ namespace BrutalCompanyMinus.Minus.Events
 
         public static TimeChaos Instance;
 
-        public static bool Active = false;
-
         public static float timeMultiplier;
 
         public override void Initalize()
@@ -48,7 +46,7 @@ namespace BrutalCompanyMinus.Minus.Events
             // Create the Time Chaos Event
             GameObject netObject = new GameObject("TimeChaosEvent");
             //Add the TimeChaosEvent component to it
-            netObject.AddComponent<TimeChaosEvent>();
+            netObject.AddComponent<TimeChaosNet>();
         }
 
         public override void OnShipLeave()

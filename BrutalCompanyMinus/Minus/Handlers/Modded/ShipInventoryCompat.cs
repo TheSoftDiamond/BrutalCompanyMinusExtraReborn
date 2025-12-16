@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using ShipInventory.Extensions;
+using ShipInventoryUpdated.Objects;
 
 namespace BrutalCompanyMinus.Minus.Handlers.Modded
 {
@@ -14,14 +14,15 @@ namespace BrutalCompanyMinus.Minus.Handlers.Modded
                 int siCount = 0;
 
                 //Getting inventory from ship inventory
-                foreach (ShipInventory.Items.ItemData data in ShipInventory.Items.ItemManager.GetItems())
+                foreach (ItemData data in ShipInventoryUpdated.Scripts.Inventory.Items)
                 {
-                    Item item = data.GetItem();
-                    if (item.isScrap)
+                    Item? item = data.GetItem();
+                    if (item != null && item.isScrap)
                     {
                         siCount += data.SCRAP_VALUE;
                     }
                 }
+
                 return siCount;
             }
             catch (Exception)

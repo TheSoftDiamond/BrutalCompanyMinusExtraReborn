@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using BrutalCompanyMinus.Minus.Events;
+using HarmonyLib;
 using static BrutalCompanyMinus.Minus.Events.DoorOverdriveEv;
 
 namespace BrutalCompanyMinus.Minus.Handlers
@@ -10,7 +11,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
         [HarmonyPatch("Update")]
         private static void OverwriteDoorPower(HangarShipDoor __instance)
         {
-            if (DoorOvUnityNet.Value == true)
+            if (Events.DoorOverdriveEv.Instance.Active)
             { 
                 __instance.doorPower = 1f;
                 __instance.buttonsEnabled = true;

@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using BrutalCompanyMinus.Minus.Events;
+using HarmonyLib;
 using UnityEngine;
 using static BrutalCompanyMinus.Minus.Events.ManualCameraFailure;
 
@@ -11,7 +12,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
         [HarmonyPatch("SwitchScreenButton")]
         private static bool InterruptSwitchScreenButton(ManualCameraRenderer __instance)
         {
-            if (CameraUnityNet.Value == true)
+            if (Events.ManualCameraFailure.Instance.Active)
             {
                 __instance.offScreenMat.color = Color.black;
                 return false;
@@ -23,7 +24,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
         [HarmonyPatch("SwitchRadarTargetClientRpc")]
         private static bool InterruptSwitchCameraView(ManualCameraRenderer __instance)
         {
-            if (CameraUnityNet.Value == true)
+            if (Events.ManualCameraFailure.Instance.Active)
             {   __instance.offScreenMat.color = Color.black;
                 __instance.currentCameraDisabled = true;
                 return false;

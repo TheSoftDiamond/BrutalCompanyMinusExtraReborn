@@ -2,6 +2,7 @@
 using UnityEngine;
 using static BrutalCompanyMinus.Minus.Events.DoorFailure;
 using static BrutalCompanyMinus.Minus.Events.DoorCircuitFailure;
+using BrutalCompanyMinus.Minus.Events;
 
 namespace BrutalCompanyMinus.Minus.Handlers
 {
@@ -14,7 +15,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
         [HarmonyPatch("Update")]
         private static void OverwriteDoorPower(HangarShipDoor __instance)
         {
-            if (DoorUnityNet.Value == true)
+            if (Events.DoorFailure.Instance.Active)
             { 
                 __instance.doorPower = 0f;
                 __instance.SetDoorOpen();
@@ -28,7 +29,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
         [HarmonyPatch("Update")]
         private static void OverwriteDoorState(HangarShipDoor __instance)
         {
-            if (CircuitUnityNet.Value == true)
+            if (Events.DoorCircuitFailure.Instance.Active)
             {
                 if (/*TimeOfDay.Instance.hour == 4 | TimeOfDay.Instance.hour == 5 | TimeOfDay.Instance.hour == 6 | TimeOfDay.Instance.hour == 7 
                     | TimeOfDay.Instance.hour == 8 |*/ TimeOfDay.Instance.hour == 9 | TimeOfDay.Instance.hour == 10 | TimeOfDay.Instance.hour == 11 

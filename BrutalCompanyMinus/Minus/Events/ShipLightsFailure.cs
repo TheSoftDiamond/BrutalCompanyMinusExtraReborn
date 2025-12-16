@@ -3,6 +3,7 @@ using Unity.Netcode;
 using UnityEngine;
 using HarmonyLib;
 using BrutalCompanyMinus.Minus.Handlers;
+using BrutalCompanyMinus.Minus.MonoBehaviours;
 
 namespace BrutalCompanyMinus.Minus.Events
 {
@@ -26,6 +27,9 @@ namespace BrutalCompanyMinus.Minus.Events
         public override void Execute()
         {
             Net.Instance.LightsOffServerRpc();
+            Active = true;
+            GameObject netObject = new GameObject("ShipLightsFailureEvent");
+            netObject.AddComponent<ShipLightsFailureNet>();
         }
 
         public override void OnShipLeave()

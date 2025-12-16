@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using BrutalCompanyMinus.Minus.MonoBehaviours;
 using Unity.Netcode;
+using UnityEngine;
 
 namespace BrutalCompanyMinus.Minus.Events
 {
@@ -8,8 +10,6 @@ namespace BrutalCompanyMinus.Minus.Events
         public override string Name() => nameof(ManualCameraFailure);
 
         public static ManualCameraFailure Instance;
-
-        public static Unity.Netcode.NetworkVariable<bool> CameraUnityNet = new NetworkVariable<bool> { Value = false };
 
         public override void Initalize()
         {
@@ -23,21 +23,17 @@ namespace BrutalCompanyMinus.Minus.Events
 
         public override void Execute()
         {
-            if (NetworkManager.Singleton.IsHost)
-            {
-                Net.Instance.SetCameraUnityNetServerRpc(true);
-            }
+            Active = true;
+            GameObject netObject = new GameObject("ManualCameraFailureEvent");
+            netObject.AddComponent<ManualCameraFailureNet>();
         }
         public override void OnShipLeave()
         {
-            if (NetworkManager.Singleton.IsHost)
-            {
-                Net.Instance.SetCameraUnityNetServerRpc(false);
-            }
+            Active = false;
         }
         public override void OnGameStart()
         {
-            CameraUnityNet.Value = false; //Using Net throws an error, also there is no need to network this
+            Active = false;
         }
     }
 }

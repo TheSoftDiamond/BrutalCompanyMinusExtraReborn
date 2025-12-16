@@ -26,11 +26,8 @@ namespace BrutalCompanyMinus.Minus.Events
         {
             if (Compatibility.HotBarPlusPresent)
             {
-                // Resize the hotbar randomly
-                HotBarPlusCompat.ResizeHotbarRandomlySmall();
+                Net.Instance.ResizeHotbarRandomlySmallServerRpc();
             }
-
-            Net.Instance.ResizeHotbarRandomlySmallClientRpc();
         }
 
         public override void OnShipLeave()
@@ -38,10 +35,8 @@ namespace BrutalCompanyMinus.Minus.Events
             if (Compatibility.HotBarPlusPresent)
             {
                 // Reset the hotbar to the original size
-                HotBarPlusCompat.ResetHotbar();
+                Net.Instance.ResetHotbarServerRpc();
             }
-
-            Net.Instance.ResetHotbarClientRpc();
         }
     }
 }

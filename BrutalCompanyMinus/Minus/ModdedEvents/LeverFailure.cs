@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using BrutalCompanyMinus.Minus.MonoBehaviours;
 using Unity.Netcode;
+using UnityEngine;
 
 namespace BrutalCompanyMinus.Minus.Events
 {
@@ -8,8 +10,6 @@ namespace BrutalCompanyMinus.Minus.Events
         public override string Name() => nameof(LeverFailure);
 
         public static LeverFailure Instance;
-
-        public static Unity.Netcode.NetworkVariable<bool> LeverUnityNet = new NetworkVariable<bool> { Value = false };
 
         public override void Initalize()
         {
@@ -25,21 +25,17 @@ namespace BrutalCompanyMinus.Minus.Events
 
         public override void Execute()
         {
-            if (NetworkManager.Singleton.IsHost)
-            {
-                Net.Instance.SetLeverUnityNetServerRpc(true);
-            }
+            Active = true;
+            GameObject netObject = new GameObject("LeverEvent");
+            netObject.AddComponent<LeverNet>();
         }
         public override void OnShipLeave()
         {
-            if (NetworkManager.Singleton.IsHost)
-            {
-                Net.Instance.SetLeverUnityNetServerRpc(false);
-            }
+            Active = false;
         }
         public override void OnGameStart()
         {
-            LeverUnityNet.Value = false; //Using Net throws an error, also there is no need to network this
+            Active = false;
         }
     }
 }

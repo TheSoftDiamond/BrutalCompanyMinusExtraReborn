@@ -16,7 +16,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
         [HarmonyPatch("Update")]
         private static void TurretsHellMode(Turret __instance)
         {
-            if (Events.BerserkTurrets.Active)
+            if (Events.BerserkTurrets.Instance.Active)
             {
                 __instance.turretMode = TurretMode.Berserk;
             }

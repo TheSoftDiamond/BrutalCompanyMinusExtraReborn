@@ -121,6 +121,7 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
         public int setHp = 5;
         public int Lives = 4;
         public bool Immortal = false;
+        public bool onlyPlayers = false;
 
 #pragma warning restore 0649
 
@@ -141,6 +142,7 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
             setHp = Configuration.nutSlayerHp.Value;
             Lives = Configuration.nutSlayerLives.Value;
             Immortal = Configuration.nutSlayerImmortal.Value;
+            onlyPlayers = Configuration.onlyPlayersAttackSlayer.Value;
             enemyType.canDie = !Immortal;
 
             enemyHP = setHp;
@@ -951,6 +953,10 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
         public override void HitEnemy(int force = 1, PlayerControllerB playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
         {
             if (Immortal) return;
+            if (onlyPlayers)
+            {
+                if (playerWhoHit == null) return;
+            }
             base.HitEnemy(force, playerWhoHit, playHitSFX);
             if (!isEnemyDead)
             {

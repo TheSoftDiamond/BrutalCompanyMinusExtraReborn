@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using BrutalCompanyMinus.Minus.MonoBehaviours;
 using Unity.Netcode;
+using UnityEngine;
 
 namespace BrutalCompanyMinus.Minus.Events
 {
@@ -9,13 +11,11 @@ namespace BrutalCompanyMinus.Minus.Events
 
         public static TerminalFailure Instance;
 
-        public static Unity.Netcode.NetworkVariable<bool> TerminalUnityNet = new NetworkVariable<bool> { Value = false };
-
         public override void Initalize()
         {
             Instance = this;
 
-            Weight = 4; //7
+            Weight = 4;
             Descriptions = new List<string>() { "Terminal Error", "Terminal console: OFFLINE" };
             ColorHex = "#FF0000";
             Type = EventType.Bad;
@@ -23,22 +23,17 @@ namespace BrutalCompanyMinus.Minus.Events
 
         public override void Execute()
         {
-            if (NetworkManager.Singleton.IsHost)
-            {
-                Net.Instance.SetTerminalUnityNetServerRpc(true);
-            }
-            
+            Active = true;
+            GameObject netObject = new GameObject("TerminalFailureEvent");
+            netObject.AddComponent<TerminalFailureNet>();
         }
         public override void OnShipLeave()
         {
-            if (NetworkManager.Singleton.IsHost)
-            {
-                Net.Instance.SetTerminalUnityNetServerRpc(false);
-            }
+            Active = false;
         }
         public override void OnGameStart()
         {
-            TerminalUnityNet.Value = false; //Using Net throws an error, also there is no need to network this
+            Active = false;
         }
     }
 }

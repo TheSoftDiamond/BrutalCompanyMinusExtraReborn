@@ -19,7 +19,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
         private static bool InterruptChargeItem()
         {
             // Interrupt the charger if a power malfunction has triggered.
-            if (/*ItemChargerNet.Value == 0*/ItemChargerUnityNet.Value == true)
+            if (Events.ItemChargerFailure.Instance.Active)
             {
                 HUDManager.Instance.globalNotificationText.text =
                 "CHARGING STATION FAILURE:\nINSUFFICIENT POWER";

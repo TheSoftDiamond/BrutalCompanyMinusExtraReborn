@@ -25,8 +25,6 @@ namespace BrutalCompanyMinus.Minus.Events
 
         public static TrapsFailure Instance;
 
-        public static bool Active = false;
-
         public override void Initalize()
         {
             Instance = this;
@@ -41,7 +39,8 @@ namespace BrutalCompanyMinus.Minus.Events
 
         public override void Execute()
         {
-            Active = true;
+            GameObject netObject = new GameObject("TrapsFailureEvent");
+            netObject.AddComponent<TrapsFailureNet>();
         }
         public override void OnShipLeave()
         {
@@ -62,7 +61,7 @@ namespace BrutalCompanyMinus.Minus.Events
         public static bool InterruptLandmine()
         {
             // Interrupt the charger method  
-            if (Events.TrapsFailure.Active)
+            if (Events.TrapsFailure.Instance.Active)
             {
                 return false;
             }
@@ -74,7 +73,7 @@ namespace BrutalCompanyMinus.Minus.Events
         public static bool InterruptLandmineOther()
         {
             // Interrupt the charger method  
-            if (Events.TrapsFailure.Active)
+            if (Events.TrapsFailure.Instance.Active)
             {
                 return false;
             }
@@ -86,7 +85,7 @@ namespace BrutalCompanyMinus.Minus.Events
         public static bool InterruptLandmineExit()
         {
             // Interrupt the charger method  
-            if (Events.TrapsFailure.Active)
+            if (Events.TrapsFailure.Instance.Active)
             {
                 return false;
             }
@@ -98,7 +97,7 @@ namespace BrutalCompanyMinus.Minus.Events
         public static bool InterruptLandmineAttack()
         {
             // Interrupt the charger method  
-            if (Events.TrapsFailure.Active)
+            if (Events.TrapsFailure.Instance.Active)
             {
                 return false;
             }
@@ -110,7 +109,7 @@ namespace BrutalCompanyMinus.Minus.Events
         public static bool InterruptTurret()
         {
             // Interrupt the charger method  
-            if (Events.TrapsFailure.Active)
+            if (Events.TrapsFailure.Instance.Active)
             {
                 return false;
             }
@@ -122,7 +121,7 @@ namespace BrutalCompanyMinus.Minus.Events
         public static bool InterruptSpikeRoofTrap()
         {
             // Interrupt the charger method  
-            if (Events.TrapsFailure.Active)
+            if (Events.TrapsFailure.Instance.Active)
             {
 
                 return false;

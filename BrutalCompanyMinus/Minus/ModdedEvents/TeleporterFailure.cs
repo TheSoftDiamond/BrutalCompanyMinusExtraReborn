@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using BrutalCompanyMinus.Minus.MonoBehaviours;
 using Unity.Netcode;
+using UnityEngine;
 
 namespace BrutalCompanyMinus.Minus.Events
 {
@@ -8,8 +10,6 @@ namespace BrutalCompanyMinus.Minus.Events
         public override string Name() => nameof(TeleporterFailure);
 
         public static TeleporterFailure Instance;
-
-        public static Unity.Netcode.NetworkVariable<bool> TeleporterUnityNet = new NetworkVariable<bool> { Value = false };
 
         public override void Initalize()
         {
@@ -20,26 +20,22 @@ namespace BrutalCompanyMinus.Minus.Events
             ColorHex = "#FF0000";
             Type = EventType.Bad;
 
-            EventsToRemove = new List<string>() { nameof(TargetingFailure) };
+            EventsToRemove = new List<string>() { nameof(TargetingFailureEvent) };
         }
 
         public override void Execute()
         {
-            if (NetworkManager.Singleton.IsHost)
-            {
-                Net.Instance.SetTeleporterUnityNetServerRpc(true);
-            }
+            Active = true;
+            GameObject netObject = new GameObject("TeleporterFailureEvent");
+            netObject.AddComponent<TeleporterFailureNet>();
         }
         public override void OnShipLeave()
         {
-            if (NetworkManager.Singleton.IsHost)
-            {
-                Net.Instance.SetTeleporterUnityNetServerRpc(false);
-            }
+            Active = false;
         }
         public override void OnGameStart()
         {
-            TeleporterUnityNet.Value = false; //Using Net throws an error, also there is no need to network this
+            Active = false;
         }
     }
 }

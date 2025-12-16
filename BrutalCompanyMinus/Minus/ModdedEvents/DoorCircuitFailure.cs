@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using BrutalCompanyMinus.Minus.MonoBehaviours;
 using Unity.Netcode;
+using UnityEngine;
 
 namespace BrutalCompanyMinus.Minus.Events
 {
@@ -8,8 +10,6 @@ namespace BrutalCompanyMinus.Minus.Events
         public override string Name() => nameof(DoorCircuitFailure);
 
         public static DoorCircuitFailure Instance;
-
-        public static Unity.Netcode.NetworkVariable<bool> CircuitUnityNet = new NetworkVariable<bool> { Value = false };
 
         public override void Initalize()
         {
@@ -38,21 +38,17 @@ namespace BrutalCompanyMinus.Minus.Events
 
         public override void Execute()
         {
-            if (NetworkManager.Singleton.IsHost)
-            {
-                Net.Instance.SetCircuitUnityNetServerRpc(true);
-            }
+            Active = true;
+            GameObject netObject = new GameObject("DoorCircuitFailureEvent");
+            netObject.AddComponent<DoorCircuitFailureNet>();
         }
         public override void OnShipLeave() //Patch to reset the network int value
         {
-            if (NetworkManager.Singleton.IsHost)
-            {
-                Net.Instance.SetCircuitUnityNetServerRpc(false);
-            }
+            Active = false;
         }
         public override void OnGameStart() //Patch to reset the network int value
         {
-            CircuitUnityNet.Value = false; //Using Net throws an error, also there is no need to network this
+            Active = false;
         }
     }
 }

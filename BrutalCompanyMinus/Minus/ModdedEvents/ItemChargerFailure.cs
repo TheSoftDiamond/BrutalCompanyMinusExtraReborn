@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using BrutalCompanyMinus.Minus.MonoBehaviours;
 using Unity.Netcode;
+using UnityEngine;
 
 namespace BrutalCompanyMinus.Minus.Events
 {
@@ -9,7 +11,6 @@ namespace BrutalCompanyMinus.Minus.Events
 
         public static ItemChargerFailure Instance;
 
-        public static Unity.Netcode.NetworkVariable<bool> ItemChargerUnityNet = new NetworkVariable<bool> { Value = false };
         public override void Initalize()
         {
             Instance = this;
@@ -24,22 +25,18 @@ namespace BrutalCompanyMinus.Minus.Events
 
         public override void Execute()
         {
-            if (NetworkManager.Singleton.IsHost)
-            {
-                Net.Instance.SetItemChargerUnityNetServerRpc(true);
-            }
+            Active = false;
+            GameObject netObject = new GameObject("ItemChargerFailureEvent");
+            netObject.AddComponent<ItemChargerFailureNet>();
         }
         public override void OnShipLeave() //Patch to reset the network int value
         {
-            if (NetworkManager.Singleton.IsHost)
-            {
-                Net.Instance.SetItemChargerUnityNetServerRpc(false);
-            }
+            Active = false;
         }
 
         public override void OnGameStart() //Patch to reset the network int value
         {
-            ItemChargerUnityNet.Value = false; //Using Net throws an error, also there is no need to network this
+            Active = false;
         }
     }
 }

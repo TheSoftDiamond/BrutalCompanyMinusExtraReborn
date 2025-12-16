@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using BrutalCompanyMinus.Minus.Events;
+using HarmonyLib;
 using static BrutalCompanyMinus.Minus.Events.JetpackFailure;
 
 namespace BrutalCompanyMinus.Minus.Handlers
@@ -10,7 +11,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
         [HarmonyPatch("Update")]
         private static void PreventItemActivation(JetpackItem __instance)
         {
-            if (JetpackUnityNet.Value == true)
+            if (Events.JetpackFailure.Instance.Active)
             {
                 __instance.insertedBattery.empty = true;
             }

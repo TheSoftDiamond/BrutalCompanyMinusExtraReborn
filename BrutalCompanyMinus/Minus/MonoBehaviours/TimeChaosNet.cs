@@ -12,9 +12,9 @@ using System.Collections;
 namespace BrutalCompanyMinus.Minus.MonoBehaviours
 {
     [HarmonyPatch]
-    internal class TimeChaosEvent : NetworkBehaviour 
+    internal class TimeChaosNet : NetworkBehaviour 
     {
-        public static TimeChaosEvent instance;
+        public static TimeChaosNet instance;
 
         public void Awake()
         {
@@ -23,7 +23,7 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
         }
         public void Update()
         {
-            if (!TimeChaos.Active) return;
+            if (!TimeChaos.Instance.Active) return;
 
             // Set the time scale
             try
@@ -40,7 +40,7 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
 
         public static void DestroyTimeInstance() // This handles the deletion of Time Chaosness
         {
-            Events.TimeChaos.Active = false;
+            Events.TimeChaos.Instance.Active = false;
             TimeOfDay.Instance.globalTimeSpeedMultiplier = 1.0f;
             GameObject netObject = GameObject.Find("TimeChaosEvent");
             if (netObject != null)

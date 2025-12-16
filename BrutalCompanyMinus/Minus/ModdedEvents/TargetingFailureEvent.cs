@@ -1,15 +1,15 @@
 ﻿using System.Collections.Generic;
+using BrutalCompanyMinus.Minus.MonoBehaviours;
 using Unity.Netcode;
+using UnityEngine;
 
 namespace BrutalCompanyMinus.Minus.Events
 {
-    internal class TargetingFailure : MEvent
+    internal class TargetingFailureEvent : MEvent
     {
-        public override string Name() => nameof(TargetingFailure);
+        public override string Name() => nameof(TargetingFailureEvent);
 
-        public static TargetingFailure Instance;
-
-        public static Unity.Netcode.NetworkVariable<bool> TargetingUnityNet = new NetworkVariable<bool> { Value = false };
+        public static TargetingFailureEvent Instance;
 
         public override void Initalize()
         {
@@ -25,21 +25,17 @@ namespace BrutalCompanyMinus.Minus.Events
 
         public override void Execute()
         {
-            if (NetworkManager.Singleton.IsHost)
-            {
-                Net.Instance.SetTargetingUnityNetServerRpc(true);
-            }
+            Active = true;
+            GameObject netObject = new GameObject("TargetingFailureEvent");
+            netObject.AddComponent<TargetingFailureNet>();
         }
         public override void OnShipLeave()
         {
-            if (NetworkManager.Singleton.IsHost)
-            {
-                Net.Instance.SetTargetingUnityNetServerRpc(false);
-            }
+            Active = false;
         }
         public override void OnGameStart()
         {
-            TargetingUnityNet.Value = false; //Using Net throws an error, also there is no need to network this
+            Active = false;
         }
     }
 }

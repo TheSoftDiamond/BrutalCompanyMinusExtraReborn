@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using BrutalCompanyMinus.Minus.MonoBehaviours;
 using Unity.Netcode;
+using UnityEngine;
 
 namespace BrutalCompanyMinus.Minus.Events
 {
@@ -8,8 +10,6 @@ namespace BrutalCompanyMinus.Minus.Events
         public override string Name() => nameof(JetpackFailure);
 
         public static JetpackFailure Instance;
-
-        public static Unity.Netcode.NetworkVariable<bool> JetpackUnityNet = new NetworkVariable<bool> { Value = false };
 
         public override void Initalize()
         {
@@ -23,21 +23,17 @@ namespace BrutalCompanyMinus.Minus.Events
 
         public override void Execute()
         {
-            if (NetworkManager.Singleton.IsHost)
-            {
-                Net.Instance.SetJetpackUnityNetServerRpc(true);
-            }
+            Active = true;
+            GameObject netObject = new GameObject("JetpackFailureEvent");
+            netObject.AddComponent<JetpackFailureNet>();
         }
         public override void OnShipLeave()
         {
-            if (NetworkManager.Singleton.IsHost)
-            {
-                Net.Instance.SetJetpackUnityNetServerRpc(false);
-            }
+            Active = false;
         }
         public override void OnGameStart()
         {
-            JetpackUnityNet.Value = false; //Using Net throws an error, also there is no need to network this
+            Active = false;
         }
     }
 }

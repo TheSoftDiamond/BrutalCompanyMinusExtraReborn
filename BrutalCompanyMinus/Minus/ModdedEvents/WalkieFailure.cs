@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using BrutalCompanyMinus.Minus.MonoBehaviours;
 using Unity.Netcode;
+using UnityEngine;
 
 namespace BrutalCompanyMinus.Minus.Events
 {
@@ -8,8 +10,6 @@ namespace BrutalCompanyMinus.Minus.Events
         public override string Name() => nameof(WalkieFailure);
 
         public static WalkieFailure Instance;
-
-        public static Unity.Netcode.NetworkVariable<bool> WalkiesUnityNet = new NetworkVariable<bool> { Value = false };
 
         public override void Initalize()
         {
@@ -23,21 +23,17 @@ namespace BrutalCompanyMinus.Minus.Events
 
         public override void Execute()
         {
-            if (NetworkManager.Singleton.IsHost)
-            {
-                Net.Instance.SetWalkiesUnityNetServerRpc(true);
-            }
+            Active = true;
+            GameObject netObject = new GameObject("WalkeFailureEvent");
+            netObject.AddComponent<WalkieFailureNet>();
         }
         public override void OnShipLeave() //Patch to reset the network int value
         {
-            if (NetworkManager.Singleton.IsHost)
-            {
-                Net.Instance.SetWalkiesUnityNetServerRpc(false);
-            }
+            Active = false;
         }
         public override void OnGameStart() //Patch to reset the network int value
         {
-            WalkiesUnityNet.Value = false; //Using Net throws an error, also there is no need to network this
+            Active = false;
         }
     }
 }

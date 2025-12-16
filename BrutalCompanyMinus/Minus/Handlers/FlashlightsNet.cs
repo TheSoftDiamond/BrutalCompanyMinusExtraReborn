@@ -14,12 +14,12 @@ using System.IO;
 
 namespace BrutalCompanyMinus.Minus.Handlers
 {
-    public class FlashlightItemChargerPatches : NetworkBehaviour
+    public class FlashlightItemsNet : NetworkBehaviour
     {
 
         // I literally tried several methods. This one isn't my favorite but... here we are.
         // I really hate this spaghetti code. May I find a better solution one day.
-        public static FlashlightItemChargerPatches instance;
+        public static FlashlightItemsNet instance;
         public void Awake()
         {
             if (instance != null) DestroyFlashlightFailure();

@@ -26,20 +26,16 @@ namespace BrutalCompanyMinus.Minus.Events
         {
             if (Compatibility.HotBarPlusPresent)
             {
-                HotBarPlusCompat.ResizeHotbarRandomly();
+                Net.Instance.ResizeHotbarRandomlyServerRpc();
             }
-
-            Net.Instance.ResizeHotbarRandomlyClientRpc();
         }
 
         public override void OnShipLeave()
         {
             if (Compatibility.HotBarPlusPresent)
             {
-                HotBarPlusCompat.ResetHotbar();
+                Net.Instance.ResetHotbarServerRpc();
             }
-
-            Net.Instance.ResetHotbarClientRpc();
         }
     }
 }
