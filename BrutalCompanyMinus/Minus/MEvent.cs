@@ -54,6 +54,8 @@ namespace BrutalCompanyMinus.Minus
 
         internal bool Executed = false;
 
+        internal bool Active = false;
+
         /// <summary>
         /// Set this in Initalize() to make monster event(s).
         /// </summary>
