@@ -489,9 +489,9 @@ namespace BrutalCompanyMinus.Minus.Handlers
                                 }
                             }
                         }
-                        {
-                            text += $"There are {itemCount} items outside the ship, totaling a total of {totalWorth} altogether.";
-                        }
+                        
+                        text += $"There are {itemCount} items outside the ship, totaling a total of {totalWorth} altogether.";
+                        
                         Respond(text);
                     }
                 })
@@ -537,38 +537,68 @@ namespace BrutalCompanyMinus.Minus.Handlers
         [HarmonyPatch(typeof(Terminal), "ParsePlayerSentence")]
         private static void OnParsePlayerSentence(ref Terminal __instance, ref TerminalNode __result)
         {
-            //if (!NetworkManager.Singleton.IsServer) return;  
-
-            string[] text = __instance.screenText.text[^__instance.textAdded..].Split(" ");
-            if (text.Length == 0) return;
-
-            string command = text[0].ToUpper();
-            string[] arguments = text[1..];
-
-            if (Configuration.handleScanCommand.Value && command.ToLower() == "scan") // Handle vanilla scan command
+            if (__instance == null || __instance.screenText == null)
             {
-                command = "mscan";
+                Log.LogError("Instance is null.");
+                return;
             }
 
-            foreach (MCommand mCommand in mCommands)
+            try
             {
-                if (mCommand.command.ToLower() != command.ToLower()) continue;
+                string[] text = __instance.screenText.text[^__instance.textAdded..].Split(" ");
+                if (text.Length == 0) return;
 
-                if (!NetworkManager.Singleton.IsServer && mCommand.tag.ToLower() == "server") // Only allow server commands on server
+                string command = text[0].ToUpper();
+                string[] arguments = text.Length > 1 ? text[1..] : Array.Empty<string>();
+
+                if (Configuration.ExtraLogging.Value)
                 {
-                    return;
+                    Log.LogDebug($"MCommand Detected: {command} with arguments: {string.Join(", ", arguments)}");
                 }
 
-                mCommand.execute(arguments);
+                if (Configuration.handleScanCommand.Value && command.ToLower() == "scan") // Handle vanilla scan command  
+                {
+                    command = "mscan";
+                }
+
+                foreach (MCommand mCommand in mCommands)
+                {
+                    Log.LogDebug($"Checking command: {mCommand.command}");
+                    if (!string.Equals(mCommand.command, command, StringComparison.OrdinalIgnoreCase)) continue;
+                    Log.LogDebug($"Command {mCommand.command} matched a valid mCommand.");
+
+                    if (!NetworkManager.Singleton.IsServer && string.Equals(mCommand.tag, "server", StringComparison.OrdinalIgnoreCase))
+                    {
+                        Log.LogDebug($"Command {mCommand.command} is a server-only command. Ignoring execution.");
+                        return;
+                    }
+
+                    try
+                    {
+                        mCommand.execute(arguments);
+                    }
+                    catch (Exception e)
+                    {
+                        Log.LogError($"An error occurred while executing command {mCommand.command}: {e}");
+                        Respond("An error occurred trying to process the command.");
+                    }
+
+                    Log.LogDebug($"Response: {response}");
+                }
+
+                if (response.IsNullOrWhiteSpace()) return;
+
+                __result = ScriptableObject.CreateInstance<TerminalNode>();
+                __result.displayText = response + "\n\n";
+                __result.clearPreviousText = _clearPreviousText;
+
+                response = "";
             }
-
-            if (response.IsNullOrWhiteSpace()) return;
-
-            __result = ScriptableObject.CreateInstance<TerminalNode>();
-            __result.displayText = response + "\n\n";
-            __result.clearPreviousText = _clearPreviousText;
-
-            response = "";
+            catch (Exception ex)
+            {
+                Log.LogError($"An error occurred while tryingt to process an mcommand {ex}");
+                Respond("An error occurred trying to process the command.");
+            }
         }
     }
 }
