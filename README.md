@@ -11,6 +11,7 @@ BCMER has a website! You can find it at [https://bcmer.softdiamond.net/](https:/
   - KanoliAvali, for their contribution and help with testing.
   - Zehs, for their contributions and major code optimizations.
   - Jayce, for testing and pointing out some feature ideas and optimizations.
+  - mr.hat, for helping me find several bugs in the code.
 
 </details>
 
@@ -20,7 +21,7 @@ BCMER has a website! You can find it at [https://bcmer.softdiamond.net/](https:/
 - Highly customizable! Nearly everything can be configured.
 - Modded event support when said mods installed.
 - Supports custom events that can be created as json files
-- Supports external event injection (COMING SOON)
+- (Planned) Supports external event injection and features
 
 ## Mod Compatibility and Recommended Mods
 <details>
@@ -48,9 +49,11 @@ The levels of compatibility are color coded to represent the level of compatibil
 | [GeneralImprovements](https://thunderstore.io/c/lethal-company/p/ShaosilGaming/GeneralImprovements/) | 🟠 (Partial) | Intro skip feature from GeneralImprovements causes issues with BCMER |
 | [YesFox](https://thunderstore.io/c/lethal-company/p/Dev1A3/YesFox/) | 🟣 (Planned) | May require additional patching. Currently the Kidnapper Fox only spawns if natural spawn conditions exist. |
 | [VeryLateCompany](https://thunderstore.io/c/lethal-company/p/McBowie/VeryLateCompany/) | 🟠 (Partial) | Some events may not work as expected. Expect potential desyncs. |
-| [Late Company](https://thunderstore.io/c/lethal-company/p/anormaltwig/LateCompany/) | 🟢 (Compatible) | Works perfectly fine. At worst, potentially not recieving event UI until ship lever is pulled. |
+| [Lobby Control](https://thunderstore.io/c/lethal-company/p/mattymatty/LobbyControl/) | 🟢 (Compatible) | Works perfectly fine. At worst, potentially not recieving event UI until ship lever is pulled. |
 | [WeatherRegistry](https://thunderstore.io/c/lethal-company/p/mrov/WeatherRegistry/) | 🟢 (Compatible) | Custom Weathers can be used inside Custom Events. |
 | [Combined Weathers Toolkit](https://thunderstore.io/c/lethal-company/p/Zigzag/Combined_Weathers_Toolkit/) | 🟢 (Compatible) | Registered via WeatherRegistry for weathers, and these themselves can be used in Custom Events. |
+| [DawnLib](https://thunderstore.io/c/lethal-company/p/TeamXiaolan/DawnLib/) | 🟣 (Planned) | Support for Hazards is to be done sometime in the future. |
+| [LunarConfig](https://thunderstore.io/c/lethal-company/p/Crafty/LunarConfig/) | 🟠 (Partial) | Some variables set may conflict or outright overwrite Brutal settings |
 
 </details>
 <details>
@@ -515,6 +518,12 @@ Location: BrutalCompanyMinusExtraReborn\CoreProperties.cfg`
 `Experimental dont handle power`: Makes it so Brutal does not handle power level settings, save for a few settings the user may want to use that affect power.
 
 `Experimental dont handle spawn chance`: Makes it so Brutal does not handle spawn curves, save for a few settings the user may want that interact with spawn curves.
+
+`Defer weather to weather toolkit mod`: Let's Weather Toolkit handle the setting of the weathers for Brutal's vanilla weather events. This has no effect on custom events.
+
+`Events reroll on dynamic interior`: Currently only supports Zeranos moon, but allows events to reroll on every interior change on the moon.
+
+`Let Brutal handle the SCAN command?`: Let's Brutal handle the scan command so that events can display the correct scrap values with respect to scrap value modifiers.
 
 ## Difficulty Config 
 Location: `BrutalCompanyMinusExtraReborn\Difficulty_Settings.cfg`
