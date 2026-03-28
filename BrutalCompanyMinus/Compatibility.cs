@@ -10,7 +10,7 @@ using static BrutalCompanyMinus.Minus.EventManager;
 namespace BrutalCompanyMinus
 {
     [HarmonyPatch]
-    internal class Compatibility
+    public class Compatibility
     {
         internal static bool yippeeModCompatibilityMode = false;
         internal static AudioClip[] yippeeNewSFX = null;
@@ -77,13 +77,13 @@ namespace BrutalCompanyMinus
             SCP939Present = false,
             SCP682Present = false,
             combinedWeatherToolKitPresent = false,
-            LethalElementsPresent = false;
-            
+            LethalElementsPresent = false,
+            DawnLibPresent = false;
 
 
 
         internal static FieldInfo peeperSpawnChance = null;
-        internal static NetworkVariable<int>[] mimicNetworkSpawnChances = null;
+        //internal static NetworkVariable<int>[] mimicNetworkSpawnChances = null;
 
         internal static MethodInfo cullOnTeleportLocalPlayer = null;
         internal static MethodInfo cullOnTeleportOtherPlayer = null;
@@ -135,6 +135,7 @@ namespace BrutalCompanyMinus
                 }
             }
 
+            /*
             Assembly mimicsAssembly = GetAssembly("x753.Mimics");
             if (mimicsAssembly != null)
             {
@@ -142,6 +143,7 @@ namespace BrutalCompanyMinus
 
                 Type mimicNetworker = mimicsAssembly.GetType("Mimics.MimicNetworker");
                 Type mimic = mimicsAssembly.GetType("Mimics.Mimics");
+
                 if (mimicNetworker != null && mimic != null)
                 {
                     mimicNetworkSpawnChances = new NetworkVariable<int>[6];
@@ -180,6 +182,7 @@ namespace BrutalCompanyMinus
                     }
                 }
             }
+            */
 
             Assembly cullFactoryAssembly = GetAssembly("com.fumiko.CullFactory");
             if(cullFactoryAssembly != null )
@@ -262,9 +265,10 @@ namespace BrutalCompanyMinus
             LegendWeathersPresent = IsModPresent("zigzag.legendweathers", "Legend Weathers Detected");
             EndlessElevatorPresent = IsModPresent("kite.ZelevatorCode", "Endless Elevator Detected");
             combinedWeatherToolKitPresent = IsModPresent("zigzag.combinedweatherstoolkit", "Combined Weathers Toolkit Detected");
+            DawnLibPresent = IsModPresent("TeamXiaolan.DawnLib", "Dawnlib Detected.");
         }
 
-        private static Assembly GetAssembly(string name)
+        public static Assembly GetAssembly(string name)
         {
             if(Chainloader.PluginInfos.ContainsKey(name))
             {
