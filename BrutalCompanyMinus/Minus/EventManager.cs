@@ -222,7 +222,7 @@ namespace BrutalCompanyMinus.Minus
             new Events.Barbers(),
             new Events.SCP939(),
             new Events.SCP682(),
-            new Events.Mimics(),
+            //new Events.Mimics(),
             new Events.SolarFlare(),
             new Events.Heatwave(),
             new Events.Windy(),
@@ -265,7 +265,7 @@ namespace BrutalCompanyMinus.Minus
             new Events.NoImmortalSnails(),
             new Events.NoLockers(),
             new Events.NoShyGuy(),
-            new Events.NoMimics(),
+            //new Events.NoMimics(),
             new Events.NoPeepers()
 
         };
@@ -800,12 +800,14 @@ namespace BrutalCompanyMinus.Minus
             foreach (Keyframe key in newLevel.outsideEnemySpawnChanceThroughDay.keys) Log.LogInfo($"Time:{key.time} + $Value:{key.value}");
             Log.LogInfo("Daytime Spawn Curve");
             foreach (Keyframe key in newLevel.daytimeEnemySpawnChanceThroughDay.keys) Log.LogInfo($"Time:{key.time} + $Value:{key.value}");
-            /*Log.LogInfo("All Known Custom Weathers: ");
+            /*
+            Log.LogInfo("All Known Custom Weathers: ");
             foreach (var weather in WeatherManager.Weathers)
             {
                 Log.LogInfo(weather.Name);
                 Log.LogInfo(weather);
-            } */
+            } 
+            */
 
         }
 
