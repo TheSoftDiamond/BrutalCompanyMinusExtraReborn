@@ -6,6 +6,7 @@ using System.Reflection.Emit;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
+using BrutalCompanyMinus.Minus.Handlers.CustomEvents;
 using BrutalCompanyMinus.Minus.Handlers.Modded;
 using HarmonyLib;
 using JetBrains.Annotations;
@@ -48,6 +49,19 @@ namespace BrutalCompanyMinus.Minus.Handlers
             RoundManager.Instance.currentLevel.Enemies.Clear(); RoundManager.Instance.currentLevel.Enemies.AddRange(insideEnemies);
             RoundManager.Instance.currentLevel.OutsideEnemies.Clear(); RoundManager.Instance.currentLevel.OutsideEnemies.AddRange(outsideEnemies);
             RoundManager.Instance.currentLevel.DaytimeEnemies.Clear(); RoundManager.Instance.currentLevel.DaytimeEnemies.AddRange(daytimeEnemies);
+
+            // Dawnlib registry restoration
+            if (Compatibility.DawnLibPresent)
+            {
+                try
+                {
+                    DawnLibPatches.OnEventEnd();
+                }
+                catch
+                {
+                    Log.LogWarning("Failed to restore DawnLib registry for hazards");
+                }
+            }
         }
 
         [HarmonyPrefix]

@@ -4,11 +4,13 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using BepInEx;
+using BepInEx.Bootstrap;
 using HarmonyLib;
 using JetBrains.Annotations;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
+using WeatherRegistry;
 using static BrutalCompanyMinus.Assets;
 
 namespace BrutalCompanyMinus.Minus.Handlers
@@ -32,7 +34,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
                     if(arguments.Length == 0)
                     {
                         string text = "To display extra information about a particular command use MHELP [Command]\n\n";
-                        
+
                         foreach(MCommand mCommand in mCommands)
                         {
                             text += $"{mCommand.command.PadRight(10)}{mCommand.shortinfo}\n\n";
@@ -148,7 +150,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
                     else
                     {
                         if (arguments[0].IsNullOrWhiteSpace()) return;
-                        
+
                         bool found = false;
                         foreach(MEvent mEvent in EventManager.events)
                         {
@@ -189,7 +191,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
                         if(!found)
                         {
                             Respond($"Failed to find event {arguments[0]} in events list.");
-                        }                             
+                        }
                     }
                 })
             },
@@ -430,7 +432,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
                                 foreach(Keyframe key in level.enemySpawnChanceThroughoutDay.keys)
                                 {
                                     text += $"\n   Time: {key.time}, Value: {key.value}";
-                                } 
+                                }
                             }
                             text += "\nOutside Enemy Spawn Chance Throughout Day:";
                             if(level.outsideEnemySpawnChanceThroughDay != null)
@@ -481,7 +483,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
                         foreach(GrabbableObject item in allItemsOutsideShip)
                         {
                             if (item != null)
-                            { 
+                            {
                                 if (item.itemProperties.isScrap && !item.isInElevator &&  !item.isInShipRoom)
                                 {
                                     itemCount++;
@@ -489,9 +491,9 @@ namespace BrutalCompanyMinus.Minus.Handlers
                                 }
                             }
                         }
-                        
+
                         text += $"There are {itemCount} items outside the ship, totaling a total of {totalWorth} altogether.";
-                        
+
                         Respond(text);
                     }
                 })

@@ -642,6 +642,42 @@ namespace BrutalCompanyMinus
             SetEntranceClientRpc(active);
         }
 
+        [ServerRpc(RequireOwnership = false)]
+        public void SetMetalOffNetServerRpc(bool active)
+        {
+            SetMetalOffNetClientRpc(active);
+        }
+
+        [ClientRpc]
+        public void SetMetalOffNetClientRpc(bool active)
+        {
+            NotMetal.Active = active;
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void SetMetalOnNetServerRpc(bool active)
+        {
+            SetMetalOnNetClientRpc(active);
+        }
+
+        [ClientRpc]
+        public void SetMetalOnNetClientRpc(bool active)
+        {
+            IsMetal.Active = active;
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void SetMetalSwitchNetServerRpc(bool active)
+        {
+            SetMetalSwitchNetClientRpc(active);
+        }
+
+        [ClientRpc]
+        public void SetMetalSwitchNetClientRpc(bool active)
+        {
+            MetalSwitch.Active = active;
+        }
+
         [ClientRpc]
         public void SetEntranceClientRpc(bool active)
         {

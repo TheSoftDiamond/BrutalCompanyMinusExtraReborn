@@ -578,6 +578,15 @@ namespace BrutalCompanyMinus.Minus
             if (Configuration.scaleByWeather.Value)
             {
                 weatherDifficulty = Configuration.weatherAdditives.GetValueOrDefault(StartOfRound.Instance.currentLevel.currentWeather, 0.0f);
+                //if (Compatibility.WeatherRegistryPresent)
+                //{
+                    // Look at the current weather in the registry
+                    //string CurrentWeather = CustomWeather.GetCustomWeather();
+
+                    // Perform a lookup in the config and get its additive if it exists
+                    //weatherDifficulty = Configuration.customWeatherMultipliers.GetValueOrDefault(CurrentWeather, weatherDifficulty);
+                //}
+
                 difficulty += weatherDifficulty;
             }
             if (Configuration.enablePlayerScaling.Value)

@@ -212,7 +212,7 @@ namespace BrutalCompanyMinus.Minus.CustomEvents
         /// </summary>
         public class HazardEvent : MEvent
         {
-            private bool isInside;
+            public bool isInside;
 
             public GameObject hazardObject;
 
@@ -300,25 +300,41 @@ namespace BrutalCompanyMinus.Minus.CustomEvents
             
             public void Execute()
             {
-                if (isInside)
+                bool dawnLibHandled = false;
+                if (Compatibility.DawnLibPresent)
                 {
-                    // Spawn inside
-                    RoundManager.Instance.currentLevel.spawnableMapObjects = RoundManager.Instance.currentLevel.spawnableMapObjects.Add(new SpawnableMapObject()
+                    if (dawnLibHandled = DawnLibPatches.IsDawnManaged(this.hazardObject.name))
                     {
-                        prefabToSpawn = hazardObject,
-                        numberToSpawn = new AnimationCurve(new Keyframe(0f, Get(ScaleType.MinAmount)), new Keyframe(1f, Get(ScaleType.MaxAmount))),
-                        spawnFacingAwayFromWall = this.facingAwayFromWall,
-                        spawnFacingWall = this.facingWall,
-                        spawnWithBackToWall = this.backToWall,
-                        spawnWithBackFlushAgainstWall = this.backFlushWithWall,
-                        requireDistanceBetweenSpawns = this.requireDistanceBetween,
-                        disallowSpawningNearEntrances = this.disallowNearEntrances
-                    });
+                        DawnLibPatches.eventQueue.Enqueue(this);
+                    }
+                    //dawnLibHandled = DawnLibPatches.ProcessMapObject(this);
+                    //DawnLibPatches.OnEventStart();
                 }
-                else
+                Log.LogInfo($"DawnLib spawned for {hazardObject.name}: {dawnLibHandled}");
+
+                //DawnLib didn't take over, we handle spawning instead
+                if (!dawnLibHandled)
                 {
-                    // Spawn outside
-                    Manager.insideObjectsToSpawnOutside.Add(new Manager.ObjectInfo(hazardObject, UnityEngine.Random.Range(Getf(ScaleType.MinDensity), Getf(ScaleType.MaxDensity))));
+                    if (isInside)
+                    {
+                        // Spawn inside
+                        RoundManager.Instance.currentLevel.spawnableMapObjects = RoundManager.Instance.currentLevel.spawnableMapObjects.Add(new SpawnableMapObject()
+                        {
+                            prefabToSpawn = hazardObject,
+                            numberToSpawn = new AnimationCurve(new Keyframe(0f, Get(ScaleType.MinAmount)), new Keyframe(1f, Get(ScaleType.MaxAmount))),
+                            spawnFacingAwayFromWall = this.facingAwayFromWall,
+                            spawnFacingWall = this.facingWall,
+                            spawnWithBackToWall = this.backToWall,
+                            spawnWithBackFlushAgainstWall = this.backFlushWithWall,
+                            requireDistanceBetweenSpawns = this.requireDistanceBetween,
+                            disallowSpawningNearEntrances = this.disallowNearEntrances
+                        });
+                    }
+                    else
+                    {
+                        // Spawn outside
+                        Manager.insideObjectsToSpawnOutside.Add(new Manager.ObjectInfo(hazardObject, UnityEngine.Random.Range(Getf(ScaleType.MinDensity), Getf(ScaleType.MaxDensity))));
+                    }
                 }
             }
         }

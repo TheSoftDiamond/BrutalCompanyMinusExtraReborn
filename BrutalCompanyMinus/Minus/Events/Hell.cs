@@ -75,6 +75,7 @@ namespace BrutalCompanyMinus.Minus.Events
             // The following is used for the time adjustment feature
             ScaleList.Add(ScaleType.TimeMin, new Scale(860f, 0f, 860f, 860f));
             ScaleList.Add(ScaleType.TimeMax, new Scale(860f, 0f, 860f, 860f));
+            ScaleList.Add(ScaleType.TimeSettings, new Scale(0.139534883721f, 0.139534883721f, 0.139534883721f, 0.139534883721f));
 
             insideHellSpawnCycle = new SpawnCycle()
             {
@@ -316,7 +317,7 @@ namespace BrutalCompanyMinus.Minus.Events
                 if (Configuration.HellTimeAdjustment.Value)
                 {
                     // For slower moving time
-                    Net.Instance.MoveTimeServerRpc(UnityEngine.Random.Range(Getf(ScaleType.TimeMin), Getf(ScaleType.TimeMax)), 0.139534883721f);
+                    Net.Instance.MoveTimeServerRpc(UnityEngine.Random.Range(Getf(ScaleType.TimeMin), Getf(ScaleType.TimeMax)), Getf(ScaleType.TimeSettings));
                 }
                 else
                 {

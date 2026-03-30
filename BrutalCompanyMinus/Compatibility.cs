@@ -76,9 +76,10 @@ namespace BrutalCompanyMinus
             BarberFixesPresent = false,
             SCP939Present = false,
             SCP682Present = false,
-            combinedWeatherToolKitPresent = false,
+            CombinedWeatherToolKitPresent = false,
             LethalElementsPresent = false,
-            DawnLibPresent = false;
+            DawnLibPresent = false,
+            WeatherRegistryPresent = false;
 
 
 
@@ -262,10 +263,11 @@ namespace BrutalCompanyMinus
             BarberFixesPresent = IsModPresent("butterystancakes.lethalcompany.barberfixes", "Barber Fixes Detected");
             SCP939Present = IsModPresent("project_scp.scp939", "SCP939 Detected");
             SCP682Present = IsModPresent("ProjectSCP.SCP682", "SCP682 Detected");
+            WeatherRegistryPresent = IsModPresent("mrov.WeatherRegistry", "Weather Registry Detected");
             LegendWeathersPresent = IsModPresent("zigzag.legendweathers", "Legend Weathers Detected");
             EndlessElevatorPresent = IsModPresent("kite.ZelevatorCode", "Endless Elevator Detected");
-            combinedWeatherToolKitPresent = IsModPresent("zigzag.combinedweatherstoolkit", "Combined Weathers Toolkit Detected");
-            DawnLibPresent = IsModPresent("TeamXiaolan.DawnLib", "Dawnlib Detected.");
+            CombinedWeatherToolKitPresent = IsModPresent("zigzag.combinedweatherstoolkit", "Combined Weathers Toolkit Detected");
+            DawnLibPresent = IsModPresent("com.github.teamxiaolan.dawnlib", "DawnLib Detected.");
         }
 
         public static Assembly GetAssembly(string name)

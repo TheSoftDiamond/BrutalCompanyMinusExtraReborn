@@ -230,7 +230,24 @@ namespace BrutalCompanyMinus
             keyboard = Keyboard.current;
             if (keyboard != null && Configuration.EnableUI.Value)
             {
+                // 1. Attempt to find the key control using the current keyboard layout first.
                 keyControl = keyboard.FindKeyOnCurrentKeyboardLayout(key);
+
+                if (keyControl == null)
+                {
+                    try
+                    {
+                        // 2. If that fails, attempt to find the key control using a generic path.
+                        string path = $"<Keyboard>/{key.ToLower()}";
+                        keyControl = InputSystem.FindControl(path) as KeyControl;
+                    }
+                    catch
+                    {
+                        // 3. If that also fails, log an error and disable the key input functionality for the main key.
+                        Log.LogError($"Failed to find key '{key}'. Input will be turned off for the main key.");
+                        return;
+                    }
+                }
 
                 downKeyControl = keyboard.downArrowKey;
                 upKeyControl = keyboard.upArrowKey;
@@ -431,12 +448,23 @@ namespace BrutalCompanyMinus
             if (Configuration.scaleByQuota.Value) text += $"<br><color=#{colorTextHex}> -Quota:      </color><color=#{Helper.GetDifficultyColorHex(Manager.quotaDifficulty, Configuration.quotaDifficultyCap.Value)}>{plusMinusExclusive(Manager.quotaDifficulty)}{Manager.quotaDifficulty:F1}</color>";
             if (Configuration.scaleByScrapInShip.Value) text += $"<br><color=#{colorTextHex}> -Ship Scrap: </color><color=#{Helper.GetDifficultyColorHex(Manager.scrapInShipDifficulty, Configuration.scrapInShipDifficultyCap.Value)}>{plusMinusExclusive(Manager.scrapInShipDifficulty)}{Manager.scrapInShipDifficulty:F1}</color>";
             if (Configuration.scaleByMoonGrade.Value) text += $"<br><color=#{colorTextHex}> -Moon risk:  </color><color=#{Helper.GetDifficultyColorHex(Manager.moonGradeDifficulty, Configuration.gradeAdditives["S+++"])}>{plusMinusExclusive(Manager.moonGradeDifficulty)}{Manager.moonGradeDifficulty:F1}</color>";
-            if (Configuration.scaleByWeather.Value) text += $"<br><color=#{colorTextHex}> -Weather:    </color><color=#{Helper.GetDifficultyColorHex(Manager.weatherDifficulty, 7.0f)}>{plusMinusExclusive(Manager.weatherDifficulty)}{Manager.weatherDifficulty:F1}</color>";
+            if (Configuration.scaleByWeather.Value) text += $"<br><color=#{colorTextHex}> -Weather:    </color><color=#{Helper.GetDifficultyColorHex(Manager.weatherDifficulty, (float)Int32.MaxValue)}>{plusMinusExclusive(Manager.weatherDifficulty)}{Manager.weatherDifficulty:F1}</color>";
             return text;
+        }
+
+        IEnumerator WaitForKeyboard()
+        {
+            while (Keyboard.current == null)
+                yield return null; // waits a frame
+            keyboard = Keyboard.current;
+            keyControl = keyboard.FindKeyOnCurrentKeyboardLayout(key);
+            keyboard.onTextInput += OnKeyboardInput;
         }
 
         public void OnKeyboardInput(char input)
         {
+            if (keyboard == null) return;
+
             bool pressed = false;
             if (keyControl != null)
             {
@@ -488,7 +516,10 @@ namespace BrutalCompanyMinus
         }
 
         [HarmonyPostfix]
-        [HarmonyPatch(typeof(StartOfRound), nameof(StartOfRound.SetDiscordStatusDetails))]
+        //[HarmonyPatch(typeof(StartOfRound), nameof(StartOfRound.SetDiscordStatusDetails))]
+        [HarmonyPatch(typeof(StartOfRound), nameof(StartOfRound.ArriveAtLevel))]
+        [HarmonyPatch(typeof(StartOfRound), nameof(StartOfRound.SetShipReadyToLand))]
+        [HarmonyPatch(typeof(StartOfRound), nameof(StartOfRound.EndPlayersFiredSequenceClientRpc))]
         private static void OnChangeLevel(ref StartOfRound __instance)
         {
             if (!NetworkManager.Singleton.IsServer || !canClearText) return;
@@ -547,6 +578,8 @@ namespace BrutalCompanyMinus
         [HarmonyPatch(typeof(Terminal), "Update")]
         private static void OnTerminalUpdate(ref bool ___terminalInUse)
         {
+            if (Instance == null) return;
+
             try
             {
                 Instance.keyPressEnabledTerminal = !___terminalInUse;
@@ -561,6 +594,8 @@ namespace BrutalCompanyMinus
         [HarmonyPatch(typeof(PlayerControllerB), "Update")]
         public static void OnPlayerControllerBUpdate(ref QuickMenuManager ___quickMenuManager)
         {
+            if (Instance == null) return;
+
             try
             {
                 Instance.keyPressEnabledSettings = !___quickMenuManager.isMenuOpen;
@@ -575,13 +610,18 @@ namespace BrutalCompanyMinus
         [HarmonyPatch(typeof(HUDManager), "Update")]
         public static void OnUpdate(ref PlayerControllerB ___localPlayer)
         {
+            if (Instance == null) return;
+
+            if (___localPlayer == null) return;
+
             try
             {
                 Instance.keyPressEnabledTyping = !___localPlayer.isTypingChat;
             }
             catch (Exception e)
             {
-                //Log.LogError("Failed to update keyPressEnabledTyping: " + e.Message);
+                // This may potentially get thrown if the keyboard fails to initialize, but I want to avoid any potential crashes from this. The main functionality of the UI should still work without the keyPressEnabledTyping variable working, it just may cause some issues with the panel not opening/closing when typing in chat.
+                Log.LogError("Failed to update keyPressEnabledTyping: " + e.Message);
             }
         }
     }

@@ -1,5 +1,6 @@
 ﻿using BepInEx.Configuration;
 using BrutalCompanyMinus.Minus.Handlers;
+using BrutalCompanyMinus.Minus.Handlers.CustomEvents;
 using HarmonyLib;
 using System;
 using System.Collections.Generic;
@@ -49,8 +50,10 @@ namespace BrutalCompanyMinus.Minus
             new Events.MoreExits(),
             new Events.DoorOverdriveEv(),
             new Events.ZedDog(),
+            new Events.NotMetal(),
             // Neutral
             new Events.Nothing(),
+            new Events.MetalSwitch(),
             new Events.Locusts(),
             new Events.Birds(),
             new Events.Trees(),
@@ -115,6 +118,7 @@ namespace BrutalCompanyMinus.Minus
             new Events.AntiBounty(),
             new Events.TargetingFailureEvent(),
             new Events.TeleporterTraps(),
+            new Events.IsMetal(),
             // Very Bad
             new Events.Nutcracker(),
             new Events.KiwiBird(),// Requires Special Events
@@ -507,6 +511,11 @@ namespace BrutalCompanyMinus.Minus
             //{
             //    e.OnGameStart();
             //}
+
+            /*if (Compatibility.DawnLibPresent)
+            {
+                DawnLibPatches.SubFreeze();
+            }*/
         }
 
         /// <summary>
@@ -687,6 +696,7 @@ namespace BrutalCompanyMinus.Minus
                     Manager.scrapAmountMultiplier *= e.scrapAmountMultiplier;
                 }
             }
+
 
             // Apply level properties
             LevelProperties properties = Configuration.levelProperties.GetValueOrDefault(newLevel.levelID);

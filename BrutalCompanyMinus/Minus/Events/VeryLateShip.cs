@@ -29,6 +29,7 @@ namespace BrutalCompanyMinus.Minus.Events
 
             ScaleList.Add(ScaleType.TimeMin, new Scale(780f, 0f, 780f, 780f));
             ScaleList.Add(ScaleType.TimeMax, new Scale(860f, 0f, 860f, 860f));
+            ScaleList.Add(ScaleType.TimeSettings, new Scale(0.139534883721f, 0.139534883721f, 0.139534883721f, 0.139534883721f));
 
             EventsToRemove = new List<string>() { nameof(VeryEarlyShip), nameof(EarlyShip), nameof(LateShip), nameof(Hell), nameof(MajoraMoon) };
         }
@@ -55,7 +56,7 @@ namespace BrutalCompanyMinus.Minus.Events
             {
                 // For slower moving time
                 int random = (int)UnityEngine.Random.Range(Getf(ScaleType.TimeMin), Getf(ScaleType.TimeMax));
-                Net.Instance.MoveTimeServerRpc(random, 0.139534883721f);
+                Net.Instance.MoveTimeServerRpc(random, Getf(ScaleType.TimeSettings));
             }
             else
             {

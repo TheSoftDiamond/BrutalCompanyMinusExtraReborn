@@ -10,7 +10,7 @@ namespace BrutalCompanyMinus.Minus.Handlers.Modded
     {
         public static void SetCustomWeather(string WeatherName)
         {
-            if (!Compatibility.IsModPresent("mrov.WeatherRegistry"))
+            if (!Compatibility.WeatherRegistryPresent)
             {
                 return;
             }
@@ -37,7 +37,7 @@ namespace BrutalCompanyMinus.Minus.Handlers.Modded
 
         public static bool isWeatherPresent(string WeatherName)
         {
-            if (!Compatibility.IsModPresent("mrov.WeatherRegistry"))
+            if (!Compatibility.WeatherRegistryPresent)
             {
                 return false;
             }
@@ -61,7 +61,7 @@ namespace BrutalCompanyMinus.Minus.Handlers.Modded
 
         public static void AddCustomWeather(string WeatherName)
         {
-            if (!Compatibility.IsModPresent("mrov.WeatherRegistry"))
+            if (!Compatibility.WeatherRegistryPresent)
             {
                 return;
             }
@@ -84,10 +84,20 @@ namespace BrutalCompanyMinus.Minus.Handlers.Modded
 
         public static void RegisterWeathers()
         {
-            if (!Compatibility.IsModPresent("zigzag.combinedweatherstoolkit"))
+            if (!Compatibility.CombinedWeatherToolKitPresent)
             {
                 return;
             }
+        }
+
+        public static string GetCustomWeather()
+        {
+            if (!Compatibility.WeatherRegistryPresent)
+            {
+                return "";
+            }
+
+            return WeatherManager.GetCurrentWeather(StartOfRound.Instance.currentLevel).ToString();
         }
     }
 }

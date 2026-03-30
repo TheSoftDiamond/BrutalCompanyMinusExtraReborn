@@ -52,8 +52,9 @@ The levels of compatibility are color coded to represent the level of compatibil
 | [Lobby Control](https://thunderstore.io/c/lethal-company/p/mattymatty/LobbyControl/) | 🟢 (Compatible) | Works perfectly fine. At worst, potentially not recieving event UI until ship lever is pulled. |
 | [WeatherRegistry](https://thunderstore.io/c/lethal-company/p/mrov/WeatherRegistry/) | 🟢 (Compatible) | Custom Weathers can be used inside Custom Events. |
 | [Combined Weathers Toolkit](https://thunderstore.io/c/lethal-company/p/Zigzag/Combined_Weathers_Toolkit/) | 🟢 (Compatible) | Registered via WeatherRegistry for weathers, and these themselves can be used in Custom Events. |
-| [DawnLib](https://thunderstore.io/c/lethal-company/p/TeamXiaolan/DawnLib/) | 🟣 (Planned) | Support for Hazards is to be done sometime in the future. |
+| [DawnLib](https://thunderstore.io/c/lethal-company/p/TeamXiaolan/DawnLib/) | 🟣 (Planned) | Support for Hazards is to be done sometime in the future. Anything from Dawnlib may or may not work at the current moment. |
 | [LunarConfig](https://thunderstore.io/c/lethal-company/p/Crafty/LunarConfig/) | 🟠 (Partial) | Some variables set may conflict or outright overwrite Brutal settings |
+| [LunarConfig](https://thunderstore.io/c/lethal-company/p/Crafty/LunarConfig/) | 🟣 (Planned) | Planned for a BCMER addon to bridge the connection between Archipelago |
 
 </details>
 <details>

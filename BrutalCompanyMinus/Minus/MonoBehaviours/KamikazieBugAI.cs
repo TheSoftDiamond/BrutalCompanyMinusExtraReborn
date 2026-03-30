@@ -894,6 +894,11 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
         {
             for (int i = 0; i < HoarderBugItems.Count; i++)
             {
+                if (HoarderBugItems[i] == null || HoarderBugItems[i].itemGrabbableObject == null)
+                {
+                    HoarderBugItems.RemoveAt(i);
+                    i--;
+                }
                 if (!HoarderBugItems[i].itemGrabbableObject.grabbableToEnemies || HoarderBugItems[i].itemGrabbableObject.isHeld || searchForItemsOfStatus != HoarderBugItemStatus.Any && HoarderBugItems[i].status != searchForItemsOfStatus)
                 {
                     continue;
