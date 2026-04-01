@@ -1,17 +1,12 @@
 ﻿using BepInEx.Configuration;
 using BrutalCompanyMinus.Minus.Handlers;
-using BrutalCompanyMinus.Minus.Handlers.CustomEvents;
 using HarmonyLib;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Security;
-using System.Text;
 using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.InputSystem.Utilities;
-using static BrutalCompanyMinus.Net;
 
 namespace BrutalCompanyMinus.Minus
 {
