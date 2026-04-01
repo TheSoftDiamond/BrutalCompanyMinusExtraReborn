@@ -6,6 +6,7 @@ using BrutalCompanyMinus.Minus.Handlers.Modded;
 using HarmonyLib;
 using System;
 using System.Reflection;
+using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.ProBuilder.MeshOperations;
@@ -132,10 +133,32 @@ namespace BrutalCompanyMinus
             NetworkVariableSerializationTypes.InitializeSerializer_UnmanagedByMemcpy<Weather>();
             NetworkVariableSerializationTypes.InitializeEqualityChecker_UnmanagedIEquatable<Weather>();
 
-            //OutsideObjectsToSpawnMethod
             NetworkVariableSerializationTypes.InitializeSerializer_UnmanagedByMemcpy<OutsideObjectsToSpawnMethod>();
             NetworkVariableSerializationTypes.InitializeEqualityChecker_UnmanagedIEquatable<OutsideObjectsToSpawnMethod>();
 
+            NetworkVariableSerializationTypes.InitializeSerializer_UnmanagedByMemcpy<FixedString4096Bytes>();
+            NetworkVariableSerializationTypes.InitializeEqualityChecker_UnmanagedIEquatable<FixedString4096Bytes>();
+
+            NetworkVariableSerializationTypes.InitializeSerializer_UnmanagedByMemcpy<bool>();
+            NetworkVariableSerializationTypes.InitializeEqualityChecker_UnmanagedIEquatable<bool>();
+
+            NetworkVariableSerializationTypes.InitializeSerializer_UnmanagedByMemcpy<float>();
+            NetworkVariableSerializationTypes.InitializeEqualityChecker_UnmanagedIEquatable<float>();
+
+            NetworkVariableSerializationTypes.InitializeSerializer_UnmanagedByMemcpy<double>();
+            NetworkVariableSerializationTypes.InitializeEqualityChecker_UnmanagedIEquatable<double>();
+
+            NetworkVariableSerializationTypes.InitializeSerializer_UnmanagedByMemcpy<int>();
+            NetworkVariableSerializationTypes.InitializeEqualityChecker_UnmanagedIEquatable<int>();
+
+            NetworkVariableSerializationTypes.InitializeSerializer_UnmanagedByMemcpy<Vector2>();
+            NetworkVariableSerializationTypes.InitializeEqualityChecker_UnmanagedIEquatable<Vector2>();
+
+            NetworkVariableSerializationTypes.InitializeSerializer_UnmanagedByMemcpy<Vector3>();
+            NetworkVariableSerializationTypes.InitializeEqualityChecker_UnmanagedIEquatable<Vector3>();
+
+            NetworkVariableSerializationTypes.InitializeSerializer_UnmanagedByMemcpy<CurrentWeatherEffect>();
+            NetworkVariableSerializationTypes.InitializeEqualityChecker_UnmanagedIEquatable<CurrentWeatherEffect>();
         }
     }
 }
