@@ -50,11 +50,11 @@ namespace BrutalCompanyMinus.Minus.Events
 
             chosenScrap.spawnableItem = Assets.GetItem(chosenScrap.spawnableItem.name);
 
-            Manager.TransmuteScrap(Getf(ScaleType.Percentage), new SpawnableItemWithRarity()
-            {
-                spawnableItem = chosenScrap.spawnableItem,
-                rarity = 100
-            });
+            Manager.TransmuteScrap(Getf(ScaleType.Percentage), new SpawnableItemWithRarity(
+            
+                chosenScrap.spawnableItem,
+                100
+            ));
 
             // Scale scrap amount abit more
             float scrapValue = (chosenScrap.spawnableItem.minValue + chosenScrap.spawnableItem.maxValue) * 0.25f; // Intentionally

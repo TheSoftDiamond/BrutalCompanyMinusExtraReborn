@@ -28,7 +28,7 @@ namespace BrutalCompanyMinus.Minus.Events
             scrapTransmutationEvent = new ScrapTransmutationEvent(
                 new Scale(0.5f, 0.008f, 0.5f, 0.9f),
           //    new SpawnableItemWithRarity() { spawnableItem = Assets.GetItem(Assets.ItemName.AirHorn), rarity = 50 },
-                new SpawnableItemWithRarity() { spawnableItem = Assets.GetItemByName("Painting", false), rarity = 95 }
+                new SpawnableItemWithRarity(Assets.GetItem("Painting"),   95 )
             );
 
             EventsToRemove = new List<string>() { nameof(RealityShift), nameof(Pickles), /*nameof(TakeyGokuPlush),*/ nameof(Dustpans) };

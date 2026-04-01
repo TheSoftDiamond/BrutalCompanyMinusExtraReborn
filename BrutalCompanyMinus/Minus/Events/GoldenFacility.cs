@@ -28,13 +28,13 @@ namespace BrutalCompanyMinus.Minus.Events
 
             scrapTransmutationEvent = new ScrapTransmutationEvent(
                 new Scale(0.5f, 0.008f, 0.5f, 0.9f),
-                new SpawnableItemWithRarity() { spawnableItem = Assets.GetItem(Assets.ItemName.GoldenCup), rarity = 25 },
-                new SpawnableItemWithRarity() { spawnableItem = Assets.GetItem(Assets.ItemName.Ring), rarity = 20 },
-                new SpawnableItemWithRarity() { spawnableItem = Assets.GetItem(Assets.ItemName.GoldBar), rarity = 1 },
-                new SpawnableItemWithRarity() { spawnableItem = Assets.GetItem(Assets.ItemName.FancyLamp), rarity = 10 },
-                new SpawnableItemWithRarity() { spawnableItem = Assets.GetItem(Assets.ItemName.PerfumeBottle), rarity = 26 },
-                new SpawnableItemWithRarity() { spawnableItem = Assets.GetItem(Assets.ItemName.Painting), rarity = 15 },
-                new SpawnableItemWithRarity() { spawnableItem = Assets.GetItem(Assets.ItemName.CashRegister), rarity = 3 }
+                new SpawnableItemWithRarity(Assets.GetItem(Assets.ItemName.GoldenCup), 25),
+                new SpawnableItemWithRarity(Assets.GetItem(Assets.ItemName.Ring), 20),
+                new SpawnableItemWithRarity(Assets.GetItem(Assets.ItemName.GoldBar), 1),
+                new SpawnableItemWithRarity(Assets.GetItem(Assets.ItemName.FancyLamp), 10),
+                new SpawnableItemWithRarity(Assets.GetItem(Assets.ItemName.PerfumeBottle), 26),
+                new SpawnableItemWithRarity(Assets.GetItem(Assets.ItemName.Painting), 15),
+                new SpawnableItemWithRarity(Assets.GetItem(Assets.ItemName.CashRegister), 3)
             );
 
             ScaleList.Add(ScaleType.ScrapAmount, new Scale(1.0f, 0.005f, 1.0f, 1.5f));

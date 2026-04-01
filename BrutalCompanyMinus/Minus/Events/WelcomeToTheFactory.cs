@@ -29,16 +29,16 @@ namespace BrutalCompanyMinus.Minus.Events
 
             scrapTransmutationEvent = new ScrapTransmutationEvent(
                 new Scale(0.5f, 0.008f, 0.5f, 0.9f),
-                new SpawnableItemWithRarity() { spawnableItem = Assets.GetItem(Assets.ItemName.BigBolt), rarity = 10 },
-                new SpawnableItemWithRarity() { spawnableItem = Assets.GetItem(Assets.ItemName.CashRegister), rarity = 10 },
-                new SpawnableItemWithRarity() { spawnableItem = Assets.GetItem(Assets.ItemName.MetalSheet), rarity = 10 },
-                new SpawnableItemWithRarity() { spawnableItem = Assets.GetItem(Assets.ItemName.TeaKettle), rarity = 10 },
-                new SpawnableItemWithRarity() { spawnableItem = Assets.GetItem(Assets.ItemName.CookieMoldPan), rarity = 10 },
-                new SpawnableItemWithRarity() { spawnableItem = Assets.GetItem(Assets.ItemName.StopSign), rarity = 10 },
-                new SpawnableItemWithRarity() { spawnableItem = Assets.GetItem(Assets.ItemName.EggBeater), rarity = 10 },
-                new SpawnableItemWithRarity() { spawnableItem = Assets.GetItem(Assets.ItemName.V_TypeEngine), rarity = 10 },
-                new SpawnableItemWithRarity() { spawnableItem = Assets.GetItem(Assets.ItemName.LargeAxle), rarity = 10 },
-                new SpawnableItemWithRarity() { spawnableItem = Assets.GetItem(Assets.ItemName.SteeringWheel), rarity = 10 }
+                new SpawnableItemWithRarity(Assets.GetItem(Assets.ItemName.BigBolt), 10),
+                new SpawnableItemWithRarity(Assets.GetItem(Assets.ItemName.CashRegister), 10),
+                new SpawnableItemWithRarity(Assets.GetItem(Assets.ItemName.MetalSheet), 10),
+                new SpawnableItemWithRarity(Assets.GetItem(Assets.ItemName.TeaKettle), 10),
+                new SpawnableItemWithRarity(Assets.GetItem(Assets.ItemName.CookieMoldPan), 10),
+                new SpawnableItemWithRarity(Assets.GetItem(Assets.ItemName.StopSign), 10),
+                new SpawnableItemWithRarity(Assets.GetItem(Assets.ItemName.EggBeater), 10),
+                new SpawnableItemWithRarity(Assets.GetItem(Assets.ItemName.V_TypeEngine), 10),
+                new SpawnableItemWithRarity(Assets.GetItem(Assets.ItemName.LargeAxle), 10),
+                new SpawnableItemWithRarity(Assets.GetItem(Assets.ItemName.SteeringWheel), 10)
             );
 
             ScaleList.Add(ScaleType.ScrapAmount, new Scale(1.0f, 0.005f, 1.0f, 1.5f));
