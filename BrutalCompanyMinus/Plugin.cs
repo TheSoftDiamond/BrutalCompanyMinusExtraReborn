@@ -1,13 +1,16 @@
 ﻿using BepInEx;
 using BepInEx.Configuration;
+using BrutalCompanyMinus.Minus;
 using BrutalCompanyMinus.Minus.Handlers;
 using BrutalCompanyMinus.Minus.Handlers.Modded;
 using HarmonyLib;
 using System;
 using System.Reflection;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.ProBuilder.MeshOperations;
 using static BrutalCompanyMinus.Configuration;
+using static BrutalCompanyMinus.Net;
 
 namespace BrutalCompanyMinus
 {
@@ -22,6 +25,9 @@ namespace BrutalCompanyMinus
     [BepInDependency("kite.ZelevatorCode", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("mrov.WeatherRegistry", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.github.teamxiaolan.dawnlib", BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency("com.github.teamxiaolan.dawnlib.interfaces", BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency("com.github.teamxiaolan.dawnlib.dusk", BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency("com.github.teamxiaolan.dawnlib.compatibility", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInPlugin(GUID, NAME, VERSION)]
     internal class Plugin : BaseUnityPlugin
     {
@@ -88,11 +94,6 @@ namespace BrutalCompanyMinus
                 _EnemyAI.PatchEnemyStart(harmony);
             }
 
-            //if (Compatibility.KidnapperFoxPresent)
-            //{
-                //KidnapperFoxPatches.PatchAll(harmony);
-            //}
-
             if (Compatibility.IsModPresent("kite.ZelevatorCode"))
             {
                 EndlessElevatorPatching.PatchAllElevator(harmony);
@@ -123,54 +124,18 @@ namespace BrutalCompanyMinus
                 Log.LogWarning("Failed to delete custom event config file: " + e.Message);
             }
 
-            NetcodePatcherAwake();
+            Init();
         }
 
-        private void NetcodePatcherAwake()
+        private void Init()
         {
-            try
-            {
-                var currentAssembly = Assembly.GetExecutingAssembly();
-                var types = currentAssembly.GetTypes();
+            NetworkVariableSerializationTypes.InitializeSerializer_UnmanagedByMemcpy<Weather>();
+            NetworkVariableSerializationTypes.InitializeEqualityChecker_UnmanagedIEquatable<Weather>();
 
-                foreach (var type in types)
-                {
-                    var methods = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
+            //OutsideObjectsToSpawnMethod
+            NetworkVariableSerializationTypes.InitializeSerializer_UnmanagedByMemcpy<OutsideObjectsToSpawnMethod>();
+            NetworkVariableSerializationTypes.InitializeEqualityChecker_UnmanagedIEquatable<OutsideObjectsToSpawnMethod>();
 
-                    foreach (var method in methods)
-                    {
-                        try
-                        {
-                            // Safely attempt to retrieve custom attributes
-                            var attributes = method.GetCustomAttributes(typeof(RuntimeInitializeOnLoadMethodAttribute), false);
-
-                            if (attributes.Length > 0)
-                            {
-                                try
-                                {
-                                    // Safely attempt to invoke the method
-                                    method.Invoke(null, null);
-                                }
-                                catch (TargetInvocationException ex)
-                                {
-                                    // Log and continue if method invocation fails (e.g., due to missing dependencies)
-                                    Logger.LogWarning($"Failed to invoke method {method.Name}: {ex.Message}");
-                                }
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            // Handle errors when fetching custom attributes, due to missing types or dependencies
-                            Logger.LogWarning($"Error processing method {method.Name} in type {type.Name}: {ex.Message}");
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                // Catch any general exceptions that occur in the process
-                Logger.LogError($"An error occurred in NetcodePatcherAwake: {ex.Message}");
-            }
         }
     }
 }
