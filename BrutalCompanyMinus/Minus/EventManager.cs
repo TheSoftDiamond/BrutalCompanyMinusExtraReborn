@@ -11,6 +11,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.InputSystem.Utilities;
+using static BrutalCompanyMinus.Net;
 
 namespace BrutalCompanyMinus.Minus
 {
@@ -191,7 +192,6 @@ namespace BrutalCompanyMinus.Minus
 
             //Good
             new Events.Dice(),
-            new Events.ZombiePlush(),
             new Events.Nemo(),
             new Events.HotBarMania(),
 
@@ -514,7 +514,7 @@ namespace BrutalCompanyMinus.Minus
 
             /*if (Compatibility.DawnLibPresent)
             {
-                DawnLibPatches.SubFreeze();
+                DawnLibHandling.SubFreeze();
             }*/
         }
 
