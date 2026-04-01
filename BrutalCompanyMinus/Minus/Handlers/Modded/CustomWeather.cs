@@ -1,33 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using WeatherRegistry;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace BrutalCompanyMinus.Minus.Handlers.Modded
 {
     public class CustomWeather
     {
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void SetCustomWeather(string WeatherName)
         {
-            if (!Compatibility.WeatherRegistryPresent)
-            {
-                return;
-            }
+            if (!Compatibility.WeatherRegistryPresent) return;
 
-            // Find the weather by name
             try
             {
-                WeatherRegistry.Weather weather = WeatherManager.Weathers.First(w => w.Name.Equals(WeatherName, StringComparison.OrdinalIgnoreCase));
+                WeatherRegistry.Weather weather = null;
+                foreach (var w in WeatherRegistry.WeatherManager.Weathers)
+                {
+                    if (string.Equals(w.Name, WeatherName, StringComparison.OrdinalIgnoreCase))
+                    {
+                        weather = w;
+                        break;
+                    }
+                }
+
                 if (weather == null)
                 {
                     Log.LogError($"Weather '{WeatherName}' not found.");
                     return;
                 }
-                //WeatherController.ChangeCurrentWeather(weather);
 
-
-                WeatherManager.CurrentWeathers.SetWeather(StartOfRound.Instance.currentLevel, weather);
+                WeatherRegistry.WeatherManager.CurrentWeathers.SetWeather(StartOfRound.Instance.currentLevel, weather);
             }
             catch (Exception ex)
             {
@@ -35,46 +39,53 @@ namespace BrutalCompanyMinus.Minus.Handlers.Modded
             }
         }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static bool isWeatherPresent(string WeatherName)
         {
-            if (!Compatibility.WeatherRegistryPresent)
-            {
-                return false;
-            }
+            if (!Compatibility.WeatherRegistryPresent) return false;
 
             try
             {
-                WeatherRegistry.Weather weather = WeatherManager.Weathers.First(w => w.Name.Equals(WeatherName, StringComparison.OrdinalIgnoreCase));
-                if (weather == null)
+                foreach (var w in WeatherRegistry.WeatherManager.Weathers)
                 {
-                    Log.LogError($"Weather '{WeatherName}' not found.");
-                    return false;
+                    if (string.Equals(w.Name, WeatherName, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return true;
+                    }
                 }
-                return true;
+                return false;
             }
             catch (Exception ex)
             {
-                Log.LogError($"Error adding '{WeatherName}' weather: {ex.Message}");
+                Log.LogError($"Error checking for '{WeatherName}' weather: {ex.Message}");
                 return false;
             }
         }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void AddCustomWeather(string WeatherName)
         {
-            if (!Compatibility.WeatherRegistryPresent)
-            {
-                return;
-            }
+            if (!Compatibility.WeatherRegistryPresent) return;
 
             try
             {
-                WeatherRegistry.Weather weather = WeatherManager.Weathers.First(w => w.Name.Equals(WeatherName, StringComparison.OrdinalIgnoreCase));
+                WeatherRegistry.Weather weather = null;
+                foreach (var w in WeatherRegistry.WeatherManager.Weathers)
+                {
+                    if (string.Equals(w.Name, WeatherName, StringComparison.OrdinalIgnoreCase))
+                    {
+                        weather = w;
+                        break;
+                    }
+                }
+
                 if (weather == null)
                 {
                     Log.LogError($"Weather '{WeatherName}' not found.");
                     return;
                 }
-                WeatherController.AddWeatherEffect(weather);
+
+                WeatherRegistry.WeatherController.AddWeatherEffect(weather);
             }
             catch (Exception ex)
             {
@@ -82,22 +93,26 @@ namespace BrutalCompanyMinus.Minus.Handlers.Modded
             }
         }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void RegisterWeathers()
         {
-            if (!Compatibility.CombinedWeatherToolKitPresent)
-            {
-                return;
-            }
+            if (!Compatibility.CombinedWeatherToolKitPresent) return;
         }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static string GetCustomWeather()
         {
-            if (!Compatibility.WeatherRegistryPresent)
+            if (!Compatibility.WeatherRegistryPresent) return "";
+
+            try
+            {
+                var current = WeatherRegistry.WeatherManager.GetCurrentWeather(StartOfRound.Instance.currentLevel);
+                return current != null ? current.ToString() : "";
+            }
+            catch
             {
                 return "";
             }
-
-            return WeatherManager.GetCurrentWeather(StartOfRound.Instance.currentLevel).ToString();
         }
     }
 }
