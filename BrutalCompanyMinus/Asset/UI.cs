@@ -404,7 +404,8 @@ namespace BrutalCompanyMinus
             }
             catch (Exception e)
             {
-                Log.LogError("Failed to clear text: " + e.Message);
+                Log.LogError("Failed to clear text in main function: " + e.Message);
+                Log.LogError("Stack trace: " + e.StackTrace);
             }
         }
 
