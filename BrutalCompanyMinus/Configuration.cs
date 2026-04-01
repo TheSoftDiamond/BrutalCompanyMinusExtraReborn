@@ -24,7 +24,7 @@ namespace BrutalCompanyMinus
     public class Configuration
     {
         // Config files
-        public static ConfigFile uiConfig, eventConfig, weatherConfig, customAssetsConfig, difficultyConfig, moddedEventConfig, customEventConfig, allEnemiesConfig, levelPropertiesConfig, CorePropertiesConfig, CustomWeatherConfig /*, extensiveSettingsConfig*/;
+        public static ConfigFile uiConfig, eventConfig, weatherConfig, customAssetsConfig, difficultyConfig, moddedEventConfig, customEventConfig, allEnemiesConfig, levelPropertiesConfig, CorePropertiesConfig/*, CustomWeatherConfig, extensiveSettingsConfig*/;
 
         // Event settings
         public static List<ConfigEntry<int>> eventWeights = new List<ConfigEntry<int>>();
@@ -534,7 +534,7 @@ namespace BrutalCompanyMinus
                             break;
                     }
                 }
-            }
+            }///
             EventManager.events = newEvents;
 
             EventManager.UpdateEventTypeCounts();
