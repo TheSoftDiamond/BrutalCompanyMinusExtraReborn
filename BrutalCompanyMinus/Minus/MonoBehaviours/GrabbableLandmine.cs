@@ -9,7 +9,6 @@ using System.Security.Cryptography;
 using System.Text;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.Animations.Rigging;
 
 namespace BrutalCompanyMinus.Minus.MonoBehaviours
 {

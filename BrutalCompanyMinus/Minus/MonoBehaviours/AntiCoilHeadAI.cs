@@ -27,7 +27,7 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
 
         private float currentAnimSpeed = 1f;
 
-        private PlayerControllerB previousTarget;
+        private PlayerControllerB? previousTarget;
 
         private bool wasOwnerLastFrame;
 
