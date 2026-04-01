@@ -14,8 +14,6 @@ using static BrutalCompanyMinus.Helper;
 using BrutalCompanyMinus.Minus.MonoBehaviours;
 using System;
 using EventType = BrutalCompanyMinus.Minus.MEvent.EventType;
-using BrutalCompanyMinus.Minus.Handlers.Modded;
-using static BrutalCompanyMinus.Net;
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 namespace BrutalCompanyMinus
@@ -24,7 +22,7 @@ namespace BrutalCompanyMinus
     public class Configuration
     {
         // Config files
-        public static ConfigFile uiConfig, eventConfig, weatherConfig, customAssetsConfig, difficultyConfig, moddedEventConfig, customEventConfig, allEnemiesConfig, levelPropertiesConfig, CorePropertiesConfig/*, CustomWeatherConfig, extensiveSettingsConfig*/;
+        public static ConfigFile uiConfig, eventConfig, weatherConfig, customAssetsConfig, difficultyConfig, moddedEventConfig, customEventConfig, allEnemiesConfig, levelPropertiesConfig, CorePropertiesConfig /*, extensiveSettingsConfig*/;
 
         // Event settings
         public static List<ConfigEntry<int>> eventWeights = new List<ConfigEntry<int>>();
@@ -52,14 +50,14 @@ namespace BrutalCompanyMinus
         public static ConfigEntry<bool> enableQuotaChanges;
         public static ConfigEntry<int> deadLineDaysAmount, startingCredits, startingQuota, baseIncrease, increaseSteepness;
         public static Scale
-            spawnChanceMultiplierScaling = new Scale(), 
-            insideEnemyMaxPowerCountScaling = new Scale(), 
-            outsideEnemyPowerCountScaling = new Scale(), 
-            enemyBonusHpScaling = new Scale(), 
+            spawnChanceMultiplierScaling = new Scale(),
+            insideEnemyMaxPowerCountScaling = new Scale(),
+            outsideEnemyPowerCountScaling = new Scale(),
+            enemyBonusHpScaling = new Scale(),
             spawnCapMultiplier = new Scale(),
-            scrapAmountMultiplier = new Scale(), 
-            scrapValueMultiplier = new Scale(), 
-            insideSpawnChanceAdditive = new Scale(), 
+            scrapAmountMultiplier = new Scale(),
+            scrapValueMultiplier = new Scale(),
+            insideSpawnChanceAdditive = new Scale(),
             outsideSpawnChanceAdditive = new Scale();
         public static ConfigEntry<bool> ignoreMaxCap;
         public static ConfigEntry<float> difficultyMaxCap;
@@ -134,22 +132,6 @@ namespace BrutalCompanyMinus
         public static ConfigEntry<string> transmutationBlacklist;
         public static ConfigEntry<bool> enableNewEventOnNewLoad;
         public static ConfigEntry<bool> handleScanCommand;
-
-        // Custom weather
-
-        // Ignored weathers
-        public static List<string> ignoredWeathers = new List<string>
-        {
-            "None",
-            "Dust Clouds",
-            "Rainy",
-            "Stormy",
-            "Foggy",
-            "Flooded",
-            "Eclipsed"
-        };
-
-        //public static Dictionary<string, float> customWeatherMultipliers = new Dictionary<string, float>();
 
 
         /*   public static ConfigEntry<bool> EnableStreamerEvents;*/
@@ -273,52 +255,12 @@ namespace BrutalCompanyMinus
             floodedMultiplier = createWeatherSettings(new Weather(LevelWeatherType.Flooded, 1.25f, 1.15f));
             eclipsedMultiplier = createWeatherSettings(new Weather(LevelWeatherType.Eclipsed, 1.35f, 1.20f));
 
-            /*
-            // Custom weather
-            
-            void createCustomWeatherSettings(string weatherName)
-            {
-                string configHeader = "(" + weatherName + ") Weather settings";
-
-                float weatherAdditive = CustomWeatherConfig.Bind(configHeader, "Difficulty additive", 0, "Additive to difficulty for being on weather " + weatherName).Value;
-            
-                customWeatherMultipliers.TryAdd(weatherName, weatherAdditive);
-            }
-
-            try
-            {
-                if (Compatibility.WeatherRegistryPresent)
-                {
-                    foreach (var weather in WeatherRegistry.WeatherManager.Weathers)
-                    {
-                        // If the weather is one of the default weathers, ignore it since we already have settings for it.
-                        // Remove ignored weathers (This is default game weathers)
-                        if (ignoredWeathers.Contains(weather.Name))
-                        {
-                            continue;
-                        }
-                        
-                        // Ignore duplicate entries
-                        if (!customWeatherMultipliers.ContainsKey(weather.Name))
-                        {
-                            createCustomWeatherSettings(weather.Name);
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.LogError($"Error occurred while setting up custom weathers: {ex.Message}");
-            }
-            */
-
-
             // UI Settings
             UIKey = uiConfig.Bind("UI Options", "Toggle UI Key", "K");
             color = uiConfig.Bind("UI Options", "UI Color Hex", "00A000", "Color hex for UI elements.");
             uiColorReduction = uiConfig.Bind("UI Options", "UI Color Reduction Factor", 0.6275f, "Changes the color of the UI element when not active (0-1).");
             colorArrows = uiConfig.Bind("UI Options", "UI Arrow Color Hex", "00A000", "Color hex for UI arrows.");
-            colorArrowsIncrease = uiConfig.Bind("UI Options", "UI Arrow Color Amplification", 255f/160f, "Mutliplies the color by this number when UI arrows are active.");
+            colorArrowsIncrease = uiConfig.Bind("UI Options", "UI Arrow Color Amplification", 255f / 160f, "Mutliplies the color by this number when UI arrows are active.");
             colorText = uiConfig.Bind("UI Options", "UI Text Color Hex", "00FF00", "Color hex for UI text.");
             //menuColor = uiConfig.Bind("UI Options", "UI Menu Color Hex", "000000", "Color hex for UI menu background.");
             //menuTransparency = uiConfig.Bind("UI Options", "UI Menu Transparency", 0.498f, "Transparency for UI menu background. (0-1)");
@@ -347,7 +289,7 @@ namespace BrutalCompanyMinus
             deferWeatherToMods = CorePropertiesConfig.Bind("Mod Compatibility", "Defer Weather To Weather ToolKit Mod?", false, "If you wish to let other mods handle Brutal's weather setting effects, enable this. This has no effect on custom events as those use weather toolkit by default.");
             enableSpecialEvents = CorePropertiesConfig.Bind("Events Features", "Enable Special Events?", false, "Enables special events to be loaded.");
             transmutationBlacklist = CorePropertiesConfig.Bind("Events Features", "Transmutation Blacklist", "", "Blacklist items here to prevent them from being used in scrap transmutation. Uses itemProperties.itemName Component Name.");
-            enableNewEventOnNewLoad = CorePropertiesConfig.Bind("Mod Compatibility", "Events Reroll on Dynamic Interior", false , "For mods like Zeranos that support changing the dungeon layout every floor... should Brutal load new events for them? This feature might break.");
+            enableNewEventOnNewLoad = CorePropertiesConfig.Bind("Mod Compatibility", "Events Reroll on Dynamic Interior", false, "For mods like Zeranos that support changing the dungeon layout every floor... should Brutal load new events for them? This feature might break.");
             handleScanCommand = CorePropertiesConfig.Bind("Mod Compatibility", "Let Brutal handle the SCAN command?", true, "If enabled, Brutal will handle the scan command with accurate scrap values to its modifiers. If you have other mods that handle this feature, disable it. Please note, if disabled, the scan command will not show the proper values for scrap value.");
 
             //todo - add settings for events and modded events that mess with features like time
@@ -419,13 +361,12 @@ namespace BrutalCompanyMinus
                     for (int i = 0; i < e.scrapTransmutationEvent.items.Length; i++)
                     {
                         newScrapTransmuations[i] = new SpawnableItemWithRarity(
-
                             GetItem(toConfig.Bind(e.Name(), $"Scrap {i} name", e.scrapTransmutationEvent.items[i].spawnableItem.name, "Inputting an invalid scrap name will cause it to return an empty item").Value),
                             toConfig.Bind(e.Name(), $"{e.scrapTransmutationEvent.items[i].spawnableItem.name} Rarity", e.scrapTransmutationEvent.items[i].rarity).Value
                         );
                     }
                     transmutationEvents.Add(new ScrapTransmutationEvent(amount, newScrapTransmuations));
-                }                                                                          
+                }
 
             }
 
@@ -433,6 +374,50 @@ namespace BrutalCompanyMinus
             RegisterEvents(moddedEventConfig, EventManager.moddedEvents);
 
             if (enableCustomEvents.Value)
+            {
+                foreach (string eventFile in System.IO.Directory.GetFiles(customEventsFolder))
+                {
+                    if (eventFile.EndsWith(".json"))
+                    {
+                        MEvent cEvent = new GeneralCustomEvent(eventFile);
+                        cEvent.Initalize();
+
+                        if (cEvent.Enabled) EventManager.customEvents.Add(cEvent);
+                    }
+                }
+                RegisterEvents(customEventConfig, EventManager.customEvents);
+            }
+
+            /*foreach (EventManager.CustomEvents customevent in EventManager.customEventsList)
+            {
+                foreach (MEvent e in customevent.events)
+                {
+                    e.Initalize();
+                }
+
+                RegisterEvents(customevent.configFile, customevent.events);
+                EventManager.customEvents.AddRange(customevent.events);
+            }
+            EventManager.customEventsList.Clear();*/
+
+            EventManager.events.AddRange(EventManager.vanillaEvents);
+            EventManager.events.AddRange(EventManager.moddedEvents);
+            EventManager.events.AddRange(EventManager.customEvents);
+            //EventManager.events.AddRange(EventManager.ExternalEvents);
+
+            // Specific event settings
+            Minus.Handlers.FacilityGhost.actionTimeCooldown = eventConfig.Bind(nameof(FacilityGhost), "Normal Action Time Interval", 15.0f, "How often does it take for the ghost to make a decision?").Value;
+            Minus.Handlers.FacilityGhost.ghostCrazyActionInterval = eventConfig.Bind(nameof(FacilityGhost), "Crazy Action Time Interval", 0.1f, "How often does it take for the ghost to make a decision while going crazy?").Value;
+            Minus.Handlers.FacilityGhost.ghostCrazyPeriod = eventConfig.Bind(nameof(FacilityGhost), "Crazy Period", 5.0f, "How long will the ghost go crazy for?").Value;
+            Minus.Handlers.FacilityGhost.crazyGhostChance = eventConfig.Bind(nameof(FacilityGhost), "Crazy Chance", 0.1f, "Whenever the ghost makes a decision, what is the chance that it will go crazy?").Value;
+            Minus.Handlers.FacilityGhost.DoNothingWeight = eventConfig.Bind(nameof(FacilityGhost), "Do Nothing Weight?", 25, "Whenever the ghost makes a decision, what is the weight to do nothing?").Value;
+            Minus.Handlers.FacilityGhost.OpenCloseBigDoorsWeight = eventConfig.Bind(nameof(FacilityGhost), "Open and close big doors weight", 20, "Whenever the ghost makes a decision, what is the weight for ghost to open and close big doors?").Value;
+            Minus.Handlers.FacilityGhost.MessWithLightsWeight = eventConfig.Bind(nameof(FacilityGhost), "Mess with lights weight", 16, "Whenever the ghost makes a decision, what is the weight to mess with lights?").Value;
+            Minus.Handlers.FacilityGhost.MessWithBreakerWeight = eventConfig.Bind(nameof(FacilityGhost), "Mess with breaker weight", 4, "Whenever the ghost makes a decision, what is the weight to mess with the breaker?").Value;
+            Minus.Handlers.FacilityGhost.disableTurretsWeight = eventConfig.Bind(nameof(FacilityGhost), "Disable turrets weight?", 5, "Whenever the ghost makes a decision, what is the weight to attempt to disable the turrets?").Value;
+            Minus.Handlers.FacilityGhost.disableLandminesWeight = eventConfig.Bind(nameof(FacilityGhost), "Disable landmines weight?", 5, "Whenever the ghost makes a decision, what is the weight to attempt to disable the landmines?").Value;
+            Minus.Handlers.FacilityGhost.turretRageWeight = eventConfig.Bind(nameof(FacilityGhost), "Turret rage weight?", 5, "Whenever the ghost makes a decision, what is the weight to attempt to make turrets rage?").Value;
+            Minus.Handlers.FacilityGhost.OpenCloseDoorsWeight = eventConfig.Bind(nameof(FacilityGhost), "Open and close normal doors weight", 9, "Whenever the ghost makes a decision, what is the weight to attempt to open and close normal doors.").Value;
             Minus.Handlers.FacilityGhost.lockUnlockDoorsWeight = eventConfig.Bind(nameof(FacilityGhost), "Lock and unlock normal doors weight", 3, "Whenever the ghost makes a decision, what is the weight to attempt to lock and unlock normal doors.").Value;
             Minus.Handlers.FacilityGhost.chanceToOpenCloseDoor = eventConfig.Bind(nameof(FacilityGhost), "Chance to open and close normal doors", 0.3f, "Whenever the ghosts decides to open and close doors, what is the chance for each individual door that it will do that.").Value;
             Minus.Handlers.FacilityGhost.rageTurretsChance = eventConfig.Bind(nameof(FacilityGhost), "Chance to rage a turret", 0.3f, "Whenever the ghosts decides to rage a turret, what is the chance for each individual turret that it will do that.").Value;
@@ -534,7 +519,7 @@ namespace BrutalCompanyMinus
                             break;
                     }
                 }
-            }///
+            }
             EventManager.events = newEvents;
 
             EventManager.UpdateEventTypeCounts();
