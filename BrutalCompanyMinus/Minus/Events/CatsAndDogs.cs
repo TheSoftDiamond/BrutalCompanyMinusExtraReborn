@@ -1,4 +1,5 @@
-﻿using BrutalCompanyMinus;
+﻿using BepInEx;
+using BrutalCompanyMinus;
 using BrutalCompanyMinus.Minus.MonoBehaviours;
 using System;
 using System.Collections.Generic;
@@ -30,6 +31,9 @@ namespace BrutalCompanyMinus.Minus.Events
 
             EventsToSpawnWith = new List<string>() { nameof(Dogs), nameof(Puma) };
         }
+
+        public override bool AddEventIfOnly() => Assets.ReadSettingEarly(Paths.ConfigPath + "\\BrutalCompanyMinusExtraReborn\\CoreProperties.cfg", "Enable Special Events?");
+
 
         public override void Execute()
         {

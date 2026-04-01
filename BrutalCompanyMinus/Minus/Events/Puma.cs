@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BepInEx;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -33,6 +34,9 @@ namespace BrutalCompanyMinus.Minus.Events
                 new Scale(2.0f, 0.60f, 2.0f, 6.0f))
             };
         }
+
+        public override bool AddEventIfOnly() => Assets.ReadSettingEarly(Paths.ConfigPath + "\\BrutalCompanyMinusExtraReborn\\CoreProperties.cfg", "Enable Special Events?");
+
 
         public override void Execute() => ExecuteAllMonsterEvents();
     }
