@@ -1,177 +1,199 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">  
-<PropertyGroup> 
-	<TargetFramework>netstandard2.1</TargetFramework>  
-	<AllowUnsafeBlocks>true</AllowUnsafeBlocks>  
-	<LangVersion>latest</LangVersion>  
-	<ProduceReferenceAssembly>False</ProduceReferenceAssembly>  
-	<Nullable>enable</Nullable>  
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>netstandard2.1</TargetFramework>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<LangVersion>latest</LangVersion>
+		<ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+		<Nullable>enable</Nullable>
 
-	<Authors>SoftDiamond</Authors>  
-	<Product>BrutalCompanyMinusExtraReborn</Product>  
-	<ToolCommandName>BrutalCompanyMinusExtraReborn</ToolCommandName>
+		<Authors>SoftDiamond</Authors>
+		<Product>BrutalCompanyMinusExtraReborn</Product>
+		<ToolCommandName>BrutalCompanyMinusExtraReborn</ToolCommandName>
 
+		<RootNamespace>BrutalCompanyMinus</RootNamespace>
 
-	<RootNamespace>BrutalCompanyMinus</RootNamespace>  
+		<RestoreAdditionalProjectSources>
+			https://api.nuget.org/v3/index.json;
+			https://nuget.bepinex.dev/v3/index.json;
+			https://nuget.samboy.dev/v3/index.json;
+		</RestoreAdditionalProjectSources>
+	</PropertyGroup>
 
-	<RestoreAdditionalProjectSources>  
-		https://api.nuget.org/v3/index.json;  
-		https://nuget.bepinex.dev/v3/index.json;  
-		https://nuget.samboy.dev/v3/index.json;  
-	</RestoreAdditionalProjectSources>  
-</PropertyGroup>  
+	<ItemGroup>
+		<None Remove="Asset\asset" />
+		<None Remove="Asset\bcm_assets" />
+		<None Remove="Asset\bcm_customassets" />
+		<None Remove="Asset\customassets" />
+		<None Remove="Asset\customenemies" />
+	</ItemGroup>
 
-<ItemGroup>  
-	<Compile Remove="Minus\Modules\**" />  
-	<EmbeddedResource Remove="Minus\Modules\**" />  
-	<None Remove="Minus\Modules\**" />  
-</ItemGroup>  
+	<ItemGroup>
+		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.5-beta1" />
+		<PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.5.0-beta.2" PrivateAssets="all" />
+		<PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
+		<PackageReference Include="BepInEx.Core" Version="5.*" />
+		<PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" />
+		<PackageReference Include="Rune580.Mods.LethalCompany.InputUtils" Version="0.7.12" /> 
+		<!-- <PackageReference Include="UnityEngine.Modules" Version="2022.3.62" IncludeAssets="compile" PrivateAssets="all" /> -->
+		<!-- <PackageReference Include="LethalCompany.GameLibs.Steam" Version="73.0.0-ngd.0" PrivateAssets="all" Publicize="true"/> -->
+	</ItemGroup>
 
-<ItemGroup>  
-	<Compile Remove="Minus\Handlers\AutopilotFailure.cs" />  
-	<Compile Remove="Minus\Handlers\BreakerBox.cs" />  
-	<Compile Remove="Minus\Handlers\CodeCheck.cs" />  
-	<Compile Remove="Minus\Handlers\CreditsMonitor.cs" />  
-	<Compile Remove="Minus\Handlers\EnemyAIModify.cs" />  
-	<Compile Remove="Minus\Handlers\Icarus - Kopie.cs" />  
-	<Compile Remove="Minus\Handlers\ISPH.cs" />  
-	<Compile Remove="Minus\Handlers\Jetpack - Kopie.cs" />  
-	<Compile Remove="Minus\Handlers\RustedDoors.cs" />  
-	<Compile Remove="Minus\Handlers\SafeBridgesH.cs" />  
-	<Compile Remove="Minus\Handlers\ShipLightsAdditions.cs" />  
-	<Compile Remove="Minus\Handlers\SpiderConf.cs" />  
-	<Compile Remove="Minus\Handlers\TakeyAwakePatch.cs" />  
-	<Compile Remove="Minus\Handlers\TakeyDinkDonkH.cs" />  
-	<Compile Remove="Minus\Handlers\ZombiesShutup.cs" />  
-	<Compile Remove="Minus\ModdedEvents\BlahajPlush.cs" />  
-	<Compile Remove="Minus\ModdedEvents\ButlerAiTechinalDifficulties.cs" />  
-	<Compile Remove="Minus\ModdedEvents\Crazy.cs" />  
-	<Compile Remove="Minus\ModdedEvents\FoxEv.cs" />  
-	<Compile Remove="Minus\ModdedEvents\HallucinoceptsEv.cs" />  
-	<Compile Remove="Minus\ModdedEvents\Invisible.cs" />  
-	<Compile Remove="Minus\ModdedEvents\ISP.cs" />  
-	<Compile Remove="Minus\ModdedEvents\MaskedHorde.cs" />  
-	<Compile Remove="Minus\ModdedEvents\MushroomEv.cs" />  
-	<Compile Remove="Minus\ModdedEvents\PowerFail.cs" />  
-	<Compile Remove="Minus\ModdedEvents\RustedDoorsEv.cs" />  
-	<Compile Remove="Minus\ModdedEvents\SafeBridges.cs" />  
-	<Compile Remove="Minus\ModdedEvents\SpiderPlush.cs" />  
-	<Compile Remove="Minus\ModdedEvents\StrawberryDonut.cs" />  
-	<Compile Remove="Minus\ModdedEvents\TakeyGokuPlush.cs" />  
-	<Compile Remove="Minus\ModdedEvents\TakeyGokuPlushBig.cs" />  
-	<Compile Remove="Minus\ModdedEvents\TakeyPlush.cs" />  
-	<Compile Remove="Minus\ModdedEvents\TakeyPlushDinkDonk.cs" />  
-	<Compile Remove="Minus\ModdedEvents\Toilet.cs" />  
-	<Compile Remove="Minus\ModdedEvents\ToilPlayerEv.cs" />  
-	<Compile Remove="Minus\ModdedEvents\ZombieApocalipse.cs" />  
-	<Compile Remove="Minus\ModdedEvents\ZombiesPlush.cs" />  
-</ItemGroup>  
+	<PropertyGroup>
+		<!-- Steam library folder -->
+		<SteamLibrary>D:\SteamLibrary\steamapps\common</SteamLibrary>
 
-<ItemGroup>  
-	<None Remove="Asset\asset" />  
-	<None Remove="Asset\bcm_assets" />  
-	<None Remove="Asset\bcm_customassets" />  
-	<None Remove="Asset\customassets" />  
-	<None Remove="Asset\customenemies" />  
-</ItemGroup>  
+		<!-- Lethal Company plugins folder -->
+		<PluginsFolder>$(SteamLibrary)\Lethal Company\BepInEx\plugins</PluginsFolder>
 
-<ItemGroup>  
-	<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />  
-	<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />  
-	<PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.5.0-beta.1" PrivateAssets="all" />  
-	<PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />  
-	<PackageReference Include="BepInEx.Core" Version="5.*" />  
-	<PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" />  
-	<PackageReference Include="Rune580.Mods.LethalCompany.InputUtils" Version="0.7.10" />  
-	<PackageReference Include="UnityEngine.Modules" Version="2022.3.9" IncludeAssets="compile" PrivateAssets="all" />  
-    <PackageReference Include="LethalCompany.GameLibs.Steam" Version="73.0.0-ngd.0" PrivateAssets="all" />
-</ItemGroup>  
+		<!-- Gale profile name -->
+		<GaleProfile>BCDev80</GaleProfile>
 
-<ItemGroup>
-	<Reference Include="com.github.zehsteam.BlahajPlush">  
-		<HintPath>libs\com.github.zehsteam.BlahajPlush.dll     </HintPath>  
-	</Reference>  
-	<Reference Include="com.github.zehsteam.TakeyGokuBracken">  
-		<HintPath>libs\com.github.zehsteam.TakeyGokuBracken.dll</HintPath>  
-	</Reference>  
-	<Reference Include="com.github.zehsteam.TakeyPlush">  
-		<HintPath>libs\com.github.zehsteam.TakeyPlush.dll      </HintPath>  
-	</Reference>  
-	<Reference Include="com.github.zehsteam.ToilHead">  
-		<HintPath>libs\com.github.zehsteam.ToilHead.dll        </HintPath>  
-	</Reference>  
-	<Reference Include="com.github.zehsteam.ZombiesPlush">  
-   <HintPath>libs\com.github.zehsteam.ZombiesPlush.dll         </HintPath>  
-	</Reference>  
-	<Reference Include="FacilityMeltdown">  
-		<HintPath>libs\FacilityMeltdown.dll                    </HintPath>  
-	</Reference>  
-	<Reference Include="kite.ZelevatorCode">
-	  <HintPath>libs\kite.ZelevatorCode.dll                    </HintPath>
-	</Reference>  
-	<Reference Include="LethalNetworkAPI">  
-		<HintPath>libs\LethalNetworkAPI.dll                    </HintPath>  
-	</Reference>  
-	<Reference Include="LethalPhones">
-	  <HintPath>libs\LethalPhones.dll                          </HintPath>
-	</Reference>  
-	<Reference Include="SelfSortingStorage">
-	  <HintPath>libs\SelfSortingStorage.dll                    </HintPath>
-	</Reference>  
-	<Reference Include="ShipInventory">  
-		<HintPath>libs\ShipInventory.dll                       </HintPath>  
-	</Reference>  
-	<Reference Include="HotBarPlus">  
-		<HintPath>libs\HotBarPlus.dll                          </HintPath>  
-	</Reference>
-	<Reference Include="uk.1a3.yesfox">  
-		<HintPath>libs\yesfox.dll                              </HintPath>  
-	</Reference>
-	<Reference Include="CombinedWeathersToolkit">
-		<HintPath>libs\CCombinedWeathersToolkit-publicized.dll </HintPath>
-	</Reference>
-	<Reference Include="WeatherRegistry">
-		<HintPath>libs\WeatherRegistry-publicized.dll          </HintPath>
-	</Reference>
-	<Reference Include="Dawnlib">
-		<HintPath>libs\dawnlib-publicized.dll                  </HintPath>
-	</Reference>
-</ItemGroup>  
+		<!-- Gale plugins folder -->
+		<GalePluginsFolder>$(AppData)\com.kesomannen.gale\lethal-company\profiles\$(GaleProfile)\BepInEx\plugins\SoftDiamond-BrutalCompanyMinusExtraReborn</GalePluginsFolder>
 
-<ItemGroup>
-  <Folder Include="Minus\Handlers\ExternalEvents\" />
-  <Folder Include="Minus\Handlers\mCommand\" />
-</ItemGroup>  
+		<!-- Other settings -->
+		<PlatformTarget>AnyCPU</PlatformTarget>
+		<GenerateDocumentationFile>False</GenerateDocumentationFile>
+		<UserSecretsId>3f41ed69-9911-4a88-a581-38559aa6aec1</UserSecretsId>
+	</PropertyGroup>
 
-<PropertyGroup>  
-	<!-- Steam library folder -->  
-	<SteamLibrary>D:\SteamLibrary\steamapps\common</SteamLibrary>  
+	<ItemGroup>
+		<Reference Include="com.github.zehsteam.BlahajPlush">
+			<HintPath>libs\com.github.zehsteam.BlahajPlush.dll</HintPath>
+		</Reference>
+		<Reference Include="com.github.zehsteam.TakeyGokuBracken">
+			<HintPath>libs\com.github.zehsteam.TakeyGokuBracken.dll</HintPath>
+		</Reference>
+		<Reference Include="com.github.zehsteam.TakeyPlush">
+			<HintPath>libs\com.github.zehsteam.TakeyPlush.dll</HintPath>
+		</Reference>
+		<Reference Include="com.github.zehsteam.ToilHead">
+			<HintPath>libs\com.github.zehsteam.ToilHead.dll</HintPath>
+		</Reference>
+		<Reference Include="FacilityMeltdown">
+			<HintPath>libs\FacilityMeltdown.dll</HintPath>
+		</Reference>
+		<Reference Include="kite.ZelevatorCode">
+			<HintPath>libs\kite.ZelevatorCode.dll</HintPath>
+		</Reference>
+		<Reference Include="LethalPhones">
+			<HintPath>libs\LethalPhones.dll</HintPath>
+		</Reference>
+		<Reference Include="SelfSortingStorage">
+			<HintPath>libs\SelfSortingStorage.dll</HintPath>
+		</Reference>
+		<Reference Include="ShipInventory">
+			<HintPath>libs\ShipInventory.dll</HintPath>
+		</Reference>
+		<Reference Include="HotBarPlus">
+			<HintPath>libs\HotBarPlus.dll</HintPath>
+		</Reference>
+		<Reference Include="Unity.Networking.Transport">
+		  <HintPath>libs\Gamelibs\Unity.Networking.Transport.dll</HintPath>
+		</Reference>
+		<Reference Include="WeatherRegistry">
+			<HintPath>libs\WeatherRegistry-publicized.dll</HintPath>
+		</Reference>
+		<Reference Include="Dawnlib">
+			<HintPath>libs\com.github.teamxiaolan.dawnlib-publicized.dll</HintPath>
+		</Reference>
+		<Reference Include="Dawnlib2">
+			<HintPath>libs\com.github.teamxiaolan.dawnlib.interfaces-publicized.dll</HintPath>
+		</Reference>
+		<Reference Include="Dawnlib3">
+			<HintPath>libs\com.github.teamxiaolan.dawnlib.compatibility-publicized.dll</HintPath>
+		</Reference>
+		<Reference Include="Dawnlib4">
+			<HintPath>libs\com.github.teamxiaolan.dawnlib.dusk-publicized.dll</HintPath>
+		</Reference>
+		<Reference Include="Dungen">
+			<HintPath>libs\Gamelibs\Dungen.dll</HintPath>
+		</Reference>
+		<Reference Include="Dungen2">
+			<HintPath>libs\Gamelibs\DunGen.Integration.UnityNav.dll</HintPath>
+		</Reference>
+		<Reference Include="Dungen4">
+			<HintPath>libs\MMHOOK_DunGen.dll</HintPath>
+		</Reference>		
+		<Reference Include="Assembly-CSharp.dll">
+			<HintPath>libs\Gamelibs\Assembly-CSharp.dll</HintPath>
+		</Reference>
+		<Reference Include="Assembly-CSharp.dll">
+			<HintPath>libs\Assembly-CSharp.dll</HintPath>
+		</Reference>		
+		<Reference Include="Assembly-CSharp-firstpass">
+			<HintPath>libs\Gamelibs\Assembly-CSharp-firstpass.dll</HintPath>
+		</Reference>
+		<Reference Include="Unity.Netcode.Runtime">
+			<HintPath>libs\Gamelibs\Unity.Netcode.Runtime.dll</HintPath>
+		</Reference>
+		<Reference Include="Unity.Netcode.Components">
+			<HintPath>libs\Gamelibs\Unity.Netcode.Components.dll</HintPath>
+		</Reference>
+		<Reference Include="UnityEngine.UI">
+			<HintPath>libs\Gamelibs\UnityEngine.UI.dll</HintPath>
+		</Reference>
+		<Reference Include="UnityEngine.InputModule">
+			<HintPath>libs\Gamelibs\UnityEngine.InputModule.dll</HintPath>
+		</Reference>
+		<Reference Include="Unity.InputSystem">
+			<HintPath>libs\Gamelibs\Unity.InputSystem.dll</HintPath>
+		</Reference>
+		<Reference Include="Facepunch.Steamworks.Win64">
+			<HintPath>libs\Gamelibs\Facepunch.Steamworks.Win64.dll</HintPath>
+		</Reference>
+		<Reference Include="Unity.ProBuilder">
+			<HintPath>libs\Gamelibs\Unity.ProBuilder.dll</HintPath>
+		</Reference>
+		<Reference Include="UnityEngine.AnimationModule">
+			<HintPath>libs\Gamelibs\UnityEngine.AnimationModule.dll</HintPath>
+		</Reference>
+		<Reference Include="Unity.Animation.Rigging">
+			<HintPath>libs\Gamelibs\Unity.Animation.Rigging.dll</HintPath>
+		</Reference>
+		<Reference Include="Unity.TextMeshPro">
+			<HintPath>libs\Gamelibs\Unity.TextMeshPro.dll</HintPath>
+		</Reference>
+		<Reference Include="UnityEngine.CoreModule">
+			<HintPath>libs\Gamelibs\UnityEngine.CoreModule.dll</HintPath>
+		</Reference>
+		<Reference Include="Unity.RenderPipelines.HighDefinition.Runtime">
+			<HintPath>libs\Gamelibs\Unity.RenderPipelines.HighDefinition.Runtime.dll</HintPath>
+		</Reference>
+		<Reference Include="Unity.Collections">
+			<HintPath>libs\Gamelibs\Unity.Collections.dll</HintPath>
+		</Reference>
+		<Reference Include="FacePunch Transport For Netcode for GameObjects">
+			<HintPath>libs\Gamelibs\Facepunch Transport for Netcode for GameObjects.dll</HintPath>
+		</Reference>
+		<Reference Include="Facepunch.Steamworks.Win64">
+			<HintPath>libs\Gamelibs\Facepunch.Steamworks.Win64.dll</HintPath>
+		</Reference>
+	</ItemGroup>
 
-	<!-- Lethal Company plugins folder -->  
-	<PluginsFolder>$(SteamLibrary)\Lethal Company\BepInEx\plugins</PluginsFolder>  
+	<ItemGroup>
+		<Folder Include="Minus\Handlers\ExternalEvents\" />
+		<Folder Include="Minus\Handlers\mCommand\" />
+	</ItemGroup>
 
-	<!-- Gale profile name -->  
-	<GaleProfile>BCDev80</GaleProfile>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<Optimize>False</Optimize>
+		<DebugType>embedded</DebugType>
+	</PropertyGroup>
 
-	<!-- Gale plugins folder -->  
-	<GalePluginsFolder>$(AppData)\com.kesomannen.gale\lethal-company\profiles\$(GaleProfile)\BepInEx\plugins\SoftDiamond-BrutalCompanyMinusExtraReborn</GalePluginsFolder>  
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<DebugType>embedded</DebugType>
+	</PropertyGroup>
 
-	<!-- Other settings -->  
-	<PlatformTarget>AnyCPU</PlatformTarget>  
-	<GenerateDocumentationFile>False</GenerateDocumentationFile>  
-</PropertyGroup>  
+	<ItemGroup>
+		<NetcodePatchDeps Include="libs\GameLibs\*.dll" />
+		<NetcodePatchDeps Include="libs\*.dll" />
+	</ItemGroup>
 
-<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">  
-	<Optimize>False</Optimize>  
-	<DebugType>embedded</DebugType>  
-</PropertyGroup>  
-
-<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">  
-	<DebugType>embedded</DebugType>  
-</PropertyGroup>  
-
-<Target Name="NetcodePatch" AfterTargets="PostBuildEvent">  
-	<Exec Command="netcode-patch -uv 2022.3.62 -nv 1.12.0 -tv 1.0.0 &quot;$(TargetPath)&quot; @(ReferencePathWithRefAssemblies->'&quot;%(Identity)&quot;', ' ')" />  
-</Target>
+	<Target Name="NetcodePatch" AfterTargets="Build">
+		<Exec Command="netcode-patch -uv 2022.3.62 -nv 1.12.0 -tv 1.0.0 &quot;$(TargetPath)&quot; @(NetcodePatchDeps->'&quot;%(FullPath)&quot;', ' ')" />
+	</Target>
 
 	<Target Name="CopyToPluginsFolder" AfterTargets="PostBuildEvent">
 		<Copy DestinationFolder="$(PluginsFolder)" OverwriteReadOnlyFiles="true" SkipUnchangedFiles="true" SourceFiles="$(TargetPath)" />
