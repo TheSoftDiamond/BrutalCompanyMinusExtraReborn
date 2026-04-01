@@ -3,9 +3,11 @@ using Unity.Netcode;
 using HarmonyLib;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using BrutalCompanyMinus.Minus.Handlers.Modded;
 
 namespace BrutalCompanyMinus.Minus
 {
+    [Serializable]
     public struct Weather : INetworkSerializable, IEquatable<Weather>
     {
         public LevelWeatherType weatherType;
@@ -48,16 +50,23 @@ namespace BrutalCompanyMinus.Minus
             return weatherType == other.weatherType;
         }
 
-        public static NetworkList<Weather> InitalizeWeatherMultipliers(NetworkList<Weather> currentWeatherMultipliers)
+        public static NetworkList<Weather> InitalizeWeatherMultipliers(ref NetworkList<Weather> currentWeatherMultipliers)
         {
             // Set Initial Values
             currentWeatherMultipliers.Add(Configuration.noneMultiplier);
+            Log.LogInfo("Added None Multiplier: " + Configuration.noneMultiplier);
             currentWeatherMultipliers.Add(Configuration.dustCloudMultiplier);
+            Log.LogInfo("Added DustCloud Multiplier: " + Configuration.dustCloudMultiplier);
             currentWeatherMultipliers.Add(Configuration.rainyMultiplier);
+            Log.LogInfo("Added Rainy Multiplier: " + Configuration.rainyMultiplier);
             currentWeatherMultipliers.Add(Configuration.stormyMultiplier);
+            Log.LogInfo("Added Stormy Multiplier: " + Configuration.stormyMultiplier);
             currentWeatherMultipliers.Add(Configuration.foggyMultiplier);
+            Log.LogInfo("Added Foggy Multiplier: " + Configuration.foggyMultiplier);
             currentWeatherMultipliers.Add(Configuration.floodedMultiplier);
+            Log.LogInfo("Added Flooded Multiplier: " + Configuration.floodedMultiplier);
             currentWeatherMultipliers.Add(Configuration.eclipsedMultiplier);
+            Log.LogInfo("Added Eclipsed Multiplier: " + Configuration.eclipsedMultiplier);
 
             return currentWeatherMultipliers;
         }
