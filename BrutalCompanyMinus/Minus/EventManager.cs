@@ -115,7 +115,12 @@ namespace BrutalCompanyMinus.Minus
             new Events.TargetingFailureEvent(),
             new Events.TeleporterTraps(),
             new Events.IsMetal(),
+            new Events.Stingray(), // Requires Special Events (Temporary)
+            new Events.Puma(), // Requires Special Events (Temporary)
+            //new Events.KidnapperFox(),  // Requires Special Events (Temporary)
             // Very Bad
+            new Events.Cadaver(), // Requires Special Events (Temporary)
+            new Events.CatsAndDogs(), // Requires Special Events (Temporary)
             new Events.Nutcracker(),
             new Events.KiwiBird(),// Requires Special Events
             new Events.LockedEntrance(),// Requires Special Events
