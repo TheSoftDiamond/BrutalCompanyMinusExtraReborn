@@ -25,6 +25,8 @@ namespace BrutalCompanyMinus.Minus.Events
 
             ScaleList.Add(ScaleType.MinAmount, new Scale(5.0f, 0.2f, 5.0f, 25.0f));
             ScaleList.Add(ScaleType.MaxAmount, new Scale(7.0f, 0.28f, 7.0f, 35.0f));
+            ScaleList.Add(ScaleType.MinPercentSelected, new Scale(0.0f, 0.0f, 0.0f, 0.0f));
+            ScaleList.Add(ScaleType.MaxPercentSelected, new Scale(1.0f, 0.0f, 1.0f, 1.0f));
         }
 
         public override bool AddEventIfOnly() => RoundManager.Instance.currentLevel.spawnableMapObjects.ToList().Exists(x => x.prefabToSpawn.name == Assets.ObjectNameList[Assets.ObjectName.Landmine]);
@@ -34,7 +36,7 @@ namespace BrutalCompanyMinus.Minus.Events
             RoundManager.Instance.currentLevel.spawnableMapObjects = RoundManager.Instance.currentLevel.spawnableMapObjects.Add(new SpawnableMapObject()
             {
                 prefabToSpawn = Assets.GetObject(Assets.ObjectName.Landmine),
-                numberToSpawn = new AnimationCurve(new Keyframe(0f, Get(ScaleType.MinAmount)), new Keyframe(1f, Get(ScaleType.MaxAmount))),
+                numberToSpawn = new AnimationCurve(new Keyframe(Getf(ScaleType.MinPercentSelected), Get(ScaleType.MinAmount)), new Keyframe(Getf(ScaleType.MaxPercentSelected), Get(ScaleType.MaxAmount))),
                 spawnFacingAwayFromWall = false,
                 spawnFacingWall = false,
                 spawnWithBackToWall = false,
