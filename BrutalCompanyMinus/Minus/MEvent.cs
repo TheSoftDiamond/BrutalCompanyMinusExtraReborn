@@ -81,19 +81,51 @@ namespace BrutalCompanyMinus.Minus
         {
             InsideEnemyRarity, OutsideEnemyRarity, DaytimeEnemyRarity, MinOutsideEnemy, MinInsideEnemy, MaxOutsideEnemy, MaxInsideEnemy,
             ScrapValue, ScrapAmount, FactorySize, MinDensity, MaxDensity, MinCash, MaxCash, MinItemAmount, MaxItemAmount, MinValue, MaxValue, Rarity, MinRarity, MaxRarity,
-            MinCut, MaxCut, MinHp, MaxHp, SpawnMultiplier, MaxInsideEnemyCount, MaxOutsideEnemyCount, SpawnCapMultiplier, MinPercentageCut, MaxPercentageCut, MinAmount, MaxAmount, Percentage, TimeSettings, TimeMin, TimeMax
+            MinCut, MaxCut, MinHp, MaxHp, SpawnMultiplier, MaxInsideEnemyCount, MaxOutsideEnemyCount, SpawnCapMultiplier, MinPercentageCut, MaxPercentageCut, MinAmount, MaxAmount, 
+            Percentage, TimeSettings, TimeMin, TimeMax, MinPercentSelected, MaxPercentSelected, ObjectWidth
         }
 
         internal static Dictionary<ScaleType, string> ScaleInfoList = new Dictionary<ScaleType, string>() {
-            { ScaleType.InsideEnemyRarity, "Enemy is added to Inside enemy list with rarity." }, { ScaleType.OutsideEnemyRarity, "Enemy is added to Outside enemy list with rarity." }, { ScaleType.DaytimeEnemyRarity, "Enemy is added to Daytime enemy list with rarity." },
-            { ScaleType.MinOutsideEnemy, "Minimum amount of enemies guranteed to spawn outside." }, { ScaleType.MaxOutsideEnemy, "Maximum amount of enemies guaranteed to spawn outside." }, { ScaleType.MinInsideEnemy, "Minimum amount of enemies guaranteed to spawn inside." }, { ScaleType.MaxInsideEnemy, "Maximum amount of enemies guaranteed to spawn inside." },
-            { ScaleType.ScrapValue, "The amount that scrap value is multiplied by." }, { ScaleType.ScrapAmount, "The amount that scrap amount is multiplied by." }, { ScaleType.FactorySize, "The amount that factory size is multiplied by." },
-            { ScaleType.MinDensity, "Minimum density value chosen." }, { ScaleType.MaxDensity, "Maximum density value chosen." }, { ScaleType.MinCash, "Minumum amount of cash given." }, { ScaleType.MaxCash, "Maximum amount of cash given." },
-            { ScaleType.MinItemAmount, "Minimum amount of items to spawn." }, { ScaleType.MaxItemAmount, "Maximum amount of items to spawn." }, { ScaleType.MinValue, "The minimum value of something." }, { ScaleType.MaxValue, "The maximum value of something." },
-            { ScaleType.Rarity, "The general chance of something." }, { ScaleType.MinRarity, "Minimum chance of something." }, { ScaleType.MaxRarity, "Maximum chance of something." }, { ScaleType.MinCut, "Minimum cut taken." }, { ScaleType.MaxCut, "Maximum cut taken." },
-            { ScaleType.MinHp, "Minimum possible to be chosen." }, { ScaleType.MaxHp, "Maxmimum possible hp to be chosen." }, { ScaleType.SpawnMultiplier, "Will multiply the spawn chance." }, { ScaleType.SpawnCapMultiplier, "Will multiply the spawn cap." },
-            { ScaleType.MaxInsideEnemyCount, "Changes max amount of inside enemies spawnable. " }, { ScaleType.MaxOutsideEnemyCount, "Changes max amount of outside enemies spawnable. " }, { ScaleType.MinPercentageCut, "Minimum possible percentage cut." }, { ScaleType.MaxPercentageCut, "Maximum possible percentage cut." },
-            { ScaleType.MinAmount, "Minimum amount of something to be chosen." }, { ScaleType.MaxAmount, "Maximum amount of something to be chosen." }, { ScaleType.Percentage, "This value goes between 0.0 to 1.0." }, { ScaleType.TimeSettings, "Time scaling factor." }, { ScaleType.TimeMin, "The minimum time to be chosen." }, { ScaleType.TimeMax, "The maximum time to be chosen." }
+            { ScaleType.InsideEnemyRarity, "Enemy is added to Inside enemy list with rarity." }, 
+            { ScaleType.OutsideEnemyRarity, "Enemy is added to Outside enemy list with rarity." }, 
+            { ScaleType.DaytimeEnemyRarity, "Enemy is added to Daytime enemy list with rarity." }, 
+            { ScaleType.MinOutsideEnemy, "Minimum amount of enemies guranteed to spawn outside." }, 
+            { ScaleType.MaxOutsideEnemy, "Maximum amount of enemies guaranteed to spawn outside." }, 
+            { ScaleType.MinInsideEnemy, "Minimum amount of enemies guaranteed to spawn inside." }, 
+            { ScaleType.MaxInsideEnemy, "Maximum amount of enemies guaranteed to spawn inside." },
+            { ScaleType.ScrapValue, "The amount that scrap value is multiplied by." }, 
+            { ScaleType.ScrapAmount, "The amount that scrap amount is multiplied by." }, 
+            { ScaleType.FactorySize, "The amount that factory size is multiplied by." },
+            { ScaleType.MinDensity, "Minimum density value chosen." }, 
+            { ScaleType.MaxDensity, "Maximum density value chosen." }, 
+            { ScaleType.MinCash, "Minumum amount of cash given." }, 
+            { ScaleType.MaxCash, "Maximum amount of cash given." },
+            { ScaleType.MinItemAmount, "Minimum amount of items to spawn." }, 
+            { ScaleType.MaxItemAmount, "Maximum amount of items to spawn." }, 
+            { ScaleType.MinValue, "The minimum value of something." }, 
+            { ScaleType.MaxValue, "The maximum value of something." },
+            { ScaleType.Rarity, "The general chance of something." }, 
+            { ScaleType.MinRarity, "Minimum chance of something." }, 
+            { ScaleType.MaxRarity, "Maximum chance of something." }, 
+            { ScaleType.MinCut, "Minimum cut taken." }, 
+            { ScaleType.MaxCut, "Maximum cut taken." }, 
+            { ScaleType.MinHp, "Minimum possible to be chosen." }, 
+            { ScaleType.MaxHp, "Maxmimum possible hp to be chosen." }, 
+            { ScaleType.SpawnMultiplier, "Will multiply the spawn chance." }, 
+            { ScaleType.SpawnCapMultiplier, "Will multiply the spawn cap." }, 
+            { ScaleType.MaxInsideEnemyCount, "Changes max amount of inside enemies spawnable. " }, 
+            { ScaleType.MaxOutsideEnemyCount, "Changes max amount of outside enemies spawnable. " }, 
+            { ScaleType.MinPercentageCut, "Minimum possible percentage cut." }, 
+            { ScaleType.MaxPercentageCut, "Maximum possible percentage cut." }, 
+            { ScaleType.MinAmount, "Minimum amount of something to be chosen." }, 
+            { ScaleType.MaxAmount, "Maximum amount of something to be chosen." }, 
+            { ScaleType.Percentage, "This value goes between 0.0 to 1.0." }, 
+            { ScaleType.TimeSettings, "Time scaling factor." }, 
+            { ScaleType.TimeMin, "The minimum time to be chosen." }, 
+            { ScaleType.TimeMax, "The maximum time to be chosen." },
+            { ScaleType.MinPercentSelected, "Minimum percentage of something to be selected." },
+            { ScaleType.MaxPercentSelected, "Maximum percentage of something to be selected." },
+            { ScaleType.ObjectWidth, "How close an object can spawn to the edges of the navmesh" }
         };
 
         /// <summary>
