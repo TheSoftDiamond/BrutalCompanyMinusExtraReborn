@@ -1,4 +1,5 @@
-﻿using BepInEx.Configuration;
+﻿using BepInEx;
+using BepInEx.Configuration;
 using BrutalCompanyMinus.Minus.Handlers;
 using HarmonyLib;
 using System;
@@ -275,6 +276,8 @@ namespace BrutalCompanyMinus.Minus
         };
         #endregion
 
+        #region Other Lists
+
         //public static List<MEvent> ExternalEvents = new List<MEvent>() { };
 
         internal static List<MEvent> customEvents = new List<MEvent>();
@@ -300,7 +303,7 @@ namespace BrutalCompanyMinus.Minus
 
         internal static float[] eventTypeRarities = new float[] { };
 
-
+        #endregion
 
         /// <summary>
         /// This must be called before save load, will generate the config in Custom_Events.cfg
@@ -352,6 +355,7 @@ namespace BrutalCompanyMinus.Minus
             System.Random rng = new System.Random(StartOfRound.Instance.randomMapSeed + 32345 + Environment.TickCount);
             int eventsToSpawn = (int)MEvent.Scale.Compute(Configuration.eventsToSpawn, MEvent.EventType.Neutral) + RoundManager.Instance.GetRandomWeightedIndex(Configuration.weightsForExtraEvents.IntArray(), rng);
             
+            //Forced events
             foreach(MEvent forcedEvent in forcedEvents)
             {
                 eventsToChooseForm.RemoveAll(x => x.Name() == forcedEvent.Name());
@@ -373,34 +377,51 @@ namespace BrutalCompanyMinus.Minus
                     continue;
                 }
 
-                if (IsIgnoredEventByMoonBlacklist(newEvent))
+                // Check moon whitelist/blacklist
+                bool moonValid = newEvent.MoonMode
+                                   ? IsEventOnMoonWhitelist(newEvent)
+                                   : !IsIgnoredEventByMoonBlacklist(newEvent);
+
+                Log.LogInfo($"Checking {(newEvent.MoonMode ? "whitelist" : "blacklist")} for event {newEvent.Name()}");
+
+                // Remove event and iterate again if condition is not met for event
+                if (!moonValid)
                 {
+                    Log.LogInfo($"Event {newEvent.Name()} is {(newEvent.MoonMode ? "not whitelisted" : "blacklisted")} on moon {Manager.currentLevel.PlanetName}, skipping.");
                     i--;
                     eventsToChooseForm.RemoveAll(x => x.Name() == newEvent.Name());
                     continue;
                 }
 
-                chosenEvents.Add(newEvent);
-
-                // Remove so no further accurrences
-                eventsToChooseForm.RemoveAll(x => x.Name() == newEvent.Name());
-
-                // Remove incompatible events from toChooseList
-                int AmountRemoved = 0;
-
-                foreach (string eventToRemove in newEvent.EventsToRemove)
+                // Add event and remove incompatible events
+                if (moonValid)
                 {
-                    eventsToChooseForm.RemoveAll(x => x.Name() == eventToRemove);
-                    AmountRemoved += chosenEvents.RemoveAll(x => x.Name() == eventToRemove);
-                }
+                    chosenEvents.Add(newEvent);
 
-                foreach (string eventToSpawnWith in newEvent.EventsToSpawnWith)
+                    // Remove so no further accurrences
+                    eventsToChooseForm.RemoveAll(x => x.Name() == newEvent.Name());
+
+                    // Remove incompatible events from toChooseList
+                    int AmountRemoved = 0;
+
+                    foreach (string eventToRemove in newEvent.EventsToRemove)
+                    {
+                        eventsToChooseForm.RemoveAll(x => x.Name() == eventToRemove);
+                        AmountRemoved += chosenEvents.RemoveAll(x => x.Name() == eventToRemove);
+                    }
+
+                    foreach (string eventToSpawnWith in newEvent.EventsToSpawnWith)
+                    {
+                        eventsToChooseForm.RemoveAll(x => x.Name() == eventToSpawnWith);
+                        AmountRemoved += chosenEvents.RemoveAll(x => x.Name() == eventToSpawnWith);
+                    }
+
+                    i -= AmountRemoved; // Decrement each time an event is removed from chosenEvents list
+                }
+                else
                 {
-                    eventsToChooseForm.RemoveAll(x => x.Name() == eventToSpawnWith);
-                    AmountRemoved += chosenEvents.RemoveAll(x => x.Name() == eventToSpawnWith);
+                    i--;
                 }
-
-                i -= AmountRemoved; // Decrement each time an event is removed from chosenEvents list
             }
 
             // Generate eventsToSpawnWith list with no copies
@@ -511,11 +532,6 @@ namespace BrutalCompanyMinus.Minus
             //{
             //    e.OnGameStart();
             //}
-
-            /*if (Compatibility.DawnLibPresent)
-            {
-                DawnLibHandling.SubFreeze();
-            }*/
         }
 
         /// <summary>
@@ -810,14 +826,6 @@ namespace BrutalCompanyMinus.Minus
             foreach (Keyframe key in newLevel.outsideEnemySpawnChanceThroughDay.keys) Log.LogInfo($"Time:{key.time} + $Value:{key.value}");
             Log.LogInfo("Daytime Spawn Curve");
             foreach (Keyframe key in newLevel.daytimeEnemySpawnChanceThroughDay.keys) Log.LogInfo($"Time:{key.time} + $Value:{key.value}");
-            /*
-            Log.LogInfo("All Known Custom Weathers: ");
-            foreach (var weather in WeatherManager.Weathers)
-            {
-                Log.LogInfo(weather.Name);
-                Log.LogInfo(weather);
-            } 
-            */
 
         }
 
@@ -869,12 +877,39 @@ namespace BrutalCompanyMinus.Minus
 
             // Check is current moon in blacklist
 
-            if (mEvent.MoonBlacklist.Contains(currentMoon, StringComparer.OrdinalIgnoreCase) || mEvent.MoonBlacklist.Contains(currentMoonNoNumbers, StringComparer.OrdinalIgnoreCase))
+            if (mEvent.Blacklist.Contains(currentMoon, StringComparer.OrdinalIgnoreCase) || mEvent.Blacklist.Contains(currentMoonNoNumbers, StringComparer.OrdinalIgnoreCase))
             {
                 Log.LogInfo($"Event {mEvent.Name()} is ignored due to moon blacklist.");
                 return true;
             }
             return false;
+        }
+
+        /// <summary>
+        /// Check if event is on moon whitelist
+        /// </summary>
+        /// <param name="mEvent"></param>
+        /// <returns></returns>
+        internal static bool IsEventOnMoonWhitelist(MEvent mEvent)
+        {
+            string currentMoon = Manager.currentLevel.PlanetName.Replace(" ", string.Empty).ToString();
+            string currentMoonNoNumbers = Regex.Replace(currentMoon, @"\d", string.Empty).Trim();
+
+            //Log.LogWarning($"{mEvent.Name()} Moon Whitelist: {string.Join(", ", mEvent.Whitelist)}");
+            //Log.LogWarning("Current Moon: " + currentMoon);
+
+            // Check is current moon in whitelist
+            if (mEvent.Whitelist.Count == 0)
+            {
+                Log.LogInfo($"Event {mEvent.Name()} has an empty moon whitelist, but whitelist mode is on. Please consider either entering entries for the list or turn off the whitelist mode");
+                return false; // Whitelist is empty, but whitelist mode is on, so no moons are valid
+            }
+            if (mEvent.Whitelist.Contains(currentMoon, StringComparer.OrdinalIgnoreCase) || mEvent.Whitelist.Contains(currentMoonNoNumbers, StringComparer.OrdinalIgnoreCase))
+            {
+                Log.LogInfo($"Event {mEvent.Name()} is chosen due to moon whitelist.");
+                return true; // Event is on whitelist, and valid moon
+            }
+            return false; // Fallback
         }
     }
 }
