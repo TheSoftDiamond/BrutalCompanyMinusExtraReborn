@@ -43,9 +43,19 @@ namespace BrutalCompanyMinus.Minus
         public List<string> EventsToRemove = new List<string>();
 
         /// <summary>
+        /// Set this in Initalize() to specify events to use whitelist mode instead of blacklist mode.
+        /// </summary>
+        public bool MoonMode = false;
+
+        /// <summary>
         /// Set this in Initalize() to specify moons to prevent this event from occuring.
         /// </summary>
-        public List<string> MoonBlacklist = new List<string>();
+        public List<string> Blacklist = new List<string>();
+
+        /// <summary>
+        /// Set this in Initalize() to specify moons to prevent this event from occuring. Whitelist takes priority over Blacklist
+        /// </summary>
+        public List<string> Whitelist = new List<string>();
 
         /// <summary>
         /// Set this in Initalize() to specify events to spawn with, these wont be shown in the UI.
