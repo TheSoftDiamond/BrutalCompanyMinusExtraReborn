@@ -33,6 +33,8 @@ namespace BrutalCompanyMinus
         public static List<ConfigEntry<bool>> eventEnables = new List<ConfigEntry<bool>>();
         public static List<List<string>> eventsToRemove = new List<List<string>>(), eventsToSpawnWith = new List<List<string>>();
         public static List<List<string>> moonBlacklist = new List<List<string>>();
+        public static List<List<string>> moonWhitelist = new List<List<string>>();
+        public static List<ConfigEntry<bool>> moonMode = new List<ConfigEntry<bool>>();
         public static List<List<MonsterEvent>> monsterEvents = new List<List<MonsterEvent>>();
         public static List<ScrapTransmutationEvent> transmutationEvents = new List<ScrapTransmutationEvent>();
 
@@ -50,14 +52,14 @@ namespace BrutalCompanyMinus
         public static ConfigEntry<bool> enableQuotaChanges;
         public static ConfigEntry<int> deadLineDaysAmount, startingCredits, startingQuota, baseIncrease, increaseSteepness;
         public static Scale
-            spawnChanceMultiplierScaling = new Scale(), 
-            insideEnemyMaxPowerCountScaling = new Scale(), 
-            outsideEnemyPowerCountScaling = new Scale(), 
-            enemyBonusHpScaling = new Scale(), 
+            spawnChanceMultiplierScaling = new Scale(),
+            insideEnemyMaxPowerCountScaling = new Scale(),
+            outsideEnemyPowerCountScaling = new Scale(),
+            enemyBonusHpScaling = new Scale(),
             spawnCapMultiplier = new Scale(),
-            scrapAmountMultiplier = new Scale(), 
-            scrapValueMultiplier = new Scale(), 
-            insideSpawnChanceAdditive = new Scale(), 
+            scrapAmountMultiplier = new Scale(),
+            scrapValueMultiplier = new Scale(),
+            insideSpawnChanceAdditive = new Scale(),
             outsideSpawnChanceAdditive = new Scale();
         public static ConfigEntry<bool> ignoreMaxCap;
         public static ConfigEntry<float> difficultyMaxCap;
@@ -260,7 +262,7 @@ namespace BrutalCompanyMinus
             color = uiConfig.Bind("UI Options", "UI Color Hex", "00A000", "Color hex for UI elements.");
             uiColorReduction = uiConfig.Bind("UI Options", "UI Color Reduction Factor", 0.6275f, "Changes the color of the UI element when not active (0-1).");
             colorArrows = uiConfig.Bind("UI Options", "UI Arrow Color Hex", "00A000", "Color hex for UI arrows.");
-            colorArrowsIncrease = uiConfig.Bind("UI Options", "UI Arrow Color Amplification", 255f/160f, "Mutliplies the color by this number when UI arrows are active.");
+            colorArrowsIncrease = uiConfig.Bind("UI Options", "UI Arrow Color Amplification", 255f / 160f, "Mutliplies the color by this number when UI arrows are active.");
             colorText = uiConfig.Bind("UI Options", "UI Text Color Hex", "00FF00", "Color hex for UI text.");
             //menuColor = uiConfig.Bind("UI Options", "UI Menu Color Hex", "000000", "Color hex for UI menu background.");
             //menuTransparency = uiConfig.Bind("UI Options", "UI Menu Transparency", 0.498f, "Transparency for UI menu background. (0-1)");
@@ -289,7 +291,7 @@ namespace BrutalCompanyMinus
             deferWeatherToMods = CorePropertiesConfig.Bind("Mod Compatibility", "Defer Weather To Weather ToolKit Mod?", false, "If you wish to let other mods handle Brutal's weather setting effects, enable this. This has no effect on custom events as those use weather toolkit by default.");
             enableSpecialEvents = CorePropertiesConfig.Bind("Events Features", "Enable Special Events?", false, "Enables special events to be loaded.");
             transmutationBlacklist = CorePropertiesConfig.Bind("Events Features", "Transmutation Blacklist", "", "Blacklist items here to prevent them from being used in scrap transmutation. Uses itemProperties.itemName Component Name.");
-            enableNewEventOnNewLoad = CorePropertiesConfig.Bind("Mod Compatibility", "Events Reroll on Dynamic Interior", false , "For mods like Zeranos that support changing the dungeon layout every floor... should Brutal load new events for them? This feature might break.");
+            enableNewEventOnNewLoad = CorePropertiesConfig.Bind("Mod Compatibility", "Events Reroll on Dynamic Interior", false, "For mods like Zeranos that support changing the dungeon layout every floor... should Brutal load new events for them? This feature might break.");
             handleScanCommand = CorePropertiesConfig.Bind("Mod Compatibility", "Let Brutal handle the SCAN command?", true, "If enabled, Brutal will handle the scan command with accurate scrap values to its modifiers. If you have other mods that handle this feature, disable it. Please note, if disabled, the scan command will not show the proper values for scrap value.");
 
             //todo - add settings for events and modded events that mess with features like time
@@ -336,7 +338,9 @@ namespace BrutalCompanyMinus
                     // EventsToRemove and EventsToSpawnWith and Moon Blacklist
                     eventsToRemove.Add(ListToStrings(toConfig.Bind(e.Name(), "Events To Remove", StringsToList(e.EventsToRemove, ", "), "Will prevent said event(s) from occuring.").Value));
                     eventsToSpawnWith.Add(ListToStrings(toConfig.Bind(e.Name(), "Events To Spawn With", StringsToList(e.EventsToSpawnWith, ", "), "Will spawn said events(s).").Value));
-                    moonBlacklist.Add(ListToStrings(toConfig.Bind(e.Name(), "Moons To Not Spawn On", StringsToList(e.MoonBlacklist, ", "), "Event will not spawn on these moons. Seperate by comma for each moon name.").Value));
+                    moonMode.Add(toConfig.Bind(e.Name(), "Whitelist Mode?", e.MoonMode, "Which list should be used? Please note that if you are using the Whitelist mode, it must have at least one entry."));
+                    moonBlacklist.Add(ListToStrings(toConfig.Bind(e.Name(), "Moons To Not Spawn On", StringsToList(e.Blacklist, ", "), "Event will not spawn on these moons. Seperate by comma for each moon name. List must be populated").Value));
+                    moonWhitelist.Add(ListToStrings(toConfig.Bind(e.Name(), "Moons To Spawn Only On", StringsToList(e.Whitelist, ", "), "Event will only spawn on these moons. Seperate by comma for each moon name. List must be populated.").Value));
 
                     // Monster events
                     List<MonsterEvent> newMonsterEvents = new List<MonsterEvent>();
@@ -360,11 +364,10 @@ namespace BrutalCompanyMinus
                     SpawnableItemWithRarity[] newScrapTransmuations = new SpawnableItemWithRarity[e.scrapTransmutationEvent.items.Length];
                     for (int i = 0; i < e.scrapTransmutationEvent.items.Length; i++)
                     {
-                        newScrapTransmuations[i] = new SpawnableItemWithRarity()
-                        {
-                            spawnableItem = GetItem(toConfig.Bind(e.Name(), $"Scrap {i} name", e.scrapTransmutationEvent.items[i].spawnableItem.name, "Inputting an invalid scrap name will cause it to return an empty item").Value),
-                            rarity = toConfig.Bind(e.Name(), $"{e.scrapTransmutationEvent.items[i].spawnableItem.name} Rarity", e.scrapTransmutationEvent.items[i].rarity).Value
-                        };
+                        newScrapTransmuations[i] = new SpawnableItemWithRarity(
+                            GetItem(toConfig.Bind(e.Name(), $"Scrap {i} name", e.scrapTransmutationEvent.items[i].spawnableItem.name, "Inputting an invalid scrap name will cause it to return an empty item").Value),
+                            toConfig.Bind(e.Name(), $"{e.scrapTransmutationEvent.items[i].spawnableItem.name} Rarity", e.scrapTransmutationEvent.items[i].rarity).Value
+                        );
                     }
                     transmutationEvents.Add(new ScrapTransmutationEvent(amount, newScrapTransmuations));
                 }
@@ -482,7 +485,9 @@ namespace BrutalCompanyMinus
                 EventManager.events[i].Enabled = eventEnables[i].Value;
                 EventManager.events[i].EventsToRemove = eventsToRemove[i];
                 EventManager.events[i].EventsToSpawnWith = eventsToSpawnWith[i];
-                EventManager.events[i].MoonBlacklist = moonBlacklist[i];
+                EventManager.events[i].MoonMode = moonMode[i].Value;
+                EventManager.events[i].Blacklist = moonBlacklist[i];
+                EventManager.events[i].Whitelist = moonWhitelist[i];
                 EventManager.events[i].monsterEvents = monsterEvents[i];
                 EventManager.events[i].scrapTransmutationEvent = transmutationEvents[i];
             }

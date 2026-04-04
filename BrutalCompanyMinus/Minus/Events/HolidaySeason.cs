@@ -45,8 +45,8 @@ namespace BrutalCompanyMinus.Minus.Events
 
             scrapTransmutationEvent = new ScrapTransmutationEvent(
                 new Scale(0.5f, 0.008f, 0.5f, 0.9f),
-                new SpawnableItemWithRarity() { spawnableItem = Assets.GetItem(Assets.ItemName.EasterEgg), rarity = 40 },
-                new SpawnableItemWithRarity() { spawnableItem = Assets.GetItem(Assets.ItemName.Gift), rarity = 60 }
+                new SpawnableItemWithRarity(Assets.GetItem(Assets.ItemName.EasterEgg), 40),
+                new SpawnableItemWithRarity(Assets.GetItem(Assets.ItemName.Gift), 60)
             );
 
             ScaleList.Add(ScaleType.ScrapAmount, new Scale(1.0f, 0.005f, 1.0f, 1.5f));

@@ -26,14 +26,14 @@ namespace BrutalCompanyMinus.Minus.Events
 
             scrapTransmutationEvent = new ScrapTransmutationEvent(
                 new Scale(0.5f, 0.008f, 0.5f, 0.9f),
-                new SpawnableItemWithRarity() { spawnableItem = Assets.GetItem(Assets.ItemName.SeveredBone), rarity = 13 },
-                new SpawnableItemWithRarity() { spawnableItem = Assets.GetItem(Assets.ItemName.SeveredBoneRib), rarity = 12 },
-                new SpawnableItemWithRarity() { spawnableItem = Assets.GetItem(Assets.ItemName.SeveredEar), rarity = 12 },
-                new SpawnableItemWithRarity() { spawnableItem = Assets.GetItem(Assets.ItemName.SeveredFoot), rarity = 12 },
-                new SpawnableItemWithRarity() { spawnableItem = Assets.GetItem(Assets.ItemName.SeveredHand), rarity = 13 },
-                new SpawnableItemWithRarity() { spawnableItem = Assets.GetItem(Assets.ItemName.SeveredHeart), rarity = 13 },
-                new SpawnableItemWithRarity() { spawnableItem = Assets.GetItem(Assets.ItemName.SeveredThigh), rarity = 12 },
-                new SpawnableItemWithRarity() { spawnableItem = Assets.GetItem(Assets.ItemName.SeveredTongue), rarity = 13 }
+                new SpawnableItemWithRarity(Assets.GetItem(Assets.ItemName.SeveredBone), 13),
+                new SpawnableItemWithRarity(Assets.GetItem(Assets.ItemName.SeveredBoneRib), 12),
+                new SpawnableItemWithRarity(Assets.GetItem(Assets.ItemName.SeveredEar), 12),
+                new SpawnableItemWithRarity(Assets.GetItem(Assets.ItemName.SeveredFoot), 12),
+                new SpawnableItemWithRarity(Assets.GetItem(Assets.ItemName.SeveredHand), 13),
+                new SpawnableItemWithRarity(Assets.GetItem(Assets.ItemName.SeveredHeart), 13),
+                new SpawnableItemWithRarity(Assets.GetItem(Assets.ItemName.SeveredThigh), 12),
+                new SpawnableItemWithRarity(Assets.GetItem(Assets.ItemName.SeveredTongue), 13)
             );
 
             ScaleList.Add(ScaleType.ScrapAmount, new Scale(1.0f, 0.005f, 1.0f, 1.1f));

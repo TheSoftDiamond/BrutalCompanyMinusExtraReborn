@@ -1,13 +1,17 @@
 ﻿using BepInEx;
 using BepInEx.Configuration;
+using BrutalCompanyMinus.Minus;
 using BrutalCompanyMinus.Minus.Handlers;
 using BrutalCompanyMinus.Minus.Handlers.Modded;
 using HarmonyLib;
 using System;
 using System.Reflection;
+using Unity.Collections;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.ProBuilder.MeshOperations;
 using static BrutalCompanyMinus.Configuration;
+using static BrutalCompanyMinus.Net;
 
 namespace BrutalCompanyMinus
 {
@@ -21,12 +25,16 @@ namespace BrutalCompanyMinus
     [BepInDependency("com.github.zehsteam.ToilHead", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("kite.ZelevatorCode", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("mrov.WeatherRegistry", BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency("com.github.teamxiaolan.dawnlib", BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency("com.github.teamxiaolan.dawnlib.interfaces", BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency("com.github.teamxiaolan.dawnlib.dusk", BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency("com.github.teamxiaolan.dawnlib.compatibility", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInPlugin(GUID, NAME, VERSION)]
     internal class Plugin : BaseUnityPlugin
     {
         private const string GUID = "SoftDiamond.BrutalCompanyMinusExtraReborn";
         private const string NAME = "BrutalCompanyMinusExtraReborn";
-        private const string VERSION = "1.28.1";
+        private const string VERSION = "1.30.2";
 
         internal static Plugin Instance { get; private set; }
 
@@ -87,11 +95,6 @@ namespace BrutalCompanyMinus
                 _EnemyAI.PatchEnemyStart(harmony);
             }
 
-            //if (Compatibility.KidnapperFoxPresent)
-            //{
-                //KidnapperFoxPatches.PatchAll(harmony);
-            //}
-
             if (Compatibility.IsModPresent("kite.ZelevatorCode"))
             {
                 EndlessElevatorPatching.PatchAllElevator(harmony);
@@ -122,54 +125,40 @@ namespace BrutalCompanyMinus
                 Log.LogWarning("Failed to delete custom event config file: " + e.Message);
             }
 
-            NetcodePatcherAwake();
+            Init();
         }
 
-        private void NetcodePatcherAwake()
+        private void Init()
         {
-            try
-            {
-                var currentAssembly = Assembly.GetExecutingAssembly();
-                var types = currentAssembly.GetTypes();
+            NetworkVariableSerializationTypes.InitializeSerializer_UnmanagedByMemcpy<Weather>();
+            NetworkVariableSerializationTypes.InitializeEqualityChecker_UnmanagedIEquatable<Weather>();
 
-                foreach (var type in types)
-                {
-                    var methods = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
+            NetworkVariableSerializationTypes.InitializeSerializer_UnmanagedByMemcpy<OutsideObjectsToSpawnMethod>();
+            NetworkVariableSerializationTypes.InitializeEqualityChecker_UnmanagedIEquatable<OutsideObjectsToSpawnMethod>();
 
-                    foreach (var method in methods)
-                    {
-                        try
-                        {
-                            // Safely attempt to retrieve custom attributes
-                            var attributes = method.GetCustomAttributes(typeof(RuntimeInitializeOnLoadMethodAttribute), false);
+            NetworkVariableSerializationTypes.InitializeSerializer_UnmanagedByMemcpy<FixedString4096Bytes>();
+            NetworkVariableSerializationTypes.InitializeEqualityChecker_UnmanagedIEquatable<FixedString4096Bytes>();
 
-                            if (attributes.Length > 0)
-                            {
-                                try
-                                {
-                                    // Safely attempt to invoke the method
-                                    method.Invoke(null, null);
-                                }
-                                catch (TargetInvocationException ex)
-                                {
-                                    // Log and continue if method invocation fails (e.g., due to missing dependencies)
-                                    Logger.LogWarning($"Failed to invoke method {method.Name}: {ex.Message}");
-                                }
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            // Handle errors when fetching custom attributes, due to missing types or dependencies
-                            Logger.LogWarning($"Error processing method {method.Name} in type {type.Name}: {ex.Message}");
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                // Catch any general exceptions that occur in the process
-                Logger.LogError($"An error occurred in NetcodePatcherAwake: {ex.Message}");
-            }
+            NetworkVariableSerializationTypes.InitializeSerializer_UnmanagedByMemcpy<bool>();
+            NetworkVariableSerializationTypes.InitializeEqualityChecker_UnmanagedIEquatable<bool>();
+
+            NetworkVariableSerializationTypes.InitializeSerializer_UnmanagedByMemcpy<float>();
+            NetworkVariableSerializationTypes.InitializeEqualityChecker_UnmanagedIEquatable<float>();
+
+            NetworkVariableSerializationTypes.InitializeSerializer_UnmanagedByMemcpy<double>();
+            NetworkVariableSerializationTypes.InitializeEqualityChecker_UnmanagedIEquatable<double>();
+
+            NetworkVariableSerializationTypes.InitializeSerializer_UnmanagedByMemcpy<int>();
+            NetworkVariableSerializationTypes.InitializeEqualityChecker_UnmanagedIEquatable<int>();
+
+            NetworkVariableSerializationTypes.InitializeSerializer_UnmanagedByMemcpy<Vector2>();
+            NetworkVariableSerializationTypes.InitializeEqualityChecker_UnmanagedIEquatable<Vector2>();
+
+            NetworkVariableSerializationTypes.InitializeSerializer_UnmanagedByMemcpy<Vector3>();
+            NetworkVariableSerializationTypes.InitializeEqualityChecker_UnmanagedIEquatable<Vector3>();
+
+            NetworkVariableSerializationTypes.InitializeSerializer_UnmanagedByMemcpy<CurrentWeatherEffect>();
+            NetworkVariableSerializationTypes.InitializeEqualityChecker_UnmanagedIEquatable<CurrentWeatherEffect>();
         }
     }
 }

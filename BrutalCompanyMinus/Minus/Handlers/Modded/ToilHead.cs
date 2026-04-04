@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using UnityEngine.Animations.Rigging;
 using UnityEngine;
 using System.Collections;
 using BepInEx.Bootstrap;

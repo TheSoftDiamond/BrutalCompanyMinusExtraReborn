@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace BrutalCompanyMinus.Minus.CustomEvents
 {
-    internal class GeneralCustomEvent : MEvent
+    public class GeneralCustomEvent : MEvent
     {
         private string name = "0";
         private CustomEventHandling.EventData? eventData;
@@ -52,10 +52,7 @@ namespace BrutalCompanyMinus.Minus.CustomEvents
 
                     foreach (CustomEventHandling.ItemData item in eventData.Items.Items)
                     {
-                        items.Add(new SpawnableItemWithRarity() {
-                            spawnableItem = Assets.GetItem(item.Name),
-                            rarity = item.Rarity
-                        });
+                        items.Add(new SpawnableItemWithRarity(Assets.GetItem(item.Name), item.Rarity));   
                     }
 
                     scrapTransmutationEvent = new ScrapTransmutationEvent(transmuteAmount, items.ToArray());
@@ -120,7 +117,7 @@ namespace BrutalCompanyMinus.Minus.CustomEvents
 
                 if (eventData.MoonBlacklist != null && eventData.MoonBlacklist.Count > 0)
                 {
-                    MoonBlacklist = eventData.MoonBlacklist;
+                    Blacklist = eventData.MoonBlacklist;
                 }
 
                 Log.LogInfo($"{name} event initialized");
@@ -303,12 +300,12 @@ namespace BrutalCompanyMinus.Minus.CustomEvents
                 bool dawnLibHandled = false;
                 if (Compatibility.DawnLibPresent)
                 {
-                    if (dawnLibHandled = DawnLibPatches.IsDawnManaged(this.hazardObject.name))
+                    if (dawnLibHandled = DawnLibHandling.IsDawnManaged(this.hazardObject.name))
                     {
-                        DawnLibPatches.eventQueue.Enqueue(this);
+                        DawnLibHandling.eventQueue.Enqueue(this);
                     }
-                    //dawnLibHandled = DawnLibPatches.ProcessMapObject(this);
-                    //DawnLibPatches.OnEventStart();
+                    //dawnLibHandled = DawnLibHandling.ProcessMapObject(this);
+                    //DawnLibHandling.OnEventStart();
                 }
                 Log.LogInfo($"DawnLib spawned for {hazardObject.name}: {dawnLibHandled}");
 

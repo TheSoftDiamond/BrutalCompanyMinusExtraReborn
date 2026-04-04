@@ -19,7 +19,6 @@ using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using UnityEngine.AI;
 using System.Xml.Linq;
-using UnityEngine.Animations.Rigging;
 using BrutalCompanyMinus.Minus.MonoBehaviours;
 using BrutalCompanyMinus.Minus.Events;
 using Unity.Collections;
@@ -795,9 +794,9 @@ namespace BrutalCompanyMinus.Minus
                 Log.LogError("Enemy prefab is null on AddEnemyToPoolWithRarity(), returning.");
                 return;
             }
-            SpawnableEnemyWithRarity spawnableEnemyWithRarity = new SpawnableEnemyWithRarity();
-            spawnableEnemyWithRarity.enemyType = enemy;
-            spawnableEnemyWithRarity.rarity = rarity;
+            SpawnableEnemyWithRarity spawnableEnemyWithRarity = new SpawnableEnemyWithRarity(enemy, rarity);
+            //spawnableEnemyWithRarity.enemyType = enemy;
+            //spawnableEnemyWithRarity.rarity = rarity;
             list.Add(spawnableEnemyWithRarity);
         }
 

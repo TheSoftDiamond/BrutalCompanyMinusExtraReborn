@@ -7,7 +7,6 @@ using System.Linq;
 using System.Text;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.Animations.Rigging;
 
 namespace BrutalCompanyMinus.Minus.MonoBehaviours
 {

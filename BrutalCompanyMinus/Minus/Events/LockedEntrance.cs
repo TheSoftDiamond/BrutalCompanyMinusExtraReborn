@@ -72,7 +72,7 @@ namespace BrutalCompanyMinus.Minus.Events
                     {
                         __instance.interactable = false;
                         //Give a random response using random
-                        int randomResponse = UnityEngine.Random.RandomRangeInt(0, 3);
+                        int randomResponse = UnityEngine.Random.Range(0, 3);
                         switch (randomResponse)
                         {
                             case 0:

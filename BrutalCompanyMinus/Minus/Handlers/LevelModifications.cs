@@ -55,7 +55,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
             {
                 try
                 {
-                    DawnLibPatches.OnEventEnd();
+                    DawnLibHandling.OnEventEnd();
                 }
                 catch
                 {

@@ -22,7 +22,7 @@ namespace BrutalCompanyMinus
         public static Net Instance { get; private set; }
         public static GameObject netObject { get; private set; }
 
-        public NetworkList<Weather> currentWeatherMultipliers;
+        public NetworkList<Weather> currentWeatherMultipliers = new NetworkList<Weather>();
         public NetworkList<OutsideObjectsToSpawnMethod> outsideObjectsToSpawn;
         public NetworkList<CurrentWeatherEffect> currentWeatherEffects;
 
@@ -286,7 +286,7 @@ namespace BrutalCompanyMinus
         [ServerRpc(RequireOwnership = false)]
         private void InitalizeCurrentWeatherMultipliersServerRpc()
         {
-            currentWeatherMultipliers = Weather.InitalizeWeatherMultipliers(currentWeatherMultipliers);
+            currentWeatherMultipliers = Weather.InitalizeWeatherMultipliers(ref currentWeatherMultipliers);
             UpdateCurrentWeatherMultipliersServerRpc();
         }
 
@@ -926,6 +926,7 @@ namespace BrutalCompanyMinus
             }
         }
 
+        [Serializable]
         public struct CurrentWeatherEffect : INetworkSerializable, IEquatable<CurrentWeatherEffect>
         {
             public FixedString128Bytes name;
@@ -959,6 +960,7 @@ namespace BrutalCompanyMinus
             }
         }
 
+        [Serializable]
         public struct OutsideObjectsToSpawnMethod : INetworkSerializable, IEquatable<OutsideObjectsToSpawnMethod>
         {
             public float density;
@@ -1039,7 +1041,7 @@ namespace BrutalCompanyMinus
                 lever.triggerScript.disabledHoverTip = text;
             }
             catch (Exception e)
-            { 
+            {
                 Log.LogError(e);
             }
         }

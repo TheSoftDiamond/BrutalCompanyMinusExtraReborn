@@ -502,6 +502,52 @@ namespace BrutalCompanyMinus.Minus.Handlers
 
             #endregion
 
+            #region MHazards
+
+            new MCommand()
+            {
+                command = "MHAZARDS",
+                tag = "SERVER",
+                shortinfo = "Displays all HAZARDS.",
+                info = "MHAZARDS\n   Will display the names of every Hazard grabbed by this mod.",
+                execute = new Action<string[]>((arguments) =>
+                {
+                    int i = 0;
+                    string text = "";
+                    foreach(SelectableLevel level in StartOfRound.Instance.levels)
+                    {
+                        foreach (SpawnableMapObject mapObj in level.spawnableMapObjects)
+                        {
+                            i++;
+                            if(i % 2 == 0)
+                            {
+                                text += $" {mapObj.prefabToSpawn.name}\n";
+                            } else
+                            {
+                                text += mapObj.prefabToSpawn.name.PadRight(23);
+                            }
+                        }
+                        text += "\n";
+
+                        foreach (SpawnableOutsideObjectWithRarity mapObj in level.spawnableOutsideObjects)
+                        {
+                            i++;
+                            if(i % 2 == 0)
+                            {
+                                text += $" {mapObj.spawnableObject.prefabToSpawn.name}\n";
+                            } else
+                            {
+                                text += mapObj.spawnableObject.prefabToSpawn.name.PadRight(23);
+                            }
+                        }
+                    }
+                    Respond(text);
+
+                })
+            },
+
+            #endregion
+
             #endregion
 
             #region Developer Commands

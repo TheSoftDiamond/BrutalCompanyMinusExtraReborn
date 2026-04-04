@@ -21,8 +21,8 @@ namespace BrutalCompanyMinus.Minus.Events
 
             scrapTransmutationEvent = new ScrapTransmutationEvent(
                 new Scale(0.1f, 0.02f, 0.1f, 0.15f),
-                new SpawnableItemWithRarity() { spawnableItem = Assets.GetItem("CatItem"), rarity = 60 },
-                new SpawnableItemWithRarity() { spawnableItem = Assets.GetItem("CatFoodItem"), rarity = 40 }
+                new SpawnableItemWithRarity(Assets.GetItem("CatItem"), 60 ),
+                new SpawnableItemWithRarity(Assets.GetItem("CatFoodItem"), 40 )
             );
 
             ScaleList.Add(ScaleType.ScrapAmount, new Scale(1.0f, 0.004f, 1.0f, 1.5f));

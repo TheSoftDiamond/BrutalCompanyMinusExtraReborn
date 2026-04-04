@@ -1,46 +1,41 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using BrutalCompanyMinus.Minus.CustomEvents;
 using Dawn;
-using HarmonyLib;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace BrutalCompanyMinus.Minus.Handlers.CustomEvents
 {
-    [HarmonyPatch]
-    internal class DawnLibPatches
+    public class DawnLibHandling
     {
-        //private static Dictionary<NamespacedKey<DawnMapObjectInfo>, DawnMapObjectInfo> brutalRegistry;
-        //private static readonly Dictionary<NamespacedKey<DawnMapObjectInfo>, DawnMapObjectInfo> originalRegistry = CopyOriginalRegistry();
-        internal static Queue<GeneralCustomEvent.HazardEvent> eventQueue = new Queue<GeneralCustomEvent.HazardEvent>();
+        public static Queue<GeneralCustomEvent.HazardEvent> eventQueue = new Queue<GeneralCustomEvent.HazardEvent>();
 
-        internal static Dictionary<string, DawnSnapshot> originalStates = new Dictionary<string, DawnSnapshot>();
+        public static Dictionary<string, DawnSnapshot> originalStates = new Dictionary<string, DawnSnapshot>();
 
-        /// <summary>
-        /// This struct helps provide a template for storing original map object data.
-        /// </summary>
-        internal struct DawnSnapshot
+        /// <summary>  
+        /// This struct helps provide a template for storing original map object data.  
+        /// </summary>  
+        public struct DawnSnapshot
         {
-            public ProviderTable<AnimationCurve?, DawnMoonInfo, SpawnWeightContext> OutsideWeights;
-            public ProviderTable<AnimationCurve?, DawnMoonInfo, SpawnWeightContext> InsideWeights;
+            public object OutsideWeights;
+            public object InsideWeights;
             public bool FacingAway, FacingWall, BackToWall, BackFlush, ReqDist, DisallowNear;
         }
 
-        /// <summary>
-        /// This method processes the hazard event data by iterating through the current active events and checking for any GeneralCustomEvents that contain hazard events.
-        /// </summary>
-        private static bool ProcessHazardEvents()
+        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+        public static bool ProcessHazardEvents()
         {
             bool dataFound = false;
             foreach (MEvent _event in EventManager.currentEvents)
             {
-                Log.LogInfo($"Event name: {nameof(_event)}");
+                Log.LogInfo($"Event name: {_event.GetType().Name}");
                 if (_event is GeneralCustomEvent customEvent)
                 {
-                    Log.LogInfo($"Event {customEvent.Name} is a GeneralCustomEvent, checking hazard events...");
+                    Log.LogInfo($"Event {customEvent.Name()} is a GeneralCustomEvent, checking hazard events...");
                     foreach (GeneralCustomEvent.HazardEvent hazard in customEvent.hazardEvents)
                     {
                         Log.LogInfo("Processing...");
@@ -52,32 +47,7 @@ namespace BrutalCompanyMinus.Minus.Handlers.CustomEvents
             return dataFound;
         }
 
-        /// <summary>
-        /// This helps ensure the map object data actually gets processed correctly.
-        /// </summary>
-        [HarmonyPatch(typeof(RoundManager), "FinishGeneratingLevel")]
-        [HarmonyPrefix]
-        static void DawnFixMethod()
-        {
-            Log.LogInfo($"Area gen: {Manager.terrainArea}");
-            if (Manager.terrainArea == 0f)
-            {
-                Manager.SampleMap();
-            }
-
-            while (eventQueue.Count > 0)
-            {
-                // Process the queue built up at the lever pull
-                Log.LogInfo("Items left: "+ eventQueue.Count);
-                ProcessMapObject(eventQueue.Dequeue());
-            }
-        }
-
-        /// <summary>
-        /// This method checks if a given hazard name corresponds to a map object that is managed by the Dawn system.
-        /// </summary>
-        /// <param name="hazardName"></param>
-        /// <returns></returns>
+        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         public static bool IsDawnManaged(string hazardName)
         {
             bool managed = false;
@@ -100,10 +70,7 @@ namespace BrutalCompanyMinus.Minus.Handlers.CustomEvents
             return managed;
         }
 
-        /// <summary>
-        /// This method processes the map object information based on the provided hazard event data.
-        /// </summary>
-        /// <param name="hazard"></param>
+        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         public static bool ProcessMapObject(GeneralCustomEvent.HazardEvent hazard)
         {
             bool processed = false;
@@ -132,10 +99,8 @@ namespace BrutalCompanyMinus.Minus.Handlers.CustomEvents
                 DawnOutsideMapObjectInfo? outsideInfo = mapObjectInfo.OutsideInfo;
                 DawnInsideMapObjectInfo? insideInfo = mapObjectInfo.InsideInfo;
 
-                // Get the current moon name lowercase without numbers
                 NamespacedKey<DawnMoonInfo> moonKey = RoundManager.Instance.currentLevel.GetDawnInfo().TypedKey;
 
-                // Compute spawn counts based on current BCMER difficulty
                 float computedWeight = UnityEngine.Random.Range(
                     hazard.minDensity.Computef(hazard.Type),
                     hazard.maxDensity.Computef(hazard.Type)
@@ -178,14 +143,13 @@ namespace BrutalCompanyMinus.Minus.Handlers.CustomEvents
             return processed;
         }
 
+        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         public static bool OnEventStart()
         {
             return ProcessHazardEvents();
         }
 
-        /// <summary>
-        /// This resets the map object data back to normal.
-        /// </summary>
+        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         public static void OnEventEnd()
         {
             foreach (var entry in originalStates)
@@ -195,11 +159,11 @@ namespace BrutalCompanyMinus.Minus.Handlers.CustomEvents
                     if (mapObjectInfo.MapObject.name == entry.Key)
                     {
                         if (mapObjectInfo.OutsideInfo != null)
-                            mapObjectInfo.OutsideInfo.SpawnWeights = entry.Value.OutsideWeights;
+                            mapObjectInfo.OutsideInfo.SpawnWeights = (ProviderTable<AnimationCurve?, DawnMoonInfo, SpawnWeightContext>?)entry.Value.OutsideWeights;
 
                         if (mapObjectInfo.InsideInfo != null)
                         {
-                            mapObjectInfo.InsideInfo.SpawnWeights = entry.Value.InsideWeights;
+                            mapObjectInfo.InsideInfo.SpawnWeights = (ProviderTable<AnimationCurve?, DawnMoonInfo, SpawnWeightContext>?)entry.Value.InsideWeights;
                             mapObjectInfo.InsideInfo.SpawnFacingAwayFromWall = entry.Value.FacingAway;
                             mapObjectInfo.InsideInfo.SpawnFacingWall = entry.Value.FacingWall;
                             mapObjectInfo.InsideInfo.SpawnWithBackToWall = entry.Value.BackToWall;

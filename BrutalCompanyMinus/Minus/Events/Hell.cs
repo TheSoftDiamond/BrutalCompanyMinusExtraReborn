@@ -7,7 +7,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.Animations.Rigging;
 using UnityEngine.Rendering.HighDefinition;
 using static BrutalCompanyMinus.Minus.MonoBehaviours.EnemySpawnCycle;
 
