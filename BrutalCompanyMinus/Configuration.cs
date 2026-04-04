@@ -33,6 +33,8 @@ namespace BrutalCompanyMinus
         public static List<ConfigEntry<bool>> eventEnables = new List<ConfigEntry<bool>>();
         public static List<List<string>> eventsToRemove = new List<List<string>>(), eventsToSpawnWith = new List<List<string>>();
         public static List<List<string>> moonBlacklist = new List<List<string>>();
+        public static List<List<string>> moonWhitelist = new List<List<string>>();
+        public static List<ConfigEntry<bool>> moonMode = new List<ConfigEntry<bool>>();
         public static List<List<MonsterEvent>> monsterEvents = new List<List<MonsterEvent>>();
         public static List<ScrapTransmutationEvent> transmutationEvents = new List<ScrapTransmutationEvent>();
 
@@ -336,7 +338,9 @@ namespace BrutalCompanyMinus
                     // EventsToRemove and EventsToSpawnWith and Moon Blacklist
                     eventsToRemove.Add(ListToStrings(toConfig.Bind(e.Name(), "Events To Remove", StringsToList(e.EventsToRemove, ", "), "Will prevent said event(s) from occuring.").Value));
                     eventsToSpawnWith.Add(ListToStrings(toConfig.Bind(e.Name(), "Events To Spawn With", StringsToList(e.EventsToSpawnWith, ", "), "Will spawn said events(s).").Value));
-                    moonBlacklist.Add(ListToStrings(toConfig.Bind(e.Name(), "Moons To Not Spawn On", StringsToList(e.MoonBlacklist, ", "), "Event will not spawn on these moons. Seperate by comma for each moon name.").Value));
+                    moonMode.Add(toConfig.Bind(e.Name(), "Whitelist Mode?", e.MoonMode, "Which list should be used? Please note that if you are using the Whitelist mode, it must have at least one entry."));
+                    moonBlacklist.Add(ListToStrings(toConfig.Bind(e.Name(), "Moons To Not Spawn On", StringsToList(e.Blacklist, ", "), "Event will not spawn on these moons. Seperate by comma for each moon name. List must be populated").Value));
+                    moonWhitelist.Add(ListToStrings(toConfig.Bind(e.Name(), "Moons To Spawn Only On", StringsToList(e.Whitelist, ", "), "Event will only spawn on these moons. Seperate by comma for each moon name. List must be populated.").Value));
 
                     // Monster events
                     List<MonsterEvent> newMonsterEvents = new List<MonsterEvent>();
@@ -481,7 +485,9 @@ namespace BrutalCompanyMinus
                 EventManager.events[i].Enabled = eventEnables[i].Value;
                 EventManager.events[i].EventsToRemove = eventsToRemove[i];
                 EventManager.events[i].EventsToSpawnWith = eventsToSpawnWith[i];
-                EventManager.events[i].MoonBlacklist = moonBlacklist[i];
+                EventManager.events[i].MoonMode = moonMode[i].Value;
+                EventManager.events[i].Blacklist = moonBlacklist[i];
+                EventManager.events[i].Whitelist = moonWhitelist[i];
                 EventManager.events[i].monsterEvents = monsterEvents[i];
                 EventManager.events[i].scrapTransmutationEvent = transmutationEvents[i];
             }
