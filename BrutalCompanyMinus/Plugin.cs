@@ -34,7 +34,7 @@ namespace BrutalCompanyMinus
     {
         private const string GUID = "SoftDiamond.BrutalCompanyMinusExtraReborn";
         private const string NAME = "BrutalCompanyMinusExtraReborn";
-        private const string VERSION = "1.30.2";
+        private const string VERSION = "1.30.3";
 
         internal static Plugin Instance { get; private set; }
 

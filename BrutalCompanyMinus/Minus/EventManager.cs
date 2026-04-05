@@ -745,6 +745,12 @@ namespace BrutalCompanyMinus.Minus
 
             bool skipEventActivation = IsIgnoredMoon(newLevel.PlanetName);
 
+            if (Configuration.DisableAllEvents.Value)
+            {
+                Log.LogInfo("All events are disabled. Skipping event activation.");
+                skipEventActivation = true;
+            }
+
             if (!skipEventActivation)
             {
                 // Choose any apply events

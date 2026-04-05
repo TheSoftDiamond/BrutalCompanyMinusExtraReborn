@@ -34,7 +34,7 @@
 		<PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
 		<PackageReference Include="BepInEx.Core" Version="5.*" />
 		<PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" />
-		<PackageReference Include="Rune580.Mods.LethalCompany.InputUtils" Version="0.7.12" /> 
+		<PackageReference Include="Rune580.Mods.LethalCompany.InputUtils" Version="0.7.12" />
 		<!-- <PackageReference Include="UnityEngine.Modules" Version="2022.3.62" IncludeAssets="compile" PrivateAssets="all" /> -->
 		<!-- <PackageReference Include="LethalCompany.GameLibs.Steam" Version="73.0.0-ngd.0" PrivateAssets="all" Publicize="true"/> -->
 	</ItemGroup>
@@ -90,7 +90,7 @@
 			<HintPath>libs\HotBarPlus.dll</HintPath>
 		</Reference>
 		<Reference Include="Unity.Networking.Transport">
-		  <HintPath>libs\Gamelibs\Unity.Networking.Transport.dll</HintPath>
+			<HintPath>libs\Gamelibs\Unity.Networking.Transport.dll</HintPath>
 		</Reference>
 		<Reference Include="WeatherRegistry">
 			<HintPath>libs\WeatherRegistry-publicized.dll</HintPath>
@@ -115,13 +115,13 @@
 		</Reference>
 		<Reference Include="Dungen4">
 			<HintPath>libs\MMHOOK_DunGen.dll</HintPath>
-		</Reference>		
+		</Reference>
 		<Reference Include="Assembly-CSharp.dll">
 			<HintPath>libs\Gamelibs\Assembly-CSharp.dll</HintPath>
 		</Reference>
 		<Reference Include="Assembly-CSharp.dll">
 			<HintPath>libs\Assembly-CSharp.dll</HintPath>
-		</Reference>		
+		</Reference>
 		<Reference Include="Assembly-CSharp-firstpass">
 			<HintPath>libs\Gamelibs\Assembly-CSharp-firstpass.dll</HintPath>
 		</Reference>
@@ -191,9 +191,9 @@
 		<NetcodePatchDeps Include="libs\*.dll" />
 	</ItemGroup>
 
-    <Target Name="NetcodePatch" AfterTargets="PostBuildEvent">
-        <Exec Command="netcode-patch -uv 2022.3.62 -nv 1.12.0 -tv 1.0.0 &quot;$(TargetPath)&quot; @(ReferencePathWithRefAssemblies->'&quot;%(Identity)&quot;', ' ')" />
-    </Target>
+	<Target Name="NetcodePatch" AfterTargets="PostBuildEvent">
+		<Exec Command="netcode-patch -uv 2022.3.62 -nv 1.12.0 -tv 1.0.0 &quot;$(TargetPath)&quot; @(ReferencePathWithRefAssemblies->'&quot;%(Identity)&quot;', ' ')" />
+	</Target>
 
 	<Target Name="CopyToPluginsFolder" AfterTargets="PostBuildEvent">
 		<Copy DestinationFolder="$(PluginsFolder)" OverwriteReadOnlyFiles="true" SkipUnchangedFiles="true" SourceFiles="$(TargetPath)" />

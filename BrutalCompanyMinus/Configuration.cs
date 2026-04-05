@@ -126,6 +126,7 @@ namespace BrutalCompanyMinus
         public static ConfigEntry<bool> GetMethods;
         public static ConfigEntry<bool> HellTimeAdjustment;
         public static ConfigEntry<bool> VeryLateShipAdjustment;
+        public static ConfigEntry<bool> DisableAllEvents;
         public static ConfigEntry<bool> dontHandlePower;
         public static ConfigEntry<bool> dontHandleSpawnCurves;
         public static ConfigEntry<bool> deferWeatherToMods;
@@ -286,6 +287,7 @@ namespace BrutalCompanyMinus
             GetMethods = CorePropertiesConfig.Bind("Debugging", "Silence Get Method Warnings?", true, "Silences warnings about missing enemies and items from mods not installed.");
             HellTimeAdjustment = CorePropertiesConfig.Bind("Events Features", "Enable Hell Time Adjustment?", true, "When the Hell event occurs, should the time be adjusted to be normal? Disable if you wish to suffer.");
             VeryLateShipAdjustment = CorePropertiesConfig.Bind("Events Features", "Enable Very Late Ship Time Adjustment?", true, "When the VeryLateShip event occurs, should the time be adjusted to be normal? Disable if you wish to suffer.");
+            DisableAllEvents = CorePropertiesConfig.Bind("Events Features", "Disable all events?", false, "Setting this to true will disable all events from spawning. This forces zero events.");
             dontHandlePower = CorePropertiesConfig.Bind("Mod Compatibility", "Experimental Dont Handle Power?", false, "If you wish to let other mods handle power levels, enable this. Some settings may affect this.");
             dontHandleSpawnCurves = CorePropertiesConfig.Bind("Mod Compatibility", "Experimental Dont Handle Spawn Chance?", false, "If you wish to let other mods handle spawn curves, enable this. Some settings may affect this.");
             deferWeatherToMods = CorePropertiesConfig.Bind("Mod Compatibility", "Defer Weather To Weather ToolKit Mod?", false, "If you wish to let other mods handle Brutal's weather setting effects, enable this. This has no effect on custom events as those use weather toolkit by default.");
