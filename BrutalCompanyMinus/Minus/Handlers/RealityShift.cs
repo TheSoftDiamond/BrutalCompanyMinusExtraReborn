@@ -51,14 +51,15 @@ namespace BrutalCompanyMinus.Minus.Handlers
             {
                 return;
             }
-            if ((int)firstEmptyItemSlot.Invoke(__instance, null) == -1)
-            {
-                return;
-            }
 
             GrabbableObject grabbableObject = hit.collider.gameObject.GetComponent<GrabbableObject>();
             if (grabbableObject != null && grabbableObject.NetworkObject != null)
             {
+                if ((int)firstEmptyItemSlot.Invoke(__instance, new object[] { grabbableObject }) == -1)
+                {
+                    return;
+                }
+
                 foreach (int objectID in ShiftableObjects)
                 {
                     if (objectID == grabbableObject.gameObject.GetInstanceID() && UnityEngine.Random.Range(0.0f, 1.0f) <= transmuteChance)
@@ -117,6 +118,11 @@ namespace BrutalCompanyMinus.Minus.Handlers
 
             GrabbableObject newObject = networkObject.GetComponent<GrabbableObject>();
             currentlyGrabbingObject.SetValue(instance, newObject);
+            
+            if ((int)firstEmptyItemSlot.Invoke(instance, new object[] { newObject }) == -1) 
+            {
+                yield break;
+            }
 
             newObject.InteractItem();
             if (newObject.grabbable)
@@ -125,7 +131,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
                 instance.playerBodyAnimator.SetBool("GrabValidated", value: false);
                 instance.playerBodyAnimator.SetBool("cancelHolding", value: false);
                 instance.playerBodyAnimator.ResetTrigger("Throw");
-                setSpecialGrabAnimationBool.Invoke(instance, new object[] { true, newObject });
+                setSpecialGrabAnimationBool.Invoke(instance, new object[] { true, null });
                 instance.isGrabbingObjectAnimation = true;
                 instance.cursorIcon.enabled = false;
                 instance.cursorTip.text = "";
