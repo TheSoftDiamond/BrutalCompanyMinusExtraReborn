@@ -32,7 +32,7 @@ namespace BrutalCompanyMinus.Minus.Events
             EventsToSpawnWith = new List<string>() { nameof(Dogs), nameof(Puma) };
         }
 
-        public override bool AddEventIfOnly() => Assets.ReadSettingEarly(Paths.ConfigPath + "\\BrutalCompanyMinusExtraReborn\\CoreProperties.cfg", "Enable Special Events?");
+        public override bool AddEventIfOnly() => Assets.ReadSettingEarly(Paths.ConfigPath + "\\BrutalCompanyMinusExtraReborn\\CoreProperties.cfg", "Enable Beta Events?");
 
 
         public override void Execute()
