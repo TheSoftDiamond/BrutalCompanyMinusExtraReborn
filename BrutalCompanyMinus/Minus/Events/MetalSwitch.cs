@@ -36,6 +36,8 @@ namespace BrutalCompanyMinus.Minus.Events
         public override void Execute()
         {
 
+
+
             // Declare the Active state to true globally
             Net.Instance.SetMetalSwitchNetServerRpc(true);
 

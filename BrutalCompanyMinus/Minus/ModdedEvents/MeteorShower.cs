@@ -22,7 +22,7 @@ namespace BrutalCompanyMinus.Minus.Events
             EventsToRemove = new List<string>() { nameof(BloodMoon), nameof(MajoraMoon), nameof(SolarFlare), nameof(Windy), nameof(Gloomy), nameof(Raining), nameof(AllWeather) };
         }
 
-        public override bool AddEventIfOnly() => Compatibility.CodeRebirthPresent;
+        public override bool AddEventIfOnly() => Compatibility.CodeRebirthPresent && Compatibility.WeatherRegistryPresent;
 
         public override void Execute()
         {

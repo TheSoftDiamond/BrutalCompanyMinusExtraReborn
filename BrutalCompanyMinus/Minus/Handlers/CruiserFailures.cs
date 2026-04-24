@@ -7,7 +7,6 @@ using System.Text;
 using UnityEngine;
 using BrutalCompanyMinus.Minus.Events;
 using static BrutalCompanyMinus.Minus.Events.CruiserFailure;
-using System.Threading.Tasks;
 
 namespace BrutalCompanyMinus.Minus.Handlers
 {
@@ -20,7 +19,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
         {
             // Interrupt the cruiser if a power malfunction has triggered.
             // If there are other vehicles from other mods, I will be happy to add compat here.
-            if (CruiserFailure.Instance.Active)
+            if (CruiserFailure.Active)
             {
                 int randomResponse = UnityEngine.Random.Range(0, 3);
                 switch (randomResponse)

@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using BrutalCompanyMinus.Minus.Handlers;
+using BrutalCompanyMinus.Minus.Handlers.Modded;
+using BrutalCompanyMinus.Minus.MonoBehaviours;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -10,6 +13,8 @@ namespace BrutalCompanyMinus.Minus.Events
         public override string Name() => nameof(CruiserFailure);
 
         public static CruiserFailure Instance;
+
+        public static bool Active = false;
 
         public override void Initalize()
         {
@@ -23,18 +28,30 @@ namespace BrutalCompanyMinus.Minus.Events
 
         public override void Execute()
         {
-            if (NetworkManager.Singleton.IsHost)
+            Net.Instance.SetCruiserOfflineServerRpc();
+
+            // Declare the event active
+            Active = true;
+
+            if (Compatibility.ScanVanPresent)
             {
-                Net.Instance.SetCruiserOfflineServerRpc();
+                GameObject netObject = new GameObject("ScanVanFailure");
+                //Add the TimeChaosEvent component to it
+                netObject.AddComponent<ScanVanNet>();
             }
+
         }
 
         public override void OnShipLeave() //Patch to reset the network int value
         {
+            // Reset the Active state
+            Active = false;
         }
 
         public override void OnGameStart() //Patch to reset the network int value
         {
+            // Reset the Active state
+            Active = false;
         }
     }
 }

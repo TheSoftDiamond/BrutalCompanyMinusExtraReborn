@@ -19,14 +19,14 @@ namespace BrutalCompanyMinus.Minus.Events
         {
             Instance = this;
 
-            Weight = 2;//3
+            Weight = 2;
             Descriptions = new List<string>() { "Rolls of low grade paper", "Toilet paper packages" };
             ColorHex = "#e84343";
             Type = EventType.Neutral;
 
             scrapTransmutationEvent = new ScrapTransmutationEvent(
                 new Scale(0.5f, 0.008f, 0.5f, 0.9f),
-                new SpawnableItemWithRarity(Assets.GetItem("Toilet paper"), 95)
+                new SpawnableItemWithRarity(Assets.GetItem("ToiletPaperRolls"), 95)
             );
 
             EventsToRemove = new List<string>() { nameof(RealityShift), nameof(Pickles), nameof(SussyPaintings), /*nameof(TakeyGokuPlush), nameof(TakeyGokuPlushBig),*/ nameof(Dustpans), nameof(Clock), nameof(ControlPad), nameof(ZedDog), nameof(PlasticCup) };
@@ -35,8 +35,7 @@ namespace BrutalCompanyMinus.Minus.Events
         }
 
         public override bool AddEventIfOnly()
-        {
-          //  if (!Compatibility.takeyPlushPresent & streamerEventsEnabled) return false;
+        {;
             if (!Manager.transmuteScrap)
             {
                 Manager.transmuteScrap = true;
@@ -47,7 +46,6 @@ namespace BrutalCompanyMinus.Minus.Events
 
         public override void Execute()
         {
-          //  if (!Compatibility.takeyPlushPresent) return;
             Manager.scrapAmountMultiplier *= Getf(ScaleType.ScrapAmount);
             scrapTransmutationEvent.Execute();
         }

@@ -25,7 +25,7 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
 
         public static void DestroyInstance() // This handles the deletion of Time Chaosness
         {
-            Events.ManualCameraFailure.Instance.Active = false;
+            Events.ManualCameraFailure.Active = false;
             GameObject netObject = GameObject.Find("ManualCameraFailureEvent");
             if (netObject != null)
             {

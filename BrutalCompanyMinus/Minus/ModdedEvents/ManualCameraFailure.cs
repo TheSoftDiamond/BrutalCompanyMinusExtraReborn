@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.Design;
 using BrutalCompanyMinus.Minus.MonoBehaviours;
 using Unity.Netcode;
 using UnityEngine;
@@ -10,6 +11,8 @@ namespace BrutalCompanyMinus.Minus.Events
         public override string Name() => nameof(ManualCameraFailure);
 
         public static ManualCameraFailure Instance;
+
+        public static bool Active = false;
 
         public override void Initalize()
         {
