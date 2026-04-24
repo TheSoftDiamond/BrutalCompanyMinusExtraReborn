@@ -29,12 +29,13 @@ namespace BrutalCompanyMinus
     [BepInDependency("com.github.teamxiaolan.dawnlib.interfaces", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.github.teamxiaolan.dawnlib.dusk", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.github.teamxiaolan.dawnlib.compatibility", BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency("Scandal.CruiserXL", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInPlugin(GUID, NAME, VERSION)]
     internal class Plugin : BaseUnityPlugin
     {
         private const string GUID = "SoftDiamond.BrutalCompanyMinusExtraReborn";
         private const string NAME = "BrutalCompanyMinusExtraReborn";
-        private const string VERSION = "1.30.4";
+        private const string VERSION = "1.40.0";
 
         internal static Plugin Instance { get; private set; }
 
@@ -80,28 +81,13 @@ namespace BrutalCompanyMinus
             harmony.PatchAll(typeof(GrabObjectTranspiler));
 
             // Conditional patching depending on mods present
-            if (Compatibility.IsModPresent("FlipMods.HotbarPlus"))
-            {
-                HotBarPlusCompat.PatchAll(harmony);
-            }
-
-            if (Compatibility.IsModPresent("LethalPhones"))
-            {
-                PhonesOutPatching.PatchAllPhone(harmony);
-            }
-
-            if (!Compatibility.IsModPresent("AudioKnight.StarlancerAIFix"))
-            {
-                _EnemyAI.PatchEnemyStart(harmony);
-            }
-
-            if (Compatibility.IsModPresent("kite.ZelevatorCode"))
-            {
-                EndlessElevatorPatching.PatchAllElevator(harmony);
-            }   
+            if (Compatibility.IsModPresent("FlipMods.HotbarPlus")) HotBarPlusCompat.PatchAll(harmony); 
+            if (Compatibility.IsModPresent("LethalPhones")) PhonesOutPatching.PatchAllPhone(harmony);
+            if (Compatibility.IsModPresent("Scandal.CruiserXL")) ScanVanPatching.PatchAllCruiserXL(harmony);
+            if (!Compatibility.IsModPresent("AudioKnight.StarlancerAIFix")) _EnemyAI.PatchEnemyStart(harmony); // Apply our patch if the mod is not present
+            if (Compatibility.IsModPresent("kite.ZelevatorCode")) EndlessElevatorPatching.PatchAllElevator(harmony);
 
             Log.LogInfo(NAME + " " + VERSION + " " + "is done patching.");
-
 
             if (Assets.ReadSettingEarly(Paths.ConfigPath + "\\BrutalCompanyMinusExtraReborn\\DifficultySettings.cfg", "Enable time scaling?") == true) ;
             {
@@ -118,13 +104,12 @@ namespace BrutalCompanyMinus
             
                 //Create and dispose
                 System.IO.File.Create(Paths.ConfigPath + "\\BrutalCompanyMinusExtraReborn\\CustomEvents.cfg").Dispose();
-
             }
             catch (Exception e)
             {
                 Log.LogWarning("Failed to delete custom event config file: " + e.Message);
             }
-
+            
             Init();
         }
 
