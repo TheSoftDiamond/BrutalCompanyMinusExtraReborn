@@ -7,6 +7,7 @@ using GameNetcodeStuff;
 using HarmonyLib;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
@@ -313,6 +314,33 @@ namespace BrutalCompanyMinus
 
         [ClientRpc]
         public void SetAllWeatherActiveClientRpc(bool state) => Minus.Events.AllWeather.Active = state;
+
+
+        /*
+        [ServerRpc(RequireOwnership = false)]
+        public void SetOneHandActiveNetServerRpc(bool state) => SetOneHandActiveNetClientRpc(state);
+        [ClientRpc]
+        public void SetOneHandActiveNetClientRpc(bool state) => AllOneHanded.Active = state;
+
+        [ServerRpc(RequireOwnership = false)]
+        public void SetTwoHandActiveNetServerRpc(bool state) => SetTwoHandActiveNetClientRpc(state);
+
+        [ClientRpc]
+        public void SetTwoHandActiveNetClientRpc(bool state) => AllTwoHanded.Active = state;
+
+
+        [ServerRpc(RequireOwnership = false)]
+        public void SetUncertainHandsActiveNetServerRpc(bool state) => SetUncertainHandsActiveNetClientRpc(state);
+
+        [ClientRpc]
+        public void SetUncertainHandsActiveNetClientRpc(bool state) => UncertainHands.Active = state;
+
+        [ServerRpc(RequireOwnership = false)]
+        public void SetHandSwitchActiveNetServerRpc(bool state) => SetHandSwitchActiveNetClientRpc(state);
+
+        [ClientRpc]
+        public void SetHandSwitchActiveNetClientRpc(bool state) => HandsSwitch.Active = state;
+        */
 
         [ServerRpc(RequireOwnership = false)]
         public void SetEventActiveServerRPC(string eventName, bool state) => SetEventActiveClientRPC(eventName, state);
@@ -667,6 +695,73 @@ namespace BrutalCompanyMinus
         }
 
         [ServerRpc(RequireOwnership = false)]
+        public void CruiserFailureServerRpc(bool active)
+        {
+            CruiserFailureClientRpc(active);
+        }
+
+        [ClientRpc]
+        public void CruiserFailureClientRpc(bool active)
+        {
+            CruiserFailure.Active = active;
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void SetMoldServerRpc(bool canSpawnMold, int iterations)
+        { 
+            SetMoldClientRpc(canSpawnMold, iterations);
+        }
+
+        [ClientRpc]
+        public void SetMoldClientRpc(bool canSpawnMold, int iterations)
+        {
+            SelectableLevel currentLevel = RoundManager.Instance.currentLevel;
+
+            if (currentLevel != null)
+            {
+                currentLevel.canSpawnMold = canSpawnMold;
+
+                currentLevel.moldSpreadIterations = iterations;
+            }
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void SaveOriginalMoldPreviousDataServerRpc()
+        {
+            SaveOriginalMoldPreviousDataClientRpc();
+        }
+
+        [ClientRpc]
+        public void SaveOriginalMoldPreviousDataClientRpc()
+        {
+            SelectableLevel currentLevel = RoundManager.Instance.currentLevel;
+            if (currentLevel != null)
+            {
+                if (!Manager.originalMoonMoldData.ContainsKey(currentLevel.PlanetName))
+                {
+                    Manager.originalMoonMoldData.Add(currentLevel.PlanetName, (currentLevel.canSpawnMold, currentLevel.moldSpreadIterations));
+                }
+            }
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void SyncHeatMapServerRpc(int[] keys, float[] values)
+        {
+            SyncHeatMapClientRpc(keys, values);
+        }
+
+        [ClientRpc]
+        public void SyncHeatMapClientRpc(int[] keys, float[] values)
+        {
+            Manager.heatDifficulty.Clear();
+            for (int i = 0; i < keys.Length; i++)
+            {
+                Log.LogInfo("Got heat for level ID " + keys[i] + ": " + values[i]);
+                Manager.heatDifficulty.Add(keys[i], values[i]);
+            }
+        }
+
+        [ServerRpc(RequireOwnership = false)]
         public void SetMetalSwitchNetServerRpc(bool active)
         {
             SetMetalSwitchNetClientRpc(active);
@@ -676,6 +771,18 @@ namespace BrutalCompanyMinus
         public void SetMetalSwitchNetClientRpc(bool active)
         {
             MetalSwitch.Active = active;
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void SetKidnapperFoxNetServerRpc(bool active)
+        {
+            SetKidnapperFoxNetClientRpc(active);
+        }
+
+        [ClientRpc]
+        public void SetKidnapperFoxNetClientRpc(bool active)
+        {
+            KidnapperFox.Active = active;
         }
 
         [ClientRpc]
