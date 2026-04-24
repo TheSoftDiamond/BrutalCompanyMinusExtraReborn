@@ -450,6 +450,8 @@ namespace BrutalCompanyMinus
             if (Configuration.scaleByScrapInShip.Value) text += $"<br><color=#{colorTextHex}> -Ship Scrap: </color><color=#{Helper.GetDifficultyColorHex(Manager.scrapInShipDifficulty, Configuration.scrapInShipDifficultyCap.Value)}>{plusMinusExclusive(Manager.scrapInShipDifficulty)}{Manager.scrapInShipDifficulty:F1}</color>";
             if (Configuration.scaleByMoonGrade.Value) text += $"<br><color=#{colorTextHex}> -Moon risk:  </color><color=#{Helper.GetDifficultyColorHex(Manager.moonGradeDifficulty, Configuration.gradeAdditives["S+++"])}>{plusMinusExclusive(Manager.moonGradeDifficulty)}{Manager.moonGradeDifficulty:F1}</color>";
             if (Configuration.scaleByWeather.Value) text += $"<br><color=#{colorTextHex}> -Weather:    </color><color=#{Helper.GetDifficultyColorHex(Manager.weatherDifficulty, (float)Int32.MaxValue)}>{plusMinusExclusive(Manager.weatherDifficulty)}{Manager.weatherDifficulty:F1}</color>";
+            if (Configuration.scaleHeat.Value) text += $"<br><color=#{colorTextHex}> -Heat:       </color><color=#{Helper.GetDifficultyColorHex(EventManager.currentHeatDifficulty(), Configuration.heatMaxCap.Value)}>{plusMinusExclusive(EventManager.currentHeatDifficulty())}{EventManager.currentHeatDifficulty():F1}</color>";
+
             return text;
         }
 
