@@ -79,6 +79,7 @@ namespace BrutalCompanyMinus
             CombinedWeatherToolKitPresent = false,
             LethalElementsPresent = false,
             DawnLibPresent = false,
+            ScanVanPresent = false,
             WeatherRegistryPresent = false;
 
 
@@ -268,6 +269,7 @@ namespace BrutalCompanyMinus
             EndlessElevatorPresent = IsModPresent("kite.ZelevatorCode", "Endless Elevator Detected");
             CombinedWeatherToolKitPresent = IsModPresent("zigzag.combinedweatherstoolkit", "Combined Weathers Toolkit Detected");
             DawnLibPresent = IsModPresent("com.github.teamxiaolan.dawnlib", "DawnLib Detected.");
+            ScanVanPresent = IsModPresent("Scandal.CruiserXL", "ScanVan Detected.");
         }
 
         public static Assembly GetAssembly(string name)
