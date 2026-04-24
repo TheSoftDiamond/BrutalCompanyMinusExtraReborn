@@ -47,10 +47,12 @@ namespace BrutalCompanyMinus.Minus
             new Events.MoreExits(),
             new Events.DoorOverdriveEv(),
             new Events.ZedDog(),
+            //new Events.AllOneHanded(),
             new Events.NotMetal(),
             // Neutral
             new Events.Nothing(),
             new Events.MetalSwitch(),
+            //new Events.HandsSwitch(),
             new Events.Locusts(),
             new Events.Birds(),
             new Events.Trees(),
@@ -116,12 +118,14 @@ namespace BrutalCompanyMinus.Minus
             new Events.TargetingFailureEvent(),
             new Events.TeleporterTraps(),
             new Events.IsMetal(),
-            new Events.Stingray(), // Requires Special Events (Temporary)
-            new Events.Puma(), // Requires Special Events (Temporary)
-            //new Events.KidnapperFox(),  // Requires Special Events (Temporary)
+            new Events.Stingray(), // Requires Beta Events (Temporary)
+            new Events.Puma(), // Requires Beta Events (Temporary)
+            new Events.KidnapperFox(),  // Requires Beta Events (Temporary)
             // Very Bad
-            new Events.Cadaver(), // Requires Special Events (Temporary)
-            new Events.CatsAndDogs(), // Requires Special Events (Temporary)
+            new Events.Cadaver(), // Requires Beta Events (Temporary)
+            new Events.CatsAndDogs(), // Requires Beta Events (Temporary)
+            //new Events.AllTwoHanded(),
+            //new Events.UncertainHands(),
             new Events.Nutcracker(),
             new Events.KiwiBird(),// Requires Special Events
             new Events.LockedEntrance(),// Requires Special Events
@@ -722,6 +726,29 @@ namespace BrutalCompanyMinus.Minus
                 Manager.scrapAmountMultiplier *= properties.GetScrapAmountMultiplier();
             }
 
+            // Do heat things here
+            if (Configuration.scaleHeat.Value)
+            {
+                // Get current PlanetName
+                Manager.levelNameOnLand = RoundManager.Instance.currentLevel.levelID;
+                if (!Manager.heatDifficulty.ContainsKey(Manager.levelNameOnLand))
+                { // Add the planet to the list if it does not exist.
+                    Manager.heatDifficulty.Add(Manager.levelNameOnLand, 0); //Declare 0
+                }
+
+                //Decrement every other planet too, assuming the list is not null.
+                if (Manager.heatDifficulty != null)
+                {
+                    foreach (var planet in Manager.heatDifficulty.Keys.ToList())
+                    {
+                        if (planet != Manager.levelNameOnLand)
+                        {
+                            Manager.heatDifficulty[planet] = Math.Max(Manager.heatDifficulty[planet] - Math.Abs(Configuration.heatDecrementAmount.Value), 0);
+                        }
+                    }
+                }
+            }
+
             // Difficulty modifications
             Manager.AddEnemyHp((int)MEvent.Scale.Compute(Configuration.enemyBonusHpScaling));
             Manager.AddInsideSpawnChance(newLevel, MEvent.Scale.Compute(Configuration.insideSpawnChanceAdditive));
@@ -796,7 +823,23 @@ namespace BrutalCompanyMinus.Minus
 
             // Apply maxPower counts
             RoundManager.Instance.currentLevel.maxEnemyPowerCount = (int)((RoundManager.Instance.currentLevel.maxEnemyPowerCount + Manager.bonusMaxInsidePowerCount) * Manager.spawncapMultipler);
+            if (Configuration.scaleHeat.Value)
+            {
+                float x = EventManager.currentHeatDifficulty();
+                if (x > 0)
+                {
+                    RoundManager.Instance.currentLevel.maxEnemyPowerCount *= (int)((Configuration.heatMultiplierOtherCalculations.Value * RoundManager.Instance.currentLevel.maxEnemyPowerCount / Configuration.heatDampening.Value) * Math.Pow(1 + Configuration.heatDampening.Value, x) + 1);
+                }
+            }
+            
             RoundManager.Instance.currentLevel.maxOutsideEnemyPowerCount = (int)((RoundManager.Instance.currentLevel.maxOutsideEnemyPowerCount + Manager.bonusMaxOutsidePowerCount) * Manager.spawncapMultipler);
+            {
+                float x = EventManager.currentHeatDifficulty();
+                if (x > 0)
+                {
+                    RoundManager.Instance.currentLevel.maxOutsideEnemyPowerCount *= (int)((Configuration.heatMultiplierOtherCalculations.Value * RoundManager.Instance.currentLevel.maxOutsideEnemyPowerCount / Configuration.heatDampening.Value) * Math.Pow(1 + Configuration.heatDampening.Value, x) + 1);
+                }
+            }
 
             //Make sure scrap amount/value stays below the cap
             Manager.scrapValueMultiplier = Mathf.Clamp(Manager.scrapValueMultiplier, 0.0f, Configuration.scrapValueMax.Value);
@@ -916,6 +959,17 @@ namespace BrutalCompanyMinus.Minus
                 return true; // Event is on whitelist, and valid moon
             }
             return false; // Fallback
+        }
+
+        public static float currentHeatDifficulty()
+        {
+            float heatValue = 0f;
+            if (RoundManager.Instance?.currentLevel?.levelID != null)
+            {
+                int levelID = RoundManager.Instance.currentLevel.levelID;
+                heatValue = Manager.heatDifficulty.TryGetValue(levelID, out float heat) ? heat : 0f;
+            }
+            return heatValue;
         }
     }
 }

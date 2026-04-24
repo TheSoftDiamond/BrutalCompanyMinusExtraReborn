@@ -22,7 +22,7 @@ namespace BrutalCompanyMinus
     public class Configuration
     {
         // Config files
-        public static ConfigFile uiConfig, eventConfig, weatherConfig, customAssetsConfig, difficultyConfig, moddedEventConfig, customEventConfig, allEnemiesConfig, levelPropertiesConfig, CorePropertiesConfig /*, extensiveSettingsConfig*/;
+        public static ConfigFile? uiConfig, eventConfig, weatherConfig, customAssetsConfig, difficultyConfig, moddedEventConfig, customEventConfig, allEnemiesConfig, levelPropertiesConfig, CorePropertiesConfig /*, extensiveSettingsConfig*/;
 
         // Event settings
         public static List<ConfigEntry<int>> eventWeights = new List<ConfigEntry<int>>();
@@ -39,18 +39,18 @@ namespace BrutalCompanyMinus
         public static List<ScrapTransmutationEvent> transmutationEvents = new List<ScrapTransmutationEvent>();
 
         // Difficulty Settings
-        public static ConfigEntry<bool> useCustomWeights, showEventsInChat;
+        public static ConfigEntry<bool>? useCustomWeights, showEventsInChat;
         public static Scale eventsToSpawn;
-        public static float[] weightsForExtraEvents;
+        public static float[]? weightsForExtraEvents;
         public static Scale[] eventTypeScales = new Scale[6];
         public static Dictionary<EventType, Scale> scrapValueByEventTypeScale = new Dictionary<EventType, Scale>();
         public static Dictionary<EventType, Scale> scrapAmountByEventTypeScale = new Dictionary<EventType, Scale>();
-        public static ConfigEntry<string> MoonsToIgnore;
+        public static ConfigEntry<string>? MoonsToIgnore;
         public static Scale factorySizeMultiplier = new Scale();
 
         public static EventManager.DifficultyTransition[] difficultyTransitions;
-        public static ConfigEntry<bool> enableQuotaChanges;
-        public static ConfigEntry<int> deadLineDaysAmount, startingCredits, startingQuota, baseIncrease, increaseSteepness;
+        public static ConfigEntry<bool>? enableQuotaChanges;
+        public static ConfigEntry<int>? deadLineDaysAmount, startingCredits, startingQuota, baseIncrease, increaseSteepness;
         public static Scale
             spawnChanceMultiplierScaling = new Scale(),
             insideEnemyMaxPowerCountScaling = new Scale(),
@@ -61,52 +61,55 @@ namespace BrutalCompanyMinus
             scrapValueMultiplier = new Scale(),
             insideSpawnChanceAdditive = new Scale(),
             outsideSpawnChanceAdditive = new Scale();
-        public static ConfigEntry<bool> ignoreMaxCap;
-        public static ConfigEntry<float> difficultyMaxCap;
-        public static ConfigEntry<float> scrapValueMax;
-        public static ConfigEntry<float> scrapAmountMax;
-        public static ConfigEntry<float> FactorySizeMax;
-        public static ConfigEntry<float> FactorySizeMin;
-        public static ConfigEntry<bool> scaleByDaysPassed, scaleByScrapInShip, scaleByMoonGrade, scaleByWeather, scaleByQuota;
-        public static ConfigEntry<float> daysPassedDifficultyMultiplier, daysPassedDifficultyCap, scrapInShipDifficultyMultiplier, scrapInShipDifficultyCap, quotaDifficultyMultiplier, quotaDifficultyCap;
+        public static ConfigEntry<bool>? ignoreMaxCap;
+        public static ConfigEntry<float>? difficultyMaxCap;
+        public static ConfigEntry<float>? scrapValueMax;
+        public static ConfigEntry<float>? scrapAmountMax;
+        public static ConfigEntry<float>? FactorySizeMax;
+        public static ConfigEntry<float>? FactorySizeMin;
+        public static ConfigEntry<bool>? scaleByDaysPassed, scaleByScrapInShip, scaleByMoonGrade, scaleByWeather, scaleByQuota, scaleHeat;
+        public static ConfigEntry<float>? daysPassedDifficultyMultiplier, daysPassedDifficultyCap, scrapInShipDifficultyMultiplier, scrapInShipDifficultyCap, quotaDifficultyMultiplier, quotaDifficultyCap;
         public static Dictionary<string, float> gradeAdditives = new Dictionary<string, float>();
         public static Dictionary<LevelWeatherType, float> weatherAdditives = new Dictionary<LevelWeatherType, float>();
         public static ConfigEntry<bool> enableCustomTimeAdjustments;
         public static Scale timeScaling = new Scale();
         public static Scale startingTime = new Scale();
 
+        public static ConfigEntry<float>? heatIncrementAmount, heatDecrementAmount, heatMaxCap, heatDampening, heatMultiplierDifficulty, heatMultiplierOtherCalculations;
+        public static ConfigEntry<bool>? heatAffectDifficultyOnly;
+
         // Player Scaling Settings
-        public static ConfigEntry<bool> enablePlayerScaling;
-        public static ConfigEntry<string> playerScalingType;
-        public static ConfigEntry<float> playerScalingMultiplier;
-        public static ConfigEntry<int> basePlayerAmount;
+        public static ConfigEntry<bool>? enablePlayerScaling;
+        public static ConfigEntry<string>? playerScalingType;
+        public static ConfigEntry<float>? playerScalingMultiplier;
+        public static ConfigEntry<int>? basePlayerAmount;
 
         // Weather settings
-        public static ConfigEntry<bool> useWeatherMultipliers, randomizeWeatherMultipliers, enableTerminalText;
-        public static ConfigEntry<float> weatherRandomRandomMinInclusive, weatherRandomRandomMaxInclusive;
+        public static ConfigEntry<bool>? useWeatherMultipliers, randomizeWeatherMultipliers, enableTerminalText;
+        public static ConfigEntry<float>? weatherRandomRandomMinInclusive, weatherRandomRandomMaxInclusive;
         public static Weather noneMultiplier, dustCloudMultiplier, rainyMultiplier, stormyMultiplier, foggyMultiplier, floodedMultiplier, eclipsedMultiplier;
 
         // UI settings
-        public static ConfigEntry<string> UIKey;
-        public static ConfigEntry<bool> NormaliseScrapValueDisplay, EnableUI, ShowUILetterBox, ShowExtraProperties, PopUpUI, DisplayUIAfterShipLeaves, DisplayExtraPropertiesAfterShipLeaves, displayEvents;
-        public static ConfigEntry<float> UITime, scrollSpeed;
-        public static ConfigEntry<string> color;
-        public static ConfigEntry<float> uiColorReduction;
-        public static ConfigEntry<float> colorArrowsIncrease;
-        public static ConfigEntry<string> colorArrows;
-        public static ConfigEntry<string> colorText;
+        public static ConfigEntry<string>? UIKey;
+        public static ConfigEntry<bool>? NormaliseScrapValueDisplay, EnableUI, ShowUILetterBox, ShowExtraProperties, PopUpUI, DisplayUIAfterShipLeaves, DisplayExtraPropertiesAfterShipLeaves, displayEvents;
+        public static ConfigEntry<float>? UITime, scrollSpeed;
+        public static ConfigEntry<string>? color;
+        public static ConfigEntry<float>? uiColorReduction;
+        public static ConfigEntry<float>? colorArrowsIncrease;
+        public static ConfigEntry<string>? colorArrows;
+        public static ConfigEntry<string>? colorText;
         //public static ConfigEntry<string> menuColor;
         //public static ConfigEntry<float> menuTransparency;
 
         // Custom assets settings
-        public static ConfigEntry<int> nutSlayerLives, nutSlayerHp;
-        public static ConfigEntry<float> nutSlayerMovementSpeed;
-        public static ConfigEntry<bool> nutSlayerImmortal;
-        public static ConfigEntry<bool> onlyPlayersAttackSlayer;
-        public static ConfigEntry<int> slayerShotgunMinValue, slayerShotgunMaxValue;
+        public static ConfigEntry<int>? nutSlayerLives, nutSlayerHp;
+        public static ConfigEntry<float>? nutSlayerMovementSpeed;
+        public static ConfigEntry<bool>? nutSlayerImmortal;
+        public static ConfigEntry<bool>? onlyPlayersAttackSlayer;
+        public static ConfigEntry<int>? slayerShotgunMinValue, slayerShotgunMaxValue;
 
         // All enemies settings
-        public static ConfigEntry<bool> enableAllEnemies, enableAllAllEnemies;
+        public static ConfigEntry<bool>? enableAllEnemies, enableAllAllEnemies;
 
         // Level properties settings
         public static Dictionary<int, LevelProperties> levelProperties = new Dictionary<int, LevelProperties>();
@@ -119,22 +122,24 @@ namespace BrutalCompanyMinus
         public static string customEventsFolder = Paths.ConfigPath + "\\BrutalCompanyMinusExtraReborn\\CustomEvents";
 
         // Core Properties
-        public static ConfigEntry<bool> enableCustomEvents;
-        public static ConfigEntry<bool> ExtraLogging;
-        public static ConfigEntry<bool> SilenceEnum;
-        public static ConfigEntry<bool> SilencePrefab;
-        public static ConfigEntry<bool> GetMethods;
-        public static ConfigEntry<bool> HellTimeAdjustment;
-        public static ConfigEntry<bool> VeryLateShipAdjustment;
-        public static ConfigEntry<bool> DisableAllEvents;
-        public static ConfigEntry<bool> dontHandlePower;
-        public static ConfigEntry<bool> dontHandleSpawnCurves;
-        public static ConfigEntry<bool> deferWeatherToMods;
-        public static ConfigEntry<bool> enableSpecialEvents;
+        public static ConfigEntry<bool>? enableCustomEvents;
+        public static ConfigEntry<bool>? ExtraLogging;
+        public static ConfigEntry<bool>? SilenceEnum;
+        public static ConfigEntry<bool>? SilencePrefab;
+        public static ConfigEntry<bool>? GetMethods;
+        public static ConfigEntry<bool>? HellTimeAdjustment;
+        public static ConfigEntry<bool>? VeryLateShipAdjustment;
+        public static ConfigEntry<bool>? DisableAllEvents;
+        public static ConfigEntry<bool>? dontHandlePower;
+        public static ConfigEntry<bool>? dontHandleSpawnCurves;
+        public static ConfigEntry<bool>? deferWeatherToMods;
+        public static ConfigEntry<bool>? enableSpecialEvents;
+        public static ConfigEntry<bool>? enableBetaEvents;
         public static Scale timeChaosScale = new Scale();
-        public static ConfigEntry<string> transmutationBlacklist;
-        public static ConfigEntry<bool> enableNewEventOnNewLoad;
-        public static ConfigEntry<bool> handleScanCommand;
+        public static ConfigEntry<string>? transmutationBlacklist;
+        public static ConfigEntry<bool>? enableNewEventOnNewLoad;
+        public static ConfigEntry<bool>? handleScanCommand;
+        public static ConfigEntry<bool>? speedrunMode;
 
 
         /*   public static ConfigEntry<bool> EnableStreamerEvents;*/
@@ -172,6 +177,16 @@ namespace BrutalCompanyMinus
             scaleByMoonGrade = difficultyConfig.Bind("Difficulty Scaling", "Scale by moon grade?", true, "Will add to difficulty depending on grade of moon you land on.");
             gradeAdditives = GetMoonRiskFromString(difficultyConfig.Bind("Difficulty Scaling", "Grade difficulty scaling", "D,-8|C,-8|B,-4|A,5|S,10|S+,15|S++,20|S+++,30|Other,10", "Format: GRADE,DIFFICULTY, Do not remove 'Other'").Value);
             scaleByWeather = difficultyConfig.Bind("Difficulty Scaling", "Scale by weather type?", false, "Will add to difficulty depending on weather of moon you land on.");
+            scaleHeat = difficultyConfig.Bind("Difficulty Scaling", "Scale by Heat?", false, "Scales the difficulty by the current heat of the planet Heat values will never go below 0.");
+            heatIncrementAmount = difficultyConfig.Bind("Difficulty Scaling", "Heat difficulty additive", 1f, "After visiting a moon, the next visit will incur this amount of heat.");
+            heatDecrementAmount = difficultyConfig.Bind("Difficulty Scaling", "Heat difficulty decrement", 1f, "If visiting a moon different from the previous day, decrement by this value.");
+            heatDampening = difficultyConfig.Bind("Difficulty Scaling", "Heat dampening factor", 0.15f, "The effective heat factor. Numbers closer to 0 will cause the calculated difficulty numbers to go higher. Higher numbers retain a value closer to the original value.");
+            heatMultiplierDifficulty = difficultyConfig.Bind("Difficulty Scaling", "Heat multiplier (Difficulty)", 0.0015f, "This is used for calculating the difficulty of the current difficulty. Higher numbers will mulitply the value faster.");
+            heatMultiplierOtherCalculations = difficultyConfig.Bind("Difficulty Scaling", "Heat multiplier (Non-Difficulty)", 0.004f, "This is used for calculations other than difficulty, affecting other properties like power values. Higher numbers will mulitply the value faster.");
+            heatMaxCap = difficultyConfig.Bind("Difficulty Scaling", "Heat Max Cap", 10f, "Heat values will never go beyond this value");
+            heatAffectDifficultyOnly = difficultyConfig.Bind("Difficulty Scaling", "Heat affects difficulty only?", true, "By default, heat only effects the difficulty number. By setting it to false, it will affect other properties");
+
+
             weatherAdditives = new Dictionary<LevelWeatherType, float>()
             {
                 { LevelWeatherType.None, difficultyConfig.Bind("Difficulty Scaling", "None weather difficulty", 0.0f, "Difficulty added for playing on None weather").Value },
@@ -292,9 +307,11 @@ namespace BrutalCompanyMinus
             dontHandleSpawnCurves = CorePropertiesConfig.Bind("Mod Compatibility", "Experimental Dont Handle Spawn Chance?", false, "If you wish to let other mods handle spawn curves, enable this. Some settings may affect this.");
             deferWeatherToMods = CorePropertiesConfig.Bind("Mod Compatibility", "Defer Weather To Weather ToolKit Mod?", false, "If you wish to let other mods handle Brutal's weather setting effects, enable this. This has no effect on custom events as those use weather toolkit by default.");
             enableSpecialEvents = CorePropertiesConfig.Bind("Events Features", "Enable Special Events?", false, "Enables special events to be loaded.");
+            enableBetaEvents = CorePropertiesConfig.Bind("Events Features", "Enable Beta Events?", false, "Enables beta events to be loaded. These events are untested and may be very buggy, use at your own risk.");
             transmutationBlacklist = CorePropertiesConfig.Bind("Events Features", "Transmutation Blacklist", "", "Blacklist items here to prevent them from being used in scrap transmutation. Uses itemProperties.itemName Component Name.");
             enableNewEventOnNewLoad = CorePropertiesConfig.Bind("Mod Compatibility", "Events Reroll on Dynamic Interior", false, "For mods like Zeranos that support changing the dungeon layout every floor... should Brutal load new events for them? This feature might break.");
             handleScanCommand = CorePropertiesConfig.Bind("Mod Compatibility", "Let Brutal handle the SCAN command?", true, "If enabled, Brutal will handle the scan command with accurate scrap values to its modifiers. If you have other mods that handle this feature, disable it. Please note, if disabled, the scan command will not show the proper values for scrap value.");
+            speedrunMode = CorePropertiesConfig.Bind("Events Features", "Enable Speedrun Mode?", false, "If enabled, Brutal will adjust certain events and features to be suited for speedrunning. I recommend keeping this off unless you are actively speedrunning the game.");
 
             //todo - add settings for events and modded events that mess with features like time
 
