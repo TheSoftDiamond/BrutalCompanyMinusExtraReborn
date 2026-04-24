@@ -170,6 +170,12 @@
 		<Reference Include="Facepunch.Steamworks.Win64">
 			<HintPath>libs\Gamelibs\Facepunch.Steamworks.Win64.dll</HintPath>
 		</Reference>
+		<Reference Include="Scandal.CruiserXL-publicized">
+			<HintPath>libs\Scandal.CruiserXL-publicized.dll</HintPath>
+		</Reference>
+		<Reference Include="RadioBrowser-publicized">
+			<HintPath>libs\RadioBrowser-publicized.dll</HintPath>
+		</Reference>
 	</ItemGroup>
 
 	<ItemGroup>
