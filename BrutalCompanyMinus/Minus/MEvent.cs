@@ -61,10 +61,22 @@ namespace BrutalCompanyMinus.Minus
         /// Set this in Initalize() to specify events to spawn with, these wont be shown in the UI.
         /// </summary>
         public List<string> EventsToSpawnWith = new List<string>();
-
+        
+        /// <summary>
+        /// Used internally for logic functions for events.
+        /// </summary>
         internal bool Executed = false;
 
+        /// <summary>
+        /// This is used internally for events. Especially for events that require a Net Object registered for specific networked effects to occur.
+        /// </summary>
         internal bool Active = false;
+
+
+        /// <summary>
+        /// Internally used to prevent events from being included if speedrun mode is on.
+        /// </summary>
+        internal bool SpeedRunSafe = true;
 
         /// <summary>
         /// Set this in Initalize() to make monster event(s).
@@ -92,7 +104,7 @@ namespace BrutalCompanyMinus.Minus
             InsideEnemyRarity, OutsideEnemyRarity, DaytimeEnemyRarity, MinOutsideEnemy, MinInsideEnemy, MaxOutsideEnemy, MaxInsideEnemy,
             ScrapValue, ScrapAmount, FactorySize, MinDensity, MaxDensity, MinCash, MaxCash, MinItemAmount, MaxItemAmount, MinValue, MaxValue, Rarity, MinRarity, MaxRarity,
             MinCut, MaxCut, MinHp, MaxHp, SpawnMultiplier, MaxInsideEnemyCount, MaxOutsideEnemyCount, SpawnCapMultiplier, MinPercentageCut, MaxPercentageCut, MinAmount, MaxAmount, 
-            Percentage, TimeSettings, TimeMin, TimeMax, MinPercentSelected, MaxPercentSelected, ObjectWidth
+            Percentage, TimeSettings, TimeMin, TimeMax, MinPercentSelected, MaxPercentSelected, ObjectWidth, minMold, maxMold
         }
 
         internal static Dictionary<ScaleType, string> ScaleInfoList = new Dictionary<ScaleType, string>() {
@@ -135,7 +147,9 @@ namespace BrutalCompanyMinus.Minus
             { ScaleType.TimeMax, "The maximum time to be chosen." },
             { ScaleType.MinPercentSelected, "Minimum percentage of something to be selected." },
             { ScaleType.MaxPercentSelected, "Maximum percentage of something to be selected." },
-            { ScaleType.ObjectWidth, "How close an object can spawn to the edges of the navmesh" }
+            { ScaleType.ObjectWidth, "How close an object can spawn to the edges of the navmesh" },
+            { ScaleType.minMold, "Minimum amount of mold to be chosen." },
+            { ScaleType.maxMold, "Maximum amount of mold to be chosen." }
         };
 
         /// <summary>

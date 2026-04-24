@@ -68,6 +68,12 @@ namespace BrutalCompanyMinus.Minus.Handlers
                 info = "MEVENT [mEvent]\n    mEvent - the name of said event.\n\nMEVENT [mEvent 1] [mEvent 2] ... [mEvent n]\n    this can take multiple events.",
                 execute = new Action<string[]>((arguments) =>
                 {
+                    if(Configuration.speedrunMode.Value)
+                    {
+                        Respond("MEVENT command is disabled in speedrun mode.");
+                        return;
+                    }
+
                     if(arguments.Length == 0)
                     {
                         Respond("MEVENT command is missing argument(s).");
@@ -114,6 +120,12 @@ namespace BrutalCompanyMinus.Minus.Handlers
                 info = "MCLEAR\n   Clears the forced event list from MEVENT.",
                 execute = new Action<string[]>((arguments) =>
                 {
+                    if(Configuration.speedrunMode.Value)
+                    {
+                        Respond("MCLEAR command is disabled in speedrun mode.");
+                        return;
+                    }
+
                     EventManager.forcedEvents.Clear();
                     Respond($"Cleared forced event list\n\nCurrent forced events = [{Helper.StringsToList(EventManager.forcedEvents.Select(n => n.Name()).ToList(), ",")}]");
                 })
@@ -209,6 +221,12 @@ namespace BrutalCompanyMinus.Minus.Handlers
                     if(arguments.Length == 0)
                     {
                         Respond("MPAY command is missing argument(s).");
+                        return;
+                    }
+
+                    if(Configuration.speedrunMode.Value)
+                    {
+                        Respond("MPAY command is disabled in speedrun mode.");
                         return;
                     }
 
