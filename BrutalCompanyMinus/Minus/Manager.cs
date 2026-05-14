@@ -106,6 +106,8 @@ namespace BrutalCompanyMinus.Minus
 
         public static Dictionary<string, (bool, int)> originalMoonMoldData = new Dictionary<string, (bool, int)>();
 
+        private static bool isApplicationQuitting = false; 
+
         /// <summary>
         /// This is used to spawn objects, enemies or scrap in certain locations.
         /// </summary>
@@ -357,6 +359,8 @@ namespace BrutalCompanyMinus.Minus
                     GrabbableObject grabbableObject = obj.GetComponent<GrabbableObject>();
                     grabbableObject.transform.rotation = Quaternion.Euler(grabbableObject.itemProperties.restingRotation);
                     grabbableObject.fallTime = 0.0f;
+                    grabbableObject.itemProperties.weight = ScrapToSpawn[i].weight;
+                    grabbableObject.itemProperties.isConductiveMetal = ScrapToSpawn[i].isConductiveMetal;
                     ScrapValues.Add((int)(UnityEngine.Random.Range(ScrapToSpawn[i].minValue, ScrapToSpawn[i].maxValue + 1) * r.scrapValueMultiplier * scrapValueMultiplier));
                     grabbableObject.scrapValue = ScrapValues[ScrapValues.Count - 1];
                     NetworkObject netObj = obj.GetComponent<NetworkObject>();
@@ -439,6 +443,7 @@ namespace BrutalCompanyMinus.Minus
                     int ScrapValue = (int)(UnityEngine.Random.Range(ScrapToSpawn[i].minValue, ScrapToSpawn[i].maxValue + 1) * r.scrapValueMultiplier * scrapValueMultiplier);
                     ScrapValues.Add(ScrapValue);
                     grabbableObject.scrapValue = ScrapValue;
+                    grabbableObject.itemProperties.weight = ScrapToSpawn[i].weight;
 
                     NetworkObject netObj = scrap.GetComponent<NetworkObject>();
                     netObj.Spawn();
@@ -584,14 +589,6 @@ namespace BrutalCompanyMinus.Minus
             if (Configuration.scaleByWeather.Value)
             {
                 weatherDifficulty = Configuration.weatherAdditives.GetValueOrDefault(StartOfRound.Instance.currentLevel.currentWeather, 0.0f);
-                //if (Compatibility.WeatherRegistryPresent)
-                //{
-                    // Look at the current weather in the registry
-                    //string CurrentWeather = CustomWeather.GetCustomWeather();
-
-                    // Perform a lookup in the config and get its additive if it exists
-                    //weatherDifficulty = Configuration.customWeatherMultipliers.GetValueOrDefault(CurrentWeather, weatherDifficulty);
-                //}
 
                 difficulty += weatherDifficulty;
             }
@@ -630,12 +627,12 @@ namespace BrutalCompanyMinus.Minus
                 }
             }
 
-            if (Configuration.scaleHeat.Value)
+            if (Configuration.scaleHeat.Value && (Configuration.heatSettingsToAffect.Value.HasFlag(Configuration.HeatSettingsFlags.Difficulty) || (Configuration.heatSettingsToAffect.Value.HasFlag(Configuration.HeatSettingsFlags.All))))
             {
-                float x = EventManager.currentHeatDifficulty();
-                if (x > 0)
+                float heatIndex = EventManager.currentHeatDifficulty();
+                if (heatIndex > 0)
                 {
-                    difficulty *= (float)((Configuration.heatMultiplierDifficulty.Value * difficulty / Configuration.heatDampening.Value) * Math.Pow(1 + Configuration.heatDampening.Value, x) + 1);
+                    difficulty *= (float)((Configuration.heatMultiplierDifficulty.Value * difficulty / Configuration.heatDampening.Value) * Math.Pow(1 + Configuration.heatDampening.Value, heatIndex) + 1);
                 }
             }
 
@@ -1016,21 +1013,34 @@ namespace BrutalCompanyMinus.Minus
         [HarmonyPatch(typeof(StartOfRound), nameof(StartOfRound.OnLocalDisconnect))]
         private static void OnDisconnect()
         {
-            try
+            if (RoundManager.Instance.IsServer)
             {
-                if (RoundManager.Instance.IsServer && Configuration.scaleHeat.Value)
+                try
                 {
-                    string gameSaveName = GameNetworkManager.Instance.currentSaveFileName;
-                    ES3.Save("heatDifficulty", Manager.heatDifficulty, $"{gameSaveName}_Brutal");
+                    if (RoundManager.Instance.IsServer && Configuration.scaleHeat.Value)
+                    {
+                        if (Manager.heatDifficulty == null || Manager.heatDifficulty.Count > 0)
+                        {
+                            string gameSaveName = GameNetworkManager.Instance.currentSaveFileName;
+                            ES3.Save("heatDifficulty", Manager.heatDifficulty, $"{gameSaveName}_Brutal");
+                        }
+                        //if (Manager.heatDifficulty == null || Manager.heatDifficulty.Count > 0)
+                        //{
+                        //    Manager.heatDifficulty.Clear();
+                        //}
+                    }
+                }
+                catch
+                {
+                    Log.LogError("Failed to get game save name on disconnect, skipping heat difficulty save.");
+                    return;
                 }
             }
-            catch
-            {
-                Log.LogError("Failed to get game save name on disconnect, skipping heat difficulty save.");
-                return;
-            }
 
-            Manager.heatDifficulty.Clear();
+            if (!isApplicationQuitting)
+            {
+                Manager.heatDifficulty.Clear();
+            }
         }
 
 
@@ -1038,15 +1048,23 @@ namespace BrutalCompanyMinus.Minus
         [HarmonyPatch(typeof(GameNetworkManager), nameof(GameNetworkManager.OnApplicationQuit))]
         private static void OnAppQuit()
         {
-            try
+            isApplicationQuitting = true;
+
+            if (RoundManager.Instance.IsServer)
             {
-                string gameSaveName = GameNetworkManager.Instance.currentSaveFileName;
-                ES3.Save("heatDifficulty", Manager.heatDifficulty, $"{gameSaveName}_Brutal");
-            }
-            catch
-            {
-                Log.LogError("Failed to get game save name on application quit, skipping heat difficulty save.");
-                return;
+                try
+                {
+                    if (Manager.heatDifficulty == null || Manager.heatDifficulty.Count > 0)
+                    {
+                        string gameSaveName = GameNetworkManager.Instance.currentSaveFileName;
+                        ES3.Save("heatDifficulty", Manager.heatDifficulty, $"{gameSaveName}_Brutal");
+                    }
+                }
+                catch
+                {
+                    Log.LogError("Failed to get game save name on application quit, skipping heat difficulty save.");
+                    return;
+                }
             }
         }
 
@@ -1057,16 +1075,19 @@ namespace BrutalCompanyMinus.Minus
             if (Configuration.scaleHeat.Value)
             {
                 Manager.heatDifficulty.Clear();
-                try
+                if (RoundManager.Instance.IsServer)
                 {
-                    string gameSaveName = GameNetworkManager.Instance.currentSaveFileName;
-                    ES3.DeleteKey("heatDifficulty", $"{gameSaveName}_Brutal");
-                    ES3.Save("heatDifficulty", Manager.heatDifficulty, $"{gameSaveName}_Brutal");
-                }
-                catch
-                {
-                    Log.LogError("Failed to get game save name after deadline, skipping heat difficulty reset.");
-                    return;
+                    try
+                    {
+                        string gameSaveName = GameNetworkManager.Instance.currentSaveFileName;
+                        ES3.DeleteKey("heatDifficulty", $"{gameSaveName}_Brutal");
+                        ES3.Save("heatDifficulty", Manager.heatDifficulty, $"{gameSaveName}_Brutal");
+                    }
+                    catch
+                    {
+                        Log.LogError("Failed to get game save name after deadline, skipping heat difficulty reset.");
+                        return;
+                    }
                 }
             }
         }
@@ -1079,19 +1100,60 @@ namespace BrutalCompanyMinus.Minus
             {
                 if (Configuration.scaleHeat.Value)
                 {
+                    Manager.heatDifficulty.Clear();
                     string gameSaveName = GameNetworkManager.Instance.currentSaveFileName;
 
                     if (ES3.KeyExists("heatDifficulty", $"{gameSaveName}_Brutal"))
                     {
                         try
                         {
-                            Manager.heatDifficulty = ES3.Load<Dictionary<int, float>>("heatDifficulty", $"{gameSaveName}_Brutal");
+                            Log.LogInfo("Found a save called " + $"{gameSaveName}_Brutal" + ", loading heat difficulty from it...");
+                            Dictionary<int, float> tempHeat = ES3.Load<Dictionary<int, float>>("heatDifficulty", $"{gameSaveName}_Brutal");
+                            if (tempHeat != null || tempHeat.Count > 0)
+                            {
+                                Manager.heatDifficulty = tempHeat;
+                            }
                             Log.LogInfo("Manager.heatDifficulty successfully loaded.");
+                            //Refresh UI
+
+                            if (!UI.canClearText) return;
+                            try
+                            {
+                                UI.ClearText();
+                            }
+                            catch (Exception e)
+                            {
+                                StartOfRound.Instance.StartCoroutine(UI.ClearAfterDelay());
+                            }
+
                         }
                         catch (Exception ex)
                         {
                             Log.LogError($"Failed to load Manager.heatDifficulty: {ex.Message}");
                         }
+                    }
+                    else
+                    {
+                        Log.LogInfo("No existing heat difficulty data found, starting fresh.");
+                    }
+                }
+            }
+
+            if (!RoundManager.Instance.IsServer)
+            {
+                try
+                {
+                    UI.ClearText();
+                }
+                catch (Exception e)
+                {
+                    try
+                    {
+                        StartOfRound.Instance.StartCoroutine(UI.ClearAfterDelay());
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.LogError($"Failed to clear UI text on client coroutine after fallback attempt: {ex.Message}");
                     }
                 }
             }
@@ -1101,8 +1163,12 @@ namespace BrutalCompanyMinus.Minus
         [HarmonyPatch(typeof(PlayerControllerB), nameof(PlayerControllerB.ConnectClientToPlayerObject))]
         private static void OnPlayerConnect()
         {
-            Log.LogInfo("Requesting heat difficulty from server...");
-            Net.Instance.SyncHeatMapServerRpc([.. Manager.heatDifficulty.Keys], [.. Manager.heatDifficulty.Values]);
+            //Log.LogInfo("Requesting heat difficulty from server...");
+            if (!RoundManager.Instance.IsServer) //We do not want the server to potentially desync itself by sending the heat difficulty to itself again.
+            {
+                Log.LogInfo("Requesting heat difficulty from server...");
+                Net.Instance.SyncHeatMapServerRpc();
+            }
         }
 
         [HarmonyPostfix]
@@ -1136,8 +1202,11 @@ namespace BrutalCompanyMinus.Minus
             {
                 try
                 {
+                    if (Manager.heatDifficulty == null || Manager.heatDifficulty.Count == 0) return;
+
                     string gameSaveName = GameNetworkManager.Instance.currentSaveFileName;
 
+                    Log.LogInfo("Attempting to save to " + $"{gameSaveName}_Brutal" + "...");
                     ES3.Save("heatDifficulty", Manager.heatDifficulty, $"{gameSaveName}_Brutal");
                     Log.LogInfo("Manager.heatDifficulty successfully saved");
                 }
