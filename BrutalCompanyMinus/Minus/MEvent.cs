@@ -81,7 +81,7 @@ namespace BrutalCompanyMinus.Minus
         /// <summary>
         /// Set this in Initalize() to make monster event(s).
         /// </summary>
-        public List<MonsterEvent> monsterEvents = new List<MonsterEvent>();
+        public List<MonsterEvent> monstersToSpawn = new List<MonsterEvent>();
 
         /// <summary>
         /// Set this in Initalize() to make a transmutation event.
@@ -244,11 +244,11 @@ namespace BrutalCompanyMinus.Minus
         }
 
         /// <summary>
-        /// Will execute every monster event inside of monsterEvents.
+        /// Will execute every monster event inside of monstersToSpawn.
         /// </summary>
         public void ExecuteAllMonsterEvents()
         {
-            foreach(MonsterEvent monsterEvent in monsterEvents)
+            foreach(MonsterEvent monsterEvent in monstersToSpawn)
             {
                 monsterEvent.Execute();
             }
@@ -297,7 +297,7 @@ namespace BrutalCompanyMinus.Minus
                 assignRarities(insideSpawnRarity, outsideSpawnRarity, minInside, maxInside, minOutside, maxOutside);
             }
 
-            private void assignRarities(Scale insideSpawnRarity, Scale outsideSpawnRarity, Scale minInside, Scale maxInside, Scale minOutside, Scale maxOutside)
+            internal void assignRarities(Scale insideSpawnRarity, Scale outsideSpawnRarity, Scale minInside, Scale maxInside, Scale minOutside, Scale maxOutside)
             {
                 this.insideSpawnRarity = insideSpawnRarity;
                 this.outsideSpawnRarity = outsideSpawnRarity;
@@ -331,7 +331,10 @@ namespace BrutalCompanyMinus.Minus
                 this.amount = amount;
             }
 
-            public void Execute() => Manager.TransmuteScrap(amount.Computef(EventType.Neutral), items);
+            public void Execute()
+            {
+                Manager.TransmuteScrap(amount.Computef(EventType.Neutral), items);
+            }
         }
     }
 }
