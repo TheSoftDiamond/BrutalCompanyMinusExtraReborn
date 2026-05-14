@@ -23,7 +23,6 @@ namespace BrutalCompanyMinus
     [BepInDependency("zigzag.SelfSortingStorage", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("LethalPhones", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.github.zehsteam.ToilHead", BepInDependency.DependencyFlags.SoftDependency)]
-    [BepInDependency("kite.ZelevatorCode", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("mrov.WeatherRegistry", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.github.teamxiaolan.dawnlib", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.github.teamxiaolan.dawnlib.interfaces", BepInDependency.DependencyFlags.SoftDependency)]
@@ -35,7 +34,7 @@ namespace BrutalCompanyMinus
     {
         private const string GUID = "SoftDiamond.BrutalCompanyMinusExtraReborn";
         private const string NAME = "BrutalCompanyMinusExtraReborn";
-        private const string VERSION = "1.40.0";
+        private const string VERSION = "1.40.2";
 
         internal static Plugin Instance { get; private set; }
 
@@ -85,7 +84,6 @@ namespace BrutalCompanyMinus
             if (Compatibility.IsModPresent("LethalPhones")) PhonesOutPatching.PatchAllPhone(harmony);
             if (Compatibility.IsModPresent("Scandal.CruiserXL")) ScanVanPatching.PatchAllCruiserXL(harmony);
             if (!Compatibility.IsModPresent("AudioKnight.StarlancerAIFix")) _EnemyAI.PatchEnemyStart(harmony); // Apply our patch if the mod is not present
-            if (Compatibility.IsModPresent("kite.ZelevatorCode")) EndlessElevatorPatching.PatchAllElevator(harmony);
 
             Log.LogInfo(NAME + " " + VERSION + " " + "is done patching.");
 
