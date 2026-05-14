@@ -181,7 +181,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
                                     text += $"{ScaleTypePadded(scaleType.Key)} {Helper.GetStringFromScale(scaleType.Value)}\n";
                                 }
                                 text += "\n[MonsterEvents]:\n";
-                                foreach(MEvent.MonsterEvent monsterEvent in mEvent.monsterEvents)
+                                foreach(MEvent.MonsterEvent monsterEvent in mEvent.monstersToSpawn)
                                 {
                                     text += $"\n{monsterEvent.enemy.name}\n";
                                     text += $"{ScaleTypePadded(MEvent.ScaleType.InsideEnemyRarity)}{Helper.GetStringFromScale(monsterEvent.insideSpawnRarity)}\n";
