@@ -25,7 +25,7 @@ namespace BrutalCompanyMinus.Minus.Events
 
             EventsToSpawnWith = new List<string>() { nameof(Landmines), nameof(OutsideLandmines) };
 
-            monsterEvents = new List<MonsterEvent>() { new MonsterEvent(
+            monstersToSpawn = new List<MonsterEvent>() { new MonsterEvent(
                 Assets.EnemyName.OldBird,
                 new Scale(1.0f, 0.4f, 1.0f, 5.0f),
                 new Scale(33.0f, 0.66f, 33.0f, 100.0f),
@@ -36,6 +36,16 @@ namespace BrutalCompanyMinus.Minus.Events
             };
         }
 
-        public override void Execute() => ExecuteAllMonsterEvents();
+        public override void Execute()
+        {
+            if (Configuration.enforceEscapeModChecks.Value && !Compatibility.StarLancereNemyEscapePresent)
+            {
+                Instance.monstersToSpawn[0].minInside = new Scale(0f, 0f, 0f, 0f);
+                Instance.monstersToSpawn[0].maxInside = new Scale(0f, 0f, 0f, 0f);
+                Instance.monstersToSpawn[0].insideSpawnRarity = new Scale(0f, 0f, 0f, 0f);
+            }
+
+            ExecuteAllMonsterEvents();
+        }
     }
 }

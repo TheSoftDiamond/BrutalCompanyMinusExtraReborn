@@ -25,7 +25,7 @@ namespace BrutalCompanyMinus.Minus.Events
 
             EventsToRemove = new List<string>() { nameof(Coilhead), nameof(AntiCoilhead), nameof(ToilHead), nameof(Mantitoil), nameof(ToilSlayer), nameof(MantiToilSlayer), nameof(NoSlayers), nameof(NoMantitoil) };
 
-            monsterEvents = new List<MonsterEvent>() { new MonsterEvent(
+            monstersToSpawn = new List<MonsterEvent>() { new MonsterEvent(
                 Assets.EnemyName.Manticoil,
                 new Scale(0.0f, 0.0f, 0.0f, 0.0f),
                 new Scale(0.0f, 0.0f, 0.0f, 0.0f),

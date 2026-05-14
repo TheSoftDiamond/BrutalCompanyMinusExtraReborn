@@ -27,7 +27,7 @@ namespace BrutalCompanyMinus.Minus.Events
             MoonMode = true;
             Whitelist = new List<string>() { "Vow", "March" };
 
-            monsterEvents = new List<MonsterEvent>() { new MonsterEvent(
+            monstersToSpawn = new List<MonsterEvent>() { new MonsterEvent(
                 Assets.EnemyName.Puma,
                 new Scale(0.0f, 0.0f, 0.0f, 0.0f),
                 new Scale(5.0f, 0.2f, 5.0f, 25.0f),

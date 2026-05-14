@@ -19,7 +19,7 @@ namespace BrutalCompanyMinus.Minus.Events
             ColorHex = "#008000";
             Type = EventType.Good;
 
-            monsterEvents = new List<MonsterEvent>()
+            monstersToSpawn = new List<MonsterEvent>()
             {
                 new MonsterEvent(
                     "NemoAsset",

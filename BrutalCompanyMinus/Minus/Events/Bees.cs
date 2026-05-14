@@ -23,7 +23,7 @@ namespace BrutalCompanyMinus.Minus.Events
             ColorHex = "#FF0000";
             Type = EventType.Bad;
 
-            monsterEvents = new List<MonsterEvent>() { new MonsterEvent(
+            monstersToSpawn = new List<MonsterEvent>() { new MonsterEvent(
                 Assets.EnemyName.CircuitBee,
                 new Scale(0.0f, 0.0f, 0.0f, 0.0f),
                 new Scale(0.0f, 0.0f, 0.0f, 0.0f),

@@ -25,7 +25,7 @@ namespace BrutalCompanyMinus.Minus.Events
 
             EventsToRemove = new List<string>() { nameof(SnareFleas) };
 
-            monsterEvents = new List<MonsterEvent>() { new MonsterEvent(
+            monstersToSpawn = new List<MonsterEvent>() { new MonsterEvent(
                 Assets.EnemyName.EarthLeviathan,
                 new Scale(2.0f, 0.08f, 2.0f, 10.0f),
                 new Scale(33.0f, 0.66f, 33.0f, 100.0f),
@@ -43,6 +43,20 @@ namespace BrutalCompanyMinus.Minus.Events
             };
         }
 
-        public override void Execute() => ExecuteAllMonsterEvents();
+        public override void Execute()
+        {
+            if (Configuration.enforceEscapeModChecks.Value && !Compatibility.StarLancereNemyEscapePresent)
+            {
+                Instance.monstersToSpawn[0].minInside = new Scale(0f, 0f, 0f, 0f);
+                Instance.monstersToSpawn[0].maxInside = new Scale(0f, 0f, 0f, 0f);
+                Instance.monstersToSpawn[0].insideSpawnRarity = new Scale(0f, 0f, 0f, 0f);
+
+                Instance.monstersToSpawn[1].minOutside = new Scale(0f, 0f, 0f, 0f);
+                Instance.monstersToSpawn[1].maxOutside = new Scale(0f, 0f, 0f, 0f);
+                Instance.monstersToSpawn[1].outsideSpawnRarity = new Scale(0f, 0f, 0f, 0f);
+            }
+
+            ExecuteAllMonsterEvents();
+        }
     }
 }

@@ -26,7 +26,7 @@ namespace BrutalCompanyMinus.Minus.Events
             EventsToRemove = new List<string>() { nameof(HoardingBugs), nameof(KamikazieBugs) };
             EventsToSpawnWith = new List<string> { nameof(ScarceOutsideScrap) };
 
-            monsterEvents = new List<MonsterEvent>() { new MonsterEvent(
+            monstersToSpawn = new List<MonsterEvent>() { new MonsterEvent(
                 Assets.EnemyName.HoardingBug,
                 new Scale(33.0f, 0.66f, 33.0f, 100.0f),
                 new Scale(10.0f, 0.4f, 10.0f, 50.0f),
@@ -43,6 +43,20 @@ namespace BrutalCompanyMinus.Minus.Events
                 new Scale(3.0f, 0.06f, 3.0f, 9.0f))
             };
         }
-        public override void Execute() => ExecuteAllMonsterEvents();
+        public override void Execute()
+        {
+            if (Configuration.enforceEscapeModChecks.Value && !Compatibility.StarLancereNemyEscapePresent)
+            {
+                Instance.monstersToSpawn[0].minOutside = new Scale(0f, 0f, 0f, 0f);
+                Instance.monstersToSpawn[0].maxOutside = new Scale(0f, 0f, 0f, 0f);
+                Instance.monstersToSpawn[0].outsideSpawnRarity = new Scale(0f, 0f, 0f, 0f);
+
+                Instance.monstersToSpawn[1].minOutside = new Scale(0f, 0f, 0f, 0f);
+                Instance.monstersToSpawn[1].maxOutside = new Scale(0f, 0f, 0f, 0f);
+                Instance.monstersToSpawn[1].outsideSpawnRarity = new Scale(0f, 0f, 0f, 0f);
+            }
+
+            ExecuteAllMonsterEvents();
+        }
     }
 }

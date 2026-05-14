@@ -72,7 +72,7 @@ namespace BrutalCompanyMinus.Minus.CustomEvents
                         Scale minOutside = CustomEventHandling.ArrayToScale(enemy.MinOutside);
                         Scale maxOutside = CustomEventHandling.ArrayToScale(enemy.MaxOutside);
 
-                        monsterEvents.Add(new MonsterEvent(enemy.Name, insideRarity, outsideRarity, minInside, maxInside, minOutside, maxOutside));
+                        monstersToSpawn.Add(new MonsterEvent(enemy.Name, insideRarity, outsideRarity, minInside, maxInside, minOutside, maxOutside));
                     }
                 }
                 

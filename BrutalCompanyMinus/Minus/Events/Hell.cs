@@ -35,7 +35,7 @@ namespace BrutalCompanyMinus.Minus.Events
             EventsToRemove = new List<string>() { nameof(Trees), nameof(LeaflessBrownTrees), nameof(Gloomy), nameof(Raining), nameof(HeavyRain), nameof(Warzone), nameof(EarlyShip), nameof(LateShip), nameof(VeryEarlyShip), nameof(VeryLateShip), nameof(MajoraMoon) };
             EventsToSpawnWith = new List<string>() { nameof(LeaflessTrees), nameof(FacilityGhost), nameof(Spiders), nameof(Thumpers), nameof(Landmines) };
 
-            monsterEvents = new List<MonsterEvent>(){ new MonsterEvent(
+            monstersToSpawn = new List<MonsterEvent>(){ new MonsterEvent(
                 Assets.EnemyName.Bracken,
                 new Scale(0.0f, 0.0f, 0.0f, 0.0f),
                 new Scale(0.0f, 0.0f, 0.0f, 0.0f),
@@ -298,6 +298,15 @@ namespace BrutalCompanyMinus.Minus.Events
 
         public override void Execute()
         {
+            if (Configuration.enforceEscapeModChecks.Value && !Compatibility.StarLancereNemyEscapePresent)
+            {
+                outsideHellSpawnCycle.enemies.RemoveAll(x => x.enemy == Assets.GetEnemy(Assets.EnemyName.Jester).enemyPrefab);
+                outsideHellSpawnCycle.enemies.RemoveAll(x => x.enemy == Assets.GetEnemy(Assets.EnemyName.Bracken).enemyPrefab);
+                outsideHellSpawnCycle.enemies.RemoveAll(x => x.enemy == Assets.GetEnemy(Assets.EnemyName.BunkerSpider).enemyPrefab);
+
+                insideHellSpawnCycle.enemies.RemoveAll(x => x.enemy == Assets.GetEnemy(Assets.EnemyName.EyelessDog).enemyPrefab);
+            }
+
             currentIngameWeather = StartOfRound.Instance.currentLevel.currentWeather.ToString();
 
             RoundManager.Instance.currentLevel.enemySpawnChanceThroughoutDay = new AnimationCurve(new Keyframe(0.0f, -100.0f), new Keyframe(1.0f, -100.0f));

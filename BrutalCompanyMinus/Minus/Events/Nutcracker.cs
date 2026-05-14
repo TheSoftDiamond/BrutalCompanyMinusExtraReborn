@@ -25,7 +25,7 @@ namespace BrutalCompanyMinus.Minus.Events
 
             EventsToSpawnWith = new List<string>() { nameof(Turrets) };
 
-            monsterEvents = new List<MonsterEvent>() { new MonsterEvent(
+            monstersToSpawn = new List<MonsterEvent>() { new MonsterEvent(
                 Assets.EnemyName.NutCracker,
                 new Scale(33.0f, 0.66f, 33.0f, 100.0f),
                 new Scale(10.0f, 0.4f, 10.0f, 50.0f),

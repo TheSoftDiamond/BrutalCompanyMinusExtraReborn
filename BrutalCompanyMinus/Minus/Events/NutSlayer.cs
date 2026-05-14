@@ -26,7 +26,7 @@ namespace BrutalCompanyMinus.Minus.Events
             EventsToSpawnWith = new List<string>() { nameof(Gloomy), nameof(Thumpers), nameof(Spiders), nameof(Masked) };
             EventsToRemove = new List<string>() { nameof(HeavyRain), nameof(Raining) };
 
-            monsterEvents = new List<MonsterEvent>() { new MonsterEvent(
+            monstersToSpawn = new List<MonsterEvent>() { new MonsterEvent(
                 Assets.nutSlayer,
                 new Scale(1.0f, 0.04f, 1.0f, 5.0f),
                 new Scale(1.0f, 0.02f, 1.0f, 3.0f),

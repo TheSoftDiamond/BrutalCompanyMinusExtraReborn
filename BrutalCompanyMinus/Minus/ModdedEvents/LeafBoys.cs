@@ -21,7 +21,7 @@ namespace BrutalCompanyMinus.Minus.Events
 
             EventsToSpawnWith = new List<string>() { nameof(Dogs) };
 
-            monsterEvents = new List<MonsterEvent>()
+            monstersToSpawn = new List<MonsterEvent>()
             {
                 new MonsterEvent(
                     "LeafBoiEnemyType",

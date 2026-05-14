@@ -26,7 +26,7 @@ namespace BrutalCompanyMinus.Minus.Events
             EventsToRemove = new List<string>() { nameof(Coilhead), nameof(LeaflessBrownTrees), nameof(Trees), nameof(HeavyRain) };
             EventsToSpawnWith = new List<string>() { nameof(LeaflessTrees), nameof(Gloomy) };
 
-            monsterEvents = new List<MonsterEvent>() { new MonsterEvent(
+            monstersToSpawn = new List<MonsterEvent>() { new MonsterEvent(
                 Assets.antiCoilHead,
                 new Scale(20.0f, 0.8f, 20.0f, 100.0f),
                 new Scale(5.0f, 0.2f, 5.0f, 25.0f),

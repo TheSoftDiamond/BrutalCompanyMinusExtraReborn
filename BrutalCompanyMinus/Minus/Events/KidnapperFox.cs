@@ -29,7 +29,7 @@ namespace BrutalCompanyMinus.Minus.Events
             ColorHex = "#FF0000";
             Type = EventType.Bad;
 
-            monsterEvents = new List<MonsterEvent>() { new MonsterEvent(
+            monstersToSpawn = new List<MonsterEvent>() { new MonsterEvent(
                 Assets.EnemyName.BushWolf,
                 new Scale(0.0f, 0.0f, 0.0f, 0.0f),
                 new Scale(0.0f, 0.0f, 0.0f, 0.0f),
@@ -48,6 +48,13 @@ namespace BrutalCompanyMinus.Minus.Events
 
         public override void Execute()
         {
+            if (Configuration.enforceEscapeModChecks.Value && !Compatibility.StarLancereNemyEscapePresent)
+            {
+                Instance.monstersToSpawn[0].minInside = new Scale(0f, 0f, 0f, 0f);
+                Instance.monstersToSpawn[0].minInside = new Scale(0f, 0f, 0f, 0f);
+                Instance.monstersToSpawn[0].insideSpawnRarity = new Scale(0f, 0f, 0f, 0f);
+            }
+
             //Grab the state before
             Net.Instance.SaveOriginalMoldPreviousDataServerRpc();
 

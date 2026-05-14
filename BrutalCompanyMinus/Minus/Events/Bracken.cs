@@ -26,7 +26,7 @@ namespace BrutalCompanyMinus.Minus.Events
 
             
 
-            monsterEvents = new List<MonsterEvent>() { new MonsterEvent(
+            monstersToSpawn = new List<MonsterEvent>() { new MonsterEvent(
                 Assets.EnemyName.Bracken,
                 new Scale(20.0f, 0.8f, 20.0f, 100.0f),
                 new Scale(5.0f, 0.2f, 5.0f, 25.0f),
@@ -37,6 +37,19 @@ namespace BrutalCompanyMinus.Minus.Events
             };
         }
 
-        public override void Execute() => ExecuteAllMonsterEvents();
+        public override void Execute()
+        {
+            if (Configuration.enforceEscapeModChecks.Value && !Compatibility.StarLancereNemyEscapePresent)
+            {
+                foreach (var monster in Instance.monstersToSpawn)
+                {
+                    monster.outsideSpawnRarity = new Scale(0.0f, 0.0f, 0.0f, 0.0f);
+                    monster.maxOutside = new Scale(0.0f, 0.0f, 0.0f, 0.0f);
+                    monster.maxInside = new Scale(0.0f, 0.0f, 0.0f, 0.0f);
+                }
+            }
+
+            ExecuteAllMonsterEvents();
+        }
     }
 }

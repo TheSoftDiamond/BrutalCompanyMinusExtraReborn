@@ -23,7 +23,7 @@ namespace BrutalCompanyMinus.Minus.Events
             ColorHex = "#FF0000";
             Type = EventType.VeryBad;
 
-            monsterEvents = new List<MonsterEvent>() { new MonsterEvent(
+            monstersToSpawn = new List<MonsterEvent>() { new MonsterEvent(
                 "Wanderer",
                 new Scale(0.0f, 0.0f, 0.0f, 0.0f),
                 new Scale(8.0f, 0.35f, 8.0f, 10.0f),

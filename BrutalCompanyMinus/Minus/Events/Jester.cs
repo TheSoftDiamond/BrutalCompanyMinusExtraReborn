@@ -23,7 +23,7 @@ namespace BrutalCompanyMinus.Minus.Events
             ColorHex = "#800000";
             Type = EventType.VeryBad;
 
-            monsterEvents = new List<MonsterEvent>() { new MonsterEvent(
+            monstersToSpawn = new List<MonsterEvent>() { new MonsterEvent(
                 Assets.EnemyName.Jester,
                 new Scale(10.0f, 0.34f, 10.0f, 50.0f),
                 new Scale(5.0f, 0.167f, 5.0f, 25.0f),
@@ -34,6 +34,16 @@ namespace BrutalCompanyMinus.Minus.Events
             };
         }
 
-        public override void Execute() => ExecuteAllMonsterEvents();
+        public override void Execute()
+        {
+            if (Configuration.enforceEscapeModChecks.Value && !Compatibility.StarLancereNemyEscapePresent)
+            {
+                Instance.monstersToSpawn[0].minOutside = new Scale(0f, 0f, 0f, 0f);
+                Instance.monstersToSpawn[0].maxOutside = new Scale(0f, 0f, 0f, 0f);
+                Instance.monstersToSpawn[0].outsideSpawnRarity = new Scale(0f, 0f, 0f, 0f);
+            }
+
+            ExecuteAllMonsterEvents();
+        }
     }
 }

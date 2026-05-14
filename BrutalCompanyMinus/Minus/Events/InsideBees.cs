@@ -26,7 +26,7 @@ namespace BrutalCompanyMinus.Minus.Events
 
             EventsToRemove = new List<string>() { nameof(Bees) };
 
-            monsterEvents = new List<MonsterEvent>() { new MonsterEvent(
+            monstersToSpawn = new List<MonsterEvent>() { new MonsterEvent(
                 Assets.EnemyName.CircuitBee,
                 new Scale(0.0f, 0.0f, 0.0f, 0.0f),
                 new Scale(0.0f, 0.0f, 0.0f, 0.0f),
@@ -43,12 +43,12 @@ namespace BrutalCompanyMinus.Minus.Events
         {
             EnemyType bee = Assets.GetEnemy(Assets.EnemyName.CircuitBee);
 
-            Manager.AddEnemyToPoolWithRarity(ref RoundManager.Instance.currentLevel.Enemies, bee, monsterEvents[0].insideSpawnRarity.Compute(Type));
-            Manager.AddEnemyToPoolWithRarity(ref RoundManager.Instance.currentLevel.OutsideEnemies, bee, monsterEvents[0].outsideSpawnRarity.Compute(Type));
+            Manager.AddEnemyToPoolWithRarity(ref RoundManager.Instance.currentLevel.Enemies, bee, monstersToSpawn[0].insideSpawnRarity.Compute(Type));
+            Manager.AddEnemyToPoolWithRarity(ref RoundManager.Instance.currentLevel.OutsideEnemies, bee, monstersToSpawn[0].outsideSpawnRarity.Compute(Type));
             Manager.AddEnemyToPoolWithRarity(ref RoundManager.Instance.currentLevel.DaytimeEnemies, bee, Get(ScaleType.DaytimeEnemyRarity));
 
-            Manager.Spawn.InsideEnemies(bee, UnityEngine.Random.Range(monsterEvents[0].minInside.Compute(Type), monsterEvents[0].maxInside.Compute(Type) + 1), 30.0f);
-            Manager.Spawn.OutsideEnemies(bee, UnityEngine.Random.Range(monsterEvents[0].minOutside.Compute(Type), monsterEvents[0].maxOutside.Compute(Type) + 1));
+            Manager.Spawn.InsideEnemies(bee, UnityEngine.Random.Range(monstersToSpawn[0].minInside.Compute(Type), monstersToSpawn[0].maxInside.Compute(Type) + 1), 30.0f);
+            Manager.Spawn.OutsideEnemies(bee, UnityEngine.Random.Range(monstersToSpawn[0].minOutside.Compute(Type), monstersToSpawn[0].maxOutside.Compute(Type) + 1));
         }
     }
 }

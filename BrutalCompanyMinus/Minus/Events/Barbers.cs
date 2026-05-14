@@ -19,7 +19,7 @@ namespace BrutalCompanyMinus.Minus.Events
             ColorHex = "#FF0000";
             Type = EventType.Bad;
 
-            monsterEvents = new List<MonsterEvent>()
+            monstersToSpawn = new List<MonsterEvent>()
             {
                 new MonsterEvent(
                     "ClaySurgeon",
@@ -34,6 +34,16 @@ namespace BrutalCompanyMinus.Minus.Events
 
         public override bool AddEventIfOnly() => Compatibility.BarberFixesPresent;
 
-        public override void Execute() => ExecuteAllMonsterEvents();
+        public override void Execute()
+        {
+            if (Configuration.enforceEscapeModChecks.Value && !Compatibility.StarLancereNemyEscapePresent)
+            {
+                Instance.monstersToSpawn[0].minOutside = new Scale(0f, 0f, 0f, 0f);
+                Instance.monstersToSpawn[0].maxOutside = new Scale(0f, 0f, 0f, 0f);
+                Instance.monstersToSpawn[0].outsideSpawnRarity = new Scale(0f, 0f, 0f, 0f);
+            }
+
+            ExecuteAllMonsterEvents();
+        }
     }
 }

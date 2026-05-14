@@ -23,7 +23,7 @@ namespace BrutalCompanyMinus.Minus.Events
             ColorHex = "#FF0000";
             Type = EventType.Bad;
 
-            monsterEvents = new List<MonsterEvent>() { new MonsterEvent(
+            monstersToSpawn = new List<MonsterEvent>() { new MonsterEvent(
                 Assets.EnemyName.FlowerSnake,
                 new Scale(1.0f, 0.02f, 1.0f, 3.0f),
                 new Scale(1.0f, 0.02f, 1.0f, 3.0f),
@@ -38,6 +38,13 @@ namespace BrutalCompanyMinus.Minus.Events
 
         public override void Execute()
         {
+            if (Configuration.enforceEscapeModChecks.Value && !Compatibility.StarLancereNemyEscapePresent)
+            {
+                Instance.monstersToSpawn[0].minInside = new Scale(0f, 0f, 0f, 0f);
+                Instance.monstersToSpawn[0].maxInside = new Scale(0f, 0f, 0f, 0f);
+                Instance.monstersToSpawn[0].insideSpawnRarity = new Scale(0f, 0f, 0f, 0f);
+            }
+
             ExecuteAllMonsterEvents();
             Manager.AddEnemyToPoolWithRarity(ref RoundManager.Instance.currentLevel.DaytimeEnemies, Assets.EnemyName.FlowerSnake, Get(ScaleType.DaytimeEnemyRarity));
         }
