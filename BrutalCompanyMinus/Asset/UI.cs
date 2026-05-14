@@ -536,7 +536,7 @@ namespace BrutalCompanyMinus
             }
         }
 
-        private static IEnumerator ClearAfterDelay()
+        internal static IEnumerator ClearAfterDelay()
         {
             yield return new WaitForSeconds(0.2f);
             try
