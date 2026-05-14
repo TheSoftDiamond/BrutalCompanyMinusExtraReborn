@@ -14,6 +14,7 @@ using static BrutalCompanyMinus.Helper;
 using BrutalCompanyMinus.Minus.MonoBehaviours;
 using System;
 using EventType = BrutalCompanyMinus.Minus.MEvent.EventType;
+using System.ComponentModel;
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 namespace BrutalCompanyMinus
@@ -75,8 +76,21 @@ namespace BrutalCompanyMinus
         public static Scale timeScaling = new Scale();
         public static Scale startingTime = new Scale();
 
-        public static ConfigEntry<float>? heatIncrementAmount, heatDecrementAmount, heatMaxCap, heatDampening, heatMultiplierDifficulty, heatMultiplierOtherCalculations;
-        public static ConfigEntry<bool>? heatAffectDifficultyOnly;
+        public static ConfigEntry<float>? heatIncrementAmount, heatDecrementAmount, heatMaxCap, heatDampening, heatMultiplierDifficulty, heatMultiplierOtherCalculations, startingHeat;
+        public static ConfigEntry<bool>? heatForceEventAtMax;
+        public static ConfigEntry<string>? heatEventsToForce;
+   
+        [Flags]
+        public enum HeatSettingsFlags
+        {
+            None = 0,
+            Difficulty = 1 << 0,
+            InsidePower = 1 << 1,
+            OutsidePower = 1 << 2,
+            All = ~0
+        }
+
+        public static ConfigEntry<HeatSettingsFlags>? heatSettingsToAffect;
 
         // Player Scaling Settings
         public static ConfigEntry<bool>? enablePlayerScaling;
@@ -133,11 +147,11 @@ namespace BrutalCompanyMinus
         public static ConfigEntry<bool>? dontHandlePower;
         public static ConfigEntry<bool>? dontHandleSpawnCurves;
         public static ConfigEntry<bool>? deferWeatherToMods;
+        public static ConfigEntry<bool>? enforceEscapeModChecks;
         public static ConfigEntry<bool>? enableSpecialEvents;
         public static ConfigEntry<bool>? enableBetaEvents;
         public static Scale timeChaosScale = new Scale();
         public static ConfigEntry<string>? transmutationBlacklist;
-        public static ConfigEntry<bool>? enableNewEventOnNewLoad;
         public static ConfigEntry<bool>? handleScanCommand;
         public static ConfigEntry<bool>? speedrunMode;
 
@@ -183,9 +197,11 @@ namespace BrutalCompanyMinus
             heatDampening = difficultyConfig.Bind("Difficulty Scaling", "Heat dampening factor", 0.15f, "The effective heat factor. Numbers closer to 0 will cause the calculated difficulty numbers to go higher. Higher numbers retain a value closer to the original value.");
             heatMultiplierDifficulty = difficultyConfig.Bind("Difficulty Scaling", "Heat multiplier (Difficulty)", 0.0015f, "This is used for calculating the difficulty of the current difficulty. Higher numbers will mulitply the value faster.");
             heatMultiplierOtherCalculations = difficultyConfig.Bind("Difficulty Scaling", "Heat multiplier (Non-Difficulty)", 0.004f, "This is used for calculations other than difficulty, affecting other properties like power values. Higher numbers will mulitply the value faster.");
+            startingHeat = difficultyConfig.Bind("Difficulty Scaling", "Starting Heat", 0f, "The starting heat of every planet on its first run. Keep at 0 for default behavior.");
             heatMaxCap = difficultyConfig.Bind("Difficulty Scaling", "Heat Max Cap", 10f, "Heat values will never go beyond this value");
-            heatAffectDifficultyOnly = difficultyConfig.Bind("Difficulty Scaling", "Heat affects difficulty only?", true, "By default, heat only effects the difficulty number. By setting it to false, it will affect other properties");
-
+            heatForceEventAtMax = difficultyConfig.Bind("Difficulty Scaling", "Force event at max heat?", false, "If true, when the heat reaches the max value, spawn the events you wrote below in the list.");
+            heatEventsToForce = difficultyConfig.Bind("Difficulty Scaling", "Events to force at max heat", "", "When heat reaches max value, these events will be forced to spawn. Seperate by comma for each event name. Event names are case sensitive and must be exact to their entry name. Trailing white spaces are stripped from every name.");
+            heatSettingsToAffect = difficultyConfig.Bind("Difficulty Scaling", "Heat Affects What Properties", HeatSettingsFlags.Difficulty, "Cchoose what additional properties you wish it to affect.");
 
             weatherAdditives = new Dictionary<LevelWeatherType, float>()
             {
@@ -306,10 +322,10 @@ namespace BrutalCompanyMinus
             dontHandlePower = CorePropertiesConfig.Bind("Mod Compatibility", "Experimental Dont Handle Power?", false, "If you wish to let other mods handle power levels, enable this. Some settings may affect this.");
             dontHandleSpawnCurves = CorePropertiesConfig.Bind("Mod Compatibility", "Experimental Dont Handle Spawn Chance?", false, "If you wish to let other mods handle spawn curves, enable this. Some settings may affect this.");
             deferWeatherToMods = CorePropertiesConfig.Bind("Mod Compatibility", "Defer Weather To Weather ToolKit Mod?", false, "If you wish to let other mods handle Brutal's weather setting effects, enable this. This has no effect on custom events as those use weather toolkit by default.");
+            enforceEscapeModChecks = CorePropertiesConfig.Bind("Mod Compatibility", "Enforce Escape Mod Checks?", true, "If you don't have any enemy escape mods (Starlancer AI, for example) installed, should Brutal modify spawning of certain events to prevent improper enemy AI behaviour? Disable this if you wish to run events without the safety check.");
             enableSpecialEvents = CorePropertiesConfig.Bind("Events Features", "Enable Special Events?", false, "Enables special events to be loaded.");
             enableBetaEvents = CorePropertiesConfig.Bind("Events Features", "Enable Beta Events?", false, "Enables beta events to be loaded. These events are untested and may be very buggy, use at your own risk.");
-            transmutationBlacklist = CorePropertiesConfig.Bind("Events Features", "Transmutation Blacklist", "", "Blacklist items here to prevent them from being used in scrap transmutation. Uses itemProperties.itemName Component Name.");
-            enableNewEventOnNewLoad = CorePropertiesConfig.Bind("Mod Compatibility", "Events Reroll on Dynamic Interior", false, "For mods like Zeranos that support changing the dungeon layout every floor... should Brutal load new events for them? This feature might break.");
+            transmutationBlacklist = CorePropertiesConfig.Bind("Events Features", "Transmutation Blacklist", "", "Blacklist items here to prevent them from being used in scrap transmutation. Uses itemProperties.itemName Component Name.");         
             handleScanCommand = CorePropertiesConfig.Bind("Mod Compatibility", "Let Brutal handle the SCAN command?", true, "If enabled, Brutal will handle the scan command with accurate scrap values to its modifiers. If you have other mods that handle this feature, disable it. Please note, if disabled, the scan command will not show the proper values for scrap value.");
             speedrunMode = CorePropertiesConfig.Bind("Events Features", "Enable Speedrun Mode?", false, "If enabled, Brutal will adjust certain events and features to be suited for speedrunning. I recommend keeping this off unless you are actively speedrunning the game.");
 
@@ -363,16 +379,16 @@ namespace BrutalCompanyMinus
 
                     // Monster events
                     List<MonsterEvent> newMonsterEvents = new List<MonsterEvent>();
-                    for (int i = 0; i < e.monsterEvents.Count; i++)
+                    for (int i = 0; i < e.monstersToSpawn.Count; i++)
                     {
                         newMonsterEvents.Add(new MonsterEvent(
-                            toConfig.Bind(e.Name(), $"Enemy {i} Name", e.monsterEvents[i].enemy.name, "Inputting an invalid enemy name will cause it to return an empty enemyType").Value,
-                            getScale(toConfig.Bind(e.Name(), $"{e.monsterEvents[i].enemy.name} {ScaleType.InsideEnemyRarity}", GetStringFromScale(e.monsterEvents[i].insideSpawnRarity), $"{ScaleInfoList[ScaleType.InsideEnemyRarity]}   {scaleDescription}").Value),
-                            getScale(toConfig.Bind(e.Name(), $"{e.monsterEvents[i].enemy.name} {ScaleType.OutsideEnemyRarity}", GetStringFromScale(e.monsterEvents[i].outsideSpawnRarity), $"{ScaleInfoList[ScaleType.OutsideEnemyRarity]}   {scaleDescription}").Value),
-                            getScale(toConfig.Bind(e.Name(), $"{e.monsterEvents[i].enemy.name} {ScaleType.MinInsideEnemy}", GetStringFromScale(e.monsterEvents[i].minInside), $"{ScaleInfoList[ScaleType.MinInsideEnemy]}   {scaleDescription}").Value),
-                            getScale(toConfig.Bind(e.Name(), $"{e.monsterEvents[i].enemy.name} {ScaleType.MaxInsideEnemy}", GetStringFromScale(e.monsterEvents[i].maxInside), $"{ScaleInfoList[ScaleType.MaxInsideEnemy]}   {scaleDescription}").Value),
-                            getScale(toConfig.Bind(e.Name(), $"{e.monsterEvents[i].enemy.name} {ScaleType.MinOutsideEnemy}", GetStringFromScale(e.monsterEvents[i].minOutside), $"{ScaleInfoList[ScaleType.MinOutsideEnemy]}   {scaleDescription}").Value),
-                            getScale(toConfig.Bind(e.Name(), $"{e.monsterEvents[i].enemy.name} {ScaleType.MaxOutsideEnemy}", GetStringFromScale(e.monsterEvents[i].maxOutside), $"{ScaleInfoList[ScaleType.MaxOutsideEnemy]}   {scaleDescription}").Value)
+                            toConfig.Bind(e.Name(), $"Enemy {i} Name", e.monstersToSpawn[i].enemy.name, "Inputting an invalid enemy name will cause it to return an empty enemyType").Value,
+                            getScale(toConfig.Bind(e.Name(), $"{e.monstersToSpawn[i].enemy.name} {ScaleType.InsideEnemyRarity}", GetStringFromScale(e.monstersToSpawn[i].insideSpawnRarity), $"{ScaleInfoList[ScaleType.InsideEnemyRarity]}   {scaleDescription}").Value),
+                            getScale(toConfig.Bind(e.Name(), $"{e.monstersToSpawn[i].enemy.name} {ScaleType.OutsideEnemyRarity}", GetStringFromScale(e.monstersToSpawn[i].outsideSpawnRarity), $"{ScaleInfoList[ScaleType.OutsideEnemyRarity]}   {scaleDescription}").Value),
+                            getScale(toConfig.Bind(e.Name(), $"{e.monstersToSpawn[i].enemy.name} {ScaleType.MinInsideEnemy}", GetStringFromScale(e.monstersToSpawn[i].minInside), $"{ScaleInfoList[ScaleType.MinInsideEnemy]}   {scaleDescription}").Value),
+                            getScale(toConfig.Bind(e.Name(), $"{e.monstersToSpawn[i].enemy.name} {ScaleType.MaxInsideEnemy}", GetStringFromScale(e.monstersToSpawn[i].maxInside), $"{ScaleInfoList[ScaleType.MaxInsideEnemy]}   {scaleDescription}").Value),
+                            getScale(toConfig.Bind(e.Name(), $"{e.monstersToSpawn[i].enemy.name} {ScaleType.MinOutsideEnemy}", GetStringFromScale(e.monstersToSpawn[i].minOutside), $"{ScaleInfoList[ScaleType.MinOutsideEnemy]}   {scaleDescription}").Value),
+                            getScale(toConfig.Bind(e.Name(), $"{e.monstersToSpawn[i].enemy.name} {ScaleType.MaxOutsideEnemy}", GetStringFromScale(e.monstersToSpawn[i].maxOutside), $"{ScaleInfoList[ScaleType.MaxOutsideEnemy]}   {scaleDescription}").Value)
                         ));
                     }
                     monsterEvents.Add(newMonsterEvents);
@@ -507,7 +523,7 @@ namespace BrutalCompanyMinus
                 EventManager.events[i].MoonMode = moonMode[i].Value;
                 EventManager.events[i].Blacklist = moonBlacklist[i];
                 EventManager.events[i].Whitelist = moonWhitelist[i];
-                EventManager.events[i].monsterEvents = monsterEvents[i];
+                EventManager.events[i].monstersToSpawn = monsterEvents[i];
                 EventManager.events[i].scrapTransmutationEvent = transmutationEvents[i];
             }
 
