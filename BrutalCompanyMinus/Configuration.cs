@@ -144,6 +144,7 @@ namespace BrutalCompanyMinus
         public static ConfigEntry<bool>? DisableAllEvents;
         public static ConfigEntry<bool>? dontHandlePower;
         public static ConfigEntry<bool>? dontHandleSpawnCurves;
+        public static ConfigEntry<bool>? AffectPropertiesOutOfEvents;
         public static ConfigEntry<bool>? deferWeatherToMods;
         public static ConfigEntry<bool>? enforceEscapeModChecks;
         public static ConfigEntry<bool>? enableSpecialEvents;
@@ -317,6 +318,7 @@ namespace BrutalCompanyMinus
             DisableAllEvents = CorePropertiesConfig.Bind("Events Features", "Disable all events?", false, "Setting this to true will disable all events from spawning. This forces zero events.");
             dontHandlePower = CorePropertiesConfig.Bind("Mod Compatibility", "Experimental Dont Handle Power?", false, "If you wish to let other mods handle power levels, enable this. Some settings may affect this.");
             dontHandleSpawnCurves = CorePropertiesConfig.Bind("Mod Compatibility", "Experimental Dont Handle Spawn Chance?", false, "If you wish to let other mods handle spawn curves, enable this. Some settings may affect this.");
+            AffectPropertiesOutOfEvents = CorePropertiesConfig.Bind("Mod Compatibility", "Let Brutal handle properties outside of events?", true, "Disable this if you wish to let Brutal not handle any propeties outside of events.");
             deferWeatherToMods = CorePropertiesConfig.Bind("Mod Compatibility", "Defer Weather To Weather ToolKit Mod?", false, "If you wish to let other mods handle Brutal's weather setting effects, enable this. This has no effect on custom events as those use weather toolkit by default.");
             enforceEscapeModChecks = CorePropertiesConfig.Bind("Mod Compatibility", "Enforce Escape Mod Checks?", true, "If you don't have any enemy escape mods (Starlancer AI, for example) installed, should Brutal modify spawning of certain events to prevent improper enemy AI behaviour? Disable this if you wish to run events without the safety check.");
             enableSpecialEvents = CorePropertiesConfig.Bind("Events Features", "Enable Special Events?", false, "Enables special events to be loaded.");
@@ -325,7 +327,6 @@ namespace BrutalCompanyMinus
             handleScanCommand = CorePropertiesConfig.Bind("Mod Compatibility", "Let Brutal handle the SCAN command?", true, "If enabled, Brutal will handle the scan command with accurate scrap values to its modifiers. If you have other mods that handle this feature, disable it. Please note, if disabled, the scan command will not show the proper values for scrap value.");
             speedrunMode = CorePropertiesConfig.Bind("Events Features", "Enable Speedrun Mode?", false, "If enabled, Brutal will adjust certain events and features to be suited for speedrunning. I recommend keeping this off unless you are actively speedrunning the game.");
 
-            //todo - add settings for events and modded events that mess with features like time
 
 
             //Custom Events Folder
