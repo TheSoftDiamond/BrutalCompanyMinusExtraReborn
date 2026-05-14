@@ -316,31 +316,6 @@ namespace BrutalCompanyMinus
         public void SetAllWeatherActiveClientRpc(bool state) => Minus.Events.AllWeather.Active = state;
 
 
-        /*
-        [ServerRpc(RequireOwnership = false)]
-        public void SetOneHandActiveNetServerRpc(bool state) => SetOneHandActiveNetClientRpc(state);
-        [ClientRpc]
-        public void SetOneHandActiveNetClientRpc(bool state) => AllOneHanded.Active = state;
-
-        [ServerRpc(RequireOwnership = false)]
-        public void SetTwoHandActiveNetServerRpc(bool state) => SetTwoHandActiveNetClientRpc(state);
-
-        [ClientRpc]
-        public void SetTwoHandActiveNetClientRpc(bool state) => AllTwoHanded.Active = state;
-
-
-        [ServerRpc(RequireOwnership = false)]
-        public void SetUncertainHandsActiveNetServerRpc(bool state) => SetUncertainHandsActiveNetClientRpc(state);
-
-        [ClientRpc]
-        public void SetUncertainHandsActiveNetClientRpc(bool state) => UncertainHands.Active = state;
-
-        [ServerRpc(RequireOwnership = false)]
-        public void SetHandSwitchActiveNetServerRpc(bool state) => SetHandSwitchActiveNetClientRpc(state);
-
-        [ClientRpc]
-        public void SetHandSwitchActiveNetClientRpc(bool state) => HandsSwitch.Active = state;
-        */
 
         [ServerRpc(RequireOwnership = false)]
         public void SetEventActiveServerRPC(string eventName, bool state) => SetEventActiveClientRPC(eventName, state);
@@ -745,13 +720,29 @@ namespace BrutalCompanyMinus
         }
 
         [ServerRpc(RequireOwnership = false)]
-        public void SyncHeatMapServerRpc(int[] keys, float[] values)
+        public void SyncHeatMapServerRpc(ServerRpcParams rpcParams = default)
         {
-            SyncHeatMapClientRpc(keys, values);
+            if (!RoundManager.Instance.IsServer) return;
+
+            ulong clientId = rpcParams.Receive.SenderClientId;
+
+            int[] keys = [.. Manager.heatDifficulty.Keys];
+            float[] values = [.. Manager.heatDifficulty.Values];
+
+            // Thank you for helping me find this method
+            ClientRpcParams clientRpcParams = new ClientRpcParams
+            {
+                Send = new ClientRpcSendParams
+                {
+                    TargetClientIds = new ulong[] { clientId }
+                }
+            };
+
+            SyncHeatMapClientRpc(keys, values, clientRpcParams);
         }
 
         [ClientRpc]
-        public void SyncHeatMapClientRpc(int[] keys, float[] values)
+        public void SyncHeatMapClientRpc(int[] keys, float[] values, ClientRpcParams rpcParams = default)
         {
             Manager.heatDifficulty.Clear();
             for (int i = 0; i < keys.Length; i++)
@@ -759,6 +750,7 @@ namespace BrutalCompanyMinus
                 Log.LogInfo("Got heat for level ID " + keys[i] + ": " + values[i]);
                 Manager.heatDifficulty.Add(keys[i], values[i]);
             }
+            Log.LogInfo("Got data from the host");
         }
 
         [ServerRpc(RequireOwnership = false)]
