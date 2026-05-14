@@ -730,8 +730,11 @@ namespace BrutalCompanyMinus.Minus
             {
                 if (newLevel.currentWeather == e.weatherType)
                 {
-                    Manager.scrapValueMultiplier *= e.scrapValueMultiplier;
-                    Manager.scrapAmountMultiplier *= e.scrapAmountMultiplier;
+                    if (Configuration.AffectPropertiesOutOfEvents.Value)
+                    {
+                        Manager.scrapValueMultiplier *= e.scrapValueMultiplier;
+                        Manager.scrapAmountMultiplier *= e.scrapAmountMultiplier;
+                    }
                 }
             }
 
@@ -740,8 +743,11 @@ namespace BrutalCompanyMinus.Minus
             LevelProperties properties = Configuration.levelProperties.GetValueOrDefault(newLevel.levelID);
             if (properties != null)
             {
-                Manager.scrapValueMultiplier *= properties.GetScrapValueMultiplier();
-                Manager.scrapAmountMultiplier *= properties.GetScrapAmountMultiplier();
+                if (Configuration.AffectPropertiesOutOfEvents.Value)
+                {
+                    Manager.scrapValueMultiplier *= properties.GetScrapValueMultiplier();
+                    Manager.scrapAmountMultiplier *= properties.GetScrapAmountMultiplier();
+                }
             }
 
             // Do heat things here
@@ -771,17 +777,19 @@ namespace BrutalCompanyMinus.Minus
             }
 
             // Difficulty modifications
-            Manager.AddEnemyHp((int)MEvent.Scale.Compute(Configuration.enemyBonusHpScaling));
-            Manager.AddInsideSpawnChance(newLevel, MEvent.Scale.Compute(Configuration.insideSpawnChanceAdditive));
-            Manager.AddOutsideSpawnChance(newLevel, MEvent.Scale.Compute(Configuration.outsideSpawnChanceAdditive));
-            Manager.MultiplySpawnChance(newLevel, MEvent.Scale.Compute(Configuration.spawnChanceMultiplierScaling));
-            Manager.MultiplySpawnCap(MEvent.Scale.Compute(Configuration.spawnCapMultiplier));
-            Manager.AddInsidePower((int)MEvent.Scale.Compute(Configuration.insideEnemyMaxPowerCountScaling));
-            Manager.AddOutsidePower((int)MEvent.Scale.Compute(Configuration.outsideEnemyPowerCountScaling));
-            Manager.scrapValueMultiplier *= MEvent.Scale.Compute(Configuration.scrapValueMultiplier);
-            Manager.scrapAmountMultiplier *= MEvent.Scale.Compute(Configuration.scrapAmountMultiplier);
-
-            Manager.factorySizeMultiplier = MEvent.Scale.Compute(Configuration.factorySizeMultiplier);
+            if (Configuration.AffectPropertiesOutOfEvents.Value)
+            {
+                Manager.AddEnemyHp((int)MEvent.Scale.Compute(Configuration.enemyBonusHpScaling));
+                Manager.AddInsideSpawnChance(newLevel, MEvent.Scale.Compute(Configuration.insideSpawnChanceAdditive));
+                Manager.AddOutsideSpawnChance(newLevel, MEvent.Scale.Compute(Configuration.outsideSpawnChanceAdditive));
+                Manager.MultiplySpawnChance(newLevel, MEvent.Scale.Compute(Configuration.spawnChanceMultiplierScaling));
+                Manager.MultiplySpawnCap(MEvent.Scale.Compute(Configuration.spawnCapMultiplier));
+                Manager.AddInsidePower((int)MEvent.Scale.Compute(Configuration.insideEnemyMaxPowerCountScaling));
+                Manager.AddOutsidePower((int)MEvent.Scale.Compute(Configuration.outsideEnemyPowerCountScaling));
+                Manager.scrapValueMultiplier *= MEvent.Scale.Compute(Configuration.scrapValueMultiplier);
+                Manager.scrapAmountMultiplier *= MEvent.Scale.Compute(Configuration.scrapAmountMultiplier);
+                Manager.factorySizeMultiplier = MEvent.Scale.Compute(Configuration.factorySizeMultiplier);
+            }
 
             List<MEvent> additionalEvents = new List<MEvent>();
             List<MEvent> currentEvents = new List<MEvent>();
@@ -849,7 +857,10 @@ namespace BrutalCompanyMinus.Minus
                 float heatIndex = EventManager.currentHeatDifficulty();
                 if (heatIndex > 0)
                 {
-                    RoundManager.Instance.currentLevel.maxEnemyPowerCount *= (int)((Configuration.heatMultiplierOtherCalculations.Value * RoundManager.Instance.currentLevel.maxEnemyPowerCount / Configuration.heatDampening.Value) * Math.Pow(1 + Configuration.heatDampening.Value, heatIndex) + 1);
+                    if (Configuration.AffectPropertiesOutOfEvents.Value)
+                    {
+                        RoundManager.Instance.currentLevel.maxEnemyPowerCount *= (int)((Configuration.heatMultiplierOtherCalculations.Value * RoundManager.Instance.currentLevel.maxEnemyPowerCount / Configuration.heatDampening.Value) * Math.Pow(1 + Configuration.heatDampening.Value, heatIndex) + 1);
+                    }
                 }
             }
             
@@ -859,7 +870,10 @@ namespace BrutalCompanyMinus.Minus
                 float heatIndex = EventManager.currentHeatDifficulty();
                 if (heatIndex > 0)
                 {
-                    RoundManager.Instance.currentLevel.maxOutsideEnemyPowerCount *= (int)((Configuration.heatMultiplierOtherCalculations.Value * RoundManager.Instance.currentLevel.maxOutsideEnemyPowerCount / Configuration.heatDampening.Value) * Math.Pow(1 + Configuration.heatDampening.Value, heatIndex) + 1);
+                    if (Configuration.AffectPropertiesOutOfEvents.Value)
+                    {
+                        RoundManager.Instance.currentLevel.maxOutsideEnemyPowerCount *= (int)((Configuration.heatMultiplierOtherCalculations.Value * RoundManager.Instance.currentLevel.maxOutsideEnemyPowerCount / Configuration.heatDampening.Value) * Math.Pow(1 + Configuration.heatDampening.Value, heatIndex) + 1);
+                    }
                 }
             }
 
@@ -890,7 +904,18 @@ namespace BrutalCompanyMinus.Minus
             }
 
             // Logging
-            Log.LogInfo("MapMultipliers = [scrapValueMultiplier: " + Manager.scrapValueMultiplier + ",     scrapAmountMultiplier: " + Manager.scrapAmountMultiplier + ",     currentLevel.factorySizeMultiplier:" + Manager.currentLevel.factorySizeMultiplier + "]");
+            Log.LogInfo($"MapMultipliers = [" +
+                $"scrapValueMultiplier: {Manager.scrapValueMultiplier}, " +
+                $"scrapAmountMultiplier: {Manager.scrapAmountMultiplier}, " +
+                $"factorySizeMultiplier: {Manager.factorySizeMultiplier}, " +
+                $"EnemyHp: {(int)MEvent.Scale.Compute(Configuration.enemyBonusHpScaling)}, " +
+                $"insideSpawnChanceAdditive: {MEvent.Scale.Compute(Configuration.insideSpawnChanceAdditive)}, " +
+                $"outsideSpawnChanceAdditive: {MEvent.Scale.Compute(Configuration.outsideSpawnChanceAdditive)}, " +
+                $"SpawnChanceMultiplier: {MEvent.Scale.Compute(Configuration.spawnChanceMultiplierScaling)}, " +
+                $"SpawnCapMultiplier: {MEvent.Scale.Compute(Configuration.spawnCapMultiplier)}, " +
+                $"InsidePower: {(int)MEvent.Scale.Compute(Configuration.insideEnemyMaxPowerCountScaling)}, " +
+                $"OutsidePower: {(int)MEvent.Scale.Compute(Configuration.outsideEnemyPowerCountScaling)}]");
+
             Log.LogInfo("Inside Spawn Curve");
             foreach (Keyframe key in newLevel.enemySpawnChanceThroughoutDay.keys) Log.LogInfo($"Time:{key.time} + $Value:{key.value}");
             Log.LogInfo("Outside Spawn Curve");
