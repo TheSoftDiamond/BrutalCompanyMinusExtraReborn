@@ -80,6 +80,7 @@ namespace BrutalCompanyMinus
             LethalElementsPresent = false,
             DawnLibPresent = false,
             ScanVanPresent = false,
+            StarLancereNemyEscapePresent = false,
             WeatherRegistryPresent = false;
 
 
@@ -269,6 +270,7 @@ namespace BrutalCompanyMinus
             EndlessElevatorPresent = IsModPresent("kite.ZelevatorCode", "Endless Elevator Detected");
             CombinedWeatherToolKitPresent = IsModPresent("zigzag.combinedweatherstoolkit", "Combined Weathers Toolkit Detected");
             DawnLibPresent = IsModPresent("com.github.teamxiaolan.dawnlib", "DawnLib Detected.");
+            StarLancereNemyEscapePresent = IsModPresent("AudioKnight.StarlancerEnemyEscape", "Starlancer Enemy Escape Detected.");
             ScanVanPresent = IsModPresent("Scandal.CruiserXL", "ScanVan Detected.");
         }
 
