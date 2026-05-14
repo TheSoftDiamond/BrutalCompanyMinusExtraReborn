@@ -358,9 +358,27 @@ namespace BrutalCompanyMinus.Minus
             // Decide how many events to spawn
             System.Random rng = new System.Random(StartOfRound.Instance.randomMapSeed + 32345 + Environment.TickCount);
             int eventsToSpawn = (int)MEvent.Scale.Compute(Configuration.eventsToSpawn, MEvent.EventType.Neutral) + RoundManager.Instance.GetRandomWeightedIndex(Configuration.weightsForExtraEvents.IntArray(), rng);
-            
+
+            if (Configuration.scaleHeat.Value)
+            {
+                float currentHeat = currentHeatDifficulty();
+
+                if ((currentHeat == Configuration.heatMaxCap.Value) && Configuration.heatForceEventAtMax.Value)
+                {
+                    Log.LogInfo("Current heat has hit max cap, now forcing events");
+                    Log.LogInfo("Attempting to force events: " + Configuration.heatEventsToForce.Value);
+                    
+                    string[] eventNames = Configuration.heatEventsToForce.Value
+                    .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(s => s.Trim())
+                    .ToArray();
+
+                    forcedEvents.AddRange(GetEventsByName(eventNames));
+                }
+            }
+
             //Forced events
-            foreach(MEvent forcedEvent in forcedEvents)
+            foreach (MEvent forcedEvent in forcedEvents)
             {
                 eventsToChooseForm.RemoveAll(x => x.Name() == forcedEvent.Name());
                 foreach(string eventToRemove in forcedEvent.EventsToRemove)
@@ -733,7 +751,8 @@ namespace BrutalCompanyMinus.Minus
                 Manager.levelNameOnLand = RoundManager.Instance.currentLevel.levelID;
                 if (!Manager.heatDifficulty.ContainsKey(Manager.levelNameOnLand))
                 { // Add the planet to the list if it does not exist.
-                    Manager.heatDifficulty.Add(Manager.levelNameOnLand, 0); //Declare 0
+                    Log.LogInfo("Adding an entry to the list with the ID " + Manager.levelNameOnLand + " and heat difficulty " + Configuration.startingHeat.Value);
+                    Manager.heatDifficulty.Add(Manager.levelNameOnLand, Configuration.startingHeat.Value); //Declare 0 by default, or whatever the starting heat is set to if non zero.
                 }
 
                 //Decrement every other planet too, assuming the list is not null.
@@ -743,7 +762,9 @@ namespace BrutalCompanyMinus.Minus
                     {
                         if (planet != Manager.levelNameOnLand)
                         {
+                            Log.LogInfo(planet + " is not equal to " + Manager.levelNameOnLand + ". Current heat difficulty was " + Manager.heatDifficulty[planet] + ", decrementing by " + Configuration.heatDecrementAmount.Value);
                             Manager.heatDifficulty[planet] = Math.Max(Manager.heatDifficulty[planet] - Math.Abs(Configuration.heatDecrementAmount.Value), 0);
+                            Log.LogInfo("New decremented heat recieved for " + planet + " is " + Manager.heatDifficulty[planet]);
                         }
                     }
                 }
@@ -823,21 +844,22 @@ namespace BrutalCompanyMinus.Minus
 
             // Apply maxPower counts
             RoundManager.Instance.currentLevel.maxEnemyPowerCount = (int)((RoundManager.Instance.currentLevel.maxEnemyPowerCount + Manager.bonusMaxInsidePowerCount) * Manager.spawncapMultipler);
-            if (Configuration.scaleHeat.Value)
+            if (Configuration.scaleHeat.Value && (Configuration.heatSettingsToAffect.Value.HasFlag(Configuration.HeatSettingsFlags.InsidePower) || (Configuration.heatSettingsToAffect.Value.HasFlag(Configuration.HeatSettingsFlags.All))))
             {
-                float x = EventManager.currentHeatDifficulty();
-                if (x > 0)
+                float heatIndex = EventManager.currentHeatDifficulty();
+                if (heatIndex > 0)
                 {
-                    RoundManager.Instance.currentLevel.maxEnemyPowerCount *= (int)((Configuration.heatMultiplierOtherCalculations.Value * RoundManager.Instance.currentLevel.maxEnemyPowerCount / Configuration.heatDampening.Value) * Math.Pow(1 + Configuration.heatDampening.Value, x) + 1);
+                    RoundManager.Instance.currentLevel.maxEnemyPowerCount *= (int)((Configuration.heatMultiplierOtherCalculations.Value * RoundManager.Instance.currentLevel.maxEnemyPowerCount / Configuration.heatDampening.Value) * Math.Pow(1 + Configuration.heatDampening.Value, heatIndex) + 1);
                 }
             }
             
             RoundManager.Instance.currentLevel.maxOutsideEnemyPowerCount = (int)((RoundManager.Instance.currentLevel.maxOutsideEnemyPowerCount + Manager.bonusMaxOutsidePowerCount) * Manager.spawncapMultipler);
+            if (Configuration.scaleHeat.Value && (Configuration.heatSettingsToAffect.Value.HasFlag(Configuration.HeatSettingsFlags.OutsidePower) || (Configuration.heatSettingsToAffect.Value.HasFlag(Configuration.HeatSettingsFlags.All))))
             {
-                float x = EventManager.currentHeatDifficulty();
-                if (x > 0)
+                float heatIndex = EventManager.currentHeatDifficulty();
+                if (heatIndex > 0)
                 {
-                    RoundManager.Instance.currentLevel.maxOutsideEnemyPowerCount *= (int)((Configuration.heatMultiplierOtherCalculations.Value * RoundManager.Instance.currentLevel.maxOutsideEnemyPowerCount / Configuration.heatDampening.Value) * Math.Pow(1 + Configuration.heatDampening.Value, x) + 1);
+                    RoundManager.Instance.currentLevel.maxOutsideEnemyPowerCount *= (int)((Configuration.heatMultiplierOtherCalculations.Value * RoundManager.Instance.currentLevel.maxOutsideEnemyPowerCount / Configuration.heatDampening.Value) * Math.Pow(1 + Configuration.heatDampening.Value, heatIndex) + 1);
                 }
             }
 
@@ -961,15 +983,28 @@ namespace BrutalCompanyMinus.Minus
             return false; // Fallback
         }
 
+        /// <summary>
+        /// Compute the given heat for a moon by its level ID.
+        /// </summary>
+        /// <returns></returns>
         public static float currentHeatDifficulty()
         {
             float heatValue = 0f;
             if (RoundManager.Instance?.currentLevel?.levelID != null)
             {
                 int levelID = RoundManager.Instance.currentLevel.levelID;
-                heatValue = Manager.heatDifficulty.TryGetValue(levelID, out float heat) ? heat : 0f;
+                Log.LogInfo("Computing heat for level ID" +  levelID);
+                heatValue = Manager.heatDifficulty.TryGetValue(levelID, out float heat) ? heat : Configuration.startingHeat.Value;
+                Log.LogInfo("Computed Heat is " + heatValue + " for level ID " + levelID);
             }
             return heatValue;
+        }
+
+        
+        internal static List<MEvent> GetEventsByName(params string[] names)
+        {
+            HashSet<string> nameSet = new HashSet<string>(names);
+            return events.Where(n => nameSet.Contains(n.Name())).ToList();
         }
     }
 }
