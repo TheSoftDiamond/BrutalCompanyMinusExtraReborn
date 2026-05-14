@@ -52,18 +52,9 @@ namespace BrutalCompanyMinus.Minus.Events
         }
         public override void Execute()
         {
-            if (Configuration.VeryLateShipAdjustment.Value)
-            {
                 // For slower moving time
                 int random = (int)UnityEngine.Random.Range(Getf(ScaleType.TimeMin), Getf(ScaleType.TimeMax));
                 Net.Instance.MoveTimeServerRpc(random, Getf(ScaleType.TimeSettings));
-            }
-            else
-            {
-                // For regular moving time
-                int Regularrandom = (int)UnityEngine.Random.Range(Getf(ScaleType.TimeMin), Getf(ScaleType.TimeMax));
-                Net.Instance.MoveTimeServerRpc(Regularrandom);
-            }
         }
     }
 }

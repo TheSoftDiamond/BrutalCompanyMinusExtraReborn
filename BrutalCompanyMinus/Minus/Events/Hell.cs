@@ -322,16 +322,8 @@ namespace BrutalCompanyMinus.Minus.Events
             currentIngameWeather = StartOfRound.Instance.currentLevel.currentWeather.ToString();
             if (currentIngameWeather != "Majora Moon")
             {
-                if (Configuration.HellTimeAdjustment.Value)
-                {
                     // For slower moving time
                     Net.Instance.MoveTimeServerRpc(UnityEngine.Random.Range(Getf(ScaleType.TimeMin), Getf(ScaleType.TimeMax)), Getf(ScaleType.TimeSettings));
-                }
-                else
-                {
-                    // For regular moving time
-                    Net.Instance.MoveTimeServerRpc(UnityEngine.Random.Range(Getf(ScaleType.TimeMin), Getf(ScaleType.TimeMax)));
-                }
             }
 
             Manager.SetAtmosphere("bloodyrain", true);
