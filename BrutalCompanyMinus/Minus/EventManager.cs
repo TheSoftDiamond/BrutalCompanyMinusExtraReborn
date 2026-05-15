@@ -28,6 +28,7 @@ namespace BrutalCompanyMinus.Minus
             new Events.SafeOutside(),
             new Events.VeryEarlyShip(),
             new Events.TrapsFailure(),
+            new Events.SID(),
             // Good
             new Events.Bounty(),
             new Events.Bonus(),
