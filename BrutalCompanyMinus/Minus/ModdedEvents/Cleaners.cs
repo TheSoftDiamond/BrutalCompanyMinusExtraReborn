@@ -25,7 +25,7 @@ namespace BrutalCompanyMinus.Minus.Events
 
 
             monstersToSpawn = new List<MonsterEvent>() { new MonsterEvent(
-                "Cleaner",
+                "EnemyCleaningDrone",
                 new Scale(10.0f, 0.4f, 10.0f, 50.0f),
                 new Scale(5.0f, 0.1f, 5.0f, 15.0f),
                 new Scale(3.0f, 0.06f, 3.0f, 9.0f),
