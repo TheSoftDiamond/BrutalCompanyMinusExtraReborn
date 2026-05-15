@@ -33,6 +33,8 @@ namespace BrutalCompanyMinus.Minus.Events
                 new Scale(0.0f, 0.02f, 0.0f, 1.0f),
                 new Scale(0.0f, 0.03f, 0.0f, 3.0f))
             };
+
+            EventsToRemove = new List<string>() { nameof(SID) };
         }
 
         public override bool AddEventIfOnly() => Compatibility.takeyGokuPresent & Compatibility.takeyGokuEssentialPresent & Compatibility.officialExternalModulePresent;

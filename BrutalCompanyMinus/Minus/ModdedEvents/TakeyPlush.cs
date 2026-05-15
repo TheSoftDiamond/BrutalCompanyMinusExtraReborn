@@ -28,7 +28,7 @@ namespace BrutalCompanyMinus.Minus.Events
                 new SpawnableItemWithRarity(Assets.GetItem("TakeyPlush"), 100)
             );
 
-            EventsToRemove = new List<string>() { nameof(RealityShift), nameof(Pickles) };
+            EventsToRemove = new List<string>() { nameof(SID), nameof(RealityShift), nameof(Pickles) };
 
             ScaleList.Add(ScaleType.ScrapAmount, new Scale(1.0f, 0.005f, 1.0f, 1.5f));
         }
