@@ -93,7 +93,7 @@ namespace BrutalCompanyMinus.Minus
         /// </summary>
         public enum EventType
         {
-            VeryBad, Bad, Neutral, Good, VeryGood, Remove/*, Insane*/
+            /*Insane, */VeryBad, Bad, Neutral, Good, VeryGood, /*, Rare, */Remove
         }
 
         /// <summary>
