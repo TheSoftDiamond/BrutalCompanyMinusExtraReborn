@@ -27,7 +27,8 @@ namespace BrutalCompanyMinus.Minus.Events
             EventsToRemove = new List<string>() { nameof(Clock), nameof(ControlPad), nameof(Dentures), nameof(Dustpans), nameof(FootballScrap), nameof(EasterEggs), nameof(GarbageLid), nameof(GoldenBars), nameof(GoldenFacility), nameof(Honk), nameof(HolidaySeason), nameof(MaskItem), nameof(SeveredBits), nameof(SussyPaintings), nameof(ToiletPaper), nameof(Train), nameof(ZedDog), nameof(CityOfGold), nameof(Bellcrab), nameof(Dice), nameof(BadDice), nameof(TakeyGokuBracken), nameof(TakeyGokuPlush), nameof(TakeyGokuPlushBig), nameof(TakeyPlush), nameof(Pickles) };
         }
 
-        public override bool AddEventIfOnly() => Assets.ReadSettingEarly(Paths.ConfigPath + "\\BrutalCompanyMinusExtraReborn\\CoreProperties.cfg", "Enable Special Events?");
+        //public override bool AddEventIfOnly() => Assets.ReadSettingEarly(Paths.ConfigPath + "\\BrutalCompanyMinusExtraReborn\\CoreProperties.cfg", "Enable Special Events?");
+        public override bool AddEventIfOnly() => (Assets.ReadSettingEarly(Paths.ConfigPath + "\\BrutalCompanyMinusExtraReborn\\CoreProperties.cfg", "Enable Beta Events?"));
 
         public override void Execute()
         {
