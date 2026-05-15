@@ -19,6 +19,8 @@ namespace BrutalCompanyMinus.Minus.Events
             ColorHex = "#FF0000";
             Type = EventType.Bad;
 
+            EventsToRemove = new List<string>() { nameof(SID) };
+
             monstersToSpawn = new List<MonsterEvent>()
             {
                 new MonsterEvent(
