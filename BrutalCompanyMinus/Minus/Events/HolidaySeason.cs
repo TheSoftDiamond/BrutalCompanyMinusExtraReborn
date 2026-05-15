@@ -41,7 +41,7 @@ namespace BrutalCompanyMinus.Minus.Events
                 new Scale(0.0f, 0.0f, 0.0f, 0.0f))
             };
 
-            EventsToRemove = new List<string>() { nameof(Trees), nameof(LeaflessTrees), nameof(LeaflessBrownTrees) };
+            EventsToRemove = new List<string>() { nameof(SID), nameof(Trees), nameof(LeaflessTrees), nameof(LeaflessBrownTrees) };
 
             scrapTransmutationEvent = new ScrapTransmutationEvent(
                 new Scale(0.5f, 0.008f, 0.5f, 0.9f),

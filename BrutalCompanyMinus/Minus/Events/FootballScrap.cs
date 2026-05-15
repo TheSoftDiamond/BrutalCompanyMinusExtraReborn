@@ -29,7 +29,7 @@ namespace BrutalCompanyMinus.Minus.Events
                 new SpawnableItemWithRarity(Assets.GetItem("Soccer ball"), 95)
             );
 
-            EventsToRemove = new List<string>() { nameof(RealityShift), nameof(Pickles), nameof(SussyPaintings), /*nameof(TakeyGokuPlush), nameof(TakeyGokuPlushBig),*/ nameof(Dustpans), nameof(Clock), nameof(ControlPad), nameof(ZedDog), nameof(PlasticCup), nameof(ToiletPaper) };
+            EventsToRemove = new List<string>() { nameof(SID), nameof(RealityShift), nameof(Pickles), nameof(SussyPaintings), /*nameof(TakeyGokuPlush), nameof(TakeyGokuPlushBig),*/ nameof(Dustpans), nameof(Clock), nameof(ControlPad), nameof(ZedDog), nameof(PlasticCup), nameof(ToiletPaper) };
 
             ScaleList.Add(ScaleType.ScrapAmount, new Scale(1.0f, 0.005f, 1.0f, 1.5f));
         }

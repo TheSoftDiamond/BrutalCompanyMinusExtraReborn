@@ -23,7 +23,7 @@ namespace BrutalCompanyMinus.Minus.Events
             ColorHex = "#FFA500";
             Type = EventType.Neutral;
 
-            EventsToRemove = new List<string>() { nameof(RealityShift), nameof(Honk), nameof(MaskItem) };
+            EventsToRemove = new List<string>() { nameof(SID), nameof(RealityShift), nameof(Honk), nameof(MaskItem) };
 
             scrapTransmutationEvent = new ScrapTransmutationEvent(
                 new Scale(0.5f, 0.1f, 1.0f, 0.9f),

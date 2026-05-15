@@ -24,6 +24,8 @@ namespace BrutalCompanyMinus.Minus.Events
             ColorHex = "#800000";
             Type = EventType.VeryBad;
 
+            EventsToRemove = new List<string>() { nameof(SID) };
+
             ScaleList.Add(ScaleType.MinDensity, new Scale(0.0025f, 0.0001f, 0.004f, 0.0215f));
             ScaleList.Add(ScaleType.MaxDensity, new Scale(0.0042f, 0.00148f, 0.0032f, 0.045f));
         }

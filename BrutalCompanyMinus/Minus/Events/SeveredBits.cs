@@ -24,6 +24,8 @@ namespace BrutalCompanyMinus.Minus.Events
             ColorHex = "#FFFFFF";
             Type = EventType.Neutral;
 
+            EventsToRemove = new List<string>() { nameof(SID) };
+
             scrapTransmutationEvent = new ScrapTransmutationEvent(
                 new Scale(0.5f, 0.008f, 0.5f, 0.9f),
                 new SpawnableItemWithRarity(Assets.GetItem(Assets.ItemName.SeveredBone), 13),

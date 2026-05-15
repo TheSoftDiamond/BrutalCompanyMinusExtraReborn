@@ -25,7 +25,7 @@ namespace BrutalCompanyMinus.Minus.Events
 
             EventsToSpawnWith = new List<string>() { nameof(HeavyRain) };
 
-            EventsToRemove = new List<string>() { nameof(RealityShift) };
+            EventsToRemove = new List<string>() { nameof(SID), nameof(RealityShift) };
 
             scrapTransmutationEvent = new ScrapTransmutationEvent(
                 new Scale(0.5f, 0.008f, 0.5f, 0.9f),

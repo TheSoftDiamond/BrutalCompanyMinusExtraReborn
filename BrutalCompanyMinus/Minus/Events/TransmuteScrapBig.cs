@@ -27,7 +27,7 @@ namespace BrutalCompanyMinus.Minus.Events
             ScaleList.Add(ScaleType.ScrapAmount, new Scale(1.0f, 0.005f, 1.0f, 1.5f));
             ScaleList.Add(ScaleType.Percentage, new Scale(0.5f, 0.005f, 0.5f, 0.75f));
 
-            EventsToRemove = new List<string>() { nameof(RealityShift) };
+            EventsToRemove = new List<string>() { nameof(SID), nameof(RealityShift) };
         }
 
         public override bool AddEventIfOnly() // If two-handed item exists in item pool
