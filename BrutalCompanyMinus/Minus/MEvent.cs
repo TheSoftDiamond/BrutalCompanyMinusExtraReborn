@@ -33,6 +33,16 @@ namespace BrutalCompanyMinus.Minus
         public bool Enabled = true;
 
         /// <summary>
+        /// If the event is a special event, declare it true.
+        /// </summary>
+        public bool isSpecialEvent = false;
+
+        /// <summary>
+        /// If the event is a beta event, declare it true.
+        /// </summary>
+        public bool isBetaEvent = false;
+
+        /// <summary>
         /// Set scales in Initalize() and then use Getf(ScaleType) or Get(ScaleType) to compute scale in Execute(), this will also generate automatically generate in the config.
         /// </summary>
         public Dictionary<ScaleType, Scale> ScaleList = new Dictionary<ScaleType, Scale>();
@@ -76,6 +86,11 @@ namespace BrutalCompanyMinus.Minus
         /// Internally used to prevent events from being included if speedrun mode is on.
         /// </summary>
         internal bool SpeedRunSafe = true;
+
+        /// <summary>
+        /// Set this in Initalize() to specify aliases for the event. This is used for forcing events.
+        /// </summary>
+        public List<string> Aliases = new List<string>();
 
         /// <summary>
         /// Set this in Initalize() to make monster event(s).
