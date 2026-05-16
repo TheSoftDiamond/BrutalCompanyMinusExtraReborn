@@ -23,6 +23,7 @@ namespace BrutalCompanyMinus.Minus.Events
             Descriptions = new List<string>() { "Goo!", "The goo is coming for you!" };
             ColorHex = "#FF0000";
             Type = EventType.Bad;
+            isBetaEvent = true;
 
             monstersToSpawn = new List<MonsterEvent>() { new MonsterEvent(
                 Assets.EnemyName.Stingray,
@@ -35,7 +36,7 @@ namespace BrutalCompanyMinus.Minus.Events
             };
         }
 
-        public override bool AddEventIfOnly() => Assets.ReadSettingEarly(Paths.ConfigPath + "\\BrutalCompanyMinusExtraReborn\\CoreProperties.cfg", "Enable Beta Events?");
+        //public override bool AddEventIfOnly() => Assets.ReadSettingEarly(Paths.ConfigPath + "\\BrutalCompanyMinusExtraReborn\\CoreProperties.cfg", "Enable Beta Events?");
 
 
         public override void Execute()

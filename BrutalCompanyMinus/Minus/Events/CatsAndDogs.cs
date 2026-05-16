@@ -28,11 +28,12 @@ namespace BrutalCompanyMinus.Minus.Events
             Descriptions = new List<string>() { "Who let the Dogs (And Cats) Out?", "It's raining Cats And Dogs", "It's raining Dogs And Cats" };
             ColorHex = "#000000";
             Type = EventType.VeryBad;
+            isBetaEvent = true;
 
             EventsToSpawnWith = new List<string>() { nameof(Dogs), nameof(Puma) };
         }
 
-        public override bool AddEventIfOnly() => Assets.ReadSettingEarly(Paths.ConfigPath + "\\BrutalCompanyMinusExtraReborn\\CoreProperties.cfg", "Enable Beta Events?");
+        //public override bool AddEventIfOnly() => Assets.ReadSettingEarly(Paths.ConfigPath + "\\BrutalCompanyMinusExtraReborn\\CoreProperties.cfg", "Enable Beta Events?");
 
 
         public override void Execute()

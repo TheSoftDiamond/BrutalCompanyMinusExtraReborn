@@ -24,6 +24,7 @@ namespace BrutalCompanyMinus.Minus.Events
             Descriptions = new List<string>() { "The entrance is locked", "The entrance is blocked", "Time for the fire exit" };
             ColorHex = "#000000";
             Type = EventType.VeryBad;
+            isSpecialEvent = true;
         }
 
         public override void Execute()
@@ -54,7 +55,7 @@ namespace BrutalCompanyMinus.Minus.Events
         {
         }
 
-        public override bool AddEventIfOnly() => Assets.ReadSettingEarly(Paths.ConfigPath + "\\BrutalCompanyMinusExtraReborn\\CoreProperties.cfg", "Enable Special Events?");
+        //public override bool AddEventIfOnly() => Assets.ReadSettingEarly(Paths.ConfigPath + "\\BrutalCompanyMinusExtraReborn\\CoreProperties.cfg", "Enable Special Events?");
 
         [HarmonyPrefix]
         [HarmonyPatch(typeof(InteractTrigger), nameof(InteractTrigger.Interact))]

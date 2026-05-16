@@ -23,6 +23,7 @@ namespace BrutalCompanyMinus.Minus.Events
             Descriptions = new List<string>() { "Eggs for breakfast!", "Egging you on", "Is it worth it?", "Beware of the Giant Kiwi", "Whats that pecking noise?", "Its like a woodpecker but..." };
             ColorHex = "#800000";
             Type = EventType.VeryBad;
+            isSpecialEvent = true;
         }
 
         public override void Execute()
@@ -67,7 +68,7 @@ namespace BrutalCompanyMinus.Minus.Events
             }
         }
 
-        public override bool AddEventIfOnly() => Assets.ReadSettingEarly(Paths.ConfigPath + "\\BrutalCompanyMinusExtraReborn\\CoreProperties.cfg", "Enable Special Events?");
+        //public override bool AddEventIfOnly() => Assets.ReadSettingEarly(Paths.ConfigPath + "\\BrutalCompanyMinusExtraReborn\\CoreProperties.cfg", "Enable Special Events?");
     }
 }
 

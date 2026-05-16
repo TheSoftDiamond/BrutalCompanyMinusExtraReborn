@@ -29,13 +29,14 @@ namespace BrutalCompanyMinus.Minus.Events
             Descriptions = new List<string>() { "MADE IN HEAVEN", "Time is very messed up!", "Look at the sky" };
             ColorHex = "#CF9FFF";
             Type = EventType.Insane;
+            isSpecialEvent = true;
 
             EventsToRemove = new List<string>() { nameof(VeryEarlyShip), nameof(EarlyShip), nameof(LateShip), nameof(VeryLateShip), nameof(Hell) };
 
             ScaleList.Add(ScaleType.TimeSettings, new Scale(1.0001f, 0.00001f, 1.0001f, 1.001f));
         }
 
-        public override bool AddEventIfOnly() => Assets.ReadSettingEarly(Paths.ConfigPath + "\\BrutalCompanyMinusExtraReborn\\CoreProperties.cfg", "Enable Special Events?");
+        //public override bool AddEventIfOnly() => Assets.ReadSettingEarly(Paths.ConfigPath + "\\BrutalCompanyMinusExtraReborn\\CoreProperties.cfg", "Enable Special Events?");
 
         public override void Execute()
         {
