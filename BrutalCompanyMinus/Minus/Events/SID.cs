@@ -21,8 +21,8 @@ namespace BrutalCompanyMinus.Minus.Events
 
             Weight = 1;
             Descriptions = new List<string>() { "Single Item Day", "Very Special Day" };
-            ColorHex = "#00FF00";
-            Type = EventType.VeryGood;
+            ColorHex = "#00FFFF";
+            Type = EventType.Rare;
 
             EventsToRemove = new List<string>() { nameof(Clock), nameof(ControlPad), nameof(Dentures), nameof(Dustpans), nameof(FootballScrap), nameof(EasterEggs), nameof(GarbageLid), nameof(GoldenBars), nameof(GoldenFacility), nameof(Honk), nameof(HolidaySeason), nameof(MaskItem), nameof(SeveredBits), nameof(SussyPaintings), nameof(ToiletPaper), nameof(Train), nameof(ZedDog), nameof(CityOfGold), nameof(Bellcrab), nameof(Dice), nameof(BadDice), nameof(TakeyGokuBracken), nameof(TakeyGokuPlush), nameof(TakeyGokuPlushBig), nameof(TakeyPlush), nameof(Pickles) };
         }
