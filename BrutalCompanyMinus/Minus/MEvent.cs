@@ -72,7 +72,6 @@ namespace BrutalCompanyMinus.Minus
         /// </summary>
         internal bool Active = false;
 
-
         /// <summary>
         /// Internally used to prevent events from being included if speedrun mode is on.
         /// </summary>
@@ -93,7 +92,7 @@ namespace BrutalCompanyMinus.Minus
         /// </summary>
         public enum EventType
         {
-            /*Insane, */VeryBad, Bad, Neutral, Good, VeryGood, /*, Rare, */Remove
+            Insane, VeryBad, Bad, Neutral, Good, VeryGood, Rare, Remove
         }
 
         /// <summary>
