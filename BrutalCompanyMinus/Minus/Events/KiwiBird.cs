@@ -24,6 +24,7 @@ namespace BrutalCompanyMinus.Minus.Events
             ColorHex = "#800000";
             Type = EventType.VeryBad;
             isSpecialEvent = true;
+            isBetaEvent = true;
         }
 
         public override void Execute()
