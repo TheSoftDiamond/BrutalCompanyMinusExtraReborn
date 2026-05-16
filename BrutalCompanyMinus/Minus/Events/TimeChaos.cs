@@ -30,6 +30,7 @@ namespace BrutalCompanyMinus.Minus.Events
             ColorHex = "#CF9FFF";
             Type = EventType.Insane;
             isSpecialEvent = true;
+            Aliases = new List<string>() { "FastDay", "MadeInHeaven" };
 
             EventsToRemove = new List<string>() { nameof(VeryEarlyShip), nameof(EarlyShip), nameof(LateShip), nameof(VeryLateShip), nameof(Hell) };
 

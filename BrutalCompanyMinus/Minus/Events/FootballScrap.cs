@@ -23,6 +23,7 @@ namespace BrutalCompanyMinus.Minus.Events
             Descriptions = new List<string>() { "Its football not soccer", "Balls... quite lot of them" };
             ColorHex = "#e84343";
             Type = EventType.Neutral;
+            Aliases = new List<string>() { "SoccerBall", "Soccer" };
 
             scrapTransmutationEvent = new ScrapTransmutationEvent(
                 new Scale(0.5f, 0.008f, 0.5f, 0.9f),

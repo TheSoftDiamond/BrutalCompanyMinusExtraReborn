@@ -22,12 +22,13 @@ namespace BrutalCompanyMinus.Minus.Events
             Descriptions = new List<string>() { "All the sussy paintings", "69" };
             ColorHex = "#FFA500";
             Type = EventType.Neutral;
+            Aliases = new List<string>() { "Paintings", "Painting" };
 
             EventsToRemove = new List<string>() { nameof(SID), nameof(RealityShift) };
 
             scrapTransmutationEvent = new ScrapTransmutationEvent(
                 new Scale(0.5f, 0.008f, 0.5f, 0.9f),
-                new SpawnableItemWithRarity(Assets.GetItem("FancyPainting"),   95 )
+                new SpawnableItemWithRarity(Assets.GetItem("FancyPainting"), 95 )
             );
 
             EventsToRemove = new List<string>() { nameof(RealityShift), nameof(Pickles), /*nameof(TakeyGokuPlush),*/ nameof(Dustpans) };
