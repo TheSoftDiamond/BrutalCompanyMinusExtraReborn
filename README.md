@@ -1,7 +1,9 @@
 # Brutal Company Minus Extra Reborn
-![Screenshot](https://softdiamond.net/images/smalllogoBCMER.png)
+![Screenshot](https://softdiamond.net/BCMERAssets/icon.png)
 
 BCMER has a website! You can find it at [https://bcmer.softdiamond.net/](https://bcmer.softdiamond.net/)
+
+Note: I recommend the usage of several of the good bug fix mods and quality of life mods when using Brutal, including [StarLancerEnemyEscape](https://thunderstore.io/c/lethal-company/p/AudioKnight/StarlancerEnemyEscape/). It will help make Brutal both more enjoyable and a fun experience. Of course, feel free to play BCMER with any mod! It can make for a fun experience!
 
 <details>
   <summary><b>Special Thanks To</b></summary>
@@ -47,14 +49,12 @@ The levels of compatibility are color coded to represent the level of compatibil
 | [Brutal Comapny Minus Extra](https://thunderstore.io/c/lethal-company/p/UnloadedHangar/Brutal_Company_Minus_Extra/) | 🔴 (Incompatible) | BCMER is built off of BCME  Will cause conflicts. |
 | [SuperEclipse](https://thunderstore.io/c/lethal-company/p/MillieTheSilly/SuperEclipse/) | 🟢 (Compatible) | Provided ShipCoreFailure or LeverFailure is never rolled. BCMER 0.21.9+ prevents these two events from being ran if SuperEclipse is present. |
 | [GeneralImprovements](https://thunderstore.io/c/lethal-company/p/ShaosilGaming/GeneralImprovements/) | 🟠 (Partial) | Intro skip feature from GeneralImprovements causes issues with BCMER |
-| [YesFox](https://thunderstore.io/c/lethal-company/p/Dev1A3/YesFox/) | 🟣 (Planned) | May require additional patching. Currently the Kidnapper Fox only spawns if natural spawn conditions exist. |
 | [VeryLateCompany](https://thunderstore.io/c/lethal-company/p/McBowie/VeryLateCompany/) | 🟠 (Partial) | Some events may not work as expected. Expect potential desyncs. |
 | [Lobby Control](https://thunderstore.io/c/lethal-company/p/mattymatty/LobbyControl/) | 🟢 (Compatible) | Works perfectly fine. At worst, potentially not recieving event UI until ship lever is pulled. |
 | [WeatherRegistry](https://thunderstore.io/c/lethal-company/p/mrov/WeatherRegistry/) | 🟢 (Compatible) | Custom Weathers can be used inside Custom Events. |
 | [Combined Weathers Toolkit](https://thunderstore.io/c/lethal-company/p/Zigzag/Combined_Weathers_Toolkit/) | 🟢 (Compatible) | Registered via WeatherRegistry for weathers, and these themselves can be used in Custom Events. |
 | [DawnLib](https://thunderstore.io/c/lethal-company/p/TeamXiaolan/DawnLib/) | 🟣 (Planned) | Support for Hazards is to be done sometime in the future. Anything from Dawnlib may or may not work at the current moment. |
 | [LunarConfig](https://thunderstore.io/c/lethal-company/p/Crafty/LunarConfig/) | 🟠 (Partial) | Some variables set may conflict or outright overwrite Brutal settings |
-| [LunarConfig](https://thunderstore.io/c/lethal-company/p/Crafty/LunarConfig/) | 🟣 (Planned) | Planned for a BCMER addon to bridge the connection between Archipelago |
 
 </details>
 <details>
@@ -78,11 +78,13 @@ Besides the mods in the Modded Events, other mods that may come in handy or add 
 
 | Event Type | Base Weight | Increment | MinCap | MaxCap |
 |-|-|-|-|-|
+| Rare | 2 | 0.02 | 2 | 10 |
 | Very Good | 3 | 0.14 | 3 | 17 |
 | Good | 23 | -0.1 | 13 | 23 |
 | Neutral | 10 | -0.05 | 5 | 10 |
 | Bad | 40 | -0.15 | 25 | 40 |
 | Very Bad | 5 | 0.25 | 5 | 30 |
+| Insane | 3 | 0.05 | 3 | 20 |
 | Remove Enemy | 15 | -0.05 | 10 | 15 |
 
 </details>
@@ -123,6 +125,7 @@ Besides the mods in the Modded Events, other mods that may come in handy or add 
 | Quota | x0.005 | 100 | False |
 | Weather | None:+0, Rainy:+2, Flooded:+4, Foggy:+4, Stormy:+7, Eclipsed:+7 | None | True |
 | Player Scaling | 1x | None | False |
+| Heat | +/- 1 | 10 | False |
 
   - All events scale off of difficulty, event type chances scale off of difficulty and alot more.
 
@@ -156,7 +159,17 @@ Logarithmic Function:
 Cubic Function:
 ![Screenshot](https://softdiamond.net/BCMERAssets/cubic.png)
 
+### Heat
 
+The heat system in brutal allows for a moon to get dangerous as players keep revisiting the moon. This can make for interesting gameplay and changes up moons are played. Various settings like enemy power and current difficulty are affected by the setting. Values are only affected by heat if the heat raises above 0 (whether it be a float or integer).
+
+- Value: The difficulty, or in the case of non-difficulty, the current enemy power level for example, being measured.
+- Heat Multiplier: Used in calculations for values.
+- Heat Dampening Factor: Used in calculations for values.
+- Current Heat: The current heat of the given moon.  
+
+Heat:
+![Screenshot](https://softdiamond.net/BCMERAssets/heatcalc2.jpg)
 
 
   - This is what can be shown in the UI
@@ -500,9 +513,15 @@ Location: BrutalCompanyMinusExtraReborn\CoreProperties.cfg`
 
 `Enable VeryLateShip Time Adjustment` : Adjust whether or not VeryLateShip Event uses regular Lethal Company time scale, or an adjusted one for the event. Defaults to True (adjusted scale for event).
 
-`Enable Special Events` : Should Special Events be loaded? These are special events made for the game that may not be desirable in regular sessions (Such as very unfair mechanics) or are not fully implemented (this could be because of slight issues related to the event, or just not fully polished like other events are).
+`Disable all events` : Disable all events ingame?
+
+`Enable Special Events` : Should Special Events be loaded? These are special events made for the game that may not be desirable in regular sessions (Such as very unfair mechanics).
+
+`Enable Beta Events` : Should events that are not fully implemented/tested be included in the event rolling.
 
 `Transmutation Blacklist` : Specify a list of items to not transmute. This is only useful if you run scrap transmutation events from Brutal or any custom events with them. Uses itemProperties.itemName Component Name.
+
+`Enable Speedrun Mode`  : Force speedrun mode on? Targets certain settings that may be considered cheating in a speedrun enviroment.
 
 #### Debugging
 
@@ -522,7 +541,7 @@ Location: BrutalCompanyMinusExtraReborn\CoreProperties.cfg`
 
 `Defer weather to weather toolkit mod`: Let's Weather Toolkit handle the setting of the weathers for Brutal's vanilla weather events. This has no effect on custom events.
 
-`Events reroll on dynamic interior`: Currently only supports Zeranos moon, but allows events to reroll on every interior change on the moon.
+`Enforce Escape Mod Checks`: Should Brutal perform its checks if any enemy escape mod is installed. This feature is used with Vanilla events to prevent improper spawning locations for enemies if they do not have the mod. (For example, no outside CoilHeads). Disable this feature if you wish to not use this safety check feature.
 
 `Let Brutal handle the SCAN command?`: Let's Brutal handle the scan command so that events can display the correct scrap values with respect to scrap value modifiers.
 
@@ -610,6 +629,30 @@ Location: `BrutalCompanyMinusExtraReborn\Difficulty_Settings.cfg`
 `Grade difficulty scaling`: Additive difficulties depending on moon risk/grade.
 
 `Scale by weather type?`: Scale by weather type?
+
+`Scale by Heat?`: Scale by Heat?
+
+`Heat difficulty additive`: Added every day for visiting a moon.
+
+`Heat difficulty decrement`: Subtracted every day on moons not visited.
+
+`Heat dampening factor`: Used in calculations. Higher value numbers retain a value closer to the original value.
+
+`Heat multiplier (Difficulty)`: Used in calculations involving active difficulty. Higher value multiply the value faster.
+
+`Heat multiplier (Non-Difficulty)`: Used in calculations not involving the current difficulty number itself (Enemy powers, etc). Higher value multiply the value faster.
+
+`Starting Heat`: The heat every moon starts with on its first day.
+
+`Heat max cap`: The heat will never exceed this value.
+
+`Force events at max heat?`: Enable forcing certain events from a list if the heat max cap is reached.
+
+`Events to fore at max heat`: The events that will be forced if max heat is reached.
+
+`Heat affects what properties`: The properties that can be affected by the heat mechanic.
+
+
 
 `None weather difficulty?`: Difficulty added if none weather.
 
