@@ -33,9 +33,12 @@ namespace BrutalCompanyMinus
         public static List<Dictionary<ScaleType, Scale>> eventScales = new List<Dictionary<ScaleType, Scale>>();
         public static List<ConfigEntry<bool>> eventEnables = new List<ConfigEntry<bool>>();
         public static List<List<string>> eventsToRemove = new List<List<string>>(), eventsToSpawnWith = new List<List<string>>();
+        public static List<List<string>> eventAliases = new List<List<string>>();
         public static List<List<string>> moonBlacklist = new List<List<string>>();
         public static List<List<string>> moonWhitelist = new List<List<string>>();
         public static List<ConfigEntry<bool>> moonMode = new List<ConfigEntry<bool>>();
+        public static List<ConfigEntry<bool>> eventSpecial = new List<ConfigEntry<bool>>();
+        public static List<ConfigEntry<bool>> eventBeta = new List<ConfigEntry<bool>>();
         public static List<List<MonsterEvent>> monsterEvents = new List<List<MonsterEvent>>();
         public static List<ScrapTransmutationEvent> transmutationEvents = new List<ScrapTransmutationEvent>();
 
@@ -372,7 +375,11 @@ namespace BrutalCompanyMinus
                     // EventsToRemove and EventsToSpawnWith and Moon Blacklist
                     eventsToRemove.Add(ListToStrings(toConfig.Bind(e.Name(), "Events To Remove", StringsToList(e.EventsToRemove, ", "), "Will prevent said event(s) from occuring.").Value));
                     eventsToSpawnWith.Add(ListToStrings(toConfig.Bind(e.Name(), "Events To Spawn With", StringsToList(e.EventsToSpawnWith, ", "), "Will spawn said events(s).").Value));
+                    eventAliases.Add(ListToStrings(toConfig.Bind(e.Name(), "Event Aliases", StringsToList(e.Aliases, ", "), "Seperate by comma for each alias. Aliases are another name that can be used when forcing events. Aliases are case-insensitive. To prevent potential errors, do not use the same alias on multiple events.").Value));
                     moonMode.Add(toConfig.Bind(e.Name(), "Whitelist Mode?", e.MoonMode, "Which list should be used? Please note that if you are using the Whitelist mode, it must have at least one entry."));
+                    eventSpecial.Add(toConfig.Bind(e.Name(), "Special Event?", e.isSpecialEvent, "Special events require Enable Special Events to be enabled."));
+                    eventBeta.Add(toConfig.Bind(e.Name(), "Beta Event?", e.isBetaEvent, "Beta events require Enable Beta Events to be enabled."));
+
                     moonBlacklist.Add(ListToStrings(toConfig.Bind(e.Name(), "Moons To Not Spawn On", StringsToList(e.Blacklist, ", "), "Event will not spawn on these moons. Seperate by comma for each moon name. List must be populated").Value));
                     moonWhitelist.Add(ListToStrings(toConfig.Bind(e.Name(), "Moons To Spawn Only On", StringsToList(e.Whitelist, ", "), "Event will only spawn on these moons. Seperate by comma for each moon name. List must be populated.").Value));
 
@@ -519,9 +526,12 @@ namespace BrutalCompanyMinus
                 EventManager.events[i].Enabled = eventEnables[i].Value;
                 EventManager.events[i].EventsToRemove = eventsToRemove[i];
                 EventManager.events[i].EventsToSpawnWith = eventsToSpawnWith[i];
+                EventManager.events[i].Aliases = eventAliases[i];
                 EventManager.events[i].MoonMode = moonMode[i].Value;
                 EventManager.events[i].Blacklist = moonBlacklist[i];
                 EventManager.events[i].Whitelist = moonWhitelist[i];
+                EventManager.events[i].isSpecialEvent = eventSpecial[i].Value;
+                EventManager.events[i].isBetaEvent = eventBeta[i].Value;
                 EventManager.events[i].monstersToSpawn = monsterEvents[i];
                 EventManager.events[i].scrapTransmutationEvent = transmutationEvents[i];
             }
