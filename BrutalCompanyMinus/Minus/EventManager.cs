@@ -122,9 +122,9 @@ namespace BrutalCompanyMinus.Minus
             new Events.IsMetal(),
             new Events.Stingray(), // Requires Beta Events (Temporary)
             new Events.Puma(), // Requires Beta Events (Temporary)
-            new Events.KidnapperFox(),  // Requires Beta Events (Temporary)
+            new Events.KidnapperFox(),
             // Very Bad
-            new Events.Cadaver(), // Requires Beta Events (Temporary)
+            new Events.Cadaver(),
             new Events.CatsAndDogs(), // Requires Beta Events (Temporary)
             //new Events.AllTwoHanded(),
             //new Events.UncertainHands(),
@@ -297,7 +297,7 @@ namespace BrutalCompanyMinus.Minus
 
         internal static List<MEvent> forcedEvents = new List<MEvent>();
 
-        internal static List<MEvent> allVeryGood = new List<MEvent>(), allGood = new List<MEvent>(), allNeutral = new List<MEvent>(), allBad = new List<MEvent>(), allVeryBad = new List<MEvent>(), allRemove = new List<MEvent>(), allInsane = new List<MEvent>(), allRare = new List<MEvent>();
+        internal static List<MEvent> allVeryGood = new List<MEvent>(), allGood = new List<MEvent>(), allNeutral = new List<MEvent>(), allBad = new List<MEvent>(), allVeryBad = new List<MEvent>(), allRemove = new List<MEvent>(), allInsane = new List<MEvent>(), allRare = new List<MEvent>(), allSpecial = new List<MEvent>(), allBeta = new List<MEvent>();
 
         internal static List<MEvent> sideEvents = new List<MEvent>();
 
@@ -403,23 +403,49 @@ namespace BrutalCompanyMinus.Minus
                 }
 
                 // Check moon whitelist/blacklist
-                bool moonValid = newEvent.MoonMode
+                bool eventValid = newEvent.MoonMode
                                    ? IsEventOnMoonWhitelist(newEvent)
                                    : !IsIgnoredEventByMoonBlacklist(newEvent);
 
                 Log.LogInfo($"Checking {(newEvent.MoonMode ? "whitelist" : "blacklist")} for event {newEvent.Name()}");
-
-                // Remove event and iterate again if condition is not met for event
-                if (!moonValid)
+                if (!eventValid)
                 {
                     Log.LogInfo($"Event {newEvent.Name()} is {(newEvent.MoonMode ? "not whitelisted" : "blacklisted")} on moon {Manager.currentLevel.PlanetName}, skipping.");
+                }
+
+                // To prevent overwriting eventValid from previous checks where it declared invalid, check if eventValid is still true here.
+                if (eventValid)
+                {
+                    if (newEvent.isSpecialEvent || newEvent.isBetaEvent)
+                    {
+                        bool specialFailed = newEvent.isSpecialEvent && !Configuration.enableSpecialEvents.Value;
+
+                        bool betaFailed = newEvent.isBetaEvent && !Configuration.enableBetaEvents.Value;
+
+                        if (specialFailed || betaFailed)
+                        {
+                            eventValid = false;
+                        }
+                        else
+                        {
+                            eventValid = true;
+                        }
+                    }
+                }
+
+                // Remove event and iterate again if condition is not met for event
+                if (!eventValid)
+                {
+                    //Log.LogInfo($"Event {newEvent.Name()} is {(newEvent.MoonMode ? "not whitelisted" : "blacklisted")} on moon {Manager.currentLevel.PlanetName}, skipping.");
                     i--;
                     eventsToChooseForm.RemoveAll(x => x.Name() == newEvent.Name());
                     continue;
                 }
 
+
+
                 // Add event and remove incompatible events
-                if (moonValid)
+                if (eventValid)
                 {
                     chosenEvents.Add(newEvent);
 
