@@ -89,9 +89,13 @@ namespace BrutalCompanyMinus.Minus.Handlers
                         }
 
                         bool found = false;
+                        string upperArg = arg.ToUpper();
                         foreach(MEvent e in EventManager.events)
                         {
-                            if(arg.ToUpper() == e.Name().ToUpper())
+                            bool matchesName = upperArg == e.Name().ToUpper();
+                            bool matchesAlias = e.Aliases != null && e.Aliases.Any(alias => alias.ToUpper() == upperArg);
+
+                            if(matchesName || matchesAlias)
                             {
                                 found = true;
                                 text += $"{e.Name()} will now be forced to occur.\n";
@@ -143,8 +147,22 @@ namespace BrutalCompanyMinus.Minus.Handlers
                 {
                     if(arguments.Length == 0)
                     {
+                        foreach (MEvent e in EventManager.events)
+                        {
+                            if (e.isSpecialEvent)
+                            {
+                                EventManager.allSpecial.Add(e);
+                            }
+                            if (e.isBetaEvent)
+                            { 
+                                EventManager.allBeta.Add(e);
+                            }
+                        }
+
                         string text = "To display extra information about a particular event, use\nMEVENTS [Name]\n\n";
-                        text += "[Very Good] events:\n";
+                        text += "[Rare] events:\n";
+                        text += Helper.StringsToList(EventManager.allRare.Select(n => n.Name()).ToList(), ", ");
+                        text += "\n\n[Very Good] events:\n";
                         text += Helper.StringsToList(EventManager.allVeryGood.Select(n => n.Name()).ToList(), ", ");
                         text += "\n\n[Good] events:\n";
                         text += Helper.StringsToList(EventManager.allGood.Select(n => n.Name()).ToList(), ", ");
@@ -154,10 +172,19 @@ namespace BrutalCompanyMinus.Minus.Handlers
                         text += Helper.StringsToList(EventManager.allBad.Select(n => n.Name()).ToList(), ", ");
                         text += "\n\n[VeryBad] events:\n";
                         text += Helper.StringsToList(EventManager.allVeryBad.Select(n => n.Name()).ToList(), ", ");
+                        text += "\n\n[Insane] events:\n";
+                        text += Helper.StringsToList(EventManager.allInsane.Select(n => n.Name()).ToList(), ", ");
                         text += "\n\n[Remove] events:\n";
                         text += Helper.StringsToList(EventManager.allRemove.Select(n => n.Name()).ToList(), ", ");
+                        text += "\n\n\n[Special] events:\n";
+                        text += Helper.StringsToList(EventManager.allSpecial.Select(n => n.Name()).ToList(), ", ");
+                        text += "\n\n[Beta] events:\n";
+                        text += Helper.StringsToList(EventManager.allBeta.Select(n => n.Name()).ToList(), ", ");
 
                         Respond(text);
+
+                        EventManager.allSpecial.Clear();
+                        EventManager.allBeta.Clear();
                     }
                     else
                     {
@@ -173,8 +200,17 @@ namespace BrutalCompanyMinus.Minus.Handlers
                                 string text = $"[{mEvent.Name()}]:\n\n";
                                 text += $"[ColorHex]: {mEvent.ColorHex}\n[Weight]: {mEvent.Weight}\n[Type]: {mEvent.Type}\n\n";
                                 text += $"[Descriptions]: {Helper.StringsToList(mEvent.Descriptions, "|")}\n\n";
+                                text += $"[Aliases]: {Helper.StringsToList(mEvent.Aliases, ", ")}\n\n";
                                 text += $"[EventsToRemove]: {Helper.StringsToList(mEvent.EventsToRemove, ", ")}\n\n";
                                 text += $"[EventsToSpawnWith]: {Helper.StringsToList(mEvent.EventsToSpawnWith, ", ")}\n\n";
+                                text += $"[EventEnabled]: {mEvent.Enabled.ToString()}\n\n";
+                                text += $"[IsSpecialEvent]: {mEvent.isSpecialEvent.ToString()}\n\n";
+                                text += $"[IsBetaEvent]: {mEvent.isBetaEvent.ToString()}\n\n";
+                                text += $"[WhitelistMode]: {mEvent.MoonMode.ToString()}\n\n";
+                                text += $"[MoonsToNotSpawnOn]: {Helper.StringsToList(mEvent.Blacklist, ", ")}\n\n";
+                                text += $"[MoonsToSpawnOn]: {Helper.StringsToList(mEvent.Whitelist, ", ")}\n\n";
+                                text += $"[SpeedRunSafe]: {mEvent.SpeedRunSafe.ToString()}\n\n";
+
                                 text += $"[ScaleList]: \n";
                                 foreach(KeyValuePair<MEvent.ScaleType, MEvent.Scale> scaleType in mEvent.ScaleList)
                                 {
