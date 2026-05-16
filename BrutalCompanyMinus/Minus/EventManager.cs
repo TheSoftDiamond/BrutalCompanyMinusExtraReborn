@@ -159,7 +159,6 @@ namespace BrutalCompanyMinus.Minus
             new Events.Hell(),
             new Events.TimeChaos(),// Requires Special Events
             new Events.NutSlayersMore(),
-            new Events.LockedDoors(),
             // No Enemy
             new Events.NoBaboons(),
             new Events.NoBracken(),
