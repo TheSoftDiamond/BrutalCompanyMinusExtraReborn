@@ -18,6 +18,8 @@ namespace BrutalCompanyMinus.Minus
         #region VanillaEvents
 
         internal static List<MEvent> vanillaEvents = new List<MEvent>() {
+            //Rare
+            new Events.SID(), // Requires Beta Events
             // Very Good
             new Events.BigBonus(),
             new Events.ScrapGalore(),
@@ -28,7 +30,6 @@ namespace BrutalCompanyMinus.Minus
             new Events.SafeOutside(),
             new Events.VeryEarlyShip(),
             new Events.TrapsFailure(),
-            new Events.SID(),
             // Good
             new Events.Bounty(),
             new Events.Bonus(),
@@ -148,15 +149,17 @@ namespace BrutalCompanyMinus.Minus
             new Events.ForestGiant(),
             new Events.InsideBees(),
             new Events.NutSlayer(),
-            new Events.Hell(),
             new Events.AllWeather(),
             new Events.Worms(),
             new Events.OldBirds(),
             new Events.ShipCoreFailure(),
-            new Events.NutSlayersMore(),
             new Events.Dweller(),
-            new Events.TimeChaos(),// Requires Special Events
             new Events.BerserkTurrets(),
+            //Insane
+            new Events.Hell(),
+            new Events.TimeChaos(),// Requires Special Events
+            new Events.NutSlayersMore(),
+            new Events.LockedDoors(),
             // No Enemy
             new Events.NoBaboons(),
             new Events.NoBracken(),
@@ -295,7 +298,7 @@ namespace BrutalCompanyMinus.Minus
 
         internal static List<MEvent> forcedEvents = new List<MEvent>();
 
-        internal static List<MEvent> allVeryGood = new List<MEvent>(), allGood = new List<MEvent>(), allNeutral = new List<MEvent>(), allBad = new List<MEvent>(), allVeryBad = new List<MEvent>(), allRemove = new List<MEvent>();
+        internal static List<MEvent> allVeryGood = new List<MEvent>(), allGood = new List<MEvent>(), allNeutral = new List<MEvent>(), allBad = new List<MEvent>(), allVeryBad = new List<MEvent>(), allRemove = new List<MEvent>(), allInsane = new List<MEvent>(), allRare = new List<MEvent>();
 
         internal static List<MEvent> sideEvents = new List<MEvent>();
 
