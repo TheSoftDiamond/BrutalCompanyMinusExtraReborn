@@ -43,7 +43,7 @@ namespace BrutalCompanyMinus
         public static ConfigEntry<bool>? useCustomWeights, showEventsInChat;
         public static Scale eventsToSpawn;
         public static float[]? weightsForExtraEvents;
-        public static Scale[] eventTypeScales = new Scale[6];
+        public static Scale[] eventTypeScales = new Scale[8];
         public static Dictionary<EventType, Scale> scrapValueByEventTypeScale = new Dictionary<EventType, Scale>();
         public static Dictionary<EventType, Scale> scrapAmountByEventTypeScale = new Dictionary<EventType, Scale>();
         public static ConfigEntry<string>? MoonsToIgnore;
@@ -165,13 +165,15 @@ namespace BrutalCompanyMinus
             weightsForExtraEvents = ParseValuesFromString(difficultyConfig.Bind("_Event Settings", "Weights for bonus events", "40, 39, 15, 5, 1", "Weights for bonus events, can be expanded. (40, 39, 15, 5, 1) is equivalent to (+0, +1, +2, +3, +4) events").Value);
             showEventsInChat = difficultyConfig.Bind("_Event Settings", "Will Minus display events in chat?", false);
 
-            eventTypeScales = new Scale[6]
+            eventTypeScales = new Scale[8]
             {
+                getScale(difficultyConfig.Bind("_EventType Weights", "Insane event scale", "3, 0.05, 3, 20", scaleDescription).Value),
                 getScale(difficultyConfig.Bind("_EventType Weights", "VeryBad event scale", "5, 0.25, 5, 30", scaleDescription).Value),
                 getScale(difficultyConfig.Bind("_EventType Weights", "Bad event scale", "40, -0.15, 25, 40", scaleDescription).Value),
                 getScale(difficultyConfig.Bind("_EventType Weights", "Neutral event scale", "10, -0.05, 5, 10", scaleDescription).Value),
                 getScale(difficultyConfig.Bind("_EventType Weights", "Good event scale", "23, -0.1, 13, 23", scaleDescription).Value),
                 getScale(difficultyConfig.Bind("_EventType Weights", "VeryGood event scale", "3, 0.14, 3, 17", scaleDescription).Value),
+                getScale(difficultyConfig.Bind("_EventType Weights", "Rare event scale", "2, 0.02, 2, 10", scaleDescription).Value),
                 getScale(difficultyConfig.Bind("_EventType Weights", "Remove event scale", "15, -0.05, 10, 15", "These events remove something   " + scaleDescription).Value)
             };
 
@@ -537,6 +539,9 @@ namespace BrutalCompanyMinus
                     newEvents.Add(e);
                     switch (e.Type)
                     {
+                        case EventType.Insane:
+                            EventManager.allInsane.Add(e);
+                            break;
                         case EventType.VeryBad:
                             EventManager.allVeryBad.Add(e);
                             break;
@@ -551,6 +556,9 @@ namespace BrutalCompanyMinus
                             break;
                         case EventType.VeryGood:
                             EventManager.allVeryGood.Add(e);
+                            break;
+                        case EventType.Rare:
+                            EventManager.allRare.Add(e);
                             break;
                         case EventType.Remove:
                             EventManager.allRemove.Add(e);
