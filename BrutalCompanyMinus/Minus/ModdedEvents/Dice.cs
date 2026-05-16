@@ -27,9 +27,9 @@ namespace BrutalCompanyMinus.Minus.Events
                 new Scale(0.5f, 0.008f, 0.5f, 0.9f),
                 new SpawnableItemWithRarity(Assets.GetItem("Saint"), 4),
                 new SpawnableItemWithRarity(Assets.GetItem("Chronos"), 10),
-                new SpawnableItemWithRarity(Assets.GetItem("Rusty"), 45),
+                new SpawnableItemWithRarity(Assets.GetItem("RustyItem"), 45),
                 new SpawnableItemWithRarity(Assets.GetItem("GamblerItem"), 25),
-                new SpawnableItemWithRarity(Assets.GetItem("Sacrificer"), 16)
+                new SpawnableItemWithRarity(Assets.GetItem("SacrificerItem"), 16)
             );
 
             EventsToRemove = new List<string>() { nameof(SID), nameof(RealityShift) };
