@@ -421,12 +421,14 @@ namespace BrutalCompanyMinus
                     EventManager.UpdateAllEventWeights();
                     text +=
                         $"<br><color=#{colorTextHex}>EventType Chances:</color>" +
-                        $"<br> <color=#{colorTextHex}>-</color><color=#800000>VeryBad</color><color=#{colorTextHex}>:  {Helper.GetPercentage(EventManager.eventTypeRarities[0])}</color>" +
-                        $"<br> <color=#{colorTextHex}>-</color><color=#FF0000>Bad</color><color=#{colorTextHex}>:      {Helper.GetPercentage(EventManager.eventTypeRarities[1])}</color>" +
-                        $"<br> <color=#{colorTextHex}>-</color><color=#FFFFFF>Neutral</color><color=#{colorTextHex}>:  {Helper.GetPercentage(EventManager.eventTypeRarities[2])}</color>" +
-                        $"<br> <color=#{colorTextHex}>-</color><color=#008000>Good</color><color=#{colorTextHex}>:     {Helper.GetPercentage(EventManager.eventTypeRarities[3])}</color>" +
-                        $"<br> <color=#{colorTextHex}>-</color><color=#00FF00>VeryGood</color><color=#{colorTextHex}>: {Helper.GetPercentage(EventManager.eventTypeRarities[4])}</color>" +
-                        $"<br> <color=#{colorTextHex}>-</color><color=#008000>Remove</color><color=#{colorTextHex}>:   {Helper.GetPercentage(EventManager.eventTypeRarities[5])}</color><br>";
+                        $"<br> <color=#{colorTextHex}>-</color><color=#8B008B>Insane</color><color=#{colorTextHex}>:   {Helper.GetPercentage(EventManager.eventTypeRarities[0])}</color>" +
+                        $"<br> <color=#{colorTextHex}>-</color><color=#800000>VeryBad</color><color=#{colorTextHex}>:  {Helper.GetPercentage(EventManager.eventTypeRarities[1])}</color>" +
+                        $"<br> <color=#{colorTextHex}>-</color><color=#FF0000>Bad</color><color=#{colorTextHex}>:      {Helper.GetPercentage(EventManager.eventTypeRarities[2])}</color>" +
+                        $"<br> <color=#{colorTextHex}>-</color><color=#FFFFFF>Neutral</color><color=#{colorTextHex}>:  {Helper.GetPercentage(EventManager.eventTypeRarities[3])}</color>" +
+                        $"<br> <color=#{colorTextHex}>-</color><color=#008000>Good</color><color=#{colorTextHex}>:     {Helper.GetPercentage(EventManager.eventTypeRarities[4])}</color>" +
+                        $"<br> <color=#{colorTextHex}>-</color><color=#00FF00>VeryGood</color><color=#{colorTextHex}>: {Helper.GetPercentage(EventManager.eventTypeRarities[5])}</color>" +
+                        $"<br> <color=#{colorTextHex}>-</color><color=#00FFFF>Rare</color><color=#{colorTextHex}>:     {Helper.GetPercentage(EventManager.eventTypeRarities[6])}</color>" +
+                        $"<br> <color=#{colorTextHex}>-</color><color=#008000>Remove</color><color=#{colorTextHex}>:   {Helper.GetPercentage(EventManager.eventTypeRarities[7])}</color><br>";
                 }
 
                 text += GetDifficultyText();
