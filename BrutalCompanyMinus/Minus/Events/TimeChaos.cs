@@ -28,7 +28,7 @@ namespace BrutalCompanyMinus.Minus.Events
             Weight = 1;
             Descriptions = new List<string>() { "MADE IN HEAVEN", "Time is very messed up!", "Look at the sky" };
             ColorHex = "#CF9FFF";
-            Type = EventType.VeryBad;
+            Type = EventType.Insane;
 
             EventsToRemove = new List<string>() { nameof(VeryEarlyShip), nameof(EarlyShip), nameof(LateShip), nameof(VeryLateShip), nameof(Hell) };
 

@@ -28,7 +28,7 @@ namespace BrutalCompanyMinus.Minus.Events
                 new SpawnableItemWithRarity(Assets.GetItem("Clock"), 95)
             );
 
-            EventsToRemove = new List<string>() { nameof(SID), nameof(RealityShift), nameof(Pickles), nameof(SussyPaintings), /*nameof(TakeyGokuPlush), nameof(TakeyGokuPlushBig),*/ nameof(Dustpans) };
+            EventsToRemove = new List<string>() { nameof(SID), nameof(RealityShift) };
 
             ScaleList.Add(ScaleType.ScrapAmount, new Scale(1.0f, 0.005f, 1.0f, 1.5f));
         }

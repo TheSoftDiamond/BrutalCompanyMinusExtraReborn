@@ -29,8 +29,8 @@ namespace BrutalCompanyMinus.Minus.Events
 
             Weight = 1;
             Descriptions = new List<string>() { "Great reward, but at what cost...", "This is the worst event of them all", "You are going to need jesus for this one", "Before crushing the life out of you, I will show you why my power is utterly beyond question!" };
-            ColorHex = "#280000";
-            Type = EventType.VeryBad;
+            ColorHex = "#8B008B";
+            Type = EventType.Insane;
 
             EventsToRemove = new List<string>() { nameof(Trees), nameof(LeaflessBrownTrees), nameof(Gloomy), nameof(Raining), nameof(HeavyRain), nameof(Warzone), nameof(EarlyShip), nameof(LateShip), nameof(VeryEarlyShip), nameof(VeryLateShip), nameof(MajoraMoon) };
             EventsToSpawnWith = new List<string>() { nameof(LeaflessTrees), nameof(FacilityGhost), nameof(Spiders), nameof(Thumpers), nameof(Landmines) };
