@@ -15,6 +15,7 @@ using BrutalCompanyMinus.Minus.MonoBehaviours;
 using System;
 using EventType = BrutalCompanyMinus.Minus.MEvent.EventType;
 using System.ComponentModel;
+using Steamworks.ServerList;
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 namespace BrutalCompanyMinus
@@ -31,6 +32,10 @@ namespace BrutalCompanyMinus
         public static List<ConfigEntry<string>> eventColorHexes = new List<ConfigEntry<string>>();
         public static List<ConfigEntry<MEvent.EventType>> eventTypes = new List<ConfigEntry<MEvent.EventType>>();
         public static List<Dictionary<ScaleType, Scale>> eventScales = new List<Dictionary<ScaleType, Scale>>();
+        
+        public static List<ConfigEntry<bool>> showTip = new List<ConfigEntry<bool>>();
+        public static List<List<string>> TipsList = new List<List<string>>();
+
         public static List<ConfigEntry<bool>> eventEnables = new List<ConfigEntry<bool>>();
         public static List<List<string>> eventsToRemove = new List<List<string>>(), eventsToSpawnWith = new List<List<string>>();
         public static List<List<string>> eventAliases = new List<List<string>>();
@@ -156,6 +161,8 @@ namespace BrutalCompanyMinus
         public static ConfigEntry<string>? transmutationBlacklist;
         public static ConfigEntry<bool>? handleScanCommand;
         public static ConfigEntry<bool>? speedrunMode;
+        public static Scale EventChanceGlobal = new Scale();
+        public static ConfigEntry<float>? timeBetweenTips, InitTimePopUp;
 
 
         /*   public static ConfigEntry<bool> EnableStreamerEvents;*/
@@ -166,7 +173,6 @@ namespace BrutalCompanyMinus
             useCustomWeights = difficultyConfig.Bind("_Event Settings", "Use custom weights?", false, "'false'= Use eventType weights to set all the weights     'true'= Use custom set weights");
             eventsToSpawn = getScale(difficultyConfig.Bind("_Event Settings", "Event scale amount", "2, 0.03, 2.0, 5.0", "The base amount of events   Format: BaseScale, IncrementScale, MinCap, MaxCap,   " + scaleDescription).Value);
             weightsForExtraEvents = ParseValuesFromString(difficultyConfig.Bind("_Event Settings", "Weights for bonus events", "40, 39, 15, 5, 1", "Weights for bonus events, can be expanded. (40, 39, 15, 5, 1) is equivalent to (+0, +1, +2, +3, +4) events").Value);
-            showEventsInChat = difficultyConfig.Bind("_Event Settings", "Will Minus display events in chat?", false);
 
             eventTypeScales = new Scale[8]
             {
@@ -313,6 +319,7 @@ namespace BrutalCompanyMinus
             DisplayUIAfterShipLeaves = uiConfig.Bind("UI Options", "Display UI after ship leaves?", false, "Will only display event's after ship has left.");
             DisplayExtraPropertiesAfterShipLeaves = uiConfig.Bind("UI Options", "Display extra properties on UI after ship leaves?", true, "This will show Event Type raritys for next day and difficulty info.");
             displayEvents = uiConfig.Bind("UI Options", "Display events?", true, "Having this set to false wont show events in the UI.");
+            showEventsInChat = uiConfig.Bind("UI Options", "Will Minus display events in chat?", false);
 
             //Core Properties
             enableCustomEvents = CorePropertiesConfig.Bind("Custom Events", "Enable Custom Events?", true, "Enables custom events to be loaded from the custom events folder.");
@@ -328,11 +335,12 @@ namespace BrutalCompanyMinus
             enforceEscapeModChecks = CorePropertiesConfig.Bind("Mod Compatibility", "Enforce Escape Mod Checks?", true, "If you don't have any enemy escape mods (Starlancer AI, for example) installed, should Brutal modify spawning of certain events to prevent improper enemy AI behaviour? Disable this if you wish to run events without the safety check.");
             enableSpecialEvents = CorePropertiesConfig.Bind("Events Features", "Enable Special Events?", false, "Enables special events to be loaded.");
             enableBetaEvents = CorePropertiesConfig.Bind("Events Features", "Enable Beta Events?", false, "Enables beta events to be loaded. These events are untested and may be very buggy, use at your own risk.");
-            transmutationBlacklist = CorePropertiesConfig.Bind("Events Features", "Transmutation Blacklist", "", "Blacklist items here to prevent them from being used in scrap transmutation. Uses itemProperties.itemName Component Name.");         
+            transmutationBlacklist = CorePropertiesConfig.Bind("Events Features", "Transmutation Blacklist", "", "Blacklist items here to prevent them from being used in scrap transmutation. Uses itemProperties.itemName Component Name.");
             handleScanCommand = CorePropertiesConfig.Bind("Mod Compatibility", "Let Brutal handle the SCAN command?", true, "If enabled, Brutal will handle the scan command with accurate scrap values to its modifiers. If you have other mods that handle this feature, disable it. Please note, if disabled, the scan command will not show the proper values for scrap value.");
             speedrunMode = CorePropertiesConfig.Bind("Events Features", "Enable Speedrun Mode?", false, "If enabled, Brutal will adjust certain events and features to be suited for speedrunning. I recommend keeping this off unless you are actively speedrunning the game.");
-
-
+            EventChanceGlobal = getScale(CorePropertiesConfig.Bind("Events Features", "Chance of Events Occurring", "100, 0.0, 100, 100", "Chance of events occurring per day. " + scaleDescription).Value);
+            InitTimePopUp = CorePropertiesConfig.Bind("Events Features", "Initial Time PopUp", 15.0f, "Time of initial popup of tips.");
+            timeBetweenTips = CorePropertiesConfig.Bind("Events Features", "Time between tips", 5.0f, "Time in between tips messages in seconds.");
 
             //Custom Events Folder
             try
@@ -362,6 +370,10 @@ namespace BrutalCompanyMinus
                     eventDescriptions.Add(ListToDescriptions(toConfig.Bind(e.Name(), "Descriptions", StringsToList(e.Descriptions, "|"), "Seperated by |").Value));
                     eventColorHexes.Add(toConfig.Bind(e.Name(), "Color Hex", e.ColorHex));
                     eventTypes.Add(toConfig.Bind(e.Name(), "Event Type", e.Type));
+
+                    showTip.Add(toConfig.Bind(e.Name(), "Show Tip?", e.showTip, "Setting this to true will show tips."));
+                    TipsList.Add(ListToDescriptions(toConfig.Bind(e.Name(), "Tip Messages", StringsToList(e.TipMessages, "|"), "Seperated by |").Value));
+
                     eventEnables.Add(toConfig.Bind(e.Name(), "Event Enabled?", e.Enabled, "Setting this to false will stop the event from occuring.")); // Normal event
 
                     // Make scale list
@@ -523,6 +535,8 @@ namespace BrutalCompanyMinus
                 EventManager.events[i].ColorHex = eventColorHexes[i].Value;
                 EventManager.events[i].Type = eventTypes[i].Value;
                 EventManager.events[i].ScaleList = eventScales[i];
+                EventManager.events[i].showTip = showTip[i].Value;
+                EventManager.events[i].TipMessages = TipsList[i];
                 EventManager.events[i].Enabled = eventEnables[i].Value;
                 EventManager.events[i].EventsToRemove = eventsToRemove[i];
                 EventManager.events[i].EventsToSpawnWith = eventsToSpawnWith[i];

@@ -3,6 +3,7 @@ using BepInEx.Configuration;
 using BrutalCompanyMinus.Minus.Handlers;
 using HarmonyLib;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -830,6 +831,9 @@ namespace BrutalCompanyMinus.Minus
 
             bool skipEventActivation = IsIgnoredMoon(newLevel.PlanetName);
 
+            //It looks like this is a mistake to have a second check, but its here for the Event Chance feature.
+            skipEventActivation = !DoesEventsRunByChance();
+
             if (Configuration.DisableAllEvents.Value)
             {
                 Log.LogInfo("All events are disabled. Skipping event activation.");
@@ -878,6 +882,8 @@ namespace BrutalCompanyMinus.Minus
                     HUDManager.Instance.AddTextToChatOnServer(eventDescription);
                 }
             }
+
+            HUDManager.Instance.StartCoroutine(EventTips(currentEvents));
 
             // Apply maxPower counts
             RoundManager.Instance.currentLevel.maxEnemyPowerCount = (int)((RoundManager.Instance.currentLevel.maxEnemyPowerCount + Manager.bonusMaxInsidePowerCount) * Manager.spawncapMultipler);
@@ -954,6 +960,33 @@ namespace BrutalCompanyMinus.Minus
 
         }
 
+        internal static IEnumerator EventTips(List<MEvent> events)
+        {
+            yield return new WaitForSeconds(Mathf.Abs(Configuration.InitTimePopUp.Value));
+            foreach (MEvent e in events)
+            {
+                if (e.showTip && e.TipMessages.Count > 0)
+                {
+                    if (e.Type == MEvent.EventType.VeryBad || e.Type == MEvent.EventType.Insane || e.Type == MEvent.EventType.Bad)
+                    {
+                        HUDManager.Instance.DisplayTip("WARNING", e.TipMessages[UnityEngine.Random.Range(0, e.TipMessages.Count)], true);
+                    }
+                    else
+                    {
+                        HUDManager.Instance.DisplayTip("ALERT", e.TipMessages[UnityEngine.Random.Range(0, e.TipMessages.Count)], false);
+
+                    }
+
+                    HUDManager.Instance.UIAudio.PlayOneShot(
+                            HUDManager.Instance.radiationWarningAudio,
+                            1f
+                        );
+
+                    yield return new WaitForSeconds(Mathf.Abs(Configuration.timeBetweenTips.Value));
+                }
+            }
+        }
+
         /// <summary>
         /// Check if moon is ignored from events
         /// </summary>
@@ -985,6 +1018,13 @@ namespace BrutalCompanyMinus.Minus
             }
 
             return skipEventActivation;
+        }
+
+        internal static bool DoesEventsRunByChance()
+        {
+            float chanceByConfig = Mathf.Clamp(MEvent.Scale.Compute(Configuration.EventChanceGlobal), 0f, 100f);
+            float computedChance = UnityEngine.Random.Range(0f, 100f);
+            return computedChance <= chanceByConfig;
         }
 
         /// <summary>
