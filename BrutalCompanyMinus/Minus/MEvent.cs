@@ -43,6 +43,17 @@ namespace BrutalCompanyMinus.Minus
         public bool isBetaEvent = false;
 
         /// <summary>
+        /// If true, a box ingame will come up with a random tip from TipMessages if the event pops up.
+        /// </summary>
+        public bool showTip = false;
+
+        /// <summary>
+        /// If showTip is true, these messages will be randomly chosen,
+        /// </summary>
+        public List<string> TipMessages = new List<string>() { "" };
+
+
+        /// <summary>
         /// Set scales in Initalize() and then use Getf(ScaleType) or Get(ScaleType) to compute scale in Execute(), this will also generate automatically generate in the config.
         /// </summary>
         public Dictionary<ScaleType, Scale> ScaleList = new Dictionary<ScaleType, Scale>();
