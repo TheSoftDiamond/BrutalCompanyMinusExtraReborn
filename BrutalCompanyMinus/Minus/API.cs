@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Xml.Linq;
 using UnityEngine;
 using static UnityEngine.Rendering.HighDefinition.ScalableSettingLevelParameter;
 
@@ -43,15 +45,28 @@ namespace BrutalCompanyMinus.Minus
             }
         }
 
-        //public static bool IsEventActive(string eventName)
-        //{ }
+        public static bool DoesEventExist(string name)
+        {
+            try
+            {
+                bool exists = EventManager.events.Any(x => string.Equals(x.Name(), name, StringComparison.OrdinalIgnoreCase));
+                if (!exists)
+                {
+                    Log.LogWarning($"The event with the name '{name}' does not exist.");
+                }
 
-        //public static bool DoesEventExist()
-        //{ }
+                return exists;
+            }
+            catch (Exception e)
+            {
+                Log.LogError($"Error occurred while checking if event {name} exists: {e}");
+                return false;
+            }
+        }
 
         #endregion
 
-        #region Getters
+        #region Getters (Difficulty)
 
         /// <summary>
         /// This method returns the current difficulty of the game.
@@ -163,43 +178,288 @@ namespace BrutalCompanyMinus.Minus
         }
 
         /// <summary>
-        /// This method returns the current heat difficulty.
+        /// This method returns the current heat difficulty. LevelID is optional.
         /// </summary>
         /// <returns></returns>
-        public static float GetHeatDifficulty()
+        public static float GetHeatDifficulty(int levelID = -1)
         {
             try
             {
-                int levelID = RoundManager.Instance.currentLevel.levelID;
+                if (levelID == -1)
+                {
+                    levelID = RoundManager.Instance.currentLevel.levelID;
+                }
                 return Manager.heatDifficulty.TryGetValue(levelID, out float heat) ? heat : Configuration.startingHeat.Value;
             }
             catch (Exception e)
             {
                 Log.LogError($"Error occurred while getting current heat difficulty: {e}");
                 return 0f;
+            }
+        }
+
+        #endregion
+
+        #region Getters (Events)
+
+        /// <summary>
+        /// This method returns the descriptions for a given event.
+        /// </summary>
+        /// <param name="e"></param>
+        /// <returns></returns>
+        public static List<string> GetEventDescriptions(MEvent e)
+        {
+            try
+            {
+                return e.Descriptions;
+            }
+            catch (Exception ex)
+            {
+                Log.LogError($"Error while getting event descriptions for {e?.Name()}: {ex.Message}");
+                return new List<string>();
+            }
+        }
+        
+        /// <summary>
+        /// This method returns the hex color of an event.
+        /// </summary>
+        /// <param name="e"></param>
+        /// <returns></returns>
+        public static string GetEventColorHex(MEvent e)
+        {
+            try
+            {
+                return e.ColorHex;
+            }
+            catch (Exception ex)
+            {
+                Log.LogError($"Error while getting event color hex for {e?.Name()}: {ex.Message}");
+                return "";
             }
         }
 
         /// <summary>
-        /// This method returns the heat difficulty of a level by its ID.
+        /// This method eturns the event's weight
         /// </summary>
-        /// <param name="levelID"></param>
+        /// <param name="e"></param>
         /// <returns></returns>
-        public static float GetHeatDifficultyByID(int levelID)
+        public static int GetEventWeight(MEvent e)
         {
             try
             {
-                return Manager.heatDifficulty.TryGetValue(levelID, out float heat) ? heat : Configuration.startingHeat.Value;
+                return e.Weight;
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Log.LogError($"Error occurred while getting current heat difficulty: {e}");
-                return 0f;
+                Log.LogError($"Error while getting event weight for {e?.Name()}: {ex.Message}");
+                return 0;
+            }
+        }
+
+        /// <summary>
+        /// This method returns the event's event type.
+        /// </summary>
+        /// <param name="e"></param>
+        /// <returns></returns>
+        public static string GetEventType(MEvent e)
+        {
+            try
+            {
+                return e.Type.ToString();
+            }
+            catch (Exception ex)
+            {
+                Log.LogError($"Error while getting event type for {e?.Name()}: {ex.Message}");
+                return "";
+            }
+        }
+
+        /// <summary>
+        /// This method checks if an event is enabled or not.
+        /// </summary>
+        /// <param name="e"></param>
+        /// <returns></returns>
+        public static bool IsEventEnabled(MEvent e)
+        {
+            try
+            {
+                return e.Enabled;
+            }
+            catch (Exception ex)
+            {
+                Log.LogError($"Error while getting event enabled status for {e?.Name()}: {ex.Message}");
+                return false;
             }
         }
 
 
+        /// <summary>
+        /// This method checks if an event is a special event.
+        /// </summary>
+        /// <param name="e"></param>
+        /// <returns></returns>
+        public static bool IsEventSpecial(MEvent e)
+        {
+            try
+            {
+                return e.isSpecialEvent;
+            }
+            catch (Exception ex)
+            {
+                Log.LogError($"Error while getting event special status for {e?.Name()}: {ex.Message}");
+                return false;
+            }
+        }
 
+        /// <summary>
+        /// This method checks if an event is a beta event.
+        /// </summary>
+        /// <param name="e"></param>
+        /// <returns></returns>
+        public static bool IsEventBeta(MEvent e)
+        {
+            try
+            {
+                return e.isBetaEvent;
+            }
+            catch (Exception ex)
+            {
+                Log.LogError($"Error while getting event beta status for {e?.Name()}: {ex.Message}");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// This method checks if an event is currently active. Used for monobehavior behaviors.
+        /// </summary>
+        /// <param name="e"></param>
+        /// <returns></returns>
+        public static bool IsEventActive(MEvent e)
+        {
+            try
+            {
+                return e.Active; //Where applicable
+            }
+            catch (Exception ex)
+            {
+                Log.LogError($"Error while getting event active status for {e?.Name()}: {ex.Message}");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// This method checks if an event has been executed. 
+        /// </summary>
+        /// <param name="e"></param>
+        /// <returns></returns>
+        public static bool IsEventExecuted(MEvent e)
+        {
+            try
+            {
+                return e.Executed; //Where applicable
+            }
+            catch (Exception ex)
+            {
+                Log.LogError($"Error while getting event executed status for {e?.Name()}: {ex.Message}");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// This method returns the list of events that will be removed when the event in question is spawned.
+        /// </summary>
+        /// <param name="e"></param>
+        /// <returns></returns>
+        public static List<string> GetEventsToRemove(MEvent e)
+        {
+            try
+            {
+                return e.EventsToRemove;
+            }
+            catch (Exception ex)
+            {
+                Log.LogError($"Error while getting events to remove for {e?.Name()}: {ex.Message}");
+                return new List<string>();
+            }
+        }
+
+        /// <summary>
+        /// This method returns the list of events that will be spawned alongside the event in question.
+        /// </summary>
+        /// <param name="e"></param>
+        /// <returns></returns>
+        public static List<string> GetEventsToAdd(MEvent e)
+        {
+            try
+            {
+                return e.EventsToSpawnWith;
+            }
+            catch (Exception ex)
+            {
+                Log.LogError($"Error while getting events to remove for {e?.Name()}: {ex.Message}");
+                return new List<string>();
+            }
+        }
+
+        /// <summary>
+        /// This method checks if an event is safe for speedrunning.
+        /// </summary>
+        /// <param name="e"></param>
+        /// <returns></returns>
+        public static bool IsEventSpeedRunSafe(MEvent e)
+        {
+            try
+            {
+                return e.SpeedRunSafe;
+            }
+            catch (Exception ex)
+            {
+                Log.LogError($"Error while getting event speedrun safe status for {e?.Name()}: {ex.Message}");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Grab the aliases of an event.
+        /// </summary>
+        /// <param name="e"></param>
+        /// <returns></returns>
+        public static List<string> GetEventAliases(MEvent e)
+        {
+            try
+            {
+                return e.Aliases;
+            }
+            catch (Exception ex)
+            {
+                Log.LogError($"Error while getting event aliases for {e?.Name()}: {ex.Message}");
+                return new List<string>();
+            }
+        }
+
+        public static bool isEventOnWhitelist(MEvent e)
+        {
+            return EventManager.IsEventOnMoonWhitelist(e);
+        }
+
+        public static bool isEventOnBlacklist(MEvent e)
+        {
+            return EventManager.IsIgnoredEventByMoonBlacklist(e);
+        }
+
+        public static bool isMoonIgnored(string moonName)
+        {
+            return EventManager.IsIgnoredMoon(moonName);
+        }
+
+        #endregion
+
+        #region Setters
+
+        //public static void SetHeatDifficulty(float heat, int levelID = -1)
+        //{ 
+        //
+        //}
 
         #endregion
     }
