@@ -52,6 +52,15 @@ namespace BrutalCompanyMinus.Minus
         /// </summary>
         public List<string> TipMessages = new List<string>() { "" };
 
+        /// <summary>
+        /// If show tip is true, this will be the title of the tip box.
+        /// </summary>
+        public List<string> TipTitle = new List<string>() { "" };
+
+        /// <summary>
+        /// If true, this will be an warning message (Red), otherwise appears yellow.
+        /// </summary>
+        public bool isWarning = true;
 
         /// <summary>
         /// Set scales in Initalize() and then use Getf(ScaleType) or Get(ScaleType) to compute scale in Execute(), this will also generate automatically generate in the config.
