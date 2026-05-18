@@ -35,6 +35,8 @@ namespace BrutalCompanyMinus
         
         public static List<ConfigEntry<bool>> showTip = new List<ConfigEntry<bool>>();
         public static List<List<string>> TipsList = new List<List<string>>();
+        public static List<List<string>> TipsTitles = new List<List<string>>();
+        public static List<ConfigEntry<bool>> TipIsWarning = new List<ConfigEntry<bool>>();
 
         public static List<ConfigEntry<bool>> eventEnables = new List<ConfigEntry<bool>>();
         public static List<List<string>> eventsToRemove = new List<List<string>>(), eventsToSpawnWith = new List<List<string>>();
@@ -57,7 +59,7 @@ namespace BrutalCompanyMinus
         public static ConfigEntry<string>? MoonsToIgnore;
         public static Scale factorySizeMultiplier = new Scale();
 
-        public static EventManager.DifficultyTransition[] difficultyTransitions;
+        public static EventManager.DifficultyTransition[]? difficultyTransitions;
         public static ConfigEntry<bool>? enableQuotaChanges;
         public static ConfigEntry<int>? deadLineDaysAmount, startingCredits, startingQuota, baseIncrease, increaseSteepness;
         public static Scale
@@ -80,7 +82,7 @@ namespace BrutalCompanyMinus
         public static ConfigEntry<float>? daysPassedDifficultyMultiplier, daysPassedDifficultyCap, scrapInShipDifficultyMultiplier, scrapInShipDifficultyCap, quotaDifficultyMultiplier, quotaDifficultyCap;
         public static Dictionary<string, float> gradeAdditives = new Dictionary<string, float>();
         public static Dictionary<LevelWeatherType, float> weatherAdditives = new Dictionary<LevelWeatherType, float>();
-        public static ConfigEntry<bool> enableCustomTimeAdjustments;
+        public static ConfigEntry<bool>? enableCustomTimeAdjustments;
         public static Scale timeScaling = new Scale();
         public static Scale startingTime = new Scale();
 
@@ -372,7 +374,10 @@ namespace BrutalCompanyMinus
                     eventTypes.Add(toConfig.Bind(e.Name(), "Event Type", e.Type));
 
                     showTip.Add(toConfig.Bind(e.Name(), "Show Tip?", e.showTip, "Setting this to true will show tips."));
+                    TipsTitles.Add(ListToDescriptions(toConfig.Bind(e.Name(), "Tip Titles", StringsToList(e.TipTitle, "|"), "Seperated by |").Value));
                     TipsList.Add(ListToDescriptions(toConfig.Bind(e.Name(), "Tip Messages", StringsToList(e.TipMessages, "|"), "Seperated by |").Value));
+                    TipIsWarning.Add(toConfig.Bind(e.Name(), "Is Tip A Warning?", e.isWarning, "Setting this to true will make it appear as an red warning. If false, will appear yellow."));
+
 
                     eventEnables.Add(toConfig.Bind(e.Name(), "Event Enabled?", e.Enabled, "Setting this to false will stop the event from occuring.")); // Normal event
 
@@ -536,6 +541,8 @@ namespace BrutalCompanyMinus
                 EventManager.events[i].Type = eventTypes[i].Value;
                 EventManager.events[i].ScaleList = eventScales[i];
                 EventManager.events[i].showTip = showTip[i].Value;
+                EventManager.events[i].isWarning = TipIsWarning[i].Value;
+                EventManager.events[i].TipTitle = TipsTitles[i];
                 EventManager.events[i].TipMessages = TipsList[i];
                 EventManager.events[i].Enabled = eventEnables[i].Value;
                 EventManager.events[i].EventsToRemove = eventsToRemove[i];
