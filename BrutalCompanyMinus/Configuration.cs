@@ -37,6 +37,7 @@ namespace BrutalCompanyMinus
         public static List<List<string>> TipsList = new List<List<string>>();
         public static List<List<string>> TipsTitles = new List<List<string>>();
         public static List<ConfigEntry<bool>> TipIsWarning = new List<ConfigEntry<bool>>();
+        public static List<ConfigEntry<bool>> playAnyAudio = new List<ConfigEntry<bool>>();
 
         public static List<ConfigEntry<bool>> eventEnables = new List<ConfigEntry<bool>>();
         public static List<List<string>> eventsToRemove = new List<List<string>>(), eventsToSpawnWith = new List<List<string>>();
@@ -377,7 +378,7 @@ namespace BrutalCompanyMinus
                     TipsTitles.Add(ListToDescriptions(toConfig.Bind(e.Name(), "Tip Titles", StringsToList(e.TipTitle, "|"), "Seperated by |").Value));
                     TipsList.Add(ListToDescriptions(toConfig.Bind(e.Name(), "Tip Messages", StringsToList(e.TipMessages, "|"), "Seperated by |").Value));
                     TipIsWarning.Add(toConfig.Bind(e.Name(), "Is Tip A Warning?", e.isWarning, "Setting this to true will make it appear as an red warning. If false, will appear yellow."));
-
+                    playAnyAudio.Add(toConfig.Bind(e.Name(), "Play Audio on Tips", e.playAudio, "Setting this to true will play audio when a tip occurs."));
 
                     eventEnables.Add(toConfig.Bind(e.Name(), "Event Enabled?", e.Enabled, "Setting this to false will stop the event from occuring.")); // Normal event
 
@@ -542,6 +543,7 @@ namespace BrutalCompanyMinus
                 EventManager.events[i].ScaleList = eventScales[i];
                 EventManager.events[i].showTip = showTip[i].Value;
                 EventManager.events[i].isWarning = TipIsWarning[i].Value;
+                EventManager.events[i].playAudio = playAnyAudio[i].Value;
                 EventManager.events[i].TipTitle = TipsTitles[i];
                 EventManager.events[i].TipMessages = TipsList[i];
                 EventManager.events[i].Enabled = eventEnables[i].Value;

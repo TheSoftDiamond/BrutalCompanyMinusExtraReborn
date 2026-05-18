@@ -969,10 +969,14 @@ namespace BrutalCompanyMinus.Minus
                 {
                     HUDManager.Instance.DisplayTip(e.TipTitle[UnityEngine.Random.Range(0, e.TipTitle.Count)], e.TipMessages[UnityEngine.Random.Range(0, e.TipMessages.Count)], e.isWarning);
 
-                    HUDManager.Instance.UIAudio.PlayOneShot(
-                            HUDManager.Instance.radiationWarningAudio,
-                            1f
-                        );
+                    if (e.playAudio)
+                    {
+                        HUDManager.Instance.UIAudio.PlayOneShot(
+                                HUDManager.Instance.radiationWarningAudio,
+                                1f
+                            );
+                    }
+
 
                     yield return new WaitForSeconds(Mathf.Abs(Configuration.timeBetweenTips.Value));
                 }

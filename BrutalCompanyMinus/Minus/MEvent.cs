@@ -63,6 +63,11 @@ namespace BrutalCompanyMinus.Minus
         public bool isWarning = true;
 
         /// <summary>
+        /// If true, the event will play a sound with the tips.
+        /// </summary>
+        public bool playAudio = false;
+
+        /// <summary>
         /// Set scales in Initalize() and then use Getf(ScaleType) or Get(ScaleType) to compute scale in Execute(), this will also generate automatically generate in the config.
         /// </summary>
         public Dictionary<ScaleType, Scale> ScaleList = new Dictionary<ScaleType, Scale>();
