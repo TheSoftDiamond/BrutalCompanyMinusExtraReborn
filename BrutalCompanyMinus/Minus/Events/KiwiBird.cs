@@ -24,18 +24,11 @@ namespace BrutalCompanyMinus.Minus.Events
             ColorHex = "#800000";
             Type = EventType.VeryBad;
             isSpecialEvent = true;
-            isBetaEvent = true;
+            isBetaEvent = false;
         }
 
         public override void Execute()
         {
-            if (Configuration.enforceEscapeModChecks.Value && !Compatibility.StarLancereNemyEscapePresent)
-            {
-                Instance.monstersToSpawn[0].minInside = new Scale(0f, 0f, 0f, 0f);
-                Instance.monstersToSpawn[0].maxInside = new Scale(0f, 0f, 0f, 0f);
-                Instance.monstersToSpawn[0].insideSpawnRarity = new Scale(0f, 0f, 0f, 0f);
-            }
-
             // I hate this method used to spawn the Giant Kiwi Bird but it somehow works.
             GameObject hangarShip = Assets.hangarShip;
             if (hangarShip == null)
