@@ -965,17 +965,9 @@ namespace BrutalCompanyMinus.Minus
             yield return new WaitForSeconds(Mathf.Abs(Configuration.InitTimePopUp.Value));
             foreach (MEvent e in events)
             {
-                if (e.showTip && e.TipMessages.Count > 0)
+                if (e.showTip && e.TipMessages.Count > 0 && e.TipTitle.Count > 0)
                 {
-                    if (e.Type == MEvent.EventType.VeryBad || e.Type == MEvent.EventType.Insane || e.Type == MEvent.EventType.Bad)
-                    {
-                        HUDManager.Instance.DisplayTip("WARNING", e.TipMessages[UnityEngine.Random.Range(0, e.TipMessages.Count)], true);
-                    }
-                    else
-                    {
-                        HUDManager.Instance.DisplayTip("ALERT", e.TipMessages[UnityEngine.Random.Range(0, e.TipMessages.Count)], false);
-
-                    }
+                    HUDManager.Instance.DisplayTip(e.TipTitle[UnityEngine.Random.Range(0, e.TipTitle.Count)], e.TipMessages[UnityEngine.Random.Range(0, e.TipMessages.Count)], e.isWarning);
 
                     HUDManager.Instance.UIAudio.PlayOneShot(
                             HUDManager.Instance.radiationWarningAudio,
