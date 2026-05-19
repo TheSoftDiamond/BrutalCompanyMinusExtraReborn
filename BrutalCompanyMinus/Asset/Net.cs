@@ -417,6 +417,38 @@ namespace BrutalCompanyMinus
         }
 
         [ServerRpc(RequireOwnership = false)]
+        public void LockAndCloseAllDoorsServerRpc()
+        {
+            TerminalAccessibleObject[] doors = GameObject.FindObjectsOfType<TerminalAccessibleObject>();
+
+            foreach (TerminalAccessibleObject door in doors) door.SetDoorOpenServerRpc(false);
+
+            LockAndCloseAllDoorsClientRpc();
+        }
+
+        [ClientRpc]
+        public void LockAndCloseAllDoorsClientRpc()
+        {
+            DoorLock[] doors = GameObject.FindObjectsOfType<DoorLock>();
+
+            foreach (DoorLock door in doors)
+            {
+                if (door == null) continue;
+
+                if (door.isDoorOpened)
+                {
+                    door.isDoorOpened = false;
+                    door.SetDoorAsOpen(false);
+                }
+
+                door.gameObject.GetComponent<AnimatedObjectTrigger>().TriggerAnimationNonPlayer(false, true);
+                //door.SetDoorAsOpen(false);
+
+                if (!door.isLocked) door.LockDoor();
+            }
+        }
+
+        [ServerRpc(RequireOwnership = false)]
         public void SpawnMudPilesOutsideServerRpc(int amount)
         {
             NavMeshHit hit = default(NavMeshHit);
