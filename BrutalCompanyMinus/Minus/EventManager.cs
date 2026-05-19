@@ -160,6 +160,7 @@ namespace BrutalCompanyMinus.Minus
             new Events.Hell(),
             new Events.TimeChaos(),// Requires Special Events
             new Events.NutSlayersMore(),
+            new Events.LockedDoors(),// Requires Special Events
             // No Enemy
             new Events.NoBaboons(),
             new Events.NoBracken(),
@@ -301,6 +302,8 @@ namespace BrutalCompanyMinus.Minus
         internal static List<MEvent> allVeryGood = new List<MEvent>(), allGood = new List<MEvent>(), allNeutral = new List<MEvent>(), allBad = new List<MEvent>(), allVeryBad = new List<MEvent>(), allRemove = new List<MEvent>(), allInsane = new List<MEvent>(), allRare = new List<MEvent>(), allSpecial = new List<MEvent>(), allBeta = new List<MEvent>();
 
         internal static List<MEvent> sideEvents = new List<MEvent>();
+
+        private static List<MEvent> tipEventsToDo = new List<MEvent>();
 
         //internal static List<CustomEvents> customEventsList = new List<CustomEvents>();
 
@@ -883,7 +886,11 @@ namespace BrutalCompanyMinus.Minus
                 }
             }
 
-            HUDManager.Instance.StartCoroutine(EventTips(currentEvents));
+            if (tipEventsToDo.Count > 0)
+            { 
+                tipEventsToDo.Clear();
+            }
+            tipEventsToDo.AddRange(currentEvents);
 
             // Apply maxPower counts
             RoundManager.Instance.currentLevel.maxEnemyPowerCount = (int)((RoundManager.Instance.currentLevel.maxEnemyPowerCount + Manager.bonusMaxInsidePowerCount) * Manager.spawncapMultipler);
@@ -960,6 +967,13 @@ namespace BrutalCompanyMinus.Minus
 
         }
 
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(RoundManager), "RefreshEnemiesList")]
+        private static void OnRefreshEnemiesList()
+        {
+            HUDManager.Instance.StartCoroutine(EventTips(tipEventsToDo));
+        }
+
         internal static IEnumerator EventTips(List<MEvent> events)
         {
             yield return new WaitForSeconds(Mathf.Abs(Configuration.InitTimePopUp.Value));
@@ -969,18 +983,11 @@ namespace BrutalCompanyMinus.Minus
                 {
                     HUDManager.Instance.DisplayTip(e.TipTitle[UnityEngine.Random.Range(0, e.TipTitle.Count)], e.TipMessages[UnityEngine.Random.Range(0, e.TipMessages.Count)], e.isWarning);
 
-                    if (e.playAudio)
-                    {
-                        HUDManager.Instance.UIAudio.PlayOneShot(
-                                HUDManager.Instance.radiationWarningAudio,
-                                1f
-                            );
-                    }
-
-
                     yield return new WaitForSeconds(Mathf.Abs(Configuration.timeBetweenTips.Value));
                 }
             }
+
+            EventManager.tipEventsToDo.Clear();
         }
 
         /// <summary>
