@@ -37,7 +37,6 @@ namespace BrutalCompanyMinus
         public static List<List<string>> TipsList = new List<List<string>>();
         public static List<List<string>> TipsTitles = new List<List<string>>();
         public static List<ConfigEntry<bool>> TipIsWarning = new List<ConfigEntry<bool>>();
-        public static List<ConfigEntry<bool>> playAnyAudio = new List<ConfigEntry<bool>>();
 
         public static List<ConfigEntry<bool>> eventEnables = new List<ConfigEntry<bool>>();
         public static List<List<string>> eventsToRemove = new List<List<string>>(), eventsToSpawnWith = new List<List<string>>();
@@ -342,7 +341,7 @@ namespace BrutalCompanyMinus
             handleScanCommand = CorePropertiesConfig.Bind("Mod Compatibility", "Let Brutal handle the SCAN command?", true, "If enabled, Brutal will handle the scan command with accurate scrap values to its modifiers. If you have other mods that handle this feature, disable it. Please note, if disabled, the scan command will not show the proper values for scrap value.");
             speedrunMode = CorePropertiesConfig.Bind("Events Features", "Enable Speedrun Mode?", false, "If enabled, Brutal will adjust certain events and features to be suited for speedrunning. I recommend keeping this off unless you are actively speedrunning the game.");
             EventChanceGlobal = getScale(CorePropertiesConfig.Bind("Events Features", "Chance of Events Occurring", "100, 0.0, 100, 100", "Chance of events occurring per day. " + scaleDescription).Value);
-            InitTimePopUp = CorePropertiesConfig.Bind("Events Features", "Initial Time PopUp", 15.0f, "Time of initial popup of tips.");
+            InitTimePopUp = CorePropertiesConfig.Bind("Events Features", "Initial Time PopUp", 5.0f, "Time of initial popup of tips.");
             timeBetweenTips = CorePropertiesConfig.Bind("Events Features", "Time between tips", 5.0f, "Time in between tips messages in seconds.");
 
             //Custom Events Folder
@@ -378,8 +377,6 @@ namespace BrutalCompanyMinus
                     TipsTitles.Add(ListToDescriptions(toConfig.Bind(e.Name(), "Tip Titles", StringsToList(e.TipTitle, "|"), "Seperated by |").Value));
                     TipsList.Add(ListToDescriptions(toConfig.Bind(e.Name(), "Tip Messages", StringsToList(e.TipMessages, "|"), "Seperated by |").Value));
                     TipIsWarning.Add(toConfig.Bind(e.Name(), "Is Tip A Warning?", e.isWarning, "Setting this to true will make it appear as an red warning. If false, will appear yellow."));
-                    playAnyAudio.Add(toConfig.Bind(e.Name(), "Play Audio on Tips", e.playAudio, "Setting this to true will play audio when a tip occurs."));
-
                     eventEnables.Add(toConfig.Bind(e.Name(), "Event Enabled?", e.Enabled, "Setting this to false will stop the event from occuring.")); // Normal event
 
                     // Make scale list
@@ -543,7 +540,6 @@ namespace BrutalCompanyMinus
                 EventManager.events[i].ScaleList = eventScales[i];
                 EventManager.events[i].showTip = showTip[i].Value;
                 EventManager.events[i].isWarning = TipIsWarning[i].Value;
-                EventManager.events[i].playAudio = playAnyAudio[i].Value;
                 EventManager.events[i].TipTitle = TipsTitles[i];
                 EventManager.events[i].TipMessages = TipsList[i];
                 EventManager.events[i].Enabled = eventEnables[i].Value;
