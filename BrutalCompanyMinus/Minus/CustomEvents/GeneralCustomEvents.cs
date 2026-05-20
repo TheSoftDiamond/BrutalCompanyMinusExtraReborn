@@ -37,6 +37,11 @@ namespace BrutalCompanyMinus.Minus.CustomEvents
                 ColorHex = eventData.Color;
                 Descriptions = eventData.Descriptions;
                 Enabled = eventData.Enabled;
+                showTip = eventData.showTip;
+                isWarning = eventData.isWarning;
+                MoonMode = eventData.MoonMode;
+                isSpecialEvent = eventData.isSpecialEvent;
+                isBetaEvent = eventData.isBetaEvent;
 
                 SanitizeName();
 
@@ -118,6 +123,26 @@ namespace BrutalCompanyMinus.Minus.CustomEvents
                 if (eventData.MoonBlacklist != null && eventData.MoonBlacklist.Count > 0)
                 {
                     Blacklist = eventData.MoonBlacklist;
+                }
+
+                if (eventData.MoonWhitelist != null && eventData.MoonWhitelist.Count > 0)
+                {
+                    Whitelist = eventData.MoonWhitelist;
+                }
+
+                if (eventData.TipMessages != null && eventData.TipMessages.Count > 0)
+                {
+                    TipMessages = eventData.TipMessages;
+                }
+
+                if (eventData.TipTitle != null && eventData.TipTitle.Count > 0)
+                {
+                    TipTitle = eventData.TipTitle;
+                }
+
+                if (eventData.Aliases != null && eventData.Aliases.Count > 0)
+                {
+                    Aliases = eventData.Aliases;
                 }
 
                 Log.LogInfo($"{name} event initialized");

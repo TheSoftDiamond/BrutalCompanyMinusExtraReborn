@@ -981,6 +981,7 @@ namespace BrutalCompanyMinus.Minus
             {
                 if (e.showTip && e.TipMessages.Count > 0 && e.TipTitle.Count > 0)
                 {
+
                     HUDManager.Instance.DisplayTip(e.TipTitle[UnityEngine.Random.Range(0, e.TipTitle.Count)], e.TipMessages[UnityEngine.Random.Range(0, e.TipMessages.Count)], e.isWarning);
 
                     yield return new WaitForSeconds(Mathf.Abs(Configuration.timeBetweenTips.Value));
