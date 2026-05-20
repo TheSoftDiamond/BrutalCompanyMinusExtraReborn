@@ -25,6 +25,9 @@ namespace BrutalCompanyMinus.Minus.Events
             Type = EventType.Rare;
             isBetaEvent = true;
 
+            ScaleList.Add(ScaleType.ScrapValue, new Scale(1.35f, 0.0115f, 1.35f, 2.5f));
+            ScaleList.Add(ScaleType.ScrapAmount, new Scale(1.35f, 0.0115f, 1.35f, 2.5f));
+
             EventsToRemove = new List<string>() { nameof(Clock), nameof(ControlPad), nameof(Dentures), nameof(Dustpans), nameof(FootballScrap), nameof(EasterEggs), nameof(GarbageLid), nameof(GoldenBars), nameof(GoldenFacility), nameof(Honk), nameof(HolidaySeason), nameof(MaskItem), nameof(SeveredBits), nameof(SussyPaintings), nameof(ToiletPaper), nameof(Train), nameof(ZedDog), nameof(CityOfGold), nameof(Bellcrab), nameof(Dice), nameof(BadDice), nameof(TakeyGokuBracken), nameof(TakeyGokuPlush), nameof(TakeyGokuPlushBig), nameof(TakeyPlush), nameof(Pickles) };
         }
 
@@ -65,6 +68,9 @@ namespace BrutalCompanyMinus.Minus.Events
             new Scale(1.0f, 1.0f, 1.0f, 1.0f),
             new SpawnableItemWithRarity(Assets.GetItem(chosenScrap), 100)
             );
+
+            Manager.scrapValueMultiplier *= Getf(ScaleType.ScrapValue);
+            Manager.scrapAmountMultiplier *= Getf(ScaleType.ScrapAmount);
 
             scrapTransmutationEvent.Execute();
         }
