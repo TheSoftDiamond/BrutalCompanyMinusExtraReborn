@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using HarmonyLib;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -33,17 +34,24 @@ namespace BrutalCompanyMinus.Minus.Events
 
         public override void Execute()
         {
-            RoundManager.Instance.currentLevel.spawnableMapObjects = RoundManager.Instance.currentLevel.spawnableMapObjects.Add(new SpawnableMapObject()
+            var landmine = new IndoorMapHazard()
             {
-                prefabToSpawn = Assets.GetObject(Assets.ObjectName.Landmine),
-                numberToSpawn = new AnimationCurve(new Keyframe(Getf(ScaleType.MinPercentSelected), Get(ScaleType.MinAmount)), new Keyframe(Getf(ScaleType.MaxPercentSelected), Get(ScaleType.MaxAmount))),
-                spawnFacingAwayFromWall = false,
-                spawnFacingWall = false,
-                spawnWithBackToWall = false,
-                spawnWithBackFlushAgainstWall = false,
-                requireDistanceBetweenSpawns = false,
-                disallowSpawningNearEntrances = false
-            });
+                hazardType = new IndoorMapHazardType()
+                {
+                    prefabToSpawn = Assets.GetObject(Assets.ObjectName.Landmine),
+                    spawnFacingAwayFromWall = true,
+                    spawnFacingWall = false,
+                    spawnWithBackToWall = false,
+                    spawnWithBackFlushAgainstWall = false,
+                    requireDistanceBetweenSpawns = false,
+                    disallowSpawningNearEntrances = false
+                },
+                numberToSpawn = new AnimationCurve(new Keyframe(Getf(ScaleType.MinPercentSelected), Get(ScaleType.MinAmount)), new Keyframe(Getf(ScaleType.MaxPercentSelected), Get(ScaleType.MaxAmount)))
+            };
+
+            EventManager.hazards.Add(landmine);
+
+            RoundManager.Instance.currentLevel.indoorMapHazards = RoundManager.Instance.currentLevel.indoorMapHazards.AddToArray(landmine);
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using HarmonyLib;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -34,17 +35,25 @@ namespace BrutalCompanyMinus.Minus.Events
         public override void Execute()
         {
             Active = true;
-            RoundManager.Instance.currentLevel.spawnableMapObjects = RoundManager.Instance.currentLevel.spawnableMapObjects.Add(new SpawnableMapObject()
+
+            var turret = new IndoorMapHazard()
             {
-                prefabToSpawn = Assets.GetObject(Assets.ObjectName.Turret),
-                numberToSpawn = new AnimationCurve(new Keyframe(0f, Get(ScaleType.MinAmount)), new Keyframe(1f, Get(ScaleType.MaxAmount))),
-                spawnFacingAwayFromWall = true,
-                spawnFacingWall = false,
-                spawnWithBackToWall = false,
-                spawnWithBackFlushAgainstWall = false,
-                requireDistanceBetweenSpawns = false,
-                disallowSpawningNearEntrances = false
-            });
+                hazardType = new IndoorMapHazardType()
+                {
+                    prefabToSpawn = Assets.GetObject(Assets.ObjectName.Turret),
+                    spawnFacingAwayFromWall = true,
+                    spawnFacingWall = false,
+                    spawnWithBackToWall = false,
+                    spawnWithBackFlushAgainstWall = false,
+                    requireDistanceBetweenSpawns = false,
+                    disallowSpawningNearEntrances = false
+                },
+                numberToSpawn = new AnimationCurve(new Keyframe(0f, Get(ScaleType.MinAmount)), new Keyframe(1f, Get(ScaleType.MaxAmount)))
+            };
+
+            EventManager.hazards.Add(turret);
+
+            RoundManager.Instance.currentLevel.indoorMapHazards = RoundManager.Instance.currentLevel.indoorMapHazards.AddToArray(turret);
         }
 
         public override void OnShipLeave() => Active = false;
