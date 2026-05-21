@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
+using com.github.zehsteam.TakeyPlush;
 using UnityEngine;
 using static UnityEngine.Rendering.HighDefinition.ScalableSettingLevelParameter;
 
@@ -21,6 +22,9 @@ namespace BrutalCompanyMinus.Minus
             try
             {
                 SelectableLevel newLevel = Manager.currentLevel;
+
+                EventManager.FixHazardsOnLeave();
+
                 EventManager.ModifyLevel(ref newLevel);
             }
             catch (Exception e)
@@ -202,6 +206,11 @@ namespace BrutalCompanyMinus.Minus
 
         #region Getters (Events)
 
+        public static MEvent GetEventsByName(string names)
+        {
+            return EventManager.events.FirstOrDefault(x => string.Equals(x.Name(), names, StringComparison.OrdinalIgnoreCase));
+        }
+
         /// <summary>
         /// This method returns the descriptions for a given event.
         /// </summary>
@@ -219,7 +228,21 @@ namespace BrutalCompanyMinus.Minus
                 return new List<string>();
             }
         }
-        
+
+        public static List<string> GetEventDescriptions(string thisEvent)
+        {
+            try
+            {
+                MEvent e = GetEventsByName(thisEvent);
+                return e?.Descriptions ?? new List<string>();
+            }
+            catch (Exception ex)
+            {
+                Log.LogError($"Error while getting event descriptions for {thisEvent}: {ex.Message}");
+                return new List<string>();
+            }
+        }
+
         /// <summary>
         /// This method returns the hex color of an event.
         /// </summary>
@@ -234,6 +257,20 @@ namespace BrutalCompanyMinus.Minus
             catch (Exception ex)
             {
                 Log.LogError($"Error while getting event color hex for {e?.Name()}: {ex.Message}");
+                return "";
+            }
+        }
+
+        public static string GetEventColorHex(string thisEvent)
+        {
+            try
+            {
+                MEvent e = GetEventsByName(thisEvent);
+                return e.ColorHex;
+            }
+            catch (Exception ex)
+            {
+                Log.LogError($"Error while getting event color hex for {thisEvent}: {ex.Message}");
                 return "";
             }
         }
@@ -256,6 +293,20 @@ namespace BrutalCompanyMinus.Minus
             }
         }
 
+        public static int GetEventWeight(string thisEvent)
+        {
+            try
+            {
+                MEvent e = GetEventsByName(thisEvent);
+                return e.Weight;
+            }
+            catch (Exception ex)
+            {
+                Log.LogError($"Error while getting event weight for {thisEvent}: {ex.Message}");
+                return 0;
+            }
+        }
+
         /// <summary>
         /// This method returns the event's event type.
         /// </summary>
@@ -274,6 +325,20 @@ namespace BrutalCompanyMinus.Minus
             }
         }
 
+        public static string GetEventType(string thisEvent)
+        {
+            try
+            {
+                MEvent e = GetEventsByName(thisEvent);
+                return e.Type.ToString();
+            }
+            catch (Exception ex)
+            {
+                Log.LogError($"Error while getting event type for {thisEvent}: {ex.Message}");
+                return "";
+            }
+        }
+
         /// <summary>
         /// This method checks if an event is enabled or not.
         /// </summary>
@@ -288,6 +353,20 @@ namespace BrutalCompanyMinus.Minus
             catch (Exception ex)
             {
                 Log.LogError($"Error while getting event enabled status for {e?.Name()}: {ex.Message}");
+                return false;
+            }
+        }
+
+        public static bool IsEventEnabled(string thisEvent)
+        {
+            try
+            {
+                MEvent e = GetEventsByName(thisEvent);
+                return e.Enabled;
+            }
+            catch (Exception ex)
+            {
+                Log.LogError($"Error while getting event enabled status for {thisEvent}: {ex.Message}");
                 return false;
             }
         }
@@ -311,6 +390,20 @@ namespace BrutalCompanyMinus.Minus
             }
         }
 
+        public static bool IsEventSpecial(string thisEvent)
+        {
+            try
+            {
+                MEvent e = GetEventsByName(thisEvent);
+                return e.isSpecialEvent;
+            }
+            catch (Exception ex)
+            {
+                Log.LogError($"Error while getting event special status for {thisEvent}: {ex.Message}");
+                return false;
+            }
+        }
+
         /// <summary>
         /// This method checks if an event is a beta event.
         /// </summary>
@@ -325,6 +418,20 @@ namespace BrutalCompanyMinus.Minus
             catch (Exception ex)
             {
                 Log.LogError($"Error while getting event beta status for {e?.Name()}: {ex.Message}");
+                return false;
+            }
+        }
+
+        public static bool IsEventBeta(string thisEvent)
+        {
+            try
+            {
+                MEvent e = GetEventsByName(thisEvent);
+                return e.isBetaEvent;
+            }
+            catch (Exception ex)
+            {
+                Log.LogError($"Error while getting event beta status for {thisEvent}: {ex.Message}");
                 return false;
             }
         }
@@ -347,6 +454,20 @@ namespace BrutalCompanyMinus.Minus
             }
         }
 
+        public static bool IsEventActive(string thisEvent)
+        {
+            try
+            {
+                MEvent e = GetEventsByName(thisEvent);
+                return e.Active; //Where applicable
+            }
+            catch (Exception ex)
+            {
+                Log.LogError($"Error while getting event active status for {thisEvent}: {ex.Message}");
+                return false;
+            }
+        }
+
         /// <summary>
         /// This method checks if an event has been executed. 
         /// </summary>
@@ -361,6 +482,20 @@ namespace BrutalCompanyMinus.Minus
             catch (Exception ex)
             {
                 Log.LogError($"Error while getting event executed status for {e?.Name()}: {ex.Message}");
+                return false;
+            }
+        }
+
+        public static bool IsEventExecuted(string thisEvent)
+        {
+            try
+            {
+                MEvent e = GetEventsByName(thisEvent);
+                return e.Executed; //Where applicable
+            }
+            catch (Exception ex)
+            {
+                Log.LogError($"Error while getting event executed status for {thisEvent}: {ex.Message}");
                 return false;
             }
         }
@@ -383,6 +518,20 @@ namespace BrutalCompanyMinus.Minus
             }
         }
 
+        public static List<string> GetEventsToRemove(string thisEvent)
+        {
+            try
+            {
+                MEvent e = GetEventsByName(thisEvent);
+                return e?.EventsToRemove ?? new List<string>();
+            }
+            catch (Exception ex)
+            {
+                Log.LogError($"Error while getting events to remove for {thisEvent}: {ex.Message}");
+                return new List<string>();
+            }
+        }
+
         /// <summary>
         /// This method returns the list of events that will be spawned alongside the event in question.
         /// </summary>
@@ -397,6 +546,20 @@ namespace BrutalCompanyMinus.Minus
             catch (Exception ex)
             {
                 Log.LogError($"Error while getting events to remove for {e?.Name()}: {ex.Message}");
+                return new List<string>();
+            }
+        }
+
+        public static List<string> GetEventsToAdd(string thisEvent)
+        {
+            try
+            {
+                MEvent e = GetEventsByName(thisEvent);
+                return e?.EventsToSpawnWith ?? new List<string>();
+            }
+            catch (Exception ex)
+            {
+                Log.LogError($"Error while getting events to remove for {thisEvent}: {ex.Message}");
                 return new List<string>();
             }
         }
@@ -419,6 +582,20 @@ namespace BrutalCompanyMinus.Minus
             }
         }
 
+        public static bool IsEventSpeedRunSafe(string thisEvent)
+        {
+            try
+            {
+                MEvent e = GetEventsByName(thisEvent);
+                return e.SpeedRunSafe;
+            }
+            catch (Exception ex)
+            {
+                Log.LogError($"Error while getting event speedrun safe status for {thisEvent}: {ex.Message}");
+                return false;
+            }
+        }
+
         /// <summary>
         /// Grab the aliases of an event.
         /// </summary>
@@ -437,21 +614,73 @@ namespace BrutalCompanyMinus.Minus
             }
         }
 
+        public static List<string> GetEventAliases(string thisEvent)
+        {
+            try
+            {
+                MEvent e = GetEventsByName(thisEvent);
+                return e?.Aliases ?? new List<string>();
+            }
+            catch (Exception ex)
+            {
+                Log.LogError($"Error while getting event aliases for {thisEvent}: {ex.Message}");
+                return new List<string>();
+            }
+        }
+
         public static bool isEventOnWhitelist(MEvent e)
         {
-            return EventManager.IsEventOnMoonWhitelist(e);
+            try
+            {
+                return EventManager.IsEventOnMoonWhitelist(e);
+            }
+            catch (Exception ex)
+            {
+                Log.LogError($"Error while checking if event is on whitelist for {e?.Name()}: {ex.Message}");
+                return false;
+            }
+        }
+
+        public static bool isEventOnWhitelist(string thisEvent)
+        {
+            try
+            {
+                MEvent e = GetEventsByName(thisEvent);
+                return EventManager.IsEventOnMoonWhitelist(e);
+            }
+            catch (Exception ex)
+            {
+                Log.LogError($"Error while checking if event is on whitelist for {thisEvent}: {ex.Message}");
+                return false;
+            }
         }
 
         public static bool isEventOnBlacklist(MEvent e)
         {
-            return EventManager.IsIgnoredEventByMoonBlacklist(e);
+            try
+            {
+                return EventManager.IsIgnoredEventByMoonBlacklist(e);
+            }
+            catch (Exception ex)
+            {
+                Log.LogError($"Error while checking if event is on blacklist for {e?.Name()}: {ex.Message}");
+                return false;
+            }
         }
 
-        public static bool isMoonIgnored(string moonName)
+        public static bool IsEventOnBlacklist(string thisEvent)
         {
-            return EventManager.IsIgnoredMoon(moonName);
+            try
+            {
+                MEvent e = GetEventsByName(thisEvent);
+                return EventManager.IsIgnoredEventByMoonBlacklist(e);
+            }
+            catch (Exception ex)
+            {
+                Log.LogError($"Error while checking if event is on blacklist for {thisEvent}: {ex.Message}");
+                return false;
+            }
         }
-
         #endregion
 
         #region Setters
