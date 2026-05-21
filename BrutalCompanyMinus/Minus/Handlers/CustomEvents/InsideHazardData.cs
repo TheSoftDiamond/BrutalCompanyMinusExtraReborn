@@ -39,6 +39,9 @@ namespace BrutalCompanyMinus.Minus.Handlers.CustomEvents
 
             [JsonProperty("DisallowNearEntrances")]
             public bool DisallowNearEntrances { get; set; }
+
+            [JsonProperty("allowInMineshaft")]
+            public bool AllowInMineshaft { get; set; }
         }
     }
 }
