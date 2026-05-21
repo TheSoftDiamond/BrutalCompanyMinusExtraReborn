@@ -10,6 +10,7 @@ using UnityEngine.Rendering.HighDefinition;
 using UnityEngine.SceneManagement;
 using System.Text.RegularExpressions;
 using BepInEx;
+using BrutalCompanyMinus.Minus.Events;
 
 namespace BrutalCompanyMinus
 {
@@ -161,7 +162,7 @@ namespace BrutalCompanyMinus
             nutSlayer.enemyName = "NutSlayer";
 
             kamikazieBug = (EnemyType)customAssetBundle.LoadAsset("KamikazieBug");
-            nutSlayer.enemyName = "kamikazieBugs";
+            kamikazieBug.enemyName = "kamikazieBugs";
 
             slayerShotgun = (Item)customAssetBundle.LoadAsset("SlayerShotgun");
             grabbableTurret = (Item)customAssetBundle.LoadAsset("GrabbableTurret");
