@@ -1,6 +1,7 @@
 ﻿using BepInEx.Bootstrap;
 using BepInEx.Configuration;
 using BrutalCompanyMinus.Minus.Handlers.CustomEvents;
+using HarmonyLib;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -98,13 +99,17 @@ namespace BrutalCompanyMinus.Minus.CustomEvents
                             Scale minAmount = CustomEventHandling.ArrayToScale(insideHazard.MinSpawn);
                             Scale maxAmount = CustomEventHandling.ArrayToScale(insideHazard.MaxSpawn);
 
-                            hazardEvents.Add(new HazardEvent(hazard.PrefabName, minAmount, maxAmount,
+                            hazardEvents.Add(new HazardEvent(
+                                hazard.PrefabName, 
+                                minAmount, 
+                                maxAmount,
                                 insideHazard.SpawnOptions.FacingAwayFromWall,
                                 insideHazard.SpawnOptions.FacingWall,
                                 insideHazard.SpawnOptions.BackToWall,
                                 insideHazard.SpawnOptions.BackFlushWithWall,
                                 insideHazard.SpawnOptions.RequireDistanceBetween,
-                                insideHazard.SpawnOptions.DisallowNearEntrances
+                                insideHazard.SpawnOptions.DisallowNearEntrances,
+                                insideHazard.SpawnOptions.AllowInMineshaft
                             ));
                         }
                     }
@@ -240,7 +245,7 @@ namespace BrutalCompanyMinus.Minus.CustomEvents
 
             public Scale minDensity, maxDensity;
 
-            public bool facingAwayFromWall, facingWall, backToWall, backFlushWithWall, requireDistanceBetween, disallowNearEntrances;
+            public bool facingAwayFromWall, facingWall, backToWall, backFlushWithWall, requireDistanceBetween, disallowNearEntrances, allowInMineshaft;
 
             public HazardEvent(GameObject hazardObject, Scale minDensity, Scale maxDensity)
             {
@@ -272,31 +277,31 @@ namespace BrutalCompanyMinus.Minus.CustomEvents
                 ScaleList.Add(ScaleType.MaxDensity, maxDensity);
             }
 
-            public HazardEvent(GameObject hazardObject, Scale minAmount, Scale maxAmount, bool facingAwayFromWall, bool facingWall, bool backToWall, bool backFlushWithWall, bool requireDistanceBetween, bool disallowNearEntrances)
+            public HazardEvent(GameObject hazardObject, Scale minAmount, Scale maxAmount, bool facingAwayFromWall, bool facingWall, bool backToWall, bool backFlushWithWall, bool requireDistanceBetween, bool disallowNearEntrances, bool allowInMineshaft)
             {
                 this.isInside = true;
                 this.hazardObject = hazardObject;
-                AssignSpawnParameters(minAmount, maxAmount, facingAwayFromWall, facingWall, backToWall, backFlushWithWall, requireDistanceBetween, disallowNearEntrances);
+                AssignSpawnParameters(minAmount, maxAmount, facingAwayFromWall, facingWall, backToWall, backFlushWithWall, requireDistanceBetween, disallowNearEntrances, allowInMineshaft);
 
                 ScaleList.Add(ScaleType.MinAmount, minAmount);
                 ScaleList.Add(ScaleType.MaxAmount, maxAmount);
             }
 
-            public HazardEvent(Assets.ObjectName hazardName, Scale minAmount, Scale maxAmount, bool facingAwayFromWall, bool facingWall, bool backToWall, bool backFlushWithWall, bool requireDistanceBetween, bool disallowNearEntrances)
+            public HazardEvent(Assets.ObjectName hazardName, Scale minAmount, Scale maxAmount, bool facingAwayFromWall, bool facingWall, bool backToWall, bool backFlushWithWall, bool requireDistanceBetween, bool disallowNearEntrances, bool allowInMineshaft)
             {
                 this.isInside = true;
                 this.hazardObject = Assets.GetObject(hazardName);
-                AssignSpawnParameters(minAmount, maxAmount, facingAwayFromWall, facingWall, backToWall, backFlushWithWall, requireDistanceBetween, disallowNearEntrances);
+                AssignSpawnParameters(minAmount, maxAmount, facingAwayFromWall, facingWall, backToWall, backFlushWithWall, requireDistanceBetween, disallowNearEntrances, allowInMineshaft);
 
                 ScaleList.Add(ScaleType.MinAmount, minAmount);
                 ScaleList.Add(ScaleType.MaxAmount, maxAmount);
             }
 
-            public HazardEvent(string hazardName, Scale minAmount, Scale maxAmount, bool facingAwayFromWall, bool facingWall, bool backToWall, bool backFlushWithWall, bool requireDistanceBetween, bool disallowNearEntrances)
+            public HazardEvent(string hazardName, Scale minAmount, Scale maxAmount, bool facingAwayFromWall, bool facingWall, bool backToWall, bool backFlushWithWall, bool requireDistanceBetween, bool disallowNearEntrances, bool allowInMineshaft)
             {
                 this.isInside = true;
                 this.hazardObject = Assets.GetObject(hazardName);
-                AssignSpawnParameters(minAmount, maxAmount, facingAwayFromWall, facingWall, backToWall, backFlushWithWall, requireDistanceBetween, disallowNearEntrances);
+                AssignSpawnParameters(minAmount, maxAmount, facingAwayFromWall, facingWall, backToWall, backFlushWithWall, requireDistanceBetween, disallowNearEntrances, allowInMineshaft);
 
                 ScaleList.Add(ScaleType.MinAmount, minAmount);
                 ScaleList.Add(ScaleType.MaxAmount, maxAmount);
@@ -308,7 +313,7 @@ namespace BrutalCompanyMinus.Minus.CustomEvents
                 this.maxDensity = maxDensity;
             }
 
-            private void AssignSpawnParameters(Scale minAmount, Scale maxAmount, bool facingAwayFromWall, bool facingWall, bool backToWall, bool backFlushWithWall, bool requireDistanceBetween, bool disallowNearEntrances)
+            private void AssignSpawnParameters(Scale minAmount, Scale maxAmount, bool facingAwayFromWall, bool facingWall, bool backToWall, bool backFlushWithWall, bool requireDistanceBetween, bool disallowNearEntrances, bool allowInMineshaft)
             {
                 this.minDensity = minAmount;
                 this.maxDensity = maxAmount;
@@ -318,10 +323,17 @@ namespace BrutalCompanyMinus.Minus.CustomEvents
                 this.backFlushWithWall = backFlushWithWall;
                 this.requireDistanceBetween = requireDistanceBetween;
                 this.disallowNearEntrances = disallowNearEntrances;
+                this.allowInMineshaft = allowInMineshaft;
             }
             
             public void Execute()
             {
+                if (this.hazardObject == null)
+                {
+                    Log.LogError($"Hazard object is null for {this.hazardObject.name}");
+                    return;
+                }
+
                 bool dawnLibHandled = false;
                 if (Compatibility.DawnLibPresent)
                 {
@@ -339,18 +351,25 @@ namespace BrutalCompanyMinus.Minus.CustomEvents
                 {
                     if (isInside)
                     {
-                        // Spawn inside
-                        RoundManager.Instance.currentLevel.spawnableMapObjects = RoundManager.Instance.currentLevel.spawnableMapObjects.Add(new SpawnableMapObject()
+                        var customHazardType = ScriptableObject.CreateInstance<IndoorMapHazardType>();
+                        customHazardType.prefabToSpawn = hazardObject;
+                        customHazardType.spawnFacingAwayFromWall = this.facingAwayFromWall;
+                        customHazardType.spawnFacingWall = this.facingWall;
+                        customHazardType.spawnWithBackToWall = this.backToWall;
+                        customHazardType.spawnWithBackFlushAgainstWall = this.backFlushWithWall;
+                        customHazardType.requireDistanceBetweenSpawns = this.requireDistanceBetween;
+                        customHazardType.disallowSpawningNearEntrances = this.disallowNearEntrances;
+                        customHazardType.allowInMineshaft = this.allowInMineshaft;
+
+                        var hazardObjectToAdd = new IndoorMapHazard()
                         {
-                            prefabToSpawn = hazardObject,
-                            numberToSpawn = new AnimationCurve(new Keyframe(0f, Get(ScaleType.MinAmount)), new Keyframe(1f, Get(ScaleType.MaxAmount))),
-                            spawnFacingAwayFromWall = this.facingAwayFromWall,
-                            spawnFacingWall = this.facingWall,
-                            spawnWithBackToWall = this.backToWall,
-                            spawnWithBackFlushAgainstWall = this.backFlushWithWall,
-                            requireDistanceBetweenSpawns = this.requireDistanceBetween,
-                            disallowSpawningNearEntrances = this.disallowNearEntrances
-                        });
+                            hazardType = customHazardType,
+                            numberToSpawn = new AnimationCurve(new Keyframe(0f, Get(ScaleType.MinAmount)), new Keyframe(1f, Get(ScaleType.MaxAmount)))
+                        };
+
+                        EventManager.hazards.Add(hazardObjectToAdd);
+
+                        RoundManager.Instance.currentLevel.indoorMapHazards = RoundManager.Instance.currentLevel.indoorMapHazards.AddToArray(hazardObjectToAdd);
                     }
                     else
                     {
