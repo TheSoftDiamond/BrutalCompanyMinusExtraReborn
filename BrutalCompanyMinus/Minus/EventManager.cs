@@ -314,6 +314,8 @@ namespace BrutalCompanyMinus.Minus
 
         internal static float[] eventTypeRarities = new float[] { };
 
+        public static List<IndoorMapHazard> hazards = new List<IndoorMapHazard>();
+
         #endregion
 
         /// <summary>
@@ -507,6 +509,7 @@ namespace BrutalCompanyMinus.Minus
 
         internal static void ApplyEvents(List<MEvent> currentEvents)
         {
+
             foreach (MEvent e in currentEvents)
             {
                 if(!e.Executed)
@@ -516,6 +519,33 @@ namespace BrutalCompanyMinus.Minus
                 }
             }
         }
+
+
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(StartOfRound), nameof(StartOfRound.ShipLeave))]
+        public static void FixHazardsOnLeave()
+        {
+            //Check if host otherwise return
+            if (!RoundManager.Instance.IsHost) return;
+
+            if (RoundManager.Instance?.currentLevel?.indoorMapHazards == null) return;
+
+            var currentHazards = RoundManager.Instance.currentLevel.indoorMapHazards.ToList();
+
+            currentHazards.RemoveAll(hazard => hazards.Contains(hazard));
+
+            RoundManager.Instance.currentLevel.indoorMapHazards = currentHazards.ToArray();
+
+            hazards.Clear();
+        }
+
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(StartOfRound), nameof(StartOfRound.OnLocalDisconnect))]
+        public static void FixHazardsOnLeaveLocalDisconnect()
+        {
+            FixHazardsOnLeave();
+        }
+
 
         /// <summary>
         /// Execute on ship leave
