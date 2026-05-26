@@ -24,14 +24,14 @@ namespace BrutalCompanyMinus.Minus.Events
             Type = EventType.VeryBad;
 
             monstersToSpawn = new List<MonsterEvent>() { new MonsterEvent(
-                "PinkGiantObj",
+                "RedwoodTitanObj",
                 new Scale(1.0f, 0.0f, 1.0f, 1.0f),
                 new Scale(33.0f, 0.66f, 33.0f, 100.0f),
                 new Scale(0.0f, 0.0f, 0.0f, 0.0f),
                 new Scale(0.0f, 0.0095f, 0.0f, 1.0f),
                 new Scale(2.0f, 0.02f, 2.0f, 4.0f),
                 new Scale(2.0f, 0.02f, 2.0f, 4.0f)), new MonsterEvent(
-                "DriftwoodGiantObj",
+                "DriftwoodMenaceObj",
                 new Scale(1.0f, 0.0f, 1.0f, 1.0f),
                 new Scale(33.0f, 0.66f, 33.0f, 100.0f),
                 new Scale(0.0f, 0.0f, 0.0f, 0.0f),
@@ -49,7 +49,7 @@ namespace BrutalCompanyMinus.Minus.Events
             EventsToRemove = new List<string>() { nameof(GiantsOutside) };
         }
 
-        public override bool AddEventIfOnly() => Compatibility.theGiantSpecimensPresent;
+        public override bool AddEventIfOnly() => Compatibility.CodeRebirthPresent;
 
         public override void Execute() => ExecuteAllMonsterEvents();
     }
