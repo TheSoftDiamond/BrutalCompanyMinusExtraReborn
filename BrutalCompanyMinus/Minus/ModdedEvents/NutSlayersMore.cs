@@ -28,8 +28,6 @@ namespace BrutalCompanyMinus.Minus.Events
                 new Scale(8.0f, 0.0f, 8.0f, 8.0f),
                 new Scale(12.0f, 0.0f, 12.0f, 12.0f))
             };
-            ScaleList.Add(ScaleType.MinAmount, new Scale(1f,1f,1f,2f));
-            ScaleList.Add(ScaleType.MaxAmount, new Scale(1f, 1f, 1f, 5f));
         }
 
         public override void Execute() 
