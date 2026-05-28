@@ -24,6 +24,8 @@ namespace BrutalCompanyMinus.Minus.Events
             ColorHex = "#FF0000";
             Type = EventType.Bad;
 
+            isBetaEvent = true;
+
             ScaleList.Add(ScaleType.MinDensity, new Scale(0.01f, 0.0004f, 0.016f, 0.086f));
             ScaleList.Add(ScaleType.MaxDensity, new Scale(0.0168f, 0.00592f, 0.0128f, 0.180f));
         }
