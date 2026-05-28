@@ -95,17 +95,17 @@ namespace BrutalCompanyMinus.Minus
         /// <summary>
         /// Used internally for logic functions for events.
         /// </summary>
-        internal bool Executed = false;
+        public bool Executed = false;
 
         /// <summary>
         /// This is used internally for events. Especially for events that require a Net Object registered for specific networked effects to occur.
         /// </summary>
-        internal bool Active = false;
+        public bool Active = false;
 
         /// <summary>
         /// Internally used to prevent events from being included if speedrun mode is on.
         /// </summary>
-        internal bool SpeedRunSafe = true;
+        public bool SpeedRunSafe = true;
 
         /// <summary>
         /// Set this in Initalize() to specify aliases for the event. This is used for forcing events.
