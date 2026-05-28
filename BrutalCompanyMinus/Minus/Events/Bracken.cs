@@ -45,7 +45,7 @@ namespace BrutalCompanyMinus.Minus.Events
                 {
                     monster.outsideSpawnRarity = new Scale(0.0f, 0.0f, 0.0f, 0.0f);
                     monster.maxOutside = new Scale(0.0f, 0.0f, 0.0f, 0.0f);
-                    monster.maxInside = new Scale(0.0f, 0.0f, 0.0f, 0.0f);
+                    monster.minOutside = new Scale(0.0f, 0.0f, 0.0f, 0.0f);
                 }
             }
 
