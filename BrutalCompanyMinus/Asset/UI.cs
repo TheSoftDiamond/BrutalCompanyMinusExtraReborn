@@ -62,6 +62,15 @@ namespace BrutalCompanyMinus
 
         public static string colorTextHex = "00FF00";
 
+        public static string getColorInsane => Configuration.GetString(Configuration.colorInsane, "8B008B");
+        public static string getColorVeryBad => Configuration.GetString(Configuration.colorVeryBad, "800000");
+        public static string getColorBad => Configuration.GetString(Configuration.colorBad, "FF0000");
+        public static string getColorNeutral => Configuration.GetString(Configuration.colorNeutral, "FFFFFF");
+        public static string getColorGood => Configuration.GetString(Configuration.colorGood, "008000");
+        public static string getColorVeryGood => Configuration.GetString(Configuration.colorVeryGood, "00FF00");
+        public static string getColorRare => Configuration.GetString(Configuration.colorRare, "00FFFF");
+        public static string getColorRemove => Configuration.GetString(Configuration.colorRemove, "008000");
+
         // Menu Color
 
         //public static string menuColorHex = "000000";
@@ -356,7 +365,7 @@ namespace BrutalCompanyMinus
         public static void GenerateText(List<MEvent> events)
         {
             // Generate Text
-            string text = $"<br><color=#{colorTextHex}>Events:</color><br>";
+            string text = $"<br><color=#{colorTextHex}>{Configuration.LocalizationEventTitle.Replace(@"\s", " ")}</color><br>";
             foreach (string eventDescription in EventManager.currentEventDescriptions)
             {
                 text += $"<color=#{colorTextHex}>-</color>{eventDescription}<br>";
@@ -370,15 +379,15 @@ namespace BrutalCompanyMinus
 
                 text += GetDifficultyText();
 
-                text += $"<br><br><color=#{colorTextHex}>Other:</color>";
+                text += $"<br><br><color=#{colorTextHex}>{Configuration.LocalizationOther.Replace(@"\s", " ")}:</color>";
 
                 text +=
-                    $"<br><color=#{colorTextHex}> -Scrap Value: x{ScrapValueMultiplier:F2}</color>" +
-                    $"<br><color=#{colorTextHex}> -Scrap Amount: x{(RoundManager.Instance.scrapAmountMultiplier * Manager.scrapAmountMultiplier):F2}</color>" +
-                    $"<br><color=#{colorTextHex}> -Factory Size: x{RoundManager.Instance.currentLevel.factorySizeMultiplier:F2}</color>" +
-                    $"<br><color=#{colorTextHex}> -Spawn Chance: x{Manager.spawnChanceMultiplier:F2}</color>" +
-                    $"<br><color=#{colorTextHex}> -Spawn Cap: x{Manager.spawncapMultipler:F2}</color>" +
-                    $"<br><color=#{colorTextHex}> -Bonus enemy hp: {plusMinus(Manager.bonusEnemyHp)}</color>"
+                    $"<br><color=#{colorTextHex}> -{Configuration.LocalizationScrapValue.Replace(@"\s", " ")}: x{ScrapValueMultiplier:F2}</color>" +
+                    $"<br><color=#{colorTextHex}> -{Configuration.LocalizationScrapAmount.Replace(@"\s", " ")}: x{(RoundManager.Instance.scrapAmountMultiplier * Manager.scrapAmountMultiplier):F2}</color>" +
+                    $"<br><color=#{colorTextHex}> -{Configuration.LocalizationFactorySize.Replace(@"\s", " ")}: x{RoundManager.Instance.currentLevel.factorySizeMultiplier:F2}</color>" +
+                    $"<br><color=#{colorTextHex}> -{Configuration.LocalizationSpawnChance.Replace(@"\s", " ")}: x{Manager.spawnChanceMultiplier:F2}</color>" +
+                    $"<br><color=#{colorTextHex}> -{Configuration.LocalizationSpawnCap.Replace(@"\s", " ")}: x{Manager.spawncapMultipler:F2}</color>" +
+                    $"<br><color=#{colorTextHex}> -{Configuration.LocalizationBonusEnemyHp.Replace(@"\s", " ")}: {plusMinus(Manager.bonusEnemyHp)}</color>"
                     ;
             }
 
@@ -420,15 +429,15 @@ namespace BrutalCompanyMinus
                 {
                     EventManager.UpdateAllEventWeights();
                     text +=
-                        $"<br><color=#{colorTextHex}>EventType Chances:</color>" +
-                        $"<br> <color=#{colorTextHex}>-</color><color=#8B008B>Insane</color><color=#{colorTextHex}>:   {Helper.GetPercentage(EventManager.eventTypeRarities[0])}</color>" +
-                        $"<br> <color=#{colorTextHex}>-</color><color=#800000>VeryBad</color><color=#{colorTextHex}>:  {Helper.GetPercentage(EventManager.eventTypeRarities[1])}</color>" +
-                        $"<br> <color=#{colorTextHex}>-</color><color=#FF0000>Bad</color><color=#{colorTextHex}>:      {Helper.GetPercentage(EventManager.eventTypeRarities[2])}</color>" +
-                        $"<br> <color=#{colorTextHex}>-</color><color=#FFFFFF>Neutral</color><color=#{colorTextHex}>:  {Helper.GetPercentage(EventManager.eventTypeRarities[3])}</color>" +
-                        $"<br> <color=#{colorTextHex}>-</color><color=#008000>Good</color><color=#{colorTextHex}>:     {Helper.GetPercentage(EventManager.eventTypeRarities[4])}</color>" +
-                        $"<br> <color=#{colorTextHex}>-</color><color=#00FF00>VeryGood</color><color=#{colorTextHex}>: {Helper.GetPercentage(EventManager.eventTypeRarities[5])}</color>" +
-                        $"<br> <color=#{colorTextHex}>-</color><color=#00FFFF>Rare</color><color=#{colorTextHex}>:     {Helper.GetPercentage(EventManager.eventTypeRarities[6])}</color>" +
-                        $"<br> <color=#{colorTextHex}>-</color><color=#008000>Remove</color><color=#{colorTextHex}>:   {Helper.GetPercentage(EventManager.eventTypeRarities[7])}</color><br>";
+                        $"<br><color=#{colorTextHex}>{Configuration.LocalizationEventType.Replace(@"\s", " ")}:</color>" +
+                        $"<br> <color=#{colorTextHex}>-</color><color=#{getColorInsane.Replace("#","")}>{Configuration.LocalizationInsane.Replace(@"\s", " ")}</color><color=#{colorTextHex}>:   {Helper.GetPercentage(EventManager.eventTypeRarities[0])}</color>" +
+                        $"<br> <color=#{colorTextHex}>-</color><color=#{getColorVeryBad.Replace("#", "")}>{Configuration.LocalizationVeryBad.Replace(@"\s", " ")}</color><color=#{colorTextHex}>:  {Helper.GetPercentage(EventManager.eventTypeRarities[1])}</color>" +
+                        $"<br> <color=#{colorTextHex}>-</color><color=#{getColorBad.Replace("#", "")}>{Configuration.LocalizationBad.Replace(@"\s", " ")}</color><color=#{colorTextHex}>:      {Helper.GetPercentage(EventManager.eventTypeRarities[2])}</color>" +
+                        $"<br> <color=#{colorTextHex}>-</color><color=#{getColorNeutral.Replace("#", "")}>{Configuration.LocalizationNeutral.Replace(@"\s", " ")}</color><color=#{colorTextHex}>:  {Helper.GetPercentage(EventManager.eventTypeRarities[3])}</color>" +
+                        $"<br> <color=#{colorTextHex}>-</color><color=#{getColorGood.Replace("#", "")}>{Configuration.LocalizationGood.Replace(@"\s", " ")}</color><color=#{colorTextHex}>:     {Helper.GetPercentage(EventManager.eventTypeRarities[4])}</color>" +
+                        $"<br> <color=#{colorTextHex}>-</color><color=#{getColorVeryGood.Replace("#", "")}>{Configuration.LocalizationVeryGood.Replace(@"\s", " ")}</color><color=#{colorTextHex}>: {Helper.GetPercentage(EventManager.eventTypeRarities[5])}</color>" +
+                        $"<br> <color=#{colorTextHex}>-</color><color=#{getColorRare.Replace("#", "")}>{Configuration.LocalizationRare.Replace(@"\s", " ")}</color><color=#{colorTextHex}>:     {Helper.GetPercentage(EventManager.eventTypeRarities[6])}</color>" +
+                        $"<br> <color=#{colorTextHex}>-</color><color=#{getColorRemove.Replace("#", "")}>{Configuration.LocalizationRemove.Replace(@"\s", " ")}</color><color=#{colorTextHex}>:   {Helper.GetPercentage(EventManager.eventTypeRarities[7])}</color><br>";
                 }
 
                 text += GetDifficultyText();
@@ -444,15 +453,15 @@ namespace BrutalCompanyMinus
         private static string GetDifficultyText()
         {
             string text =
-                $"<br><color=#{colorTextHex}>Difficulty:</color> {Helper.GetDifficultyText()}" +
-                $"<br><color=#{colorTextHex}> -Difficulty:</color>  <color=#{Helper.GetDifficultyColorHex(Manager.difficulty, Configuration.difficultyMaxCap.Value)}>{Manager.difficulty:F1}</color>";
+                $"<br><color=#{colorTextHex}>{Configuration.LocalizationDifficultyTitle.Replace(@"\s", " ")}:</color> {Helper.GetDifficultyText()}" +
+                $"<br><color=#{colorTextHex}> -{Configuration.LocalizationDifficultyAmount.Replace(@"\s", " ")}</color>  <color=#{Helper.GetDifficultyColorHex(Manager.difficulty, Configuration.difficultyMaxCap.Value)}>{Manager.difficulty:F1}</color>";
 
-            if (Configuration.scaleByDaysPassed.Value) text += $"<br><color=#{colorTextHex}> -Day:        </color><color=#{Helper.GetDifficultyColorHex(Manager.daysDifficulty, Configuration.daysPassedDifficultyCap.Value)}>{plusMinusExclusive(Manager.daysDifficulty)}{Manager.daysDifficulty:F1}</color>";
-            if (Configuration.scaleByQuota.Value) text += $"<br><color=#{colorTextHex}> -Quota:      </color><color=#{Helper.GetDifficultyColorHex(Manager.quotaDifficulty, Configuration.quotaDifficultyCap.Value)}>{plusMinusExclusive(Manager.quotaDifficulty)}{Manager.quotaDifficulty:F1}</color>";
-            if (Configuration.scaleByScrapInShip.Value) text += $"<br><color=#{colorTextHex}> -Ship Scrap: </color><color=#{Helper.GetDifficultyColorHex(Manager.scrapInShipDifficulty, Configuration.scrapInShipDifficultyCap.Value)}>{plusMinusExclusive(Manager.scrapInShipDifficulty)}{Manager.scrapInShipDifficulty:F1}</color>";
-            if (Configuration.scaleByMoonGrade.Value) text += $"<br><color=#{colorTextHex}> -Moon risk:  </color><color=#{Helper.GetDifficultyColorHex(Manager.moonGradeDifficulty, Configuration.gradeAdditives["S+++"])}>{plusMinusExclusive(Manager.moonGradeDifficulty)}{Manager.moonGradeDifficulty:F1}</color>";
-            if (Configuration.scaleByWeather.Value) text += $"<br><color=#{colorTextHex}> -Weather:    </color><color=#{Helper.GetDifficultyColorHex(Manager.weatherDifficulty, (float)Int32.MaxValue)}>{plusMinusExclusive(Manager.weatherDifficulty)}{Manager.weatherDifficulty:F1}</color>";
-            if (Configuration.scaleHeat.Value) text += $"<br><color=#{colorTextHex}> -Heat:       </color><color=#{Helper.GetDifficultyColorHex(EventManager.currentHeatDifficulty(), Configuration.heatMaxCap.Value)}>{plusMinusExclusive(EventManager.currentHeatDifficulty())}{EventManager.currentHeatDifficulty():F1}</color>";
+            if (Configuration.scaleByDaysPassed.Value) text += $"<br><color=#{colorTextHex}> -{Configuration.LocalizationDay.Replace(@"\s", " ")}</color><color=#{Helper.GetDifficultyColorHex(Manager.daysDifficulty, Configuration.daysPassedDifficultyCap.Value)}>{plusMinusExclusive(Manager.daysDifficulty)}{Manager.daysDifficulty:F1}</color>";
+            if (Configuration.scaleByQuota.Value) text += $"<br><color=#{colorTextHex}> -{Configuration.LocalizationQuota.Replace(@"\s", " ")}</color><color=#{Helper.GetDifficultyColorHex(Manager.quotaDifficulty, Configuration.quotaDifficultyCap.Value)}>{plusMinusExclusive(Manager.quotaDifficulty)}{Manager.quotaDifficulty:F1}</color>";
+            if (Configuration.scaleByScrapInShip.Value) text += $"<br><color=#{colorTextHex}> -{Configuration.LocalizationShipScrap.Replace(@"\s", " ")}</color><color=#{Helper.GetDifficultyColorHex(Manager.scrapInShipDifficulty, Configuration.scrapInShipDifficultyCap.Value)}>{plusMinusExclusive(Manager.scrapInShipDifficulty)}{Manager.scrapInShipDifficulty:F1}</color>";
+            if (Configuration.scaleByMoonGrade.Value) text += $"<br><color=#{colorTextHex}> -{Configuration.LocalizationMoonRisk.Replace(@"\s", " ")}</color><color=#{Helper.GetDifficultyColorHex(Manager.moonGradeDifficulty, Configuration.gradeAdditives["S+++"])}>{plusMinusExclusive(Manager.moonGradeDifficulty)}{Manager.moonGradeDifficulty:F1}</color>";
+            if (Configuration.scaleByWeather.Value) text += $"<br><color=#{colorTextHex}> -{Configuration.LocalizationWeather.Replace(@"\s", " ")}</color><color=#{Helper.GetDifficultyColorHex(Manager.weatherDifficulty, (float)Int32.MaxValue)}>{plusMinusExclusive(Manager.weatherDifficulty)}{Manager.weatherDifficulty:F1}</color>";
+            if (Configuration.scaleHeat.Value) text += $"<br><color=#{colorTextHex}> -{Configuration.LocalizationHeat.Replace(@"\s", " ")}</color><color=#{Helper.GetDifficultyColorHex(EventManager.currentHeatDifficulty(), Configuration.heatMaxCap.Value)}>{plusMinusExclusive(EventManager.currentHeatDifficulty())}{EventManager.currentHeatDifficulty():F1}</color>";
 
             return text;
         }
