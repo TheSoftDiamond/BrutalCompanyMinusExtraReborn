@@ -34,7 +34,7 @@ namespace BrutalCompanyMinus
     {
         private const string GUID = "SoftDiamond.BrutalCompanyMinusExtraReborn";
         private const string NAME = "BrutalCompanyMinusExtraReborn";
-        private const string VERSION = "1.50.6";
+        private const string VERSION = "1.60.0";
 
         internal static Plugin Instance { get; private set; }
 
@@ -60,6 +60,7 @@ namespace BrutalCompanyMinus
             allEnemiesConfig = new ConfigFile(Paths.ConfigPath + "\\BrutalCompanyMinusExtraReborn\\AllEnemies.cfg", true);
             levelPropertiesConfig = new ConfigFile(Paths.ConfigPath + "\\BrutalCompanyMinusExtraReborn\\LevelProperties.cfg", true);
             CorePropertiesConfig = new ConfigFile(Paths.ConfigPath + "\\BrutalCompanyMinusExtraReborn\\CoreProperties.cfg", true);
+            LanguageConfig = new ConfigFile(Paths.ConfigPath + "\\BrutalCompanyMinusExtraReborn\\Language.cfg", true);
 
             uiConfig.SaveOnConfigSet = false;
             difficultyConfig.SaveOnConfigSet = false;
@@ -71,6 +72,7 @@ namespace BrutalCompanyMinus
             allEnemiesConfig.SaveOnConfigSet = false;
             levelPropertiesConfig.SaveOnConfigSet = false;
             CorePropertiesConfig.SaveOnConfigSet = false;
+            LanguageConfig.SaveOnConfigSet = false;
 
             // Load assets
             Assets.Load();
