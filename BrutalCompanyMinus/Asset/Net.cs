@@ -449,6 +449,18 @@ namespace BrutalCompanyMinus
         }
 
         [ServerRpc(RequireOwnership = false)]
+        public void SpawnTipServerRpc(string Title, string message, bool isWarning)
+        {
+            SpawnTipClientRpc(Title, message, isWarning);
+        }
+
+        [ClientRpc]
+        public void SpawnTipClientRpc(string Title, string message, bool isWarning)
+        {
+            HUDManager.Instance.DisplayTip(Title, message, isWarning);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
         public void SpawnMudPilesOutsideServerRpc(int amount)
         {
             NavMeshHit hit = default(NavMeshHit);
@@ -991,7 +1003,6 @@ namespace BrutalCompanyMinus
 
             GameObject net = Instantiate(netObject);
             net.GetComponent<NetworkObject>().Spawn(destroyWithScene: false);
-
         }
 
         [HarmonyPrefix]
