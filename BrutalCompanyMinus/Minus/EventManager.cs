@@ -1,6 +1,7 @@
 ﻿using BepInEx;
 using BepInEx.Configuration;
 using BrutalCompanyMinus.Minus.Handlers;
+using Discord;
 using HarmonyLib;
 using System;
 using System.Collections;
@@ -1001,7 +1002,10 @@ namespace BrutalCompanyMinus.Minus
         [HarmonyPatch(typeof(RoundManager), "RefreshEnemiesList")]
         private static void OnRefreshEnemiesList()
         {
-            HUDManager.Instance.StartCoroutine(EventTips(tipEventsToDo));
+            if (RoundManager.Instance.IsServer)
+            {
+                HUDManager.Instance.StartCoroutine(EventTips(tipEventsToDo));
+            }
         }
 
         internal static IEnumerator EventTips(List<MEvent> events)
@@ -1011,8 +1015,7 @@ namespace BrutalCompanyMinus.Minus
             {
                 if (e.showTip && e.TipMessages.Count > 0 && e.TipTitle.Count > 0)
                 {
-
-                    HUDManager.Instance.DisplayTip(e.TipTitle[UnityEngine.Random.Range(0, e.TipTitle.Count)], e.TipMessages[UnityEngine.Random.Range(0, e.TipMessages.Count)], e.isWarning);
+                    Net.Instance.SpawnTipServerRpc(e.TipTitle[UnityEngine.Random.Range(0, e.TipTitle.Count)], e.TipMessages[UnityEngine.Random.Range(0, e.TipMessages.Count)], e.isWarning);
 
                     yield return new WaitForSeconds(Mathf.Abs(Configuration.timeBetweenTips.Value));
                 }
