@@ -24,7 +24,7 @@ namespace BrutalCompanyMinus
     public class Configuration
     {
         // Config files
-        public static ConfigFile? uiConfig, eventConfig, weatherConfig, customAssetsConfig, difficultyConfig, moddedEventConfig, customEventConfig, allEnemiesConfig, levelPropertiesConfig, CorePropertiesConfig /*, extensiveSettingsConfig*/;
+        public static ConfigFile? uiConfig, eventConfig, weatherConfig, customAssetsConfig, difficultyConfig, moddedEventConfig, customEventConfig, allEnemiesConfig, levelPropertiesConfig, CorePropertiesConfig, LanguageConfig /*, extensiveSettingsConfig*/;
 
         // Event settings
         public static List<ConfigEntry<int>> eventWeights = new List<ConfigEntry<int>>();
@@ -72,13 +72,8 @@ namespace BrutalCompanyMinus
             scrapValueMultiplier = new Scale(),
             insideSpawnChanceAdditive = new Scale(),
             outsideSpawnChanceAdditive = new Scale();
-        public static ConfigEntry<bool>? ignoreMaxCap;
-        public static ConfigEntry<float>? difficultyMaxCap;
-        public static ConfigEntry<float>? scrapValueMax;
-        public static ConfigEntry<float>? scrapAmountMax;
-        public static ConfigEntry<float>? FactorySizeMax;
-        public static ConfigEntry<float>? FactorySizeMin;
-        public static ConfigEntry<bool>? scaleByDaysPassed, scaleByScrapInShip, scaleByMoonGrade, scaleByWeather, scaleByQuota, scaleHeat;
+        public static ConfigEntry<float>? difficultyMaxCap, scrapValueMax, scrapAmountMax, FactorySizeMax, FactorySizeMin;
+        public static ConfigEntry<bool>? ignoreMaxCap, scaleByDaysPassed, scaleByScrapInShip, scaleByMoonGrade, scaleByWeather, scaleByQuota, scaleHeat;
         public static ConfigEntry<float>? daysPassedDifficultyMultiplier, daysPassedDifficultyCap, scrapInShipDifficultyMultiplier, scrapInShipDifficultyCap, quotaDifficultyMultiplier, quotaDifficultyCap;
         public static Dictionary<string, float> gradeAdditives = new Dictionary<string, float>();
         public static Dictionary<LevelWeatherType, float> weatherAdditives = new Dictionary<LevelWeatherType, float>();
@@ -114,23 +109,19 @@ namespace BrutalCompanyMinus
         public static Weather noneMultiplier, dustCloudMultiplier, rainyMultiplier, stormyMultiplier, foggyMultiplier, floodedMultiplier, eclipsedMultiplier;
 
         // UI settings
-        public static ConfigEntry<string>? UIKey;
+        public static ConfigEntry<string>? UIKey, color, colorArrows, colorText;
         public static ConfigEntry<bool>? NormaliseScrapValueDisplay, EnableUI, ShowUILetterBox, ShowExtraProperties, PopUpUI, DisplayUIAfterShipLeaves, DisplayExtraPropertiesAfterShipLeaves, displayEvents;
-        public static ConfigEntry<float>? UITime, scrollSpeed;
-        public static ConfigEntry<string>? color;
-        public static ConfigEntry<float>? uiColorReduction;
-        public static ConfigEntry<float>? colorArrowsIncrease;
-        public static ConfigEntry<string>? colorArrows;
-        public static ConfigEntry<string>? colorText;
+        public static ConfigEntry<float>? UITime, scrollSpeed, uiColorReduction, colorArrowsIncrease;
+
+        public static ConfigEntry<string>? colorInsane, colorVeryBad, colorBad, colorNeutral, colorGood, colorVeryGood, colorRare, colorRemove;
+
         //public static ConfigEntry<string> menuColor;
         //public static ConfigEntry<float> menuTransparency;
 
         // Custom assets settings
-        public static ConfigEntry<int>? nutSlayerLives, nutSlayerHp;
+        public static ConfigEntry<int>? nutSlayerLives, nutSlayerHp, slayerShotgunMinValue, slayerShotgunMaxValue;
         public static ConfigEntry<float>? nutSlayerMovementSpeed;
-        public static ConfigEntry<bool>? nutSlayerImmortal;
-        public static ConfigEntry<bool>? onlyPlayersAttackSlayer;
-        public static ConfigEntry<int>? slayerShotgunMinValue, slayerShotgunMaxValue;
+        public static ConfigEntry<bool>? nutSlayerImmortal, onlyPlayersAttackSlayer;
 
         // All enemies settings
         public static ConfigEntry<bool>? enableAllEnemies, enableAllAllEnemies;
@@ -142,8 +133,54 @@ namespace BrutalCompanyMinus
         public static CultureInfo en = new CultureInfo("en-US"); // This is important, no touchy
         public static string scaleDescription = "Format: BaseScale, IncrementScale, MinCap, MaxCap,   Forumla: BaseScale + (IncrementScale * Difficulty),   By default difficulty goes between 0 to 100 depending on certain factors";
 
+        public static string LanguageDescription = @"This is used for localization of text elements on the UI. Use \s to represent a space. For event descriptions, you can find them in their respective config sections.";
+
         // Custom Events and Settings
         public static string customEventsFolder = Paths.ConfigPath + "\\BrutalCompanyMinusExtraReborn\\CustomEvents";
+
+        // Localization settings
+        public static ConfigEntry<string>? MsgEventTitle, MsgScrapValue, MsgScrapAmount, MsgFactorySize, MsgSpawnChance, MsgSpawnCap, MsgBonusEnemyhp, MsgOther, MsgInsane, MsgVeryBad, MsgBad, MsgNeutral, MsgGood, MsgVeryGood, MsgRare, MsgRemove, MsgEventType, MsgDIfficultyTitle, MsgDifficultyAmount, MsgDay, MsgQuota, MsgShipScrap, MsgMoonRisk, MsgWeather, MsgHeat;
+
+        public static string LocalizationEventTitle => GetString(MsgEventTitle, "Events:");
+
+        public static string LocalizationScrapValue => GetString(MsgScrapValue, "Scrap Value");
+        public static string LocalizationScrapAmount => GetString(MsgScrapAmount, "Scrap Amount");
+        public static string LocalizationFactorySize => GetString(MsgFactorySize, "Factory Size");
+        public static string LocalizationSpawnChance => GetString(MsgSpawnChance, "Spawn Chance");
+        public static string LocalizationSpawnCap => GetString(MsgSpawnCap, "Spawn Cap");
+        public static string LocalizationBonusEnemyHp => GetString(MsgBonusEnemyhp, "Bonus enemy hp");
+        public static string LocalizationOther => GetString(MsgOther, "Other");
+
+        public static string LocalizationEventType => GetString(MsgEventType, "EventType Chances");
+        public static string LocalizationInsane => GetString(MsgInsane, "Insane");
+        public static string LocalizationVeryBad => GetString(MsgVeryBad, "VeryBad");
+        public static string LocalizationBad => GetString(MsgBad, "Bad");
+        public static string LocalizationNeutral => GetString(MsgNeutral, "Neutral");
+        public static string LocalizationGood => GetString(MsgGood, "Good");
+        public static string LocalizationVeryGood => GetString(MsgVeryGood, "VeryGood");
+        public static string LocalizationRare => GetString(MsgRare, "Rare");
+        public static string LocalizationRemove => GetString(MsgRemove, "Remove");
+
+        public static string LocalizationDifficultyTitle => GetString(MsgDIfficultyTitle, "Difficulty");
+        public static string LocalizationDifficultyAmount => GetString(MsgDifficultyAmount, @"Difficulty:");
+        public static string LocalizationDay => GetString(MsgDay, @"Day:\s\s\s\s\s\s\s\s");
+        public static string LocalizationQuota => GetString(MsgQuota, @"Quota:\s\s\s\s\s\s");
+        public static string LocalizationShipScrap => GetString(MsgShipScrap, @"Ship Scrap:\s");
+        public static string LocalizationMoonRisk => GetString(MsgMoonRisk, @"Moon Risk:\s\s");
+        public static string LocalizationWeather => GetString(MsgWeather, @"Weather:\s\s\s");
+        public static string LocalizationHeat => GetString(MsgHeat, @"Heat:\s\s\s\s\s\s");
+
+
+        public static string GetString(ConfigEntry<string>? entry, string fallback)
+        {
+            if (entry == null || string.IsNullOrEmpty(entry.Value))
+            {
+                return fallback;
+            }
+            return entry.Value;
+        }
+
+
 
         // Core Properties
         public static ConfigEntry<bool>? enableCustomEvents;
@@ -184,9 +221,39 @@ namespace BrutalCompanyMinus
                 getScale(difficultyConfig.Bind("_EventType Weights", "Neutral event scale", "10, -0.05, 5, 10", scaleDescription).Value),
                 getScale(difficultyConfig.Bind("_EventType Weights", "Good event scale", "23, -0.1, 13, 23", scaleDescription).Value),
                 getScale(difficultyConfig.Bind("_EventType Weights", "VeryGood event scale", "3, 0.14, 3, 17", scaleDescription).Value),
-                getScale(difficultyConfig.Bind("_EventType Weights", "Rare event scale", "2, 0.02, 2, 10", scaleDescription).Value),
+                getScale(difficultyConfig.Bind("_EventType Weights", "Rare event scale", "1, 0.02, 1, 10", scaleDescription).Value),
                 getScale(difficultyConfig.Bind("_EventType Weights", "Remove event scale", "15, -0.05, 10, 15", "These events remove something   " + scaleDescription).Value)
             };
+
+            MsgEventTitle = LanguageConfig.Bind("UI Text (General)", "Event Title Text", @"Events:", LanguageDescription);
+
+            MsgOther = LanguageConfig.Bind("UI Text (Other)", "Other Text", @"Other", LanguageDescription);
+            MsgScrapValue = LanguageConfig.Bind("UI Text (Other)", "Scrap Value Text", @"Scrap Value", LanguageDescription);
+            MsgScrapAmount = LanguageConfig.Bind("UI Text (Other)", "Scrap Amount Text", @"Scrap Amount", LanguageDescription);
+            MsgFactorySize = LanguageConfig.Bind("UI Text (Other)", "Factory Size Text", @"Factory Size", LanguageDescription);
+            MsgSpawnChance = LanguageConfig.Bind("UI Text (Other)", "Spawn Chance Text", @"Spawn Chance", LanguageDescription);
+            MsgSpawnCap = LanguageConfig.Bind("UI Text (Other)", "Spawn Cap Text", @"Spawn Cap", LanguageDescription);
+            MsgBonusEnemyhp = LanguageConfig.Bind("UI Text (Other)", "Bonus Enemy Hp Text", @"Bonus enemy hp", LanguageDescription);
+
+            MsgEventType = LanguageConfig.Bind("UI Text (Event Type)", @"Event Type Chances Text", "EventType Chances", LanguageDescription);
+            MsgInsane = LanguageConfig.Bind("UI Text (Event Type)", "Insane Text", @"Insane", LanguageDescription);
+            MsgVeryBad = LanguageConfig.Bind("UI Text (Event Type)", "Very Bad Text", @"VeryBad", LanguageDescription);
+            MsgBad = LanguageConfig.Bind("UI Text (Event Type)", "Bad Text", @"Bad", LanguageDescription);
+            MsgNeutral = LanguageConfig.Bind("UI Text (Event Type)", "Neutral Text", @"Neutral", LanguageDescription);
+            MsgGood = LanguageConfig.Bind("UI Text (Event Type)", "Good Text", @"Good", LanguageDescription);
+            MsgVeryGood = LanguageConfig.Bind("UI Text (Event Type)", "Very Good Text", @"VeryGood", LanguageDescription);
+            MsgRare = LanguageConfig.Bind("UI Text (Event Type)", "Rare Text", @"Rare", LanguageDescription);
+            MsgRemove = LanguageConfig.Bind("UI Text (Event Type)", "Remove Text", @"Remove", LanguageDescription);
+
+            MsgDIfficultyTitle = LanguageConfig.Bind("UI Text (Difficulty)", @"Difficulty Title Text", "Difficulty", LanguageDescription);
+            MsgDifficultyAmount = LanguageConfig.Bind("UI Text (Difficulty)", @"Difficulty Amount Text", @"Difficulty:", LanguageDescription);
+            MsgDay = LanguageConfig.Bind("UI Text (Difficulty)", "Day Text", @"Day:\s\s\s\s\s\s\s\s", LanguageDescription);
+            MsgQuota = LanguageConfig.Bind("UI Text (Difficulty)", "Quota Text", @"Quota:\s\s\s\s\s\s", LanguageDescription);
+            MsgShipScrap = LanguageConfig.Bind("UI Text (Difficulty)", "Ship Scrap Text", @"Ship Scrap:\s", LanguageDescription);
+            MsgMoonRisk = LanguageConfig.Bind("UI Text (Difficulty)", "Moon Risk Text", @"Moon Risk:\s\s", LanguageDescription);
+            MsgWeather = LanguageConfig.Bind("UI Text (Difficulty)", "Weather Text", @"Weather:\s\s", LanguageDescription);
+            MsgHeat = LanguageConfig.Bind("UI Text (Difficulty)", "Heat Text", @"Heat:\s\s\s\s\s\s", LanguageDescription);
+
 
             difficultyTransitions = GetDifficultyTransitionsFromString(difficultyConfig.Bind("Difficulty Scaling", "Difficulty Transitions", "Easy,00FF00,0|Medium,008000,15|Hard,FF0000,30|Very Hard,800000,50|Insane,140000,75", "Format: NAME,HEX,ABOVE, above is the value the name will be shown at.").Value);
             ignoreMaxCap = difficultyConfig.Bind("Difficulty Scaling", "Ignore max cap?", false, "Will ignore max cap if true, upperlimit is dictated by difficulty max cap setting as well.");
@@ -302,12 +369,22 @@ namespace BrutalCompanyMinus
             eclipsedMultiplier = createWeatherSettings(new Weather(LevelWeatherType.Eclipsed, 1.35f, 1.20f));
 
             // UI Settings
-            UIKey = uiConfig.Bind("UI Options", "Toggle UI Key", "K");
-            color = uiConfig.Bind("UI Options", "UI Color Hex", "00A000", "Color hex for UI elements.");
-            uiColorReduction = uiConfig.Bind("UI Options", "UI Color Reduction Factor", 0.6275f, "Changes the color of the UI element when not active (0-1).");
-            colorArrows = uiConfig.Bind("UI Options", "UI Arrow Color Hex", "00A000", "Color hex for UI arrows.");
-            colorArrowsIncrease = uiConfig.Bind("UI Options", "UI Arrow Color Amplification", 255f / 160f, "Mutliplies the color by this number when UI arrows are active.");
-            colorText = uiConfig.Bind("UI Options", "UI Text Color Hex", "00FF00", "Color hex for UI text.");
+            UIKey = uiConfig.Bind("UI Options (Color)", "Toggle UI Key", "K");
+            color = uiConfig.Bind("UI Options (Color)", "UI Color Hex", "00A000", "Color hex for UI elements.");
+            uiColorReduction = uiConfig.Bind("UI Options (Color)", "UI Color Reduction Factor", 0.6275f, "Changes the color of the UI element when not active (0-1).");
+            colorArrows = uiConfig.Bind("UI Options (Color)", "UI Arrow Color Hex", "00A000", "Color hex for UI arrows.");
+            colorArrowsIncrease = uiConfig.Bind("UI Options (Color)", "UI Arrow Color Amplification", 255f / 160f, "Mutliplies the color by this number when UI arrows are active.");
+            colorText = uiConfig.Bind("UI Options (Color)", "UI Text Color Hex", "00FF00", "Color hex for UI text.");
+            
+            colorInsane = uiConfig.Bind("UI Options (Color)", "Insane Event UI Color Hex", "8B008B", "Color hex for insane event type. This only affects the category name color, not events itself.");
+            colorVeryBad = uiConfig.Bind("UI Options (Color)", "Very Bad Event UI Color Hex", "800000", "Color hex for very bad event type. This only affects the category name color, not events itself.");
+            colorBad = uiConfig.Bind("UI Options (Color)", "Bad Event UI Color Hex", "FF0000", "Color hex for bad event type. This only affects the category name color, not events itself.");
+            colorNeutral = uiConfig.Bind("UI Options (Color)", "Neutral Event UI Color Hex", "FFFFFF", "Color hex for neutral event type. This only affects the category name color, not events itself.");
+            colorGood = uiConfig.Bind("UI Options (Color)", "Good Event UI Color Hex", "008000", "Color hex for good event type. This only affects the category name color, not events itself.");
+            colorVeryGood = uiConfig.Bind("UI Options (Color)", "Very Good Event UI Color Hex", "00FF00", "Color hex for very good event type. This only affects the category name color, not events itself.");
+            colorRare = uiConfig.Bind("UI Options (Color)", "Rare Event UI Color Hex", "00FFFF", "Color hex for rare event type. This only affects the category name color, not events itself.");
+            colorRemove = uiConfig.Bind("UI Options (Color)", "Remove Event UI Color Hex", "008000", "Color hex for remove event type. This only affects the category name color, not events itself.");
+
             //menuColor = uiConfig.Bind("UI Options", "UI Menu Color Hex", "000000", "Color hex for UI menu background.");
             //menuTransparency = uiConfig.Bind("UI Options", "UI Menu Transparency", 0.498f, "Transparency for UI menu background. (0-1)");
 
@@ -621,6 +698,7 @@ namespace BrutalCompanyMinus
             allEnemiesConfig.Save();
             levelPropertiesConfig.Save();
             CorePropertiesConfig.Save();
+            LanguageConfig.Save();
             //   extensiveSettingsConfig.Save();
 
             Initalized = true;
