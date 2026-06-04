@@ -37,17 +37,7 @@ namespace BrutalCompanyMinus.Minus.Events
                 new Scale(1.0f, 0.0f, 1.0f, 1.0f),
                 new Scale(2.0f, 0.60f, 2.0f, 6.0f))
             };
-
-            
-
-            //EventsToSpawnWith = new List<string>() { nameof(Tree) };
-
-            //ScaleList.Add(ScaleType.MinDensity, new Scale(0.018f, 0.0f, 0.018f, 0.018f));
-            //ScaleList.Add(ScaleType.MaxDensity, new Scale(0.025f, 0.0f, 0.025f, 0.025f));
         }
-
-        //public override bool AddEventIfOnly() => (Assets.ReadSettingEarly(Paths.ConfigPath + "\\BrutalCompanyMinusExtraReborn\\CoreProperties.cfg", "Enable Beta Events?"));
-
 
         public override void Execute()
         {
