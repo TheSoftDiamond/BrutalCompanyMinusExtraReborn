@@ -138,7 +138,7 @@ namespace BrutalCompanyMinus.Minus
             InsideEnemyRarity, OutsideEnemyRarity, DaytimeEnemyRarity, MinOutsideEnemy, MinInsideEnemy, MaxOutsideEnemy, MaxInsideEnemy,
             ScrapValue, ScrapAmount, FactorySize, MinDensity, MaxDensity, MinCash, MaxCash, MinItemAmount, MaxItemAmount, MinValue, MaxValue, Rarity, MinRarity, MaxRarity,
             MinCut, MaxCut, MinHp, MaxHp, SpawnMultiplier, MaxInsideEnemyCount, MaxOutsideEnemyCount, SpawnCapMultiplier, MinPercentageCut, MaxPercentageCut, MinAmount, MaxAmount, 
-            Percentage, TimeSettings, TimeMin, TimeMax, MinPercentSelected, MaxPercentSelected, ObjectWidth, minMold, maxMold
+            Percentage, TimeSettings, TimeMin, TimeMax, MinPercentSelected, MaxPercentSelected, ObjectWidth, minMold, maxMold, Slipperyness
         }
 
         internal static Dictionary<ScaleType, string> ScaleInfoList = new Dictionary<ScaleType, string>() {
@@ -183,7 +183,8 @@ namespace BrutalCompanyMinus.Minus
             { ScaleType.MaxPercentSelected, "Maximum percentage of something to be selected." },
             { ScaleType.ObjectWidth, "How close an object can spawn to the edges of the navmesh" },
             { ScaleType.minMold, "Minimum amount of mold to be chosen." },
-            { ScaleType.maxMold, "Maximum amount of mold to be chosen." }
+            { ScaleType.maxMold, "Maximum amount of mold to be chosen." },
+            { ScaleType.Slipperyness, "How slippery is the floor is" }
         };
 
         /// <summary>
