@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using HarmonyLib;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -31,17 +32,24 @@ namespace BrutalCompanyMinus.Minus.Events
 
         public override void Execute()
         {
-            RoundManager.Instance.currentLevel.spawnableMapObjects = RoundManager.Instance.currentLevel.spawnableMapObjects.Add(new SpawnableMapObject()
+            var TeleporterTrap = new IndoorMapHazard()
             {
-                prefabToSpawn = Assets.GetObject("TeleporterTrap"),
-                numberToSpawn = new AnimationCurve(new Keyframe(0f, Get(ScaleType.MinAmount)), new Keyframe(1f, Get(ScaleType.MaxAmount))),
-                spawnFacingAwayFromWall = false,
-                spawnFacingWall = false,
-                spawnWithBackToWall = false,
-                spawnWithBackFlushAgainstWall = false,
-                requireDistanceBetweenSpawns = false,
-                disallowSpawningNearEntrances = false
-            });
+                hazardType = new IndoorMapHazardType()
+                {
+                    prefabToSpawn = Assets.GetObject("TeleporterTrap"),
+                    spawnFacingAwayFromWall = false,
+                    spawnFacingWall = false,
+                    spawnWithBackToWall = false,
+                    spawnWithBackFlushAgainstWall = false,
+                    requireDistanceBetweenSpawns = false,
+                    disallowSpawningNearEntrances = false
+                },
+                numberToSpawn = new AnimationCurve(new Keyframe(0f, Get(ScaleType.MinAmount)), new Keyframe(1f, Get(ScaleType.MaxAmount)))
+            };
+
+            EventManager.hazards.Add(TeleporterTrap);
+
+            RoundManager.Instance.currentLevel.indoorMapHazards = RoundManager.Instance.currentLevel.indoorMapHazards.AddToArray(TeleporterTrap);
         }
     }
 }
