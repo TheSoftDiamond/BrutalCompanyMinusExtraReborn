@@ -265,6 +265,63 @@ namespace BrutalCompanyMinus
             }
 
             panelText.text = Manager.textUI.ToString();
+
+            try
+            {
+                Vector3 scale = panelBackground.transform.localScale;
+                Vector3 newscale = new Vector3(
+                    Configuration.uiScaleX != null ? Configuration.uiScaleX.Value : 1,
+                    Configuration.uiScaleY != null ? Configuration.uiScaleY.Value : 1,
+                    Configuration.uiScaleZ != null ? Configuration.uiScaleZ.Value : 1
+                );
+
+                Log.LogMessage($"Got a default scale of {scale.x}, {scale.y}, {scale.z}.");
+
+                Log.LogMessage($"Modifying by a scale of {newscale.x}, {newscale.y}, {newscale.z}.");
+                panelBackground.transform.localScale = new Vector3(scale.x * newscale.x, scale.y * newscale.y, scale.z * newscale.z);
+            }
+            catch
+            {
+                Log.LogError("Failed to set UI scale from config.");
+            }
+
+            try
+            {
+                Vector3 offset = panelBackground.transform.localPosition;
+                Vector3 newoffset = new Vector3(
+                    Configuration.uiPosX != null ? Configuration.uiPosX.Value : 0,
+                    Configuration.uiPosY != null ? Configuration.uiPosY.Value : 0,
+                    Configuration.uiPosZ != null ? Configuration.uiPosZ.Value : 0
+                );
+
+                Log.LogMessage($"Got a default position of {offset.x}, {offset.y}, {offset.z}.");
+
+                Log.LogMessage($"Modifying to a position of {newoffset.x}, {newoffset.y}, {newoffset.z}.");
+                panelBackground.transform.localPosition = new Vector3(offset.x + newoffset.x, offset.y + newoffset.y, offset.z + newoffset.z);
+            }
+            catch
+            {
+                Log.LogError("Failed to set UI offset from config.");
+            }
+
+            try
+            {
+                Vector3 rotation = panelBackground.transform.localEulerAngles;
+                Vector3 newRotation = new Vector3(
+                    Configuration.uiRotX != null ? Configuration.uiRotX.Value : 0,
+                    Configuration.uiRotY != null ? Configuration.uiRotY.Value : 0,
+                    Configuration.uiRotZ != null ? Configuration.uiRotZ.Value : 0
+                );
+
+                Log.LogMessage($"Got a default position of {rotation.x}, {rotation.y}, {rotation.z}.");
+
+                Log.LogMessage($"Modifying to a position of {newRotation.x}, {newRotation.y}, {newRotation.z}.");
+                panelBackground.transform.localEulerAngles = new Vector3(newRotation.x, newRotation.y, newRotation.z);
+            }
+            catch
+            {
+                Log.LogError("Failed to set UI offset from config.");
+            }
         }
 
         void Update()
