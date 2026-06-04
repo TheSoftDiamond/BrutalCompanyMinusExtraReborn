@@ -684,6 +684,32 @@ namespace BrutalCompanyMinus
         }
 
         [ServerRpc(RequireOwnership = false)]
+        public void SetSlimeServerRpc(bool active)
+        {
+            SetSlimeClientRpc(active);
+        }
+
+        [ClientRpc]
+        public void SetSlimeClientRpc(bool active)
+        {
+            SlimeInside.Active = active;
+        }
+
+        
+        [ServerRpc(RequireOwnership = false)]
+        public void SetSlimeSlipperyServerRpc(float slipperyness)
+        {
+            SetSlimeSlipperyClientRpc(slipperyness);
+        }
+
+        [ClientRpc]
+        public void SetSlimeSlipperyClientRpc(float slipperyness)
+        {
+            SlimeInside.SlippinessValue = slipperyness;
+        }
+        
+
+        [ServerRpc(RequireOwnership = false)]
         public void SetEntranceServerRpc(bool active)
         {
             SetEntranceClientRpc(active);
