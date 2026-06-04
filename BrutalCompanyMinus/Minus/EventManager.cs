@@ -113,7 +113,6 @@ namespace BrutalCompanyMinus.Minus
             new Events.ManualCameraFailure(),
             new Events.LeverFailure(),
             new Events.WelcomeToTheFactory(),
-            new Events.TargetingFailureEvent(),
             new Events.FlashLightsFailure(),
             new Events.JetpackFailure(),
             new Events.DoorCircuitFailure(),
@@ -198,6 +197,8 @@ namespace BrutalCompanyMinus.Minus
         /// </summary>
         public static List<MEvent> moddedEvents = new List<MEvent>()
         {
+            //Rare
+
             //Very Good
             new Events.CityOfGold(),
 
@@ -224,7 +225,6 @@ namespace BrutalCompanyMinus.Minus
             new Events.Baldi(),
             new Events.Shiba(),
             new Events.Seamine(),
-            new Events.Bertha(),
             new Events.YeetBomb(),
             new Events.ManStalker(),
             new Events.Foxy(),
@@ -257,7 +257,6 @@ namespace BrutalCompanyMinus.Minus
             new Events.SlenderMan(),
             new Events.TheFiend(),
             new Events.ToilHead(),
-            new Events.Walkers(),
             new Events.GiantShowdown(),
             new Events.MoaiEnemy(),
             new Events.Meltdown(),
@@ -270,6 +269,9 @@ namespace BrutalCompanyMinus.Minus
             new Events.MajoraMoon(),
             new Events.BloodMoon(),
             new Events.Hurricane(),
+            new Events.Bertha(),
+           
+            //Insane
 
             //No Enemy
             new Events.NoMantitoil(),
