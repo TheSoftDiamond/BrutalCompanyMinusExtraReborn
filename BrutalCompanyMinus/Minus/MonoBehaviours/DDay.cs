@@ -40,6 +40,8 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
 
         private LayerMask triggerLayerMask = 1 << 13;
 
+        private static System.Random rng;
+
         public void Start()
         {
             if (instance != null) DestroyInstance();
@@ -52,6 +54,8 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
             sirensFar.volume = volume;
 
             triggerLayerMask = LayerMask.GetMask("Triggers");
+
+            rng = new System.Random(seed);
         }
 
         public void Update() // I honestly dont even know how it's possible for this to persist... It dosen't make any sense to me, how is this even possible.....
@@ -89,14 +93,15 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
                 fireCurrentTime = fireInterval;
 
                 seed++;
-                System.Random rng = new System.Random(seed);
+                //int randomValue = rng.Next();
+                int getRNG = rng.Next();
 
                 // Fire
                 for (int i = 0; i < fireAmount * fireAmountMultiplier; i++)
                 {
                     for (int j = 0; j < 4; j++) // 4 Attempts at safe position
                     {
-                        rng = new System.Random(seed++);
+                        getRNG = rng.Next();
 
                         Vector3 at = Manager.outsideObjectSpawnNodes[rng.Next(Manager.outsideObjectSpawnNodes.Count)];
                         at += new Vector3(rng.Next(-75, 75), 0, rng.Next(-75, 75));
