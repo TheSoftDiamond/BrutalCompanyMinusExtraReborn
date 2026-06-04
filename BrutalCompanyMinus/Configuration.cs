@@ -111,7 +111,7 @@ namespace BrutalCompanyMinus
         // UI settings
         public static ConfigEntry<string>? UIKey, color, colorArrows, colorText;
         public static ConfigEntry<bool>? NormaliseScrapValueDisplay, EnableUI, ShowUILetterBox, ShowExtraProperties, PopUpUI, DisplayUIAfterShipLeaves, DisplayExtraPropertiesAfterShipLeaves, displayEvents;
-        public static ConfigEntry<float>? UITime, scrollSpeed, uiColorReduction, colorArrowsIncrease;
+        public static ConfigEntry<float>? UITime, scrollSpeed, uiColorReduction, colorArrowsIncrease, uiScaleX, uiScaleY, uiScaleZ, uiPosX, uiPosY, uiPosZ, uiRotX, uiRotY, uiRotZ;
 
         public static ConfigEntry<string>? colorInsane, colorVeryBad, colorBad, colorNeutral, colorGood, colorVeryGood, colorRare, colorRemove;
 
@@ -399,6 +399,15 @@ namespace BrutalCompanyMinus
             DisplayExtraPropertiesAfterShipLeaves = uiConfig.Bind("UI Options", "Display extra properties on UI after ship leaves?", true, "This will show Event Type raritys for next day and difficulty info.");
             displayEvents = uiConfig.Bind("UI Options", "Display events?", true, "Having this set to false wont show events in the UI.");
             showEventsInChat = uiConfig.Bind("UI Options", "Will Minus display events in chat?", false);
+            uiScaleX = uiConfig.Bind("UI Options", "UI Scale X", 1.0f, "Scale for UI on the X axis. Do not modify this unless you know what you are doing.");
+            uiScaleY = uiConfig.Bind("UI Options", "UI Scale Y", 1.0f, "Scale for UI on the Y axis. Do not modify this unless you know what you are doing.");
+            uiScaleZ = uiConfig.Bind("UI Options", "UI Scale Z", 1.0f, "Scale for UI on the Z axis. Do not modify this unless you know what you are doing.");
+            uiPosX = uiConfig.Bind("UI Options", "UI Position X Offset", 0.0f, "Offset of UI on the X axis. Do not modify this unless you know what you are doing.");
+            uiPosY = uiConfig.Bind("UI Options", "UI Position Y Offset", 0.0f, "Offset of UI on the Y axis. Do not modify this unless you know what you are doing.");
+            uiPosZ = uiConfig.Bind("UI Options", "UI Position Z Offset", 0.0f, "Offset of UI on the Z axis. Do not modify this unless you know what you are doing.");
+            uiRotX = uiConfig.Bind("UI Options", "UI Rotation X", 0.0f, "Rotation of UI on the X axis. Do not modify this unless you know what you are doing.");
+            uiRotY = uiConfig.Bind("UI Options", "UI Rotation Y", 0.0f, "Rotation of UI on the Y axis. Do not modify this unless you know what you are doing.");
+            uiRotZ = uiConfig.Bind("UI Options", "UI Rotation Z", 0.0f, "Rotation of UI on the Z axis. Do not modify this unless you know what you are doing.");
 
             //Core Properties
             enableCustomEvents = CorePropertiesConfig.Bind("Custom Events", "Enable Custom Events?", true, "Enables custom events to be loaded from the custom events folder.");
