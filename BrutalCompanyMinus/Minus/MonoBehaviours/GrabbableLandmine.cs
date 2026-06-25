@@ -1,54 +1,35 @@
-﻿using GameNetcodeStuff;
+using GameNetcodeStuff;
 using HarmonyLib;
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Security.Cryptography;
-using System.Text;
 using Unity.Netcode;
 using UnityEngine;
 
 namespace BrutalCompanyMinus.Minus.MonoBehaviours
 {
     [HarmonyPatch]
-    [HarmonyPatch(typeof(Landmine))]
     public class GrabbableLandmine : GrabbableObject, IHittable
     {
         private bool mineActivated = true;
 
         public bool hasExploded;
 
-        public ParticleSystem explosionParticle;
+        public Animator mineAnimator = null!;
 
-        public Animator mineAnimator;
+        public AudioSource mineAudio = null!;
 
-        public AudioSource mineAudio;
+        public AudioSource mineTickSource = null!;
 
-        public AudioSource mineFarAudio;
+        public AudioClip mineDetonate = null!;
 
-        public AudioSource mineTickSource;
+        public AudioClip mineTrigger = null!;
 
-        public AudioClip mineDetonate;
+        public AudioClip mineDeactivate = null!;
 
-        public AudioClip mineTrigger;
-
-        public AudioClip mineDetonateFar;
-
-        public AudioClip mineDeactivate;
-
-        public AudioClip minePress;
+        public AudioClip minePress = null!;
 
         private bool sendingExplosionRPC;
 
-        private RaycastHit hit;
-
-        private RoundManager roundManager;
-
         private float pressMineDebounceTimer;
-
-        public bool localPlayerOnMine;
 
         public bool mineGrabbed = false;
 
@@ -58,64 +39,188 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
 
         public float dropSafetyTime = 0.0f;
 
-        [HarmonyPrefix]
-        [HarmonyPatch("Start")]
-        private static void onLandmineStart(ref Landmine __instance)
-        {
-            if (!RoundManager.Instance.IsHost) return;
+        private static int seed = 0;
 
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(Landmine), nameof(Landmine.Start))]
+        private static void onLandmineStart(Landmine __instance)
+        {
             if (Events.GrabbableLandmines.Active)
             {
-                __instance.StartCoroutine(destroySelfAndReplace(__instance));
+                // Parent holds the doorcode object on vanilla mines
+                GameObject terminalObjectRoot = __instance.transform.parent != null ? __instance.transform.parent.gameObject : __instance.gameObject;
+                DisableTerminalAccessibleObjects(terminalObjectRoot);
+
+                if (!RoundManager.Instance.IsHost) return;
+
+                __instance.StartCoroutine(DestroySelfAndReplace(__instance));
             }
             else
             {
+                if (!RoundManager.Instance.IsHost) return;
+
                 seed++;
-                System.Random rng = new System.Random(seed);
-                Net.Instance.GenerateAndSyncTerminalCodeServerRpc(__instance.NetworkObject, rng.Next(RoundManager.Instance.possibleCodesForBigDoors.Length));
+                System.Random rng = new(seed);
+                __instance.StartCoroutine(syncTerminalCodeWhenReady(__instance, rng));
+            }
+
+            static IEnumerator DestroySelfAndReplace(Landmine landmine)
+            {
+                MEvent _event = Events.GrabbableLandmines.Instance;
+
+                float rarity = _event.Getf(MEvent.ScaleType.Rarity);
+
+                seed++;
+                System.Random rng = new(StartOfRound.Instance.randomMapSeed + seed);
+                if (rng.NextDouble() <= rarity)
+                {
+                    GameObject grabbableLandmine = Instantiate(Assets.grabbableLandmine.spawnPrefab, landmine.transform.position, Quaternion.identity);
+                    NetworkObject netObject = grabbableLandmine.GetComponent<NetworkObject>();
+                    netObject.Spawn();
+                    Net.Instance.GenerateAndSyncTerminalCodeServerRpc(netObject, rng.Next(RoundManager.Instance.possibleCodesForBigDoors.Length));
+
+                    int scrapValue = UnityEngine.Random.Range(Assets.grabbableLandmine.minValue, Assets.grabbableLandmine.maxValue + 1);
+                    int multipliedScrapValue = Mathf.RoundToInt(scrapValue * RoundManager.Instance.scrapValueMultiplier * Manager.scrapValueMultiplier);
+                    Net.Instance.SyncScrapValueServerRpc(netObject, multipliedScrapValue);
+
+                    yield return new WaitForSeconds(5.0f);
+
+                    NetworkObject vanillaNetObject = landmine.transform.parent != null ? landmine.transform.parent.GetComponent<NetworkObject>() : landmine.NetworkObject;
+                    if (vanillaNetObject != null && vanillaNetObject.IsSpawned)
+                    {
+                        vanillaNetObject.Despawn(destroy: true);
+                    }
+                }
             }
         }
 
-        private static int seed = 0;
-        private static IEnumerator destroySelfAndReplace(Landmine __instance)
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(Landmine), nameof(Landmine.SpawnExplosion))]
+        private static void ChainGrabbableLandmines(Vector3 explosionPosition, float damageRange)
         {
-            MEvent _event = Events.GrabbableLandmines.Instance;
-
-            float rarity = _event.Getf(MEvent.ScaleType.Rarity);
-
-            seed++;
-            System.Random rng = new System.Random(StartOfRound.Instance.randomMapSeed + seed);
-            if (rng.NextDouble() <= rarity)
+            if (NetworkManager.Singleton == null || !NetworkManager.Singleton.IsServer)
             {
-                GameObject grabbableLandmine = Instantiate(Assets.grabbableLandmine.spawnPrefab, __instance.transform.position, Quaternion.identity);
-                NetworkObject netObject = grabbableLandmine.GetComponent<NetworkObject>();
-                netObject.Spawn();
-
-                Net.Instance.GenerateAndSyncTerminalCodeServerRpc(__instance.NetworkObject, rng.Next(RoundManager.Instance.possibleCodesForBigDoors.Length));
-
-                int scrapValue = UnityEngine.Random.Range(Assets.grabbableLandmine.minValue, Assets.grabbableLandmine.maxValue + 1);
-                int multipliedScrapValue = Mathf.RoundToInt(scrapValue * RoundManager.Instance.scrapValueMultiplier * Manager.scrapValueMultiplier);
-                Net.Instance.SyncScrapValueServerRpc(netObject, multipliedScrapValue);
-
-                yield return new WaitForSeconds(5.0f);
-
-                try
-                {
-                    __instance.transform.parent.gameObject.GetComponent<NetworkObject>().Despawn(destroy: true);
-                } catch
-                {
-
-                }
+                return;
             }
+
+            GrabbableLandmine[] grabbableLandmines = Object.FindObjectsByType<GrabbableLandmine>(FindObjectsSortMode.None);
+            for (int i = 0; i < grabbableLandmines.Length; i++)
+            {
+                GrabbableLandmine mine = grabbableLandmines[i];
+                float distance = Vector3.Distance(explosionPosition, mine.transform.position);
+                if (mine.hasExploded || distance >= damageRange || distance >= 6f)
+                {
+                    continue;
+                }
+
+                if (Physics.Linecast(explosionPosition, mine.transform.position + Vector3.up * 0.3f, out RaycastHit hitInfo, 1073742080, QueryTriggerInteraction.Ignore) && (hitInfo.collider.gameObject.layer == 30 || distance > 4f))
+                {
+                    continue;
+                }
+
+                mine.StartCoroutine(mine.TriggerOtherMineDelayed());
+            }
+        }
+
+        private static void DisableTerminalAccessibleObjects(GameObject rootObject)
+        {
+            if (rootObject == null)
+            {
+                return;
+            }
+
+            foreach (TerminalAccessibleObject terminalAccessibleObject in rootObject.GetComponentsInChildren<TerminalAccessibleObject>(true))
+            {
+                if (terminalAccessibleObject == null)
+                {
+                    continue;
+                }
+
+                // Stops the bugged vanilla update after round ends
+                terminalAccessibleObject.enabled = false;
+            }
+        }
+
+        private static IEnumerator syncTerminalCodeWhenReady(Landmine landmine, System.Random rng)
+        {
+            float waitTime = 0f;
+            while (landmine != null && (landmine.NetworkObject == null || !landmine.NetworkObject.IsSpawned) && waitTime < 2f)
+            {
+                waitTime += Time.deltaTime;
+                yield return null;
+            }
+
+            if (landmine == null || landmine.NetworkObject == null || !landmine.NetworkObject.IsSpawned)
+            {
+                yield break;
+            }
+
+            Net.Instance.GenerateAndSyncTerminalCodeServerRpc(landmine.NetworkObject, rng.Next(RoundManager.Instance.possibleCodesForBigDoors.Length));
         }
 
         public override void Start()
         {
             StartCoroutine(StartIdleAnimation());
             base.Start();
+            TerminalAccessibleObject terminalAccessibleObject = GetComponentInChildren<TerminalAccessibleObject>();
+            if (terminalAccessibleObject != null)
+            {
+                // Should be done on the prefab if this isn't
+                terminalAccessibleObject.terminalCodeEvent = new InteractEvent();
+                terminalAccessibleObject.terminalCodeEvent.AddListener(DetonateFromTerminal);
+                terminalAccessibleObject.terminalCodeCooldownEvent = new InteractEvent();
+            }
+            DisableTerminalAccessibleObjects(gameObject);
+            if (IsServer)
+            {
+                DisableTerminalAccessibleObjectsClientRpc();
+            }
+
+            ScanNodeProperties scanNode = GetComponentInChildren<ScanNodeProperties>();
+            if (scanNode != null)
+            {
+                // Stop the scan node collider from falling through ground
+                Rigidbody scanNodeRigidbody = scanNode.gameObject.GetComponent<Rigidbody>() ?? scanNode.gameObject.AddComponent<Rigidbody>();
+                scanNodeRigidbody.isKinematic = false;
+                scanNodeRigidbody.useGravity = false;
+                scanNodeRigidbody.constraints = RigidbodyConstraints.FreezeAll;
+            }
 
             dropSafetyTime = 2.0f;
             mineGrabbed = true;
+
+            IEnumerator StartIdleAnimation()
+            {
+                RoundManager roundManager = RoundManager.Instance;
+                if (roundManager == null)
+                {
+                    yield break;
+                }
+
+                if (roundManager.BreakerBoxRandom != null)
+                {
+                    yield return new WaitForSeconds((float)roundManager.BreakerBoxRandom.NextDouble() + 0.5f);
+                }
+                mineAnimator.SetTrigger("startIdle");
+                mineAudio.pitch = UnityEngine.Random.Range(0.9f, 1.1f);
+            }
+        }
+
+        private void DetonateFromTerminal(PlayerControllerB playerWhoTriggered)
+        {
+            TriggerMineOnLocalClientByExiting();
+        }
+
+        [Rpc(SendTo.ClientsAndHost)]
+        private void DisableTerminalAccessibleObjectsClientRpc()
+        {
+            DisableTerminalAccessibleObjects(gameObject);
+        }
+
+        public override void OnDestroy()
+        {
+            DisableTerminalAccessibleObjects(gameObject);
+            base.OnDestroy();
         }
 
         public override void Update()
@@ -144,11 +249,6 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
             {
                 pressMineDebounceTimer -= Time.deltaTime;
             }
-            if (localPlayerOnMine && GameNetworkManager.Instance.localPlayerController.teleportedLastFrame)
-            {
-                localPlayerOnMine = false;
-                TriggerMineOnLocalClientByExiting();
-            }
             base.Update();
         }
 
@@ -161,13 +261,13 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
             playMineTickSourceServerRpc(true);
         }
 
-        [ServerRpc(RequireOwnership = false)]
+        [Rpc(SendTo.Server, RequireOwnership = false)]
         private void OnGrabServerRpc() => OnGrabClientRpc();
 
-        [ClientRpc]
+        [Rpc(SendTo.ClientsAndHost)]
         private void OnGrabClientRpc() => OnGrab();
 
-        private void OnDisacrd()
+        private void OnDiscard()
         {
             mineGrabbed = true;
             onBlowUpSchedule = false;
@@ -176,11 +276,11 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
             playMineTickSourceServerRpc(false);
         }
 
-        [ServerRpc(RequireOwnership = false)]
+        [Rpc(SendTo.Server, RequireOwnership = false)]
         private void OnDiscardServerRpc() => OnDiscardClientRpc();
 
-        [ClientRpc]
-        private void OnDiscardClientRpc() => OnDisacrd();
+        [Rpc(SendTo.ClientsAndHost)]
+        private void OnDiscardClientRpc() => OnDiscard();
 
         public override void GrabItem()
         {
@@ -192,7 +292,7 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
         public override void DiscardItem()
         {
             base.DiscardItem();
-            OnDisacrd();
+            OnDiscard();
             OnDiscardServerRpc();
         }
 
@@ -206,17 +306,17 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
         public override void DiscardItemFromEnemy()
         {
             base.DiscardItemFromEnemy();
-            OnDisacrd();
+            OnDiscard();
             OnDiscardServerRpc();
         }
 
-        [ServerRpc(RequireOwnership = false)]
+        [Rpc(SendTo.Server, RequireOwnership = false)]
         private void playMineTickSourceServerRpc(bool toggle)
         {
             playMineTickSourceClientRpc(toggle);
         }
 
-        [ClientRpc]
+        [Rpc(SendTo.ClientsAndHost)]
         private void playMineTickSourceClientRpc(bool toggle)
         {
             if (toggle)
@@ -244,24 +344,19 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
             }
         }
 
-        [ServerRpc(RequireOwnership = false)]
+        [Rpc(SendTo.Server, RequireOwnership = false)]
         public void ToggleMineServerRpc(bool enable)
         {
             ToggleMineClientRpc(enable);
         }
 
-        [ClientRpc]
+        [Rpc(SendTo.ClientsAndHost)]
         public void ToggleMineClientRpc(bool enable)
         {
-            ToggleMineEnabledLocalClient(enable);
-        }
-
-        public void ToggleMineEnabledLocalClient(bool enabled)
-        {
-            if (mineActivated != enabled)
+            if (mineActivated != enable)
             {
-                mineActivated = enabled;
-                if (!enabled)
+                mineActivated = enable;
+                if (!enable)
                 {
                     mineAudio.PlayOneShot(mineDeactivate);
                     WalkieTalkie.TransmitOneShotAudio(mineAudio, mineDeactivate);
@@ -269,62 +364,42 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
             }
         }
 
-        private IEnumerator StartIdleAnimation()
-        {
-            roundManager = FindObjectOfType<RoundManager>();
-            if (!(roundManager == null))
-            {
-                if (roundManager.BreakerBoxRandom != null)
-                {
-                    yield return new WaitForSeconds((float)roundManager.BreakerBoxRandom.NextDouble() + 0.5f);
-                }
-                mineAnimator.SetTrigger("startIdle");
-                mineAudio.pitch = UnityEngine.Random.Range(0.9f, 1.1f);
-            }
-        }
+        private void OnTriggerEnter(Collider other) => MineCollisionEnter(other);
 
-        private void OnTriggerEnter(Collider other)
+        private void OnCollisionEnter(Collision collision) => MineCollisionEnter(collision.collider);
+
+        private void MineCollisionEnter(Collider other)
         {
             if (hasExploded || pressMineDebounceTimer > 0f || mineGrabbed || Events.GrabbableLandmines.LandmineDisabled || dropSafetyTime > 0.0f)
             {
                 return;
             }
-            Debug.Log(string.Format("Trigger entered mine: {0}; {1}; {2}", other.tag, other.CompareTag("Player") || other.CompareTag("PlayerBody"), other.CompareTag("PhysicsProp") || other.tag.StartsWith("PlayerRagdoll")));
-            if (other.CompareTag("Player") || other.CompareTag("PlayerBody"))
+            if (!other.CompareTag("PhysicsProp") && !other.tag.StartsWith("PlayerRagdoll"))
             {
-                localPlayerOnMine = true;
-                pressMineDebounceTimer = 0.5f;
-                PressMineServerRpc();
+                return;
             }
-            else
+            if ((bool)other.GetComponent<DeadBodyInfo>())
             {
-                if (!other.CompareTag("PhysicsProp") && !other.tag.StartsWith("PlayerRagdoll"))
+                if (other.GetComponent<DeadBodyInfo>().playerScript != GameNetworkManager.Instance.localPlayerController)
                 {
                     return;
                 }
-                if ((bool)other.GetComponent<DeadBodyInfo>())
-                {
-                    if (other.GetComponent<DeadBodyInfo>().playerScript != GameNetworkManager.Instance.localPlayerController)
-                    {
-                        return;
-                    }
-                }
-                else if ((bool)other.GetComponent<GrabbableObject>() && !other.GetComponent<GrabbableObject>().NetworkObject.IsOwner)
-                {
-                    return;
-                }
-                pressMineDebounceTimer = 0.5f;
-                PressMineServerRpc();
             }
+            else if ((bool)other.GetComponent<GrabbableObject>() && !other.GetComponent<GrabbableObject>().NetworkObject.IsOwner)
+            {
+                return;
+            }
+            pressMineDebounceTimer = 0.5f;
+            PressMineServerRpc();
         }
 
-        [ServerRpc(RequireOwnership = false)]
+        [Rpc(SendTo.Server, RequireOwnership = false)]
         public void PressMineServerRpc()
         {
             PressMineClientRpc();
         }
 
-        [ClientRpc]
+        [Rpc(SendTo.ClientsAndHost)]
         public void PressMineClientRpc()
         {
             pressMineDebounceTimer = 0.5f;
@@ -332,57 +407,53 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
             WalkieTalkie.TransmitOneShotAudio(mineAudio, minePress);
         }
 
-        private void OnTriggerExit(Collider other)
+        private void OnTriggerExit(Collider other) => MineCollisionExit(other);
+
+        private void OnCollisionExit(Collision collision) => MineCollisionExit(collision.collider);
+
+        private void MineCollisionExit(Collider other)
         {
             if (hasExploded || !mineActivated || mineGrabbed || Events.GrabbableLandmines.LandmineDisabled || dropSafetyTime > 0.0f)
             {
                 return;
             }
-            Debug.Log("Object leaving mine trigger, gameobject name: " + other.gameObject.name);
-            Debug.Log(string.Format("Trigger exited mine: {0}; ({1} / {2}) {3}; {4}", other.tag, other.gameObject.name, other.transform.name, other.CompareTag("Player") || other.CompareTag("PlayerBody"), other.CompareTag("PhysicsProp") || other.tag.StartsWith("PlayerRagdoll")));
-            if (other.CompareTag("Player") || other.CompareTag("PlayerBody"))
+            if (!other.tag.StartsWith("PlayerRagdoll") && !other.CompareTag("PhysicsProp"))
             {
-                localPlayerOnMine = false;
-                TriggerMineOnLocalClientByExiting();
+                return;
             }
-            else
+            if ((bool)other.GetComponent<DeadBodyInfo>())
             {
-                if (!other.tag.StartsWith("PlayerRagdoll") && !other.CompareTag("PhysicsProp"))
+                if (other.GetComponent<DeadBodyInfo>().playerScript != GameNetworkManager.Instance.localPlayerController)
                 {
                     return;
                 }
-                if ((bool)other.GetComponent<DeadBodyInfo>())
-                {
-                    if (other.GetComponent<DeadBodyInfo>().playerScript != GameNetworkManager.Instance.localPlayerController)
-                    {
-                        return;
-                    }
-                }
-                else if ((bool)other.GetComponent<GrabbableObject>() && !other.GetComponent<GrabbableObject>().NetworkObject.IsOwner)
-                {
-                    return;
-                }
-                TriggerMineOnLocalClientByExiting();
             }
+            else if ((bool)other.GetComponent<GrabbableObject>() && !other.GetComponent<GrabbableObject>().NetworkObject.IsOwner)
+            {
+                return;
+            }
+            TriggerMineOnLocalClientByExiting();
         }
 
         private void TriggerMineOnLocalClientByExiting()
         {
-            if (!hasExploded || !mineGrabbed || dropSafetyTime <= 0.0f)
+            if (hasExploded || mineGrabbed || dropSafetyTime > 0.0f)
             {
-                SetOffMineAnimation();
-                sendingExplosionRPC = true;
-                ExplodeMineServerRpc();
+                return;
             }
+
+            SetOffMineAnimation();
+            sendingExplosionRPC = true;
+            ExplodeMineServerRpc();
         }
 
-        [ServerRpc(RequireOwnership = false)]
+        [Rpc(SendTo.Server, RequireOwnership = false)]
         public void ExplodeMineServerRpc()
         {
             ExplodeMineClientRpc();
         }
 
-        [ClientRpc]
+        [Rpc(SendTo.ClientsAndHost)]
         public void ExplodeMineClientRpc()
         {
             if (sendingExplosionRPC)
@@ -397,117 +468,57 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
 
         public void SetOffMineAnimation()
         {
-            if (dropSafetyTime > 0.0f || mineGrabbed) return;
+            if (hasExploded || dropSafetyTime > 0.0f || mineGrabbed) return;
             hasExploded = true;
             mineAnimator.SetTrigger("detonate");
             mineAudio.PlayOneShot(mineTrigger, 1f);
         }
 
-        private IEnumerator TriggerOtherMineDelayed(GrabbableLandmine mine)
-        {
-            if (!mine.hasExploded)
-            {
-                mine.mineAudio.pitch = UnityEngine.Random.Range(0.75f, 1.07f);
-                mine.hasExploded = true;
-                yield return new WaitForSeconds(0.2f);
-                mine.SetOffMineAnimation();
-            }
-        }
-
         public void Detonate()
         {
             if (dropSafetyTime > 0.0f || mineGrabbed) return;
-            
+
             mineAudio.pitch = UnityEngine.Random.Range(0.93f, 1.07f);
             mineAudio.PlayOneShot(mineDetonate, 1f);
-            SpawnExplosion(transform.position + Vector3.up, spawnExplosionEffect: false, 5.7f, 6.4f);
-            if (NetworkManager.Singleton.IsServer) StartCoroutine(DestroyObject());
+
+            Vector3 explosionPosition = transform.position + Vector3.up;
+            Landmine.SpawnExplosion(explosionPosition, spawnExplosionEffect: false, 5.7f, 6f);
+
+            if (NetworkManager.Singleton.IsServer)
+            {
+                StartCoroutine(DestroyObject());
+            }
+        }
+
+        private IEnumerator TriggerOtherMineDelayed()
+        {
+            if (hasExploded)
+            {
+                yield break;
+            }
+
+            // Chain mines need to go through the grabbable RPC
+            mineAudio.pitch = UnityEngine.Random.Range(0.75f, 1.07f);
+            yield return new WaitForSeconds(0.2f);
+            dropSafetyTime = -1.0f;
+            mineGrabbed = false;
+            onBlowUpSchedule = false;
+            countDown = 0.0f;
+            SetOffMineAnimation();
+            sendingExplosionRPC = true;
+            ExplodeMineServerRpc();
         }
 
         private IEnumerator DestroyObject()
         {
             yield return new WaitForSeconds(5.0f);
-            gameObject.GetComponent<NetworkObject>().Despawn(destroy: true);
-        }
-
-        public static void SpawnExplosion(Vector3 explosionPosition, bool spawnExplosionEffect = false, float killRange = 1f, float damageRange = 1f)
-        {
-            Debug.Log("Spawning explosion at pos: {explosionPosition}");
-            if (spawnExplosionEffect)
+            if (NetworkObject != null && NetworkObject.IsSpawned)
             {
-                Instantiate(StartOfRound.Instance.explosionPrefab, explosionPosition, Quaternion.Euler(-90f, 0f, 0f), RoundManager.Instance.mapPropsContainer.transform).SetActive(value: true);
-            }
-            float num = Vector3.Distance(GameNetworkManager.Instance.localPlayerController.transform.position, explosionPosition);
-            if (num < 14f)
-            {
-                HUDManager.Instance.ShakeCamera(ScreenShakeType.Big);
-            }
-            else if (num < 25f)
-            {
-                HUDManager.Instance.ShakeCamera(ScreenShakeType.Small);
-            }
-            Collider[] array = Physics.OverlapSphere(explosionPosition, 6f, 2621448, QueryTriggerInteraction.Collide);
-            PlayerControllerB playerControllerB = null;
-            for (int i = 0; i < array.Length; i++)
-            {
-                float num2 = Vector3.Distance(explosionPosition, array[i].transform.position);
-                if (num2 > 4f && Physics.Linecast(explosionPosition, array[i].transform.position + Vector3.up * 0.3f, 256, QueryTriggerInteraction.Ignore))
-                {
-                    continue;
-                }
-                if (array[i].gameObject.layer == 3)
-                {
-                    playerControllerB = array[i].gameObject.GetComponent<PlayerControllerB>();
-                    if (playerControllerB != null && playerControllerB.IsOwner)
-                    {
-                        if (num2 < killRange)
-                        {
-                            Vector3 bodyVelocity = (playerControllerB.gameplayCamera.transform.position - explosionPosition) * 80f / Vector3.Distance(playerControllerB.gameplayCamera.transform.position, explosionPosition);
-                            playerControllerB.KillPlayer(bodyVelocity, spawnBody: true, CauseOfDeath.Blast);
-                        }
-                        else if (num2 < damageRange)
-                        {
-                            playerControllerB.DamagePlayer(50);
-                        }
-                    }
-                }
-                else if (array[i].gameObject.layer == 21)
-                {
-                    GrabbableLandmine componentInChildren = array[i].gameObject.GetComponentInChildren<GrabbableLandmine>();
-                    if (componentInChildren != null && !componentInChildren.hasExploded && num2 < 6f)
-                    {
-                        Debug.Log("Setting off other mine");
-                        componentInChildren.StartCoroutine(componentInChildren.TriggerOtherMineDelayed(componentInChildren));
-                    }
-                }
-                else if (array[i].gameObject.layer == 19)
-                {
-                    EnemyAICollisionDetect componentInChildren2 = array[i].gameObject.GetComponentInChildren<EnemyAICollisionDetect>();
-                    if (componentInChildren2 != null && componentInChildren2.mainScript.IsOwner && num2 < 4.5f)
-                    {
-                        componentInChildren2.mainScript.HitEnemyOnLocalClient(6);
-                    }
-                }
-            }
-            int num3 = ~LayerMask.GetMask("Room");
-            num3 = ~LayerMask.GetMask("Colliders");
-            array = Physics.OverlapSphere(explosionPosition, 10f, num3);
-            for (int j = 0; j < array.Length; j++)
-            {
-                Rigidbody component = array[j].GetComponent<Rigidbody>();
-                if (component != null)
-                {
-                    component.AddExplosionForce(70f, explosionPosition, 10f);
-                }
+                NetworkObject.Despawn(destroy: true);
             }
         }
 
-        public bool MineHasLineOfSight(Vector3 pos)
-        {
-            return !Physics.Linecast(transform.position, pos, out hit, 256);
-        }
-
-        bool IHittable.Hit(int force, Vector3 hitDirection, PlayerControllerB playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
+        bool IHittable.Hit(int force, Vector3 hitDirection, PlayerControllerB playerWhoHit, bool playHitSFX, int hitID)
         {
             if (mineGrabbed) return false;
             SetOffMineAnimation();
@@ -515,7 +526,5 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
             ExplodeMineServerRpc();
             return true;
         }
-
     }
-
 }

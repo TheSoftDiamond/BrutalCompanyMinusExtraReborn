@@ -253,13 +253,13 @@ namespace BrutalCompanyMinus.Minus.Handlers
                 Log.LogError("Failed to patch BeginGrabObject()");
             }
 
-            Log.LogInfo("Patched Section     PlayerControllerB.BeginGrabObject()");
+            Log.LogDebug("Patched Section     PlayerControllerB.BeginGrabObject()");
             for (int i = 0; i < index + 4; i++)
             {
                 string labels = "", arrow = "";
                 foreach (Label l in code[i].labels) labels += code[i].labels;
                 if (i == index || i == index + 1) arrow = "-> ";
-                Log.LogInfo($"{arrow}{i}: {code[i].opcode}, {code[i].operand}, {labels}");
+                //Log.LogInfo($"{arrow}{i}: {code[i].opcode}, {code[i].operand}, {labels}");
             }
 
             return code.AsEnumerable();

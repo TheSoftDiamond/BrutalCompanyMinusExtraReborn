@@ -1,29 +1,24 @@
-﻿using GameNetcodeStuff;
-using HarmonyLib;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Emit;
+using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
+
+using System.Collections.Generic;
 
 namespace BrutalCompanyMinus.Minus.MonoBehaviours
 {
     public class AntiCoilHeadAI : EnemyAI
     {
-        public AISearchRoutine searchForPlayers;
+        public AISearchRoutine searchForPlayers = null!;
 
-        private float checkLineOfSightInterval;
-
-        private bool hasEnteredChaseMode;
+        private readonly List<PlayerControllerB> lookingPlayerQueue = [];
 
         private bool stoppingMovement;
 
         private bool hasStopped;
 
-        public AnimationStopPoints animStopPoints;
+        public AnimationStopPoints animStopPoints = null!;
 
-        private float currentChaseSpeed = 14.5f;
+        private float currentChaseSpeed = 18f;
 
         private float currentAnimSpeed = 1f;
 
@@ -33,17 +28,120 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
 
         private float stopAndGoMinimumInterval;
 
-        private float timeSinceHittingPlayer;
+        private float hitPlayerTimer;
 
-        public AudioClip[] springNoises;
+        private float stopMovementTimer;
 
-        public Collider mainCollider;
+        public AudioClip[] springNoises = null!;
+
+        public Collider mainCollider = null!;
+
+        private bool PlayerIsInAntiCoilArea(PlayerControllerB player)
+        {
+            // Keep outside and facility targeting separate
+            if (isOutside)
+            {
+                return !player.isInsideFactory && !player.isInHangarShipRoom;
+            }
+            return player.isInsideFactory;
+        }
+
+        private bool PlayerIsLookingAtAntiCoil(PlayerControllerB player)
+        {
+            if (!PlayerIsInAntiCoilArea(player) || !PlayerIsTargetable(player))
+            {
+                return false;
+            }
+
+            Transform lineOfSightOrigin = eye ?? transform;
+            return player.HasLineOfSightToPosition(transform.position + Vector3.up * 1.6f, 60f) && Vector3.SqrMagnitude(player.gameplayCamera.transform.position - lineOfSightOrigin.position) > 0.09f;
+        }
+
+        private bool ShouldRoamWithoutPlayers()
+        {
+            // Outside ones shouldnt camp entrances forever
+            if (StartOfRound.Instance.allPlayersDead)
+            {
+                return false;
+            }
+
+            for (int i = 0; i < StartOfRound.Instance.allPlayerScripts.Length; i++)
+            {
+                PlayerControllerB player = StartOfRound.Instance.allPlayerScripts[i];
+                if (!PlayerIsInAntiCoilArea(player) || !PlayerIsTargetable(player))
+                {
+                    continue;
+                }
+                if (!isOutside || Vector3.SqrMagnitude(transform.position - player.transform.position) < 2500f)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private bool TargetFirstLookingPlayer(out PlayerControllerB firstLookingPlayer)
+        {
+            for (int i = lookingPlayerQueue.Count - 1; i >= 0; i--)
+            {
+                if (!PlayerIsLookingAtAntiCoil(lookingPlayerQueue[i]))
+                {
+                    lookingPlayerQueue.RemoveAt(i);
+                }
+            }
+
+            for (int i = 0; i < StartOfRound.Instance.allPlayerScripts.Length; i++)
+            {
+                PlayerControllerB player = StartOfRound.Instance.allPlayerScripts[i];
+                if (!PlayerIsLookingAtAntiCoil(player) || lookingPlayerQueue.Contains(player))
+                {
+                    continue;
+                }
+
+                lookingPlayerQueue.Add(player);
+            }
+
+            if (lookingPlayerQueue.Count == 0)
+            {
+                firstLookingPlayer = null!;
+                return false;
+            }
+
+            firstLookingPlayer = lookingPlayerQueue[0];
+            targetPlayer = firstLookingPlayer;
+            return true;
+        }
+
+        private void StopMovingOnOwner()
+        {
+            if (!IsOwner)
+            {
+                return;
+            }
+
+            // Owner has to kill the nav movement
+            if (agent.speed != 0f || movingTowardsTargetPlayer)
+            {
+                agent.speed = 0f;
+                movingTowardsTargetPlayer = false;
+                SetDestinationToPosition(transform.position);
+            }
+        }
+
+        private void StopActiveSearches()
+        {
+            if (searchForPlayers.inProgress)
+            {
+                StopSearch(searchForPlayers);
+            }
+        }
 
         public override void DoAIInterval()
         {
             base.DoAIInterval();
             if (StartOfRound.Instance.allPlayersDead || isEnemyDead)
             {
+                StopActiveSearches();
                 return;
             }
             switch (currentBehaviourStateIndex)
@@ -55,20 +153,38 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
                             ChangeOwnershipOfEnemy(StartOfRound.Instance.allPlayerScripts[0].actualClientId);
                             break;
                         }
-                        for (int i = 0; i < 4; i++)
+
+                        // only wake up when someone is actually looking
+                        if (TargetFirstLookingPlayer(out PlayerControllerB wakeTargetPlayer))
                         {
-                            if (PlayerIsTargetable(StartOfRound.Instance.allPlayerScripts[i]) && !Physics.Linecast(transform.position + Vector3.up * 0.5f, StartOfRound.Instance.allPlayerScripts[i].gameplayCamera.transform.position, StartOfRound.Instance.collidersAndRoomMaskAndDefault) && Vector3.Distance(transform.position, StartOfRound.Instance.allPlayerScripts[i].transform.position) < 30f)
-                            {
-                                SwitchToBehaviourState(1);
-                                return;
-                            }
+                            previousTarget = wakeTargetPlayer;
+                            ChangeOwnershipOfEnemy(wakeTargetPlayer.actualClientId);
+                            SwitchToBehaviourState(1);
+                            return;
                         }
-                        agent.speed = 6f;
-                        if (!searchForPlayers.inProgress)
+
+                        if (ShouldRoamWithoutPlayers())
                         {
+                            previousTarget = null;
+                            addPlayerVelocityToDestination = 0f;
+                            agent.speed = 6f;
                             movingTowardsTargetPlayer = false;
-                            StartSearch(transform.position, searchForPlayers);
+                            if (!searchForPlayers.inProgress)
+                            {
+                                StartSearch(transform.position, searchForPlayers);
+                            }
+                            break;
                         }
+
+                        if (searchForPlayers.inProgress)
+                        {
+                            StopSearch(searchForPlayers);
+                        }
+                        previousTarget = null;
+                        addPlayerVelocityToDestination = 0f;
+                        StopMovingOnOwner();
+                        creatureAnimator.SetFloat("walkSpeed", 0f);
+                        currentAnimSpeed = 0f;
                         break;
                     }
                 case 1:
@@ -76,17 +192,24 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
                     {
                         StopSearch(searchForPlayers);
                     }
-                    if (TargetClosestPlayer())
+                    if (TargetFirstLookingPlayer(out PlayerControllerB chaseTargetPlayer))
                     {
-                        if (previousTarget != targetPlayer)
+                        if (previousTarget != chaseTargetPlayer)
                         {
-                            previousTarget = targetPlayer;
-                            ChangeOwnershipOfEnemy(targetPlayer.actualClientId);
+                            previousTarget = chaseTargetPlayer;
+                            ChangeOwnershipOfEnemy(chaseTargetPlayer.actualClientId);
                         }
+                        agent.stoppingDistance = 0f;
+                        agent.acceleration = 50f;
+                        addPlayerVelocityToDestination = 0f;
                         movingTowardsTargetPlayer = true;
                     }
                     else
                     {
+                        // Stop chasing when no one looking
+                        addPlayerVelocityToDestination = 0f;
+                        movingTowardsTargetPlayer = false;
+                        StopMovingOnOwner();
                         SwitchToBehaviourState(0);
                         ChangeOwnershipOfEnemy(StartOfRound.Instance.allPlayerScripts[0].actualClientId);
                     }
@@ -101,14 +224,41 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
             {
                 return;
             }
-            if (timeSinceHittingPlayer >= 0f)
+            if (hitPlayerTimer >= 0f)
             {
-                timeSinceHittingPlayer -= Time.deltaTime;
+                hitPlayerTimer -= Time.deltaTime;
             }
-            int num = currentBehaviourStateIndex;
-            if (num == 0 || num != 1)
+            if (currentBehaviourStateIndex != 1)
             {
+                if (ShouldRoamWithoutPlayers())
+                {
+                    stoppingMovement = false;
+                    stopMovementTimer = 0f;
+                    if (hasStopped)
+                    {
+                        hasStopped = false;
+                        mainCollider.isTrigger = true;
+                    }
+                    currentAnimSpeed = Mathf.Lerp(currentAnimSpeed, 2f, 5f * Time.deltaTime);
+                    creatureAnimator.SetFloat("walkSpeed", currentAnimSpeed);
+                    if (IsOwner)
+                    {
+                        addPlayerVelocityToDestination = 0f;
+                        agent.speed = 6f;
+                        movingTowardsTargetPlayer = false;
+                    }
+                    return;
+                }
+                stoppingMovement = true;
+                stopMovementTimer = 0f;
+                creatureAnimator.SetFloat("walkSpeed", 0f);
+                currentAnimSpeed = 0f;
+                StopMovingOnOwner();
                 return;
+            }
+            if (!IsOwner)
+            {
+                wasOwnerLastFrame = false;
             }
             if (IsOwner)
             {
@@ -119,7 +269,7 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
                 if (!wasOwnerLastFrame)
                 {
                     wasOwnerLastFrame = true;
-                    if (!stoppingMovement && timeSinceHittingPlayer < 0.12f)
+                    if (!stoppingMovement)
                     {
                         agent.speed = currentChaseSpeed;
                     }
@@ -129,11 +279,12 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
                     }
                 }
                 bool flag = true;
-                for (int i = 0; i < 4; i++)
+                for (int i = 0; i < StartOfRound.Instance.allPlayerScripts.Length; i++)
                 {
-                    if (PlayerIsTargetable(StartOfRound.Instance.allPlayerScripts[i]) && StartOfRound.Instance.allPlayerScripts[i].HasLineOfSightToPosition(transform.position + Vector3.up * 1.6f, 68f) && Vector3.Distance(StartOfRound.Instance.allPlayerScripts[i].gameplayCamera.transform.position, eye.position) > 0.3f)
+                    if (PlayerIsLookingAtAntiCoil(StartOfRound.Instance.allPlayerScripts[i]))
                     {
                         flag = false;
+                        break;
                     }
                 }
                 if (stunNormalizedTimer > 0f)
@@ -158,19 +309,29 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
             {
                 if (!animStopPoints.canAnimationStop)
                 {
-                    return;
+                    // dont let anticoilhead slide forever
+                    // might be overkill but gets the job done
+                    stopMovementTimer += Time.deltaTime;
+                    if (stopMovementTimer <= 0.27f)
+                    {
+                        return;
+                    }
+                }
+                else
+                {
+                    stopMovementTimer = 0f;
                 }
                 if (!hasStopped)
                 {
                     hasStopped = true;
-                    if (GameNetworkManager.Instance.localPlayerController.HasLineOfSightToPosition(transform.position, 70f, 25))
+                    if (GameNetworkManager.Instance.localPlayerController.HasLineOfSightToPosition(transform.position, 60f, 25))
                     {
-                        float num2 = Vector3.Distance(transform.position, GameNetworkManager.Instance.localPlayerController.transform.position);
-                        if (num2 < 4f)
+                        float num2 = Vector3.SqrMagnitude(transform.position - GameNetworkManager.Instance.localPlayerController.transform.position);
+                        if (num2 < 16f)
                         {
                             GameNetworkManager.Instance.localPlayerController.JumpToFearLevel(0.9f);
                         }
-                        else if (num2 < 9f)
+                        else if (num2 < 81f)
                         {
                             GameNetworkManager.Instance.localPlayerController.JumpToFearLevel(0.4f);
                         }
@@ -188,7 +349,7 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
                         }
                     }
                 }
-                if (mainCollider.isTrigger && Vector3.Distance(GameNetworkManager.Instance.localPlayerController.transform.position, transform.position) > 0.25f)
+                if (mainCollider.isTrigger && Vector3.SqrMagnitude(GameNetworkManager.Instance.localPlayerController.transform.position - transform.position) > 0.0625f)
                 {
                     mainCollider.isTrigger = false;
                 }
@@ -196,11 +357,13 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
                 currentAnimSpeed = 0f;
                 if (IsOwner)
                 {
-                    agent.speed = 0f;
+                    addPlayerVelocityToDestination = 0f;
+                    StopMovingOnOwner();
                 }
             }
             else
             {
+                stopMovementTimer = 0f;
                 if (hasStopped)
                 {
                     hasStopped = false;
@@ -210,30 +373,56 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
                 creatureAnimator.SetFloat("walkSpeed", currentAnimSpeed);
                 if (IsOwner)
                 {
+                    agent.stoppingDistance = 0f;
+                    agent.acceleration = 50f;
+                    addPlayerVelocityToDestination = 0f;
                     agent.speed = Mathf.Lerp(agent.speed, currentChaseSpeed, 4.5f * Time.deltaTime);
+                    movingTowardsTargetPlayer = true;
                 }
             }
         }
 
-        [ServerRpc]
+        public override void NavigateTowardsTargetPlayer()
+        {
+            if (targetPlayer == null)
+            {
+                return;
+            }
+            if (setDestinationToPlayerInterval <= 0f)
+            {
+                setDestinationToPlayerInterval = 0.05f;
+                destination = targetPlayer.transform.position;
+                moveTowardsDestination = true;
+                if (agent.enabled && agent.isOnNavMesh)
+                {
+                    agent.SetDestination(destination);
+                }
+            }
+            else
+            {
+                setDestinationToPlayerInterval -= Time.deltaTime;
+            }
+        }
+
+        [Rpc(SendTo.Server)]
         public void SetAnimationStopServerRpc()
         {
             SetAnimationStopClientRpc();
         }
 
-        [ClientRpc]
+        [Rpc(SendTo.ClientsAndHost)]
         public void SetAnimationStopClientRpc()
         {
             stoppingMovement = true;
         }
 
-        [ServerRpc]
+        [Rpc(SendTo.Server)]
         public void SetAnimationGoServerRpc()
         {
             SetAnimationGoClientRpc();
         }
 
-        [ClientRpc]
+        [Rpc(SendTo.ClientsAndHost)]
         public void SetAnimationGoClientRpc()
         {
             stoppingMovement = false;
@@ -242,16 +431,26 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
         public override void OnCollideWithPlayer(Collider other)
         {
             base.OnCollideWithPlayer(other);
-            if (!stoppingMovement && currentBehaviourStateIndex == 1 && !(timeSinceHittingPlayer >= 0f))
+            if (!stoppingMovement && currentBehaviourStateIndex == 1 && !(hitPlayerTimer >= 0f))
             {
-                PlayerControllerB controller = other.gameObject.GetComponent<PlayerControllerB>();
-                if (controller != null)
+                PlayerControllerB playerControllerB = MeetsStandardPlayerCollisionConditions(other);
+                if (playerControllerB != null)
                 {
-                    timeSinceHittingPlayer = 0.2f;
-                    controller.DamagePlayer(90, hasDamageSFX: true, callRPC: true, CauseOfDeath.Mauling, 2);
-                    controller.JumpToFearLevel(1f);
+                    if (playerControllerB.IsOwner)
+                    {
+                        hitPlayerTimer = 0.2f;
+                        Vector3 bodyVelocity = Vector3.Normalize(playerControllerB.gameplayCamera.transform.position - transform.position) * 80f;
+                        playerControllerB.KillPlayer(bodyVelocity, spawnBody: true, CauseOfDeath.Mauling);
+                        playerControllerB.JumpToFearLevel(1f);
+                    }
                 }
             }
+        }
+
+        public override void KillEnemy(bool destroy = false)
+        {
+            StopActiveSearches();
+            base.KillEnemy(destroy);
         }
     }
 }

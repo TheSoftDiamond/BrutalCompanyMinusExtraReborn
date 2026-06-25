@@ -1,45 +1,31 @@
-﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.AI;
 
 namespace BrutalCompanyMinus.Minus.MonoBehaviours
 {
     public class NutSlayerAI : EnemyAI
     {
-#pragma warning disable 0649
         public int previousBehaviourState = -1;
 
         public int previousBehaviourStateAIInterval = -1;
 
-        public static float timeAtNextInspection;
-
-        public bool inspectingLocalPlayer;
-
         public float localPlayerTurnDistance;
 
-        public bool isInspecting;
+        public GameObject gunPrefab = null!;
 
-        public bool hasGun;
+        public SlayerShotgun gun = null!;
 
-        public int randomSeedNumber;
-
-        public GameObject gunPrefab;
-
-        public SlayerShotgun gun;
-
-        public Transform gunPoint;
+        public Transform gunPoint = null!;
 
         public NetworkObjectReference gunObjectRef;
 
-        public AISearchRoutine patrol;
+        public AISearchRoutine patrol = null!;
 
-        public AISearchRoutine attackSearch;
+        public AISearchRoutine attackSearch = null!;
 
-        public Transform torsoContainer;
+        public Transform torsoContainer = null!;
 
         public float currentTorsoRotation;
 
@@ -47,45 +33,32 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
 
         public float torsoTurnSpeed = 6f;
 
-        public AudioSource torsoTurnAudio;
+        public AudioSource torsoTurnAudio = null!;
 
-        public AudioSource longRangeAudio;
+        public AudioSource longRangeAudio = null!;
 
-        public AudioClip[] torsoFinishTurningClips;
+        public AudioClip[] torsoFinishTurningClips = null!;
 
-        public AudioClip aimSFX;
+        public AudioClip aimSFX = null!;
 
-        public AudioClip kickSFX;
-
-        public GameObject shotgunShellPrefab;
+        public AudioClip kickSFX = null!;
 
         public bool torsoTurning;
 
-        public System.Random NutcrackerRandom;
-
-        public int timesDoingInspection;
-
-        public Coroutine inspectionCoroutine;
-
-        public int lastPlayerSeenMoving = 0;
+        // -1 stops it defaulting to host
+        public int lastPlayerSeenMoving = -1;
 
         public float timeSinceSeeingTarget;
-
-        public float timeSinceInspecting;
 
         public float timeSinceFiringGun;
 
         public bool aimingGun;
 
-        public bool reloadingGun;
-
         public Vector3 lastSeenPlayerPos;
 
         public RaycastHit rayHit;
 
-        public Coroutine gunCoroutine;
-
-        public bool isLeaderScript;
+        public Coroutine gunCoroutine = null!;
 
         public Vector3 positionLastCheck;
 
@@ -96,8 +69,6 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
         public bool lostPlayerInChase;
 
         public float timeSinceHittingPlayer;
-
-        public Coroutine waitToFireGunCoroutine;
 
         public float walkCheckInterval;
 
@@ -114,8 +85,7 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
         public float speedWhileMoving = 9.5f;
         public float widthSearch = 45f;
         public int rangeSearch = 30;
-        public Transform target;
-        public List<string> aiBlackList = new List<string>();
+        public Transform target = null!;
         public bool isFiring = false;
 
         public int setHp = 5;
@@ -123,47 +93,40 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
         public bool Immortal = false;
         public bool onlyPlayers = false;
 
-#pragma warning restore 0649
-
         public override void Start()
         {
             base.Start();
-            lastPlayerSeenMoving = 0;
+            lastPlayerSeenMoving = -1;
             if (IsServer)
             {
                 InitializeNutcrackerValuesServerRpc();
-                if (enemyType.numberSpawned <= 1)
-                {
-                    isLeaderScript = true;
-                }
             }
             rayHit = default;
-
-            setHp = Configuration.nutSlayerHp.Value;
-            Lives = Configuration.nutSlayerLives.Value;
-            Immortal = Configuration.nutSlayerImmortal.Value;
-            onlyPlayers = Configuration.onlyPlayersAttackSlayer.Value;
+            
+            setHp = Configuration.nutSlayerHp!.Value;
+            Lives = Configuration.nutSlayerLives!.Value;
+            speedWhileMoving = Configuration.nutSlayerMovementSpeed!.Value;
+            Immortal = Configuration.nutSlayerImmortal!.Value;
+            onlyPlayers = Configuration.onlyPlayersAttackSlayer!.Value;
             enemyType.canDie = !Immortal;
 
             enemyHP = setHp;
         }
 
-        [ServerRpc]
+        [Rpc(SendTo.Server)]
         public void InitializeNutcrackerValuesServerRpc()
         {
             GameObject gameObject = Instantiate(gunPrefab, transform.position + Vector3.up * 0.5f, Quaternion.identity, RoundManager.Instance.spawnedScrapContainer);
             gameObject.GetComponent<NetworkObject>().Spawn();
-            setShotgunScrapValue = UnityEngine.Random.Range(Configuration.slayerShotgunMinValue.Value, Configuration.slayerShotgunMaxValue.Value + 1);
+            setShotgunScrapValue = UnityEngine.Random.Range(Configuration.slayerShotgunMinValue!.Value, Configuration.slayerShotgunMaxValue!.Value + 1);
             GrabGun(gameObject);
-            randomSeedNumber = UnityEngine.Random.Range(0, 10000);
-            InitializeNutcrackerValuesClientRpc(randomSeedNumber, gameObject.GetComponent<NetworkObject>(), setShotgunScrapValue);
+            InitializeNutcrackerValuesClientRpc(gameObject.GetComponent<NetworkObject>(), setShotgunScrapValue);
         }
 
-        [ClientRpc]
-        public void InitializeNutcrackerValuesClientRpc(int randomSeed, NetworkObjectReference gunObject, int setShotgunValue)
+        [Rpc(SendTo.ClientsAndHost)]
+        public void InitializeNutcrackerValuesClientRpc(NetworkObjectReference gunObject, int setShotgunValue)
         {
             setShotgunScrapValue = setShotgunValue;
-            randomSeedNumber = randomSeed;
             gunObjectRef = gunObject;
         }
 
@@ -181,11 +144,17 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
             gun.isHeldByEnemy = true;
             gun.grabbableToEnemies = false;
             gun.grabbable = false;
-            gun.shellsLoaded = 2;
             gun.GrabItemFromEnemy(this);
         }
 
-        private void DropGun(Vector3 dropPosition)
+        [Rpc(SendTo.Server)]
+        public void DropGunServerRpc(Vector3 dropPosition)
+        {
+            DropGunClientRpc(dropPosition);
+        }
+
+        [Rpc(SendTo.ClientsAndHost)]
+        public void DropGunClientRpc(Vector3 dropPosition)
         {
             if (gun == null)
             {
@@ -198,38 +167,15 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
             gun.grabbable = true;
         }
 
-        private void SpawnShotgunShells()
-        {
-            if (IsOwner)
-            {
-                for (int i = 0; i < 2; i++)
-                {
-                    Vector3 position = transform.position + Vector3.up * 0.6f;
-                    position += new Vector3(UnityEngine.Random.Range(-0.8f, 0.8f), 0f, UnityEngine.Random.Range(-0.8f, 0.8f));
-                    GameObject obj = Instantiate(shotgunShellPrefab, position, Quaternion.identity, RoundManager.Instance.spawnedScrapContainer);
-                    obj.GetComponent<GrabbableObject>().fallTime = 0f;
-                    obj.GetComponent<NetworkObject>().Spawn();
-                }
-            }
-        }
-
-        [ServerRpc]
-        public void DropGunServerRpc(Vector3 dropPosition)
-        {
-            DropGunClientRpc(dropPosition);
-        }
-
-        [ClientRpc]
-        public void DropGunClientRpc(Vector3 dropPosition)
-        {
-            DropGun(dropPosition);
-        }
-
         public override void DoAIInterval()
         {
             base.DoAIInterval();
             if (isEnemyDead || stunNormalizedTimer > 0f || gun == null)
             {
+                if (isEnemyDead)
+                {
+                    StopActiveSearches();
+                }
                 return;
             }
             switch (currentBehaviourStateIndex)
@@ -291,16 +237,9 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
                         {
                             break;
                         }
-                        if (DebugEnemy)
-                        {
-                            for (int i = 1; i < path1.corners.Length; i++)
-                            {
-                                Debug.DrawLine(path1.corners[i - 1], path1.corners[i], Color.red, AIIntervalTime);
-                            }
-                        }
                         if (path1.corners.Length > 1)
                         {
-                            Ray ray = new Ray(path1.corners[path1.corners.Length - 1], path1.corners[path1.corners.Length - 1] - path1.corners[path1.corners.Length - 2]);
+                            Ray ray = new(path1.corners[path1.corners.Length - 1], path1.corners[path1.corners.Length - 1] - path1.corners[path1.corners.Length - 2]);
                             if (Physics.Raycast(ray, out rayHit, 5f, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
                             {
                                 strafePosition = RoundManager.Instance.GetNavMeshPosition(ray.GetPoint(Mathf.Max(0f, rayHit.distance - 2f)));
@@ -315,7 +254,7 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
                             strafePosition = lastSeenPlayerPos;
                         }
                         SetDestinationToPosition(strafePosition);
-                        if (Vector3.Distance(transform.position, strafePosition) < 2f)
+                        if (Vector3.SqrMagnitude(transform.position - strafePosition) < 4f)
                         {
                             reachedStrafePosition = true;
                         }
@@ -336,13 +275,13 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
             }
         }
 
-        [ServerRpc(RequireOwnership = false)]
+        [Rpc(SendTo.Server, RequireOwnership = false)]
         public void SetLostPlayerInChaseServerRpc(bool lostPlayer)
         {
             SetLostPlayerInChaseClientRpc(lostPlayer);
         }
 
-        [ClientRpc]
+        [Rpc(SendTo.ClientsAndHost)]
         public void SetLostPlayerInChaseClientRpc(bool lostPlayer)
         {
             lostPlayerInChase = lostPlayer;
@@ -352,18 +291,17 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
             }
         }
 
-        private bool GrabGunIfNotHolding()
+        private void StopActiveSearches()
         {
-            if (gun != null)
+            // Death cleanup
+            if (patrol.inProgress)
             {
-                return true;
+                StopSearch(patrol);
             }
-            if (gunObjectRef.TryGet(out var networkObject))
+            if (attackSearch.inProgress)
             {
-                gun = networkObject.gameObject.GetComponent<SlayerShotgun>();
-                GrabGun(gun.gameObject);
+                StopSearch(attackSearch);
             }
-            return gun != null;
         }
 
         public void TurnTorsoToTargetDegrees()
@@ -399,85 +337,19 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
             torsoTurnSpeed = 1500f;
         }
 
-        private void StartInspectionTurn()
-        {
-            if (!isInspecting && !isEnemyDead)
-            {
-                timesDoingInspection++;
-                if (inspectionCoroutine != null)
-                {
-                    StopCoroutine(inspectionCoroutine);
-                }
-                inspectionCoroutine = StartCoroutine(InspectionTurn());
-            }
-        }
-
-        private IEnumerator InspectionTurn()
-        {
-            yield return new WaitForSeconds(0.75f);
-            isInspecting = true;
-            NutcrackerRandom = new System.Random(randomSeedNumber + timesDoingInspection);
-            int degrees = 0;
-            int turnTime = 1;
-            for (int i = 0; i < 8; i++)
-            {
-                degrees = Mathf.Min(degrees + NutcrackerRandom.Next(45, 95), 360);
-                if (Physics.Raycast(eye.position, eye.forward, 5f, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
-                {
-                    turnTime = 1;
-                }
-                else
-                {
-                    int a = !(turnTime > 2f) ? 4 : turnTime / 3;
-                    turnTime = NutcrackerRandom.Next(1, Mathf.Max(a, 3));
-                }
-                targetTorsoDegrees = degrees;
-                torsoTurnSpeed = NutcrackerRandom.Next(275, 855) / turnTime;
-                yield return new WaitForSeconds(turnTime);
-                if (degrees >= 360)
-                {
-                    break;
-                }
-            }
-            if (IsOwner)
-            {
-                SwitchToBehaviourState(0);
-            }
-        }
-
-        public void StopInspection()
-        {
-            if (isInspecting)
-            {
-                isInspecting = false;
-            }
-            if (inspectionCoroutine != null)
-            {
-                StopCoroutine(inspectionCoroutine);
-            }
-        }
-
         // Player
 
-        [ServerRpc(RequireOwnership = false)]
+        [Rpc(SendTo.Server, RequireOwnership = false)]
         public void SeeMovingThreatServerRpc(Vector3 position, bool enterAttackFromPatrolMode = false, int playerId = -1)
         {
             SeeMovingThreatClientRpc(position, enterAttackFromPatrolMode, playerId);
         }
 
-        [ClientRpc]
+        [Rpc(SendTo.ClientsAndHost)]
         public void SeeMovingThreatClientRpc(Vector3 position, bool enterAttackFromPatrolMode = false, int playerId = -1)
         {
             SwitchTargetTo(position, playerId);
             SwitchToBehaviourStateOnLocalClient(2);
-        }
-
-        private void GlobalNutcrackerClock()
-        {
-            if (isLeaderScript && Time.realtimeSinceStartup - timeAtNextInspection > 2f)
-            {
-                timeAtNextInspection = Time.realtimeSinceStartup + UnityEngine.Random.Range(6f, 15f);
-            }
         }
 
         public override void Update()
@@ -486,11 +358,14 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
             TurnTorsoToTargetDegrees();
             if (isEnemyDead)
             {
-                StopInspection();
                 return;
             }
-            GlobalNutcrackerClock();
-            if (!isEnemyDead && !GrabGunIfNotHolding())
+            if (gun == null && gunObjectRef.TryGet(out var networkObject))
+            {
+                gun = networkObject.gameObject.GetComponent<SlayerShotgun>();
+                GrabGun(gun.gameObject);
+            }
+            if (gun == null)
             {
                 return;
             }
@@ -510,7 +385,6 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
                 return;
             }
             timeSinceSeeingTarget += Time.deltaTime;
-            timeSinceInspecting += Time.deltaTime;
             timeSinceFiringGun += Time.deltaTime;
             timeSinceHittingPlayer += Time.deltaTime;
             creatureAnimator.SetInteger("State", currentBehaviourStateIndex);
@@ -521,7 +395,6 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
                     if (previousBehaviourState != currentBehaviourStateIndex)
                     {
                         previousBehaviourState = currentBehaviourStateIndex;
-                        isInspecting = false;
                         lostPlayerInChase = false;
                         creatureVoice.Stop();
                     }
@@ -530,7 +403,7 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
                     torsoTurnSpeed = 525f;
                     if (CheckLineOfSightForTarget(widthSearch, rangeSearch, 1))
                     {
-                        if (IsLocalPlayerMoving())
+                        if (target == GameNetworkManager.Instance.localPlayerController.gameplayCamera.transform)
                         {
                             SeeMovingThreatServerRpc(Vector3.zero, false, (int)GameNetworkManager.Instance.localPlayerController.playerClientId);
                         }
@@ -547,14 +420,13 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
                         {
                             longRangeAudio.PlayOneShot(enemyType.audioClips[3]);
                         }
-                        StopInspection();
                         previousBehaviourState = currentBehaviourStateIndex;
                     }
                     if (IsOwner)
                     {
-                        if (reloadingGun || aimingGun || timeSinceFiringGun < 1.2f && timeSinceSeeingTarget < 0.5f || timeSinceHittingPlayer < 1f)
+                        if (aimingGun || timeSinceFiringGun < 1.2f && timeSinceSeeingTarget < 0.5f || timeSinceHittingPlayer < 1f)
                         {
-                            if (aimingGun && !reloadingGun)
+                            if (aimingGun)
                             {
                                 agent.speed = speedWhileAiming;
                             }
@@ -568,11 +440,6 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
                             agent.speed = 7f;
                         }
                     }
-                    if (IsOwner && timeSinceFiringGun > 0.75f && gun.shellsLoaded <= 0 && !reloadingGun && !aimingGun)
-                    {
-                        reloadingGun = true;
-                        ReloadGunServerRpc();
-                    }
                     if (lostPlayerInChase)
                     {
                         targetTorsoDegrees = 0;
@@ -581,10 +448,76 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
                     {
                         SetTargetDegreesToPosition(lastSeenPlayerPos);
                     }
-                    if (target != null && HasLineOfSightToPositionCopy(target.position, widthSearch, rangeSearch, 1f))
+                    if (lastPlayerSeenMoving != -1)
+                    {
+                        // Player target sync
+                        PlayerControllerB playerTarget = StartOfRound.Instance.allPlayerScripts[lastPlayerSeenMoving];
+                        target = playerTarget.gameplayCamera.transform;
+                        if (CheckLineOfSightForPosition(target.position, widthSearch, rangeSearch, 1f))
+                        {
+                            timeSinceSeeingTarget = 0f;
+                            lastSeenPlayerPos = playerTarget.transform.position;
+                        }
+                        else if (!CheckLineOfSightForPosition(GameNetworkManager.Instance.localPlayerController.gameplayCamera.transform.position, 70f, 12, 1f))
+                        {
+                            break;
+                        }
+
+                        if (CheckLineOfSightForPosition(target.position, widthSearch, 12, 1f) && timeSinceSeeingTarget < 3.0f)
+                        {
+                            SetTargetDegreesToPosition(playerTarget.transform.position);
+
+                            TurnTorsoToTargetDegrees();
+                            if (timeSinceFiringGun > gun.useCooldown && !aimingGun && timeSinceHittingPlayer > 1f)
+                            {
+                                timeSinceFiringGun = 0f;
+                                agent.speed = 0f;
+                                AimGunServerRpc(transform.position, lastPlayerSeenMoving);
+                            }
+                            if (lostPlayerInChase)
+                            {
+                                lostPlayerInChase = false;
+                                SetLostPlayerInChaseServerRpc(lostPlayer: false);
+                            }
+                            timeSinceSeeingTarget = 0f;
+                            lastSeenPlayerPos = playerTarget.transform.position;
+                        }
+                        else if (IsLocalPlayerMoving())
+                        {
+                            bool flag = (int)GameNetworkManager.Instance.localPlayerController.playerClientId == lastPlayerSeenMoving;
+                            if (flag)
+                            {
+                                timeSinceSeeingTarget = 0f;
+                            }
+                            float currentTargetDistance = (transform.position - playerTarget.transform.position).magnitude;
+                            float localPlayerDistance = (transform.position - GameNetworkManager.Instance.localPlayerController.transform.position).magnitude;
+                            if (currentTargetDistance - localPlayerDistance > 3f || timeSinceSeeingTarget > 3f && !flag)
+                            {
+                                lastPlayerSeenMoving = (int)GameNetworkManager.Instance.localPlayerController.playerClientId;
+                                SwitchTargetServerRpc(Vector3.zero, (int)GameNetworkManager.Instance.localPlayerController.playerClientId);
+                            }
+                        }
+
+                        break;
+                    }
+
+                    bool hasCurrentTargetSight = false;
+                    if (target != null)
+                    {
+                        Transform lineOfSightOrigin = eye ?? transform;
+                        Vector3 targetPosition = target.position;
+                        Vector3 toTarget = targetPosition - lineOfSightOrigin.position;
+                        if (toTarget.sqrMagnitude < rangeSearch * rangeSearch && !Physics.Linecast(lineOfSightOrigin.position, targetPosition, StartOfRound.Instance.collidersAndRoomMaskAndDefault))
+                        {
+                            hasCurrentTargetSight = Vector3.Angle(lineOfSightOrigin.forward, toTarget) < widthSearch || Vector3.SqrMagnitude(transform.position - targetPosition) < 1f;
+                        }
+                    }
+                    if (hasCurrentTargetSight)
                     {
                         timeSinceSeeingTarget = 0f;
-                        lastSeenPlayerPos = target.position;
+
+                        if (target != null)
+                            lastSeenPlayerPos = target.position;
                     }
                     else if (!CheckLineOfSightForTarget(70f, 12, 1))
                     {
@@ -592,13 +525,20 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
                     }
                     if (CheckLineOfSightForTarget(widthSearch, 12, 1) && timeSinceSeeingTarget < 3.0f)
                     {
-                        SetTargetDegreesToPosition(target.position);
+                        if (target != null)
+                            SetTargetDegreesToPosition(target.position);
+
                         TurnTorsoToTargetDegrees();
-                        if (timeSinceFiringGun > gun.useCooldown && !reloadingGun && !aimingGun && timeSinceHittingPlayer > 1f)
+                        if (timeSinceFiringGun > gun.useCooldown && !aimingGun && timeSinceHittingPlayer > 1f)
                         {
                             timeSinceFiringGun = 0f;
                             agent.speed = 0f;
-                            AimGunServerRpc(transform.position);
+                            int targetPlayerId = lastPlayerSeenMoving;
+                            if (target == GameNetworkManager.Instance.localPlayerController.gameplayCamera.transform)
+                            {
+                                targetPlayerId = (int)GameNetworkManager.Instance.localPlayerController.playerClientId;
+                            }
+                            AimGunServerRpc(transform.position, targetPlayerId);
                         }
                         if (lostPlayerInChase)
                         {
@@ -606,149 +546,98 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
                             SetLostPlayerInChaseServerRpc(lostPlayer: false);
                         }
                         timeSinceSeeingTarget = 0f;
-                        lastSeenPlayerPos = target.position;
-                    }
-                    else if (IsLocalPlayerMoving())
-                    {
-                        bool flag = (int)GameNetworkManager.Instance.localPlayerController.playerClientId == lastPlayerSeenMoving;
-                        if (flag)
-                        {
-                            timeSinceSeeingTarget = 0f;
-                        }
-                        if (Vector3.Distance(transform.position, StartOfRound.Instance.allPlayerScripts[lastPlayerSeenMoving].transform.position) - Vector3.Distance(transform.position, GameNetworkManager.Instance.localPlayerController.transform.position) > 3f || timeSinceSeeingTarget > 3f && !flag)
-                        {
-                            lastPlayerSeenMoving = (int)GameNetworkManager.Instance.localPlayerController.playerClientId;
-                            SwitchTargetServerRpc(Vector3.zero, (int)GameNetworkManager.Instance.localPlayerController.playerClientId);
-                        }
+
+                        if (target != null)
+                            lastSeenPlayerPos = target.position;
                     }
                     break;
             }
         }
 
-        [ServerRpc]
-        public void ReloadGunServerRpc()
+        [Rpc(SendTo.Server, RequireOwnership = false)]
+        public void AimGunServerRpc(Vector3 enemyPos, int playerId)
         {
-            if (aimingGun)
-            {
-                reloadingGun = false;
-            }
-            else
-            {
-                ReloadGunClientRpc();
-            }
-        }
-
-        [ClientRpc]
-        public void ReloadGunClientRpc()
-        {
-            StopAimingGun();
-            gun.shellsLoaded = 2;
-            gunCoroutine = StartCoroutine(ReloadGun());
-        }
-
-        private IEnumerator ReloadGun()
-        {
-            reloadingGun = true;
-            creatureSFX.PlayOneShot(enemyType.audioClips[2]);
-            creatureAnimator.SetBool("Reloading", value: true);
-            yield return new WaitForSeconds(0.32f);
-            gun.gunAnimator.SetBool("Reloading", value: true);
-            yield return new WaitForSeconds(0.92f);
-            gun.gunAnimator.SetBool("Reloading", value: false);
-            creatureAnimator.SetBool("Reloading", value: false);
-            yield return new WaitForSeconds(0.5f);
-            reloadingGun = false;
-        }
-
-        private void StopReloading()
-        {
-            reloadingGun = false;
-            gun.gunAnimator.SetBool("Reloading", value: false);
-            creatureAnimator.SetBool("Reloading", value: false);
-            if (gunCoroutine != null)
-            {
-                StopCoroutine(gunCoroutine);
-            }
-        }
-
-        [ServerRpc(RequireOwnership = false)]
-        public void AimGunServerRpc(Vector3 enemyPos)
-        {
-            if (gun.shellsLoaded <= 0)
-            {
-                aimingGun = false;
-                ReloadGunClientRpc();
-            }
-            else if (!reloadingGun)
+            if (!aimingGun)
             {
                 aimingGun = true;
-                AimGunClientRpc(enemyPos);
+                AimGunClientRpc(enemyPos, playerId);
             }
         }
 
-        [ClientRpc]
-        public void AimGunClientRpc(Vector3 enemyPos)
+        [Rpc(SendTo.ClientsAndHost)]
+        public void AimGunClientRpc(Vector3 enemyPos, int playerId)
         {
-            StopReloading();
+            if (playerId != -1)
+            {
+                // Set every client to the same target before firing
+                SwitchTargetTo(Vector3.zero, playerId);
+            }
+            StopAimingGun();
             gunCoroutine = StartCoroutine(AimGun(enemyPos));
+
+            IEnumerator AimGun(Vector3 aimEnemyPos)
+            {
+                aimingGun = true;
+                if (lastPlayerSeenMoving == previousPlayerSeenWhenAiming)
+                {
+                    timesSeeingSamePlayer++;
+                }
+                else
+                {
+                    previousPlayerSeenWhenAiming = lastPlayerSeenMoving;
+                    timesSeeingSamePlayer = 0;
+                }
+                longRangeAudio.PlayOneShot(aimSFX);
+                speedWhileAiming = speedWhileMoving * 0.35f;
+                inSpecialAnimation = true;
+                serverPosition = aimEnemyPos;
+                yield return new WaitForSeconds(0.9f);
+                yield return new WaitForEndOfFrame();
+                if (IsOwner && !isFiring && gun != null && gun.shotgunRayPoint != null)
+                {
+                    Vector3 gunPosition = gun.shotgunRayPoint.position;
+                    Vector3 gunForward = gun.shotgunRayPoint.forward;
+                    if (target != null)
+                    {
+                        gunForward = new Vector3(
+                            gun.shotgunRayPoint.forward.x,
+                            (target.position - gun.shotgunRayPoint.position).normalized.y,
+                            gun.shotgunRayPoint.forward.z
+                        );
+                    }
+                    FireGunServerRpc(gunPosition, gunForward);
+                }
+                timeSinceFiringGun = 0f;
+                yield return new WaitForSeconds(0.35f);
+                aimingGun = false;
+                inSpecialAnimation = false;
+                creatureVoice.Play();
+                creatureVoice.pitch = UnityEngine.Random.Range(0.9f, 1.1f);
+            }
         }
 
-        private IEnumerator AimGun(Vector3 enemyPos)
-        {
-            aimingGun = true;
-            if (lastPlayerSeenMoving == previousPlayerSeenWhenAiming)
-            {
-                timesSeeingSamePlayer++;
-            }
-            else
-            {
-                previousPlayerSeenWhenAiming = lastPlayerSeenMoving;
-                timesSeeingSamePlayer = 0;
-            }
-            longRangeAudio.PlayOneShot(aimSFX);
-            speedWhileAiming = speedWhileMoving * 0.35f;
-            inSpecialAnimation = true;
-            serverPosition = enemyPos;
-            if (enemyHP <= 1)
-            {
-                yield return new WaitForSeconds(0.9f);
-            }
-            else if (gun.shellsLoaded == 1)
-            {
-                yield return new WaitForSeconds(1.3f);
-            }
-            else
-            {
-                yield return new WaitForSeconds(0.9f);
-            }
-            yield return new WaitForEndOfFrame();
-            if (IsOwner && !isFiring)
-            {
-                FireGunServerRpc();
-            }
-            timeSinceFiringGun = 0f;
-            yield return new WaitForSeconds(0.35f);
-            aimingGun = false;
-            inSpecialAnimation = false;
-            creatureVoice.Play();
-            creatureVoice.pitch = UnityEngine.Random.Range(0.9f, 1.1f);
-        }
-
-        [ServerRpc]
-        public void FireGunServerRpc()
+        [Rpc(SendTo.Server)]
+        public void FireGunServerRpc(Vector3 gunPosition, Vector3 gunForward)
         {
             if (stunNormalizedTimer <= 0f)
             {
-                FireGunClientRpc();
+                FireGunClientRpc(gunPosition, gunForward);
             }
             else
             {
-                StartCoroutine(waitToFireGun());
+                StartCoroutine(WaitToFireGun(gunPosition, gunForward));
+            }
+
+            IEnumerator WaitToFireGun(Vector3 delayedGunPosition, Vector3 delayedGunForward)
+            {
+                yield return new WaitUntil(() => stunNormalizedTimer <= 0f);
+                yield return new WaitForSeconds(0.5f);
+                FireGunClientRpc(delayedGunPosition, delayedGunForward);
             }
         }
 
-        [ClientRpc]
-        public void FireGunClientRpc()
+        [Rpc(SendTo.ClientsAndHost)]
+        public void FireGunClientRpc(Vector3 gunPosition, Vector3 gunForward)
         {
             if (gun == null)
             {
@@ -762,26 +651,32 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
                 return;
             }
 
-            if (target == null)
+            isFiring = true;
+            Fire(gunPosition, gunForward);
+            StartCoroutine(FireAfterDelay(0.35f, gunPosition, gunForward));
+            StartCoroutine(FireAfterDelay(0.7f, gunPosition, gunForward));
+            isFiring = false;
+
+            IEnumerator FireAfterDelay(float time, Vector3 delayedGunPosition, Vector3 delayedGunForward)
             {
-                //Log.LogError("FireGunClientRpc failed: target is null");
-                return;
+                yield return new WaitForSeconds(time);
+                gun.currentUseCooldown = -1.0f;
+                Fire(delayedGunPosition, delayedGunForward);
             }
 
-            Vector3 targetForward = new Vector3(
-                gun.shotgunRayPoint.forward.x,
-                (target.position - gun.shotgunRayPoint.position).normalized.y,
-                gun.shotgunRayPoint.forward.z
-            );
-
-            FireGun(gun.shotgunRayPoint.position, targetForward);
-        }
-
-        private IEnumerator waitToFireGun()
-        {
-            yield return new WaitUntil(() => stunNormalizedTimer <= 0f);
-            yield return new WaitForSeconds(0.5f);
-            FireGunClientRpc();
+            void Fire(Vector3 firePosition, Vector3 fireForward)
+            {
+                creatureAnimator.ResetTrigger("ShootGun");
+                creatureAnimator.SetTrigger("ShootGun");
+                if (gun == null)
+                {
+                    LogEnemyError("No gun held on local client, unable to shoot");
+                }
+                else
+                {
+                    gun.ShootGun(firePosition, fireForward);
+                }
+            }
         }
 
         private void StopAimingGun()
@@ -794,44 +689,14 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
             }
         }
 
-        private void FireGun(Vector3 gunPosition, Vector3 gunForward)
-        {
-            isFiring = true;
-            fire(gunPosition, gunForward);
-            StartCoroutine(fireAfterDelay(0.35f, gunPosition, gunForward));
-            StartCoroutine(fireAfterDelay(0.7f, gunPosition, gunForward));
-            isFiring = false;
-        }
 
-        private IEnumerator fireAfterDelay(float time, Vector3 gunPosition, Vector3 gunForward)
-        {
-            yield return new WaitForSeconds(time);
-            gun.currentUseCooldown = -1.0f;
-            fire(gunPosition, gunForward);
-        }
-
-        private void fire(Vector3 gunPosition, Vector3 gunForward)
-        {
-            creatureAnimator.ResetTrigger("ShootGun");
-            creatureAnimator.SetTrigger("ShootGun");
-            if (gun == null)
-            {
-                LogEnemyError("No gun held on local client, unable to shoot");
-            }
-            else
-            {
-                gun.ShootGun(gunPosition, gunForward);
-            }
-        }
-
-
-        [ServerRpc(RequireOwnership = false)]
+        [Rpc(SendTo.Server, RequireOwnership = false)]
         public void SwitchTargetServerRpc(Vector3 position, int playerId = -1)
         {
             SwitchTargetClientRpc(position, playerId);
         }
 
-        [ClientRpc]
+        [Rpc(SendTo.ClientsAndHost)]
         public void SwitchTargetClientRpc(Vector3 position, int playerId = -1)
         {
             SwitchTargetTo(position, playerId);
@@ -843,10 +708,12 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
             {
                 lastPlayerSeenMoving = playerId;
                 timeSinceSeeingTarget = 0f;
+                target = StartOfRound.Instance.allPlayerScripts[playerId].gameplayCamera.transform;
                 lastSeenPlayerPos = StartOfRound.Instance.allPlayerScripts[playerId].transform.position;
             }
             else
             {
+                lastPlayerSeenMoving = -1;
                 timeSinceSeeingTarget = 0f;
                 lastSeenPlayerPos = position;
             }
@@ -854,11 +721,15 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
 
         public bool CheckLineOfSightForTarget(float width = 45f, int range = 60, int proximityAwareness = -1)
         {
+            Transform lineOfSightOrigin = eye ?? transform;
+            Vector3 origin = lineOfSightOrigin.position;
+            float rangeSqr = range * range;
+            float proximityAwarenessSqr = proximityAwareness * proximityAwareness;
             Vector3 position = GameNetworkManager.Instance.localPlayerController.gameplayCamera.transform.position;
-            if (Vector3.Distance(position, eye.position) < range && !Physics.Linecast(eye.position, position, StartOfRound.Instance.collidersAndRoomMaskAndDefault))
+            Vector3 to = position - origin;
+            if (to.sqrMagnitude < rangeSqr && !Physics.Linecast(origin, position, StartOfRound.Instance.collidersAndRoomMaskAndDefault))
             {
-                Vector3 to = position - eye.position;
-                if (Vector3.Angle(eye.forward, to) < width || proximityAwareness != -1 && Vector3.Distance(eye.position, position) < proximityAwareness)
+                if (Vector3.Angle(lineOfSightOrigin.forward, to) < width || proximityAwareness != -1 && to.sqrMagnitude < proximityAwarenessSqr)
                 {
                     target = GameNetworkManager.Instance.localPlayerController.gameplayCamera.transform;
                     return true;
@@ -868,10 +739,10 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
             {
                 if (ai == null || ai.transform == null || ai.isEnemyDead) continue; // Skip
                 position = ai.transform.position;
-                Vector3 to = position - eye.position;
-                if (Vector3.Distance(position, eye.position) < range && !Physics.Linecast(eye.position, position, StartOfRound.Instance.collidersAndRoomMaskAndDefault))
+                to = position - origin;
+                if (to.sqrMagnitude < rangeSqr && !Physics.Linecast(origin, position, StartOfRound.Instance.collidersAndRoomMaskAndDefault))
                 {
-                    if (Vector3.Angle(eye.forward, to) < width || proximityAwareness != -1 && Vector3.Distance(eye.position, position) < proximityAwareness)
+                    if (Vector3.Angle(lineOfSightOrigin.forward, to) < width || proximityAwareness != -1 && to.sqrMagnitude < proximityAwarenessSqr)
                     {
                         target = ai.transform;
                         return true;
@@ -884,7 +755,7 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
         private bool IsLocalPlayerMoving()
         {
             localPlayerTurnDistance += StartOfRound.Instance.playerLookMagnitudeThisFrame;
-            if (localPlayerTurnDistance > 0.1f && Vector3.Distance(GameNetworkManager.Instance.localPlayerController.transform.position, transform.position) < 10f)
+            if (localPlayerTurnDistance > 0.1f && Vector3.SqrMagnitude(GameNetworkManager.Instance.localPlayerController.transform.position - transform.position) < 100f)
             {
                 return true;
             }
@@ -908,7 +779,7 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
             base.OnCollideWithPlayer(other);
             if (!isEnemyDead && !(timeSinceHittingPlayer < 1f) && !(stunNormalizedTimer >= 0f))
             {
-                PlayerControllerB playerControllerB = MeetsStandardPlayerCollisionConditions(other, reloadingGun || aimingGun);
+                PlayerControllerB playerControllerB = MeetsStandardPlayerCollisionConditions(other, aimingGun);
                 if (playerControllerB != null)
                 {
                     timeSinceHittingPlayer = 0f;
@@ -917,19 +788,24 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
             }
         }
 
-        [ServerRpc(RequireOwnership = false)]
+        [Rpc(SendTo.Server, RequireOwnership = false)]
         public void LegKickPlayerServerRpc(int playerId)
         {
+            if (playerId < 0 || playerId >= StartOfRound.Instance.allPlayerScripts.Length)
+            {
+                return;
+            }
+            PlayerControllerB playerControllerB = StartOfRound.Instance.allPlayerScripts[playerId];
+            if (playerControllerB == null || playerControllerB.isPlayerDead || Vector3.SqrMagnitude(playerControllerB.transform.position - transform.position) > 9f)
+            {
+                return;
+            }
+            // Server checks kick range so it cant kill across clients
             LegKickPlayerClientRpc(playerId);
         }
 
-        [ClientRpc]
+        [Rpc(SendTo.ClientsAndHost)]
         public void LegKickPlayerClientRpc(int playerId)
-        {
-            LegKickPlayer(playerId);
-        }
-
-        private void LegKickPlayer(int playerId)
         {
             timeSinceHittingPlayer = 0f;
             PlayerControllerB playerControllerB = StartOfRound.Instance.allPlayerScripts[playerId];
@@ -938,7 +814,10 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
             transform.eulerAngles = new Vector3(0f, RoundManager.Instance.tempTransform.eulerAngles.y, 0f);
             serverRotation = new Vector3(0f, RoundManager.Instance.tempTransform.eulerAngles.y, 0f);
             Vector3 bodyVelocity = Vector3.Normalize((playerControllerB.transform.position + Vector3.up * 0.75f - transform.position) * 100f) * 25f;
-            playerControllerB.KillPlayer(bodyVelocity, spawnBody: true, CauseOfDeath.Kicking);
+            if (playerControllerB.IsOwner)
+            {
+                playerControllerB.KillPlayer(bodyVelocity, spawnBody: true, CauseOfDeath.Kicking);
+            }
             creatureAnimator.SetTrigger("Kick");
             creatureSFX.Stop();
             torsoTurnAudio.volume = 0f;
@@ -950,17 +829,17 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
             }
         }
 
-        public override void HitEnemy(int force = 1, PlayerControllerB playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
+        public override void HitEnemy(int force = 1, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
         {
             if (Immortal) return;
             if (onlyPlayers)
             {
                 if (playerWhoHit == null) return;
             }
-            base.HitEnemy(force, playerWhoHit, playHitSFX);
+            base.HitEnemy(force, playerWhoHit, playHitSFX, hitID);
             if (!isEnemyDead)
             {
-                if (isInspecting || currentBehaviourStateIndex == 2)
+                if (currentBehaviourStateIndex == 2)
                 {
                     creatureSFX.PlayOneShot(enemyType.audioClips[0]);
                     enemyHP -= force;
@@ -980,10 +859,10 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
             }
         }
 
-        [ServerRpc(RequireOwnership = false)]
+        [Rpc(SendTo.Server, RequireOwnership = false)]
         private void SetLivesServerRpc(int value) => SetLivesClientRpc(value);
 
-        [ClientRpc]
+        [Rpc(SendTo.ClientsAndHost)]
         private void SetLivesClientRpc(int value)
         {
             Lives = value;
@@ -996,52 +875,24 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
 
             Lives--;
             enemyHP = setHp;
-            if(NetworkManager.Singleton.IsServer) SetLivesServerRpc(Lives);
+            if (NetworkManager.Singleton.IsServer) SetLivesServerRpc(Lives);
 
             if (Lives > 0)
             {
                 return;
             }
 
+            StopActiveSearches();
             base.KillEnemy(destroy);
             targetTorsoDegrees = 0;
-            StopInspection();
-            StopReloading();
-            if (IsOwner)
+            StopAimingGun();
+            if (IsOwner && gun != null)
             {
                 DropGunServerRpc(gunPoint.position);
-                StartCoroutine(spawnShotgunShellsOnDelay());
             }
             creatureVoice.Stop();
             torsoTurnAudio.Stop();
         }
 
-        private IEnumerator spawnShotgunShellsOnDelay()
-        {
-            yield return new WaitForSeconds(1.2f);
-            SpawnShotgunShells();
-        }
-
-        // Copy from zeeker's
-        public bool HasLineOfSightToPositionCopy(Vector3 pos, float width = 45f, int range = 60, float proximityAwareness = -1f)
-        {
-            if (eye == null)
-            {
-                _ = transform;
-            }
-            else
-            {
-                _ = eye;
-            }
-            if (Vector3.Distance(eye.position, pos) < range && !Physics.Linecast(eye.position, pos, StartOfRound.Instance.collidersAndRoomMaskAndDefault))
-            {
-                Vector3 to = pos - eye.position;
-                if (Vector3.Angle(eye.forward, to) < width || Vector3.Distance(transform.position, pos) < proximityAwareness)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
     }
 }
