@@ -802,15 +802,26 @@ namespace BrutalCompanyMinus.Minus
 
         private static void DoAddEnemyToPoolWithRarity(ref List<SpawnableEnemyWithRarity> list, EnemyType enemy, int rarity)
         {
-            if (enemy.enemyPrefab == null)
+            try
             {
-                Log.LogError("Enemy prefab is null on AddEnemyToPoolWithRarity(), returning.");
-                return;
+                if (enemy.enemyPrefab == null)
+                {
+                    Log.LogError("Enemy prefab is null on AddEnemyToPoolWithRarity(), returning.");
+                    return;
+                }
+                SpawnableEnemyWithRarity spawnableEnemyWithRarity = new SpawnableEnemyWithRarity(enemy, rarity);
+                //spawnableEnemyWithRarity.enemyType = enemy;
+                //spawnableEnemyWithRarity.rarity = rarity;
+                list.Add(spawnableEnemyWithRarity);
             }
-            SpawnableEnemyWithRarity spawnableEnemyWithRarity = new SpawnableEnemyWithRarity(enemy, rarity);
-            //spawnableEnemyWithRarity.enemyType = enemy;
-            //spawnableEnemyWithRarity.rarity = rarity;
-            list.Add(spawnableEnemyWithRarity);
+            catch (Exception ex)
+            {
+                Log.LogError("DoAddEnemyToPoolWithRarity failed: " + ex);
+            }
+            finally
+            {
+                LunarConfigCompat.DoAddEnemyToPoolWithRarityPostfix(ref list, enemy, rarity);
+            }
         }
 
         /// <summary>
@@ -839,29 +850,40 @@ namespace BrutalCompanyMinus.Minus
             int amountRemoved = 0;
             try
             {
-                amountRemoved += RoundManager.Instance.currentLevel.Enemies.RemoveAll(x => x.enemyType.name.ToUpper() == Name.ToUpper());
+                try
+                {
+                    amountRemoved += RoundManager.Instance.currentLevel.Enemies.RemoveAll(x => x.enemyType.name.ToUpper() == Name.ToUpper());
+                }
+                catch
+                {
+                    Log.LogError("RemoveAll() on insideEnemies failed");
+                }
+                try
+                {
+                    amountRemoved += RoundManager.Instance.currentLevel.OutsideEnemies.RemoveAll(x => x.enemyType.name.ToUpper() == Name.ToUpper());
+                }
+                catch
+                {
+                    Log.LogError("RemoveAll() on outsideEnemies failed");
+                }
+                try
+                {
+                    amountRemoved += RoundManager.Instance.currentLevel.DaytimeEnemies.RemoveAll(x => x.enemyType.name.ToUpper() == Name.ToUpper());
+                }
+                catch
+                {
+                    Log.LogError("RemoveAll() on daytimeEnemies failed");
+                }
+                if (amountRemoved == 0) Log.LogInfo(string.Format("Failed to remove '{0}' from enemy pool, either it dosen't exist on the map or wrong string used.", Name));
             }
-            catch
+            catch (Exception ex)
             {
-                Log.LogError("RemoveAll() on insideEnemies failed");
+                Log.LogError("RemoveAll() failed: " + ex);
             }
-            try
+            finally
             {
-                amountRemoved += RoundManager.Instance.currentLevel.OutsideEnemies.RemoveAll(x => x.enemyType.name.ToUpper() == Name.ToUpper());
+                LunarConfigCompat.DoRemoveSpawnPostfix(Name);
             }
-            catch
-            {
-                Log.LogError("RemoveAll() on outsideEnemies failed");
-            }
-            try
-            {
-                amountRemoved += RoundManager.Instance.currentLevel.DaytimeEnemies.RemoveAll(x => x.enemyType.name.ToUpper() == Name.ToUpper());
-            }
-            catch
-            {
-                Log.LogError("RemoveAll() on daytimeEnemies failed");
-            }
-            if (amountRemoved == 0) Log.LogInfo(string.Format("Failed to remove '{0}' from enemy pool, either it dosen't exist on the map or wrong string used.", Name));
         }
 
         /// <summary>
