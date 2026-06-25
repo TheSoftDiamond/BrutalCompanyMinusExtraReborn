@@ -860,15 +860,18 @@ namespace BrutalCompanyMinus.Minus
             List<MEvent> additionalEvents = new List<MEvent>();
             List<MEvent> currentEvents = new List<MEvent>();
 
-            if (newLevel.PlanetName != null)
+            if (Configuration.ExtraLogging.Value)
             {
-                Log.LogInfo("Moon name is " + newLevel.PlanetName);
+                if (newLevel.PlanetName != null)
+                {
+                    Log.LogInfo("Moon name is " + newLevel.PlanetName);
+                }
             }
 
-            bool skipEventActivation = IsIgnoredMoon(newLevel.PlanetName);
+            bool skipEventActivation = IsIgnoredMoon(newLevel.PlanetName) || IsIgnoredMoon(newLevel.name);
 
             //It looks like this is a mistake to have a second check, but its here for the Event Chance feature.
-            skipEventActivation = !DoesEventsRunByChance();
+            skipEventActivation |= !DoesEventsRunByChance();
 
             if (Configuration.DisableAllEvents.Value)
             {
@@ -1033,11 +1036,12 @@ namespace BrutalCompanyMinus.Minus
         /// <returns></returns>
         internal static bool IsIgnoredMoon(string moonName)
         {
+            moonName = moonName.ToLower();
             string moonsToIgnore = Configuration.MoonsToIgnore.GetSerializedValue();
             string[] ignoredMoons = string.IsNullOrEmpty(moonsToIgnore)
                 ? new string[0]
                 : moonsToIgnore.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                              .Select(moon => moon.Trim())
+                              .Select(moon => moon.Trim().ToLower())
                               .ToArray();
 
             //Log.LogInfo(moonsToIgnore); //Current list of moons that are ignored
@@ -1046,8 +1050,8 @@ namespace BrutalCompanyMinus.Minus
 
             foreach (string moon in ignoredMoons)
             {
-                string moonNameNoNumbers = Regex.Replace(moonName, @"\d", string.Empty).Trim();
-                string ignoredMoonNoNumbers = Regex.Replace(moon, @"\d", string.Empty).Trim();
+                string moonNameNoNumbers = Regex.Replace(moonName, @"-?\d-?", string.Empty).Trim();
+                string ignoredMoonNoNumbers = Regex.Replace(moon, @"-?\d-?", string.Empty).Trim();
                 if (moonName == moon || moonNameNoNumbers == ignoredMoonNoNumbers)
                 {
                     skipEventActivation = true;
@@ -1073,15 +1077,19 @@ namespace BrutalCompanyMinus.Minus
         /// <returns></returns>
         internal static bool IsIgnoredEventByMoonBlacklist(MEvent mEvent)
         {
-            string currentMoon = Manager.currentLevel.PlanetName.Replace(" ", string.Empty).ToString();
-            string currentMoonNoNumbers = Regex.Replace(currentMoon, @"\d", string.Empty).Trim();
+            string currentMoonPlanetName = Manager.currentLevel.PlanetName;
+            string currentMoonPlanetNameNoNumbers = Regex.Replace(currentMoonPlanetName, @"-?\d-?", string.Empty).Trim();
+
+            string currentMoonName = Manager.currentLevel.name;
+            string currentMoonNameNoNumbers = Regex.Replace(currentMoonName, @"-?\d-?", string.Empty).Trim();
+
 
             //Log.LogWarning($"{mEvent.Name()} Moon Blacklist: {string.Join(", ", mEvent.MoonBlacklist)}");
             //Log.LogWarning("Current Moon: " + currentMoon);
 
             // Check is current moon in blacklist
 
-            if (mEvent.Blacklist.Contains(currentMoon, StringComparer.OrdinalIgnoreCase) || mEvent.Blacklist.Contains(currentMoonNoNumbers, StringComparer.OrdinalIgnoreCase))
+            if (mEvent.Blacklist.Contains(currentMoonPlanetName, StringComparer.OrdinalIgnoreCase) || mEvent.Blacklist.Contains(currentMoonPlanetName, StringComparer.OrdinalIgnoreCase) || mEvent.Blacklist.Contains(currentMoonName, StringComparer.OrdinalIgnoreCase) || mEvent.Blacklist.Contains(currentMoonNameNoNumbers, StringComparer.OrdinalIgnoreCase))
             {
                 Log.LogInfo($"Event {mEvent.Name()} is ignored due to moon blacklist.");
                 return true;
@@ -1096,8 +1104,12 @@ namespace BrutalCompanyMinus.Minus
         /// <returns></returns>
         internal static bool IsEventOnMoonWhitelist(MEvent mEvent)
         {
-            string currentMoon = Manager.currentLevel.PlanetName.Replace(" ", string.Empty).ToString();
-            string currentMoonNoNumbers = Regex.Replace(currentMoon, @"\d", string.Empty).Trim();
+            string currentMoonPlanetName = Manager.currentLevel.PlanetName;
+            string currentMoonPlanetNameNoNumbers = Regex.Replace(currentMoonPlanetName, @"-?\d-?", string.Empty).Trim();
+
+            string currentMoonName = Manager.currentLevel.name;
+            string currentMoonNameNoNumbers = Regex.Replace(currentMoonName, @"-?\d-?", string.Empty).Trim();
+
 
             //Log.LogWarning($"{mEvent.Name()} Moon Whitelist: {string.Join(", ", mEvent.Whitelist)}");
             //Log.LogWarning("Current Moon: " + currentMoon);
@@ -1108,7 +1120,7 @@ namespace BrutalCompanyMinus.Minus
                 Log.LogInfo($"Event {mEvent.Name()} has an empty moon whitelist, but whitelist mode is on. Please consider either entering entries for the list or turn off the whitelist mode");
                 return false; // Whitelist is empty, but whitelist mode is on, so no moons are valid
             }
-            if (mEvent.Whitelist.Contains(currentMoon, StringComparer.OrdinalIgnoreCase) || mEvent.Whitelist.Contains(currentMoonNoNumbers, StringComparer.OrdinalIgnoreCase))
+            if (mEvent.Whitelist.Contains(currentMoonPlanetName, StringComparer.OrdinalIgnoreCase) || mEvent.Blacklist.Contains(currentMoonPlanetName, StringComparer.OrdinalIgnoreCase) || mEvent.Blacklist.Contains(currentMoonName, StringComparer.OrdinalIgnoreCase) || mEvent.Blacklist.Contains(currentMoonNameNoNumbers, StringComparer.OrdinalIgnoreCase))
             {
                 Log.LogInfo($"Event {mEvent.Name()} is chosen due to moon whitelist.");
                 return true; // Event is on whitelist, and valid moon
