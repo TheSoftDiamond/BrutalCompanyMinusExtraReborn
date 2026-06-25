@@ -1,6 +1,6 @@
 namespace BrutalCompanyMinus.Minus.Handlers.CustomEvents
 {
-    internal abstract class BaseHazardData
+    public abstract class BaseHazardData
     {
         public string PrefabName { get; set; }
 
