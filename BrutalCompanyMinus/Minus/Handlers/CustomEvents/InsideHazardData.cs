@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 
 namespace BrutalCompanyMinus.Minus.Handlers.CustomEvents
 {
-    internal class InsideHazardData : BaseHazardData
+    public class InsideHazardData : BaseHazardData
     {
         [JsonProperty("MinSpawn")]
         public int[] MinSpawn { get; set; }
