@@ -1,4 +1,7 @@
 ﻿using BrutalCompanyMinus;
+using BrutalCompanyMinus.Minus.CustomEvents;
+using BrutalCompanyMinus.Minus.Handlers.CustomEvents;
+using Dawn;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,7 +36,14 @@ namespace BrutalCompanyMinus.Minus.Events
         public override bool AddEventIfOnly() => Compatibility.SurfacedPresent;
         public override void Execute()
         {
-            Manager.insideObjectsToSpawnOutside.Add(new Manager.ObjectInfo(Assets.GetObject("Bertha"), UnityEngine.Random.Range(Getf(ScaleType.MinDensity), Getf(ScaleType.MaxDensity))));
+            Scale minDensity = ScaleList[ScaleType.MinDensity];
+            Scale maxDensity = ScaleList[ScaleType.MaxDensity];
+
+            var hazard = new GeneralCustomEvent.HazardEvent("Bertha", minDensity, maxDensity);
+
+            hazard.Type = this.Type;
+
+            DawnLibHandling.eventQueue.Enqueue(hazard);
         }
     }
 }
