@@ -43,6 +43,46 @@ namespace BrutalCompanyMinus.Minus.Handlers.CustomEvents
             return dataFound;
         }
 
+        /// <summary>
+        /// Registers and processes an inside hazard dynamically during a regular event's Execute method.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+        public static void DynamicInsideHazard(string hazardName, MEvent.Scale minCount, MEvent.Scale maxCount, InsideHazardData.SpawnOptions_ options, MEvent.EventType eventType)
+        {
+            if (!Compatibility.DawnLibPresent) return;
+
+            GeneralCustomEvent.HazardEvent hazard = new GeneralCustomEvent.HazardEvent(
+                    hazardName,
+                    minCount,
+                    maxCount,
+                    options.FacingAwayFromWall,
+                    options.FacingWall,
+                    options.BackToWall,
+                    options.BackFlushWithWall,
+                    options.RequireDistanceBetween,
+                    options.DisallowNearEntrances,
+                    options.AllowInMineshaft
+            );
+
+
+            ProcessMapObject(hazard, eventType);
+
+
+        }
+
+        /// <summary>
+        /// Registers and processes an outside hazard dynamically during a regular event's Execute method.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+        public static void DynamicOutsideHazard(string hazardName, MEvent.Scale minDensity, MEvent.Scale maxDensity, MEvent.EventType eventType)
+        {
+            if (!Compatibility.DawnLibPresent) return;
+
+            GeneralCustomEvent.HazardEvent hazard = new GeneralCustomEvent.HazardEvent(hazardName, minDensity, maxDensity);
+
+            ProcessMapObject(hazard, eventType);
+        }
+
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         public static bool IsDawnManaged(string hazardName)
         {
@@ -74,7 +114,14 @@ namespace BrutalCompanyMinus.Minus.Handlers.CustomEvents
             foreach (DawnMapObjectInfo mapObjectInfo in LethalContent.MapObjects.Values)
             {
                 GameObject? mapObject = mapObjectInfo.GetMapObjectPrefab();
-                if (mapObjectInfo.ShouldSkipIgnoreOverride() || mapObject == null || mapObject.name != hazard.hazardObject.name)
+                if (mapObjectInfo.ShouldSkipIgnoreOverride() || mapObject == null)
+                    continue;
+
+                //Recommended by a buddy to add
+                string cleanMapObjectName = mapObject.name.Replace("(Clone)", "").Trim();
+                string cleanHazardName = hazard.hazardObject.name.Replace("(Clone)", "").Trim();
+
+                if (cleanMapObjectName != cleanHazardName)
                     continue;
 
                 string hazardName = mapObject.name;
@@ -109,7 +156,7 @@ namespace BrutalCompanyMinus.Minus.Handlers.CustomEvents
 
                 if (outsideInfo != null)
                 {
-                    computedWeight = (int)Mathf.Clamp(computedWeight * Manager.terrainArea, 0f, 1000f);
+                    computedWeight = Mathf.Clamp(computedWeight * Manager.terrainArea, 0f, 1000f);
                     Log.LogInfo($"Outside adjusted computed: {computedWeight} Area: {Manager.terrainArea}");
 
                     outsideInfo.SpawnWeights = new CurveTableBuilder<DawnMoonInfo, SpawnWeightContext>()
@@ -121,10 +168,94 @@ namespace BrutalCompanyMinus.Minus.Handlers.CustomEvents
 
                 if (insideInfo != null)
                 {
-                    int insideWeight = (int)computedWeight;
-                    Log.LogInfo("Inside adjusted computed: " + insideWeight);
+                    //int insideWeight = (int)computedWeight;
+                    Log.LogInfo("Inside adjusted computed: " + computedWeight);
                     insideInfo.SpawnWeights = new CurveTableBuilder<DawnMoonInfo, SpawnWeightContext>()
-                        .AddCurve(moonKey, AnimationCurve.Constant(0, 1, insideWeight))
+                        .AddCurve(moonKey, AnimationCurve.Constant(0, 1, computedWeight))
+                        .Build();
+                    insideInfo.IndoorMapHazardType.spawnFacingAwayFromWall = hazard.facingAwayFromWall;
+                    insideInfo.IndoorMapHazardType.spawnFacingWall = hazard.facingWall;
+                    insideInfo.IndoorMapHazardType.spawnWithBackToWall = hazard.backToWall;
+                    insideInfo.IndoorMapHazardType.spawnWithBackFlushAgainstWall = hazard.backFlushWithWall;
+                    insideInfo.IndoorMapHazardType.requireDistanceBetweenSpawns = hazard.requireDistanceBetween;
+                    insideInfo.IndoorMapHazardType.disallowSpawningNearEntrances = hazard.disallowNearEntrances;
+                    insideInfo.IndoorMapHazardType.allowInMineshaft = hazard.allowInMineshaft;
+
+                    mapObjectInfo.InsideInfo = insideInfo;
+                    processed = true;
+                }
+
+                if (processed) break;
+            }
+
+            return processed;
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+        public static bool ProcessMapObject(GeneralCustomEvent.HazardEvent hazard, MEvent.EventType eventType)
+        {
+            bool processed = false;
+            foreach (DawnMapObjectInfo mapObjectInfo in LethalContent.MapObjects.Values)
+            {
+                GameObject? mapObject = mapObjectInfo.GetMapObjectPrefab();
+                if (mapObjectInfo.ShouldSkipIgnoreOverride() || mapObject == null)
+                    continue;
+
+                 //Recommended
+                string cleanMapObjectName = mapObject.name.Replace("(Clone)", "").Trim();
+                string cleanHazardName = hazard.hazardObject.name.Replace("(Clone)", "").Trim();
+
+                if (cleanMapObjectName != cleanHazardName)
+                    continue;
+
+                string hazardName = mapObject.name;
+                IndoorMapHazardType? indoorMapHazardType = mapObjectInfo.InsideInfo?.IndoorMapHazardType;
+
+                if (!originalStates.ContainsKey(hazardName))
+                {
+                    originalStates[hazardName] = new DawnSnapshot
+                    {
+                        OutsideWeights = mapObjectInfo.OutsideInfo?.SpawnWeights,
+                        InsideWeights = mapObjectInfo.InsideInfo?.SpawnWeights,
+                        FacingAway = indoorMapHazardType?.spawnFacingAwayFromWall ?? false,
+                        FacingWall = indoorMapHazardType?.spawnFacingWall ?? false,
+                        BackToWall = indoorMapHazardType?.spawnWithBackToWall ?? false,
+                        BackFlush = indoorMapHazardType?.spawnWithBackFlushAgainstWall ?? false,
+                        ReqDist = indoorMapHazardType?.requireDistanceBetweenSpawns ?? false,
+                        DisallowNear = indoorMapHazardType?.disallowSpawningNearEntrances ?? false,
+                        AllowInMineshaft = indoorMapHazardType?.allowInMineshaft ?? false
+                    };
+                }
+
+                DawnOutsideMapObjectInfo? outsideInfo = mapObjectInfo.OutsideInfo;
+                DawnInsideMapObjectInfo? insideInfo = mapObjectInfo.InsideInfo;
+
+                NamespacedKey<DawnMoonInfo> moonKey = RoundManager.Instance.currentLevel.GetDawnInfo().TypedKey;
+
+                float computedWeight = Random.Range(
+                    hazard.minDensity.Computef(eventType),
+                    hazard.maxDensity.Computef(eventType)
+                );
+                Log.LogInfo($"Raw computed: {computedWeight}");
+
+                if (outsideInfo != null)
+                {
+                    computedWeight = Mathf.Clamp(computedWeight * Manager.terrainArea, 0f, 1000f);
+                    Log.LogInfo($"Outside adjusted computed: {computedWeight} Area: {Manager.terrainArea}");
+
+                    outsideInfo.SpawnWeights = new CurveTableBuilder<DawnMoonInfo, SpawnWeightContext>()
+                        .AddCurve(moonKey, AnimationCurve.Constant(0, 1, computedWeight)).Build();
+
+                    mapObjectInfo.OutsideInfo = outsideInfo;
+                    processed = true;
+                }
+
+                if (insideInfo != null)
+                {
+                    //int insideWeight = (int)computedWeight;
+                    Log.LogInfo("Inside adjusted computed: " + computedWeight);
+                    insideInfo.SpawnWeights = new CurveTableBuilder<DawnMoonInfo, SpawnWeightContext>()
+                        .AddCurve(moonKey, AnimationCurve.Constant(0, 1, computedWeight))
                         .Build();
                     insideInfo.IndoorMapHazardType.spawnFacingAwayFromWall = hazard.facingAwayFromWall;
                     insideInfo.IndoorMapHazardType.spawnFacingWall = hazard.facingWall;
@@ -181,6 +312,7 @@ namespace BrutalCompanyMinus.Minus.Handlers.CustomEvents
                 }
             }
             originalStates.Clear();
+
         }
     }
 }
