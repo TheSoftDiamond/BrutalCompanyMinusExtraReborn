@@ -307,6 +307,10 @@ namespace BrutalCompanyMinus.Minus.CustomEvents
                 ScaleList.Add(ScaleType.MaxAmount, maxAmount);
             }
 
+            public HazardEvent()
+            {
+            }
+
             private void AssignSpawnParameters(Scale minDensity, Scale maxDensity)
             {
                 this.minDensity = minDensity;
@@ -330,7 +334,7 @@ namespace BrutalCompanyMinus.Minus.CustomEvents
             {
                 if (this.hazardObject == null)
                 {
-                    Log.LogError($"Hazard object is null for {this.hazardObject.name}");
+                    Log.LogError($"A Hazard object data went null! Something either went wrong or you specified an incoorect name.");
                     return;
                 }
 
