@@ -8,14 +8,14 @@ namespace BrutalCompanyMinus.Minus.Handlers.Modded;
 /// Applies current day enemy pool after DawnLib/LunarConfig changes the moon enemy pools
 /// </summary>
 [HarmonyPatch]
-internal class LunarConfigCompat
+public class LunarConfigCompat
 {
-    private static readonly List<EnemyPool> enemyPools = [];
-    private static bool applying;
+    public static readonly List<EnemyPool> enemyPools = [];
+    public static bool applying;
 
-    [HarmonyPatch(typeof(Manager), "DoAddEnemyToPoolWithRarity")]
-    [HarmonyPostfix]
-    private static void DoAddEnemyToPoolWithRarityPostfix(ref List<SpawnableEnemyWithRarity> list, EnemyType enemy, int rarity)
+    //[HarmonyPatch(typeof(Manager), "DoAddEnemyToPoolWithRarity")]
+    //[HarmonyPostfix]
+    public static void DoAddEnemyToPoolWithRarityPostfix(ref List<SpawnableEnemyWithRarity> list, EnemyType enemy, int rarity)
     {
         RoundManager roundManager = RoundManager.Instance;
 
@@ -44,9 +44,9 @@ internal class LunarConfigCompat
         enemyPools.Add(new EnemyPool(EnemyPoolType.Add, poolList, enemy, rarity, string.Empty));
     }
 
-    [HarmonyPatch(typeof(Manager), "DoRemoveSpawn")]
-    [HarmonyPostfix]
-    private static void DoRemoveSpawnPostfix(string Name)
+    //[HarmonyPatch(typeof(Manager), "DoRemoveSpawn")]
+    //[HarmonyPostfix]
+    public static void DoRemoveSpawnPostfix(string Name)
     {
         RoundManager roundManager = RoundManager.Instance;
 
@@ -58,7 +58,7 @@ internal class LunarConfigCompat
 
     [HarmonyPatch(typeof(RoundManager), nameof(RoundManager.RefreshEnemiesList))]
     [HarmonyPostfix]
-    private static void RefreshEnemiesListPostfix()
+    public static void RefreshEnemiesListPostfix()
     {
         RoundManager roundManager = RoundManager.Instance;
 
@@ -102,33 +102,33 @@ internal class LunarConfigCompat
     [HarmonyPatch(typeof(StartOfRound), nameof(StartOfRound.ShipLeave))]
     [HarmonyPatch(typeof(StartOfRound), nameof(StartOfRound.OnLocalDisconnect))]
     [HarmonyPostfix]
-    private static void CleanupPostfix()
+    public static void CleanupPostfix()
     {
         enemyPools.Clear();
     }
 
-    private enum EnemyPoolType
+    public enum EnemyPoolType
     {
         Add,
         Remove
     }
 
-    private enum EnemyPoolList
+    public enum EnemyPoolList
     {
         Inside,
         Outside,
         Daytime
     }
 
-    private readonly struct EnemyPool
+    public readonly struct EnemyPool
     {
-        internal readonly EnemyPoolType PoolType;
-        internal readonly EnemyPoolList PoolList;
-        internal readonly EnemyType EnemyType;
-        internal readonly int Rarity;
-        internal readonly string EnemyName;
+        public readonly EnemyPoolType PoolType;
+        public readonly EnemyPoolList PoolList;
+        public readonly EnemyType EnemyType;
+        public readonly int Rarity;
+        public readonly string EnemyName;
 
-        internal EnemyPool(EnemyPoolType poolType, EnemyPoolList poolList, EnemyType enemyType, int rarity, string enemyName)
+        public EnemyPool(EnemyPoolType poolType, EnemyPoolList poolList, EnemyType enemyType, int rarity, string enemyName)
         {
             PoolType = poolType;
             PoolList = poolList;
