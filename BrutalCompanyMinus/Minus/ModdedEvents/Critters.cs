@@ -22,7 +22,7 @@ namespace BrutalCompanyMinus.Minus.Events
             Descriptions = new List<string>() { "They Come In Numbers", "Big smiles", "They are super cute.. or not?!" };
             ColorHex = "#800000";
             Type = EventType.VeryBad;
-            Aliases = new List<string>() { "NoDog" };
+            Aliases = new List<string>() { "Criter" };
 
             monstersToSpawn = new List<MonsterEvent>() { new MonsterEvent(
                 "KickinRuinedEnemyType",
