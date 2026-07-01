@@ -22,6 +22,7 @@ namespace BrutalCompanyMinus.Minus.Events
             Descriptions = new List<string>() { "No miniguns at all for today", "Unloaded Hangar corp. has removed all slayers in this area!" };
             ColorHex = "#008000";
             Type = EventType.Remove;
+            Aliases = new List<string>() { "NoSlayer" };
 
             EventsToRemove = new List<string>() { nameof(Coilhead), nameof(AntiCoilhead), nameof(ToilHead),/* nameof(Mantitoil), */nameof(ToilSlayer), nameof(MantiToilSlayer), nameof(NoMantiToilSlayer), nameof(NoToilSlayer), nameof(AllSlayers) };
 

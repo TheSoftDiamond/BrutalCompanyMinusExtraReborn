@@ -16,6 +16,7 @@ namespace BrutalCompanyMinus.Minus.Events
             Descriptions = new List<string>() { "Warning: Multiple NutSlayers detected in the area!", "Oh...Oh my god..."  };
             ColorHex = "#000000";
             Type = EventType.Insane;
+            Aliases = new List<string>() { "NutslayerMore" };
 
             EventsToRemove = new List<string>() { nameof(HeavyRain), nameof(Raining), nameof(Masked)};
 

@@ -26,6 +26,7 @@ namespace BrutalCompanyMinus.Minus.Events
             Descriptions = new List<string>() { "No weights", "The air feels light." };
             ColorHex = "#008000";
             Type = EventType.Remove;
+            Aliases = new List<string>() { "NoPeeper" };
         }
 
         public override bool AddEventIfOnly() => Compatibility.peepersPresent;

@@ -23,8 +23,9 @@ namespace BrutalCompanyMinus.Minus.Events
             Descriptions = new List<string>() { "No flying turrets today", "You wont see any flying turrets today", "No air snipers", "NoMantiToils...phew..." };
             ColorHex = "#008000";
             Type = EventType.Remove;
+            Aliases = new List<string>() { "NoMantitoil" };
 
-      //      EventsToSpawnWith = new List<string>() { nameof(NoBirds)}; Deprecated
+            //      EventsToSpawnWith = new List<string>() { nameof(NoBirds)}; Deprecated
             EventsToRemove = new List<string>() { nameof(Mantitoil), nameof(NoSlayers), nameof(ToilSlayer) };
         }
 

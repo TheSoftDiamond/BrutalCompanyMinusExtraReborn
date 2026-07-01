@@ -23,6 +23,7 @@ namespace BrutalCompanyMinus.Minus.Events
             Descriptions = new List<string>() { "Watch your step", "This facility is rigged", "Landmines, yes", "+Landmines" };
             ColorHex = "#FF0000";
             Type = EventType.Bad;
+            Aliases = new List<string>() { "Landmine" };
 
             ScaleList.Add(ScaleType.MinAmount, new Scale(5.0f, 0.2f, 5.0f, 25.0f));
             ScaleList.Add(ScaleType.MaxAmount, new Scale(7.0f, 0.28f, 7.0f, 35.0f));

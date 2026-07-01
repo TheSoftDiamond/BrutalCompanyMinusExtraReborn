@@ -24,6 +24,7 @@ namespace BrutalCompanyMinus.Minus.Events
             Type = EventType.Bad;
 
             EventsToRemove = new List<string>() { nameof(SID), nameof(RealityShift) };
+            Aliases = new List<string>() { "Dustpan" };
 
             scrapTransmutationEvent = new ScrapTransmutationEvent(
                 new Scale(0.5f, 0.008f, 0.5f, 0.9f),

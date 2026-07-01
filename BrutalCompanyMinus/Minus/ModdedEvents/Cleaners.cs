@@ -22,6 +22,7 @@ namespace BrutalCompanyMinus.Minus.Events
             Descriptions = new List<string>() { "Pest control", "Smoke machines", "Covid free facility", "Cleaners!" };
             ColorHex = "#FF0000";
             Type = EventType.Bad;
+            Aliases = new List<string>() { "Cleaner" };
 
 
             monstersToSpawn = new List<MonsterEvent>() { new MonsterEvent(

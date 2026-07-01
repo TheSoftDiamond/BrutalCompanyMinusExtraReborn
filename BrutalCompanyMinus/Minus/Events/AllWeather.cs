@@ -25,6 +25,7 @@ namespace BrutalCompanyMinus.Minus.Events
             Descriptions = new List<string>() { "God hates you", "Chaos reigns as the skies unleash every weather pattern known to man.", "An umbrella might help here", "I hope you suffer here" };
             ColorHex = "#800000";
             Type = EventType.VeryBad;
+            Aliases = new List<string>() { "EveryWeather" };
 
             EventsToRemove = new List<string>() { nameof(Gloomy), nameof(Raining), nameof(HeavyRain) };
 

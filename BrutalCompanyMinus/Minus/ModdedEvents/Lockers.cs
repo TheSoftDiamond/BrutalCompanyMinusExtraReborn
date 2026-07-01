@@ -22,6 +22,7 @@ namespace BrutalCompanyMinus.Minus.Events
             Descriptions = new List<string>() { "Lockers", "They remind me of iron maidens", "The chance of you dying has increased" };
             ColorHex = "#FF0000";
             Type = EventType.Bad;
+            Aliases = new List<string>() { "Locker" };
 
             monstersToSpawn = new List<MonsterEvent>() { new MonsterEvent(
                 "LockerEnemy",

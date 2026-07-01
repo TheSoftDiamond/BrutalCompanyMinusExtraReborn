@@ -22,6 +22,7 @@ namespace BrutalCompanyMinus.Minus.Events
             Descriptions = new List<string>() { "This facility is armed.", "You better bring your codpiece", "Try moving, i dare you..." };
             ColorHex = "#800000";
             Type = EventType.VeryBad;
+            Aliases = new List<string>() { "Nutcrackers" };
 
             EventsToSpawnWith = new List<string>() { nameof(Turrets) };
 

@@ -22,6 +22,7 @@ namespace BrutalCompanyMinus.Minus.Events
             Descriptions = new List<string>() { "Its bird migration season", "Birb", "Do these things have feathers?", "You can shoot these" };
             ColorHex = "#FFFFFF";
             Type = EventType.Neutral;
+            Aliases = new List<string>() { "Bird" };
 
             monstersToSpawn = new List<MonsterEvent>() { new MonsterEvent(
                 Assets.EnemyName.Manticoil,

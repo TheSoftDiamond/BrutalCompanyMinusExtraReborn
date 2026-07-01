@@ -27,6 +27,7 @@ namespace BrutalCompanyMinus.Minus.Events
             MoonMode = true;
             Whitelist = new List<string>() { "Vow", "March" };
             isBetaEvent = true;
+            Aliases = new List<string>() { "Pumas" };
 
             monstersToSpawn = new List<MonsterEvent>() { new MonsterEvent(
                 Assets.EnemyName.Puma,

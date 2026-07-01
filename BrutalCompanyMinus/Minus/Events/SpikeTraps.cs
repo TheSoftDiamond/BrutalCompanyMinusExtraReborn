@@ -22,6 +22,7 @@ namespace BrutalCompanyMinus.Minus.Events
             Descriptions = new List<string>() { "Spikes!!!", "I recommend looking up", "Hydraulic press!" };
             ColorHex = "#FF0000";
             Type = EventType.Bad;
+            Aliases = new List<string>() { "Spiketrap" };
 
             ScaleList.Add(ScaleType.MinAmount, new Scale(3.0f, 0.09f, 3.0f, 12.0f));
             ScaleList.Add(ScaleType.MaxAmount, new Scale(4.0f, 0.12f, 4.0f, 16.0f));

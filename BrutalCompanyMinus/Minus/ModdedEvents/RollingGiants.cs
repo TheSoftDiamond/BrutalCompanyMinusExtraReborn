@@ -22,6 +22,7 @@ namespace BrutalCompanyMinus.Minus.Events
             Descriptions = new List<string>() { "Rolling Giants!!", "It wants to touch...", "What even is this thing?????" };
             ColorHex = "#FF0000";
             Type = EventType.Bad;
+            Aliases = new List<string>() { "RollingGiant" };
 
             monstersToSpawn = new List<MonsterEvent>() { new MonsterEvent(
                 "RollingGiant_EnemyType",

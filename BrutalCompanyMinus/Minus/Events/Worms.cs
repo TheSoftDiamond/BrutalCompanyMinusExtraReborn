@@ -22,6 +22,7 @@ namespace BrutalCompanyMinus.Minus.Events
             Descriptions = new List<string>() { "Bug Breach Detected", "The ultimate fine dining experience", "Dont make out with those things" };
             ColorHex = "#800000";
             Type = EventType.VeryBad;
+            Aliases = new List<string>() { "Worm" };
 
             EventsToRemove = new List<string>() { nameof(SnareFleas) };
 

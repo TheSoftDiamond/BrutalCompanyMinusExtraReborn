@@ -22,6 +22,7 @@ namespace BrutalCompanyMinus.Minus.Events
             Descriptions = new List<string>() { "No stalkers", "No chiropractor's", "No more disappearing." };
             ColorHex = "#008000";
             Type = EventType.Remove;
+            Aliases = new List<string>() { "NoBrackens" };
 
             EventsToRemove = new List<string>() { nameof(Bracken), nameof(Hell) };
         }

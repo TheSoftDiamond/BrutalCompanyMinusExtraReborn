@@ -24,6 +24,7 @@ namespace BrutalCompanyMinus.Minus.Events
             Descriptions = new List<string>() { "No slow moving things", "No immortal snails", "No thermonuclear bombs here..." };
             ColorHex = "#008000";
             Type = EventType.Remove;
+            Aliases = new List<string>() { "NoImmortalSnail" };
         }
 
         public override bool AddEventIfOnly() => Manager.SpawnExists("ImmortalSnail.EnemyType") && Compatibility.immortalSnailPresent;

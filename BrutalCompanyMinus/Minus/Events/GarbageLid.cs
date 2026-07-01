@@ -22,6 +22,7 @@ namespace BrutalCompanyMinus.Minus.Events
             Descriptions = new List<string>() { "Trash", "GarbageLid... lot of them" };
             ColorHex = "#e84343";
             Type = EventType.Neutral;
+            Aliases = new List<string>() { "GarbageLids" };
 
             scrapTransmutationEvent = new ScrapTransmutationEvent(
                 new Scale(0.5f, 0.008f, 0.5f, 0.9f),

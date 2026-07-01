@@ -25,6 +25,7 @@ namespace BrutalCompanyMinus.Minus.Events
             Descriptions = new List<string>() { "Some mines have turned into scrap...", "This was a wonderful idea", "Beep, Beep, Beep.", "You can now sell some of the landmines." };
             ColorHex = "#FF0000";
             Type = EventType.Bad;
+            Aliases = new List<string>() { "GrabbableLandmine" };
 
             ScaleList.Add(ScaleType.Rarity, new Scale(0.33f, 0.0066f, 0.33f, 1.0f));
             ScaleList.Add(ScaleType.MinAmount, new Scale(2.0f, 0.08f, 2.0f, 10.0f));

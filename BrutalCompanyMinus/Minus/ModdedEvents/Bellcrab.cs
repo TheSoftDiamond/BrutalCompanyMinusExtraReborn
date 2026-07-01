@@ -18,6 +18,7 @@ namespace BrutalCompanyMinus.Minus.Events
             Descriptions = new List<string>() { "Bells.. but are they real?", "Do you trust it?", "Dont get pinched!" };
             ColorHex = "#FF0000";
             Type = EventType.Bad;
+            Aliases = new List<string>() { "Bellcrabs" };
 
             EventsToRemove = new List<string>() { nameof(SID) };
 

@@ -22,6 +22,7 @@ namespace BrutalCompanyMinus.Minus.Events
             Descriptions = new List<string>() { "Ceiling campers!", "A delicacy", "The finest of creatures", "Look up", "Look down" };
             ColorHex = "#FF0000";
             Type = EventType.Bad;
+            Aliases = new List<string>() { "Snareflea" };
 
             monstersToSpawn = new List<MonsterEvent>() { new MonsterEvent(
                 Assets.EnemyName.SnareFlea,

@@ -22,6 +22,7 @@ namespace BrutalCompanyMinus.Minus.Events
             Descriptions = new List<string>() { "Your skin crawls...", "Not for those with arachnophobia", "Bring your hoover" };
             ColorHex = "#FF0000";
             Type = EventType.Bad;
+            Aliases = new List<string>() { "Spider" };
 
             EventsToRemove = new List<string>() { nameof(Trees), nameof(LeaflessTrees) };
             EventsToSpawnWith = new List<string>() { nameof(LeaflessBrownTrees) };

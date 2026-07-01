@@ -23,6 +23,7 @@ namespace BrutalCompanyMinus.Minus.Events
             Descriptions = new List<string>() { "The turrets blend in with the trees...", "I hope you enjoy getting shot", "A beautiful day to go outside." };
             ColorHex = "#FF0000";
             Type = EventType.Bad;
+            Aliases = new List<string>() { "OutsideTurret" };
 
             EventsToSpawnWith = new List<string>() { nameof(Trees) };
             EventsToRemove = new List<string>() { nameof(LeaflessBrownTrees), nameof(LeaflessTrees) };

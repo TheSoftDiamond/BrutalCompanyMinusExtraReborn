@@ -23,6 +23,7 @@ namespace BrutalCompanyMinus.Minus.Events
             Descriptions = new List<string>() { "I like trains", "Looks like train factory" };
             ColorHex = "#FFFFFF";
             Type = EventType.Neutral;
+            Aliases = new List<string>() { "Trains" };
 
             scrapTransmutationEvent = new ScrapTransmutationEvent(
                 new Scale(0.5f, 0.008f, 0.5f, 0.9f),

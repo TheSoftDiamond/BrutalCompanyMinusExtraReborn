@@ -24,6 +24,7 @@ namespace BrutalCompanyMinus.Minus.Events
             Descriptions = new List<string>() { "No worms", "No leviathans", "The earth is safe", "No delicacy" };
             ColorHex = "#008000";
             Type = EventType.Remove;
+            Aliases = new List<string>() { "NoWorms" };
         }
 
         public override bool AddEventIfOnly() => Manager.SpawnExists(Assets.EnemyName.EarthLeviathan);

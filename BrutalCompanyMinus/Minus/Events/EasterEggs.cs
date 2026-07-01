@@ -24,6 +24,7 @@ namespace BrutalCompanyMinus.Minus.Events
             Type = EventType.Neutral;
 
             EventsToRemove = new List<string>() { nameof(SID), nameof(RealityShift) };
+            Aliases = new List<string>() { "EasterEgg" };
 
             scrapTransmutationEvent = new ScrapTransmutationEvent(
                 new Scale(0.5f, 0.1f, 1.0f, 0.9f),

@@ -22,6 +22,7 @@ namespace BrutalCompanyMinus.Minus.Events
             Descriptions = new List<string>() { "Enemies here are a little more tougher than usual.", "Should take an extra wack or 2", "These monsters are drugged" };
             ColorHex = "#FF0000";
             Type = EventType.Bad;
+            Aliases = new List<string>() { "StrongerEnemies" };
 
             ScaleList.Add(ScaleType.MinHp, new Scale(1.0f, 0.03f, 1.0f, 4.0f));
             ScaleList.Add(ScaleType.MaxHp, new Scale(2.0f, 0.04f, 2.0f, 6.0f));

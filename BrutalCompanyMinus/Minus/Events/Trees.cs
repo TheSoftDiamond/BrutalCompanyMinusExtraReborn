@@ -24,6 +24,7 @@ namespace BrutalCompanyMinus.Minus.Events
             Descriptions = new List<string>() { "Trees", "More trees", "The trees look like trees" };
             ColorHex = "#FFFFFF";
             Type = EventType.Neutral;
+            Aliases = new List<string>() { "Tree" };
 
             EventsToRemove = new List<string>() { nameof(LeaflessBrownTrees), nameof(LeaflessTrees) };
 

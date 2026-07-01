@@ -23,6 +23,7 @@ namespace BrutalCompanyMinus.Minus.Events
             ColorHex = "#008000";
             Type = EventType.Remove;
             EventsToRemove = new List<string>() { nameof(Lizard) };
+            Aliases = new List<string>() { "NoLizard" };
         }
 
         public override bool AddEventIfOnly() => Manager.SpawnExists(Assets.EnemyName.SporeLizard);

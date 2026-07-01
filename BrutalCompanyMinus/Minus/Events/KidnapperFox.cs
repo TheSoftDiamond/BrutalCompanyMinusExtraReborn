@@ -28,6 +28,7 @@ namespace BrutalCompanyMinus.Minus.Events
             Descriptions = new List<string>() { "He's back, and he's not happy." };
             ColorHex = "#FF0000";
             Type = EventType.Bad;
+            Aliases = new List<string>() { "Bushwolf", "Fox" };
 
             monstersToSpawn = new List<MonsterEvent>() { new MonsterEvent(
                 Assets.EnemyName.BushWolf,

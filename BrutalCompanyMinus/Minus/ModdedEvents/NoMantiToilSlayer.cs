@@ -12,7 +12,9 @@ namespace BrutalCompanyMinus.Minus.Events
     {
         public override string Name() => nameof(NoMantiToilSlayer);
 
+
         public static NoMantiToilSlayer Instance;
+
 
         public override void Initalize()
         {
@@ -22,6 +24,7 @@ namespace BrutalCompanyMinus.Minus.Events
             Descriptions = new List<string>() { "No flying Miniguns", "MantiSlayers not permited in this area", "The Manticoils cant hurt you today" };
             ColorHex = "#008000";
             Type = EventType.Remove;
+            Aliases = new List<string>() { "No Manticoil" };
 
             EventsToRemove = new List<string>() { nameof(Coilhead), nameof(AntiCoilhead), nameof(ToilHead), nameof(Mantitoil), nameof(ToilSlayer), nameof(MantiToilSlayer), nameof(NoToilSlayer) };
 

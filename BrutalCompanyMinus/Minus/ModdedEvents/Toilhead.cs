@@ -22,6 +22,7 @@ namespace BrutalCompanyMinus.Minus.Events
             Descriptions = new List<string>() { "These things are against the geneva convention.", "Toilheads!", "The coilheads have gotten a software upgrade.", "All the heads!", "You downloaded this mod, not me..." };
             ColorHex = "#800000";
             Type = EventType.VeryBad;
+            Aliases = new List<string>() { "Toilheads" };
 
             EventsToRemove = new List<string>() { nameof(Coilhead), nameof(AntiCoilhead) };
 

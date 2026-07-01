@@ -22,6 +22,7 @@ namespace BrutalCompanyMinus.Minus.Events
             Descriptions = new List<string>() { "Welcome To The Factory!", "Its all metallic??" };
             ColorHex = "#FF0000";
             Type = EventType.Bad;
+            Aliases = new List<string>() { "Factory" };
 
             EventsToSpawnWith = new List<string>() { nameof(HeavyRain) };
 

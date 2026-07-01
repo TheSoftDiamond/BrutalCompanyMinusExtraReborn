@@ -23,8 +23,8 @@ namespace BrutalCompanyMinus.Minus.Events
             Descriptions = new List<string>() { "Your neck tingles", "Your local chiropractors", "I hope you have nyctophobia", "You wont win this staring competition" };
             ColorHex = "#800000";
             Type = EventType.VeryBad;
+            Aliases = new List<string>() { "Brackens" };
 
-            
 
             monstersToSpawn = new List<MonsterEvent>() { new MonsterEvent(
                 Assets.EnemyName.Bracken,

@@ -22,6 +22,7 @@ namespace BrutalCompanyMinus.Minus.Events
             Descriptions = new List<string>() { "No landmines", "No need to be wary of the floor today.", "Dont expect mines" };
             ColorHex = "#008000";
             Type = EventType.Remove;
+            Aliases = new List<string>() { "NoLandmine" };
 
             EventsToRemove = new List<string>() { nameof(Landmines), nameof(OutsideLandmines), nameof(Warzone), nameof(GrabbableLandmines), nameof(Hell), nameof(Roomba) };
         }

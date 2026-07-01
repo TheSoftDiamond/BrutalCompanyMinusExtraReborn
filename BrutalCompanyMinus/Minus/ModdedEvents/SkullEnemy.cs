@@ -1,4 +1,4 @@
-﻿using System;
+﻿ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -18,6 +18,7 @@ namespace BrutalCompanyMinus.Minus.Events
             Descriptions = new List<string>() { "The skull chases you...", "Do what you will, but it follows..." };
             ColorHex = "#800000";
             Type = EventType.VeryBad;
+            Aliases = new List<string>() { "Skull" };
 
             monstersToSpawn = new List<MonsterEvent>()
             {

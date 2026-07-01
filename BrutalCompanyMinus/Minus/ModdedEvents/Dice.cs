@@ -22,6 +22,7 @@ namespace BrutalCompanyMinus.Minus.Events
             Descriptions = new List<string>() { "Dice!!!!", "Did you know that 90% of gamblers quit just before they hit big?", "50/50", "Questionable luck" };
             ColorHex = "#008000";
             Type = EventType.Good;
+            Aliases = new List<string>() { "Dices" };
 
             scrapTransmutationEvent = new ScrapTransmutationEvent(
                 new Scale(0.5f, 0.008f, 0.5f, 0.9f),

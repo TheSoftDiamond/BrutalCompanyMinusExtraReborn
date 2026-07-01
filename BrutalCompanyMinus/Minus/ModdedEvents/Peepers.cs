@@ -22,6 +22,7 @@ namespace BrutalCompanyMinus.Minus.Events
             Descriptions = new List<string>() { "Weights!", "Group HUG!!!", "The air feels heavy...", "More annoying than cute" };
             ColorHex = "#FF0000";
             Type = EventType.Bad;
+            Aliases = new List<string>() { "Peepers" };
 
             monstersToSpawn = new List<MonsterEvent>() { new MonsterEvent(
                 "PeeperType",

@@ -24,6 +24,7 @@ namespace BrutalCompanyMinus.Minus.Events
             Descriptions = new List<string>() { "You should have got that extended warranty", "CRUISER SYSTEM FAILURE", "The cruiser has broken down", "Vehicles are not reliable today!", "Your ignition subscription expired", "We are here for your extended warranty" };
             ColorHex = "#FF0000";
             Type = EventType.Bad;
+            Aliases = new List<string>() { "NoCruisers" };
         }
 
         public override void Execute()

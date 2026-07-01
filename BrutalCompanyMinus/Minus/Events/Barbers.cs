@@ -18,6 +18,7 @@ namespace BrutalCompanyMinus.Minus.Events
             Descriptions = new List<string>() { "Haircut time", "The Barber called!", "You are due for a trim" };
             ColorHex = "#FF0000";
             Type = EventType.Bad;
+            Aliases = new List<string>() { "Barber" };
 
             monstersToSpawn = new List<MonsterEvent>()
             {

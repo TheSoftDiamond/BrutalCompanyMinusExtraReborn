@@ -22,6 +22,7 @@ namespace BrutalCompanyMinus.Minus.Events
             Descriptions = new List<string>() { "Enemies here are a little more fragile than usual.", "Should take 1 less bonk", "A mysterious ailment is making the enemies fragile..." };
             ColorHex = "#008000";
             Type = EventType.Good;
+            Aliases = new List<string>() { "FragileEnemy" };
 
             EventsToRemove = new List<string>() { nameof(StrongEnemies) };
 

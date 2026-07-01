@@ -18,6 +18,7 @@ namespace BrutalCompanyMinus.Minus.Events
             Descriptions = new List<string>() { "When they said it could be worse.. this is that!", "You do not want to encounter this.", "It looks like a jester but without the box!" };
             ColorHex = "#800000";
             Type = EventType.VeryBad;
+            Aliases = new List<string>() { "SoulDevs" };
 
             monstersToSpawn = new List<MonsterEvent>()
             {

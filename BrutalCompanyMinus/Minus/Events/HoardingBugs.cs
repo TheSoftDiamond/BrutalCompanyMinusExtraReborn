@@ -22,6 +22,7 @@ namespace BrutalCompanyMinus.Minus.Events
             Descriptions = new List<string>() { "They look cute.", "Best served bonked", "Pretty innocent" };
             ColorHex = "#FF0000";
             Type = EventType.Bad;
+            Aliases = new List<string>() { "HoardingBug" };
 
             EventsToSpawnWith = new List<string>() { nameof(ScarceOutsideScrap) };
 

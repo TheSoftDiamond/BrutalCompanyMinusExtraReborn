@@ -24,6 +24,7 @@ namespace BrutalCompanyMinus.Minus.Events
             Descriptions = new List<string>() { "No robots", "No deranged children", "No more giant killers" };
             ColorHex = "#008000";
             Type = EventType.Remove;
+            Aliases = new List<string>() { "NoOldBirds" };
         }
 
         public override bool AddEventIfOnly() => Manager.SpawnExists(Assets.EnemyName.OldBird);

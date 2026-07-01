@@ -22,6 +22,7 @@ namespace BrutalCompanyMinus.Minus.Events
             Descriptions = new List<string>() { "Tastes salty...", "Reminds me of grandma", "This cellar is massive" };
             ColorHex = "#008000";
             Type = EventType.Good;
+            Aliases = new List<string>() { "Pickle" };
 
             EventsToRemove = new List<string>() { nameof(SID), nameof(RealityShift) };
 

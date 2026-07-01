@@ -18,6 +18,7 @@ namespace BrutalCompanyMinus.Minus.Events
             Descriptions = new List<string>() { "Unwanted attention", "The boys from the trees", "Imagine dogs and leafs" };
             ColorHex = "#FF0000";
             Type = EventType.Bad;
+            Aliases = new List<string>() { "LeafBoy" };
 
             EventsToSpawnWith = new List<string>() { nameof(Dogs) };
 

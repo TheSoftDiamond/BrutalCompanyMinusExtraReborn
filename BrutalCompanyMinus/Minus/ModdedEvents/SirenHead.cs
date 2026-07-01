@@ -22,6 +22,7 @@ namespace BrutalCompanyMinus.Minus.Events
             Descriptions = new List<string>() { "God would like to speak with you...", "NINE. EIGHTEEN. ONE. CHILD. SEVENTEEN. REMOVE. VILE." };
             ColorHex = "#800000";
             Type = EventType.VeryBad;
+            Aliases = new List<string>() { "SirenHeads" };
 
             monstersToSpawn = new List<MonsterEvent>() { new MonsterEvent(
                 "SirenHead",

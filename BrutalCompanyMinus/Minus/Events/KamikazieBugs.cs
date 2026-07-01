@@ -22,6 +22,7 @@ namespace BrutalCompanyMinus.Minus.Events
             Descriptions = new List<string>() { "I rather not anger them if I were you.", "Did you know that hoarding bugs have organs? Well these ones have bombs...", "I hope you meet an army of them.", "An invasion of self-destructing pests inside the facility." };
             ColorHex = "#FF0000";
             Type = EventType.Bad;
+            Aliases = new List<string>() { "KamikazieBug", "ExplodingBugs", "ExplodingBug" };
 
             monstersToSpawn = new List<MonsterEvent>() { new MonsterEvent(
                 Assets.kamikazieBug,
