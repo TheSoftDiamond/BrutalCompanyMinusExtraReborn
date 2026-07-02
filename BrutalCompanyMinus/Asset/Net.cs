@@ -707,7 +707,18 @@ namespace BrutalCompanyMinus
         {
             SlimeInside.SlippinessValue = slipperyness;
         }
-        
+
+        [ServerRpc(RequireOwnership = false)]
+        public void SetExplosivePerecentServerRpc(float val)
+        {
+            SetExplosivePerecentClientRpc(val);
+        }
+
+        [ClientRpc]
+        public void SetExplosivePerecentClientRpc(float val)
+        {
+            ExplodingItems.AmountValue = val;
+        }
 
         [ServerRpc(RequireOwnership = false)]
         public void SetEntranceServerRpc(bool active)
