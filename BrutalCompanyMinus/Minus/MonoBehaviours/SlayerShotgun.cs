@@ -80,7 +80,7 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
         {
             base.EquipItem();
             previousPlayerHeldBy = playerHeldBy;
-            previousPlayerHeldBy?.equippedUsableItemQE = true;
+            previousPlayerHeldBy.equippedUsableItemQE = true;
             hasHitGroundWithSafetyOff = false;
         }
 
@@ -312,7 +312,7 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
 
         private void StopUsingGun()
         {
-            previousPlayerHeldBy?.equippedUsableItemQE = false;
+            previousPlayerHeldBy.equippedUsableItemQE = false;
         }
     }
 }
