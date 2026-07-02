@@ -156,6 +156,7 @@ namespace BrutalCompanyMinus.Minus
             new Events.ShipCoreFailure(),
             new Events.Dweller(),
             new Events.BerserkTurrets(),
+            new Events.ExplodingItems(),
             //Insane
             new Events.Hell(),
             new Events.TimeChaos(),// Requires Special Events
@@ -379,7 +380,7 @@ namespace BrutalCompanyMinus.Minus
                 {
                     Log.LogInfo("Current heat has hit max cap, now forcing events");
                     Log.LogInfo("Attempting to force events: " + Configuration.heatEventsToForce.Value);
-                    
+
                     string[] eventNames = Configuration.heatEventsToForce.Value
                     .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                     .Select(s => s.Trim())
@@ -393,7 +394,7 @@ namespace BrutalCompanyMinus.Minus
             foreach (MEvent forcedEvent in forcedEvents)
             {
                 eventsToChooseForm.RemoveAll(x => x.Name() == forcedEvent.Name());
-                foreach(string eventToRemove in forcedEvent.EventsToRemove)
+                foreach (string eventToRemove in forcedEvent.EventsToRemove)
                 {
                     eventsToChooseForm.RemoveAll(x => x.Name() == forcedEvent.Name());
                 }
@@ -515,7 +516,7 @@ namespace BrutalCompanyMinus.Minus
 
             foreach (MEvent e in currentEvents)
             {
-                if(!e.Executed)
+                if (!e.Executed)
                 {
                     e.Executed = true;
                     e.Execute();
@@ -556,22 +557,22 @@ namespace BrutalCompanyMinus.Minus
         internal static void ExecuteOnShipLeave()
         {
             Log.LogInfo("Executing OnShipLeave for all events()");
-            foreach(MEvent e in events)
+            foreach (MEvent e in events)
             {
                 e.OnShipLeave();
             }
 
-            foreach(MEvent e in vanillaEvents)
+            foreach (MEvent e in vanillaEvents)
             {
                 e.OnShipLeave();
             }
 
-            foreach(MEvent e in moddedEvents)
+            foreach (MEvent e in moddedEvents)
             {
                 e.OnShipLeave();
             }
 
-            foreach(MEvent e in customEvents)
+            foreach (MEvent e in customEvents)
             {
                 e.OnShipLeave();
             }
@@ -642,7 +643,7 @@ namespace BrutalCompanyMinus.Minus
             {
                 e.OnLocalDisconnect();
             }
-            
+
             //foreach (MEvent e in ExternalEvents)
             //{
             //    e.OnLocalDisconnect();
@@ -653,12 +654,40 @@ namespace BrutalCompanyMinus.Minus
         {
             if (Configuration.useCustomWeights.Value) return;
 
+            if (Configuration.EnableRandomizer.Value && !Configuration.speedrunMode.Value)
+            {
+                if (RoundManager.Instance.IsServer)
+                {
+                        // If the game is day 0, then we want to randomize the weights.
+                        if (StartOfRound.Instance.gameStats.daysSpent == 0 && (Configuration.WhenRandomize.Value.HasFlag(Configuration.RandomizeFlags.Start) || (Configuration.WhenRandomize.Value.HasFlag(Configuration.RandomizeFlags.All))))
+                        {
+                            if (Configuration.RandomizeWeight.Value && Configuration.RandomizeWeight != null)
+                            {
+                                Log.LogInfo("Randomizing event weights for day 0");
+                                RandomizeWeight();
+                            }
+                        }
+
+                        if (StartOfRound.Instance.gameStats.daysSpent != 0)
+                        {
+                            if (Configuration.WhenRandomize.Value.HasFlag(Configuration.RandomizeFlags.LeverPull) || (Configuration.WhenRandomize.Value.HasFlag(Configuration.RandomizeFlags.All)))
+                            {
+                                if (Configuration.RandomizeWeight.Value && Configuration.RandomizeWeight != null)
+                                {
+                                    Log.LogInfo("Randomizing on lever pull");
+                                    RandomizeWeight();
+                                }
+                            }
+                        }
+                }
+            }
+
             float fix(float value) // This is to avoid division by zero
             {
                 if (value < 1) return 1;
                 return value;
             }
-            
+
             int eventTypeAmount = Configuration.eventTypeScales.Length;
 
             float[] computedScales = new float[eventTypeAmount];
@@ -669,7 +698,7 @@ namespace BrutalCompanyMinus.Minus
             eventTypeWeightSum = fix(eventTypeWeightSum);
 
             float[] eventTypeProbabilities = new float[eventTypeAmount];
-            for(int i = 0; i < eventTypeAmount; i++) eventTypeProbabilities[i] = computedScales[i] / eventTypeWeightSum;
+            for (int i = 0; i < eventTypeAmount; i++) eventTypeProbabilities[i] = computedScales[i] / eventTypeWeightSum;
             eventTypeRarities = eventTypeProbabilities;
 
             int[] newEventWeights = new int[eventTypeAmount];
@@ -679,7 +708,7 @@ namespace BrutalCompanyMinus.Minus
                 Log.LogInfo($"Set eventType weight for {((MEvent.EventType)Enum.ToObject(typeof(MEvent.EventType), i)).ToString()} to {newEventWeights[i]}");
             }
 
-            foreach(MEvent e in events) e.Weight = newEventWeights[(int)e.Type];
+            foreach (MEvent e in events) e.Weight = newEventWeights[(int)e.Type];
         }
 
         internal static void UpdateEventTypeCounts()
@@ -698,7 +727,7 @@ namespace BrutalCompanyMinus.Minus
         {
             if (!Configuration.displayEvents.Value) return;
             currentEventDescriptions.Clear();
-            foreach(MEvent e in events)
+            foreach (MEvent e in events)
             {
                 currentEventDescriptions.Add($"<color={e.ColorHex}>{e.Descriptions[UnityEngine.Random.Range(0, e.Descriptions.Count)]}</color>");
             }
@@ -845,16 +874,174 @@ namespace BrutalCompanyMinus.Minus
             // Difficulty modifications
             if (Configuration.AffectPropertiesOutOfEvents.Value)
             {
-                Manager.AddEnemyHp((int)MEvent.Scale.Compute(Configuration.enemyBonusHpScaling));
-                Manager.AddInsideSpawnChance(newLevel, MEvent.Scale.Compute(Configuration.insideSpawnChanceAdditive));
-                Manager.AddOutsideSpawnChance(newLevel, MEvent.Scale.Compute(Configuration.outsideSpawnChanceAdditive));
-                Manager.MultiplySpawnChance(newLevel, MEvent.Scale.Compute(Configuration.spawnChanceMultiplierScaling));
-                Manager.MultiplySpawnCap(MEvent.Scale.Compute(Configuration.spawnCapMultiplier));
-                Manager.AddInsidePower((int)MEvent.Scale.Compute(Configuration.insideEnemyMaxPowerCountScaling));
-                Manager.AddOutsidePower((int)MEvent.Scale.Compute(Configuration.outsideEnemyPowerCountScaling));
-                Manager.scrapValueMultiplier *= MEvent.Scale.Compute(Configuration.scrapValueMultiplier);
-                Manager.scrapAmountMultiplier *= MEvent.Scale.Compute(Configuration.scrapAmountMultiplier);
-                Manager.factorySizeMultiplier = MEvent.Scale.Compute(Configuration.factorySizeMultiplier);
+                //Manager.AddEnemyHp((int)MEvent.Scale.Compute(Configuration.enemyBonusHpScaling));
+                //Manager.AddInsideSpawnChance(newLevel, MEvent.Scale.Compute(Configuration.insideSpawnChanceAdditive));
+                //Manager.AddOutsideSpawnChance(newLevel, MEvent.Scale.Compute(Configuration.outsideSpawnChanceAdditive));
+                //Manager.MultiplySpawnChance(newLevel, MEvent.Scale.Compute(Configuration.spawnChanceMultiplierScaling));
+                //Manager.MultiplySpawnCap(MEvent.Scale.Compute(Configuration.spawnCapMultiplier));
+                //Manager.AddInsidePower((int)MEvent.Scale.Compute(Configuration.insideEnemyMaxPowerCountScaling));
+                //Manager.AddOutsidePower((int)MEvent.Scale.Compute(Configuration.outsideEnemyPowerCountScaling));
+                //Manager.scrapValueMultiplier *= MEvent.Scale.Compute(Configuration.scrapValueMultiplier);
+                //Manager.scrapAmountMultiplier *= MEvent.Scale.Compute(Configuration.scrapAmountMultiplier);
+                //Manager.factorySizeMultiplier = MEvent.Scale.Compute(Configuration.factorySizeMultiplier);
+
+                /*Developer Note for anyone working with ModifyLevel, the following is invoked for difficulty selections:
+                 * 1. Check if the randomizer is enabled and exists, if not, use the config value.
+                 * 2. If the randomizer is enabled, check if the current day is 0 OR set to run every every lever pull, if so, randomize the value.
+                 * 3. Otherwise, use the randomizer value stored from the save.
+                 */
+
+                if ((Configuration.EnableRandomizer != null && !Configuration.EnableRandomizer.Value) ||
+                    (Configuration.RandomizeEnemyHP != null && !Configuration.RandomizeEnemyHP.Value) ||
+                    Configuration.speedrunMode.Value)
+                {
+                    Manager.AddEnemyHp((int)MEvent.Scale.Compute(Configuration.enemyBonusHpScaling));
+                }
+                else
+                {
+                    if (StartOfRound.Instance.gameStats.daysSpent == 0 || (Configuration.WhenRandomize.Value.HasFlag(Configuration.RandomizeFlags.LeverPull) || (Configuration.WhenRandomize.Value.HasFlag(Configuration.RandomizeFlags.All))))
+                    {
+                        RandomizeBonusEnemyHP();
+                    }
+                    Manager.AddEnemyHp((int)(Manager.randomizerbonusenemyhp));
+                }
+
+                if ((Configuration.EnableRandomizer != null && !Configuration.EnableRandomizer.Value) ||
+                (Configuration.RandomizeSpawnChanceInside != null && !Configuration.RandomizeSpawnChanceInside.Value) ||
+                Configuration.speedrunMode.Value)
+                {
+                    Manager.AddInsideSpawnChance(newLevel, MEvent.Scale.Compute(Configuration.insideSpawnChanceAdditive));
+                }
+                else
+                {
+                    if (StartOfRound.Instance.gameStats.daysSpent == 0 || (Configuration.WhenRandomize.Value.HasFlag(Configuration.RandomizeFlags.LeverPull) || (Configuration.WhenRandomize.Value.HasFlag(Configuration.RandomizeFlags.All))))
+                    {
+                        RandomizeSpawnChanceInside();
+                    }
+                    Manager.AddInsideSpawnChance(newLevel, Manager.randomizerspawnchanceinside);
+                }
+
+                if ((Configuration.EnableRandomizer != null && !Configuration.EnableRandomizer.Value) ||
+                (Configuration.RandomizeSpawnChanceOutside != null && !Configuration.RandomizeSpawnChanceOutside.Value) ||
+                Configuration.speedrunMode.Value)
+                {
+                    Manager.AddOutsideSpawnChance(newLevel, MEvent.Scale.Compute(Configuration.outsideSpawnChanceAdditive));
+                }
+                else
+                {
+                    if (StartOfRound.Instance.gameStats.daysSpent == 0 || (Configuration.WhenRandomize.Value.HasFlag(Configuration.RandomizeFlags.LeverPull) || (Configuration.WhenRandomize.Value.HasFlag(Configuration.RandomizeFlags.All))))
+                    {
+                        RandomizeSpawnChanceOutside();
+                    }
+                    Manager.AddOutsideSpawnChance(newLevel, Manager.randomizerspawnchanceoutside);
+                }
+
+                if ((Configuration.EnableRandomizer != null && !Configuration.EnableRandomizer.Value) ||
+                (Configuration.RandomizeSpawnChance != null && !Configuration.RandomizeSpawnChance.Value) ||
+                Configuration.speedrunMode.Value)
+                {
+                    Manager.MultiplySpawnChance(newLevel, MEvent.Scale.Compute(Configuration.insideSpawnChanceAdditive));
+                }
+                else
+                {
+                    if (StartOfRound.Instance.gameStats.daysSpent == 0 || (Configuration.WhenRandomize.Value.HasFlag(Configuration.RandomizeFlags.LeverPull) || (Configuration.WhenRandomize.Value.HasFlag(Configuration.RandomizeFlags.All))))
+                    {
+                        RandomizeSpawnChance();
+                    }
+                    Manager.MultiplySpawnChance(newLevel, Manager.randomizerspawnchance);
+                }
+
+                if ((Configuration.EnableRandomizer != null && !Configuration.EnableRandomizer.Value) ||
+                (Configuration.RandomizeSpawnCap != null && !Configuration.RandomizeSpawnCap.Value) ||
+                Configuration.speedrunMode.Value)
+                {
+                    Manager.MultiplySpawnCap(MEvent.Scale.Compute(Configuration.spawnCapMultiplier));
+                }
+                else
+                {
+                    if (StartOfRound.Instance.gameStats.daysSpent == 0 || (Configuration.WhenRandomize.Value.HasFlag(Configuration.RandomizeFlags.LeverPull) || (Configuration.WhenRandomize.Value.HasFlag(Configuration.RandomizeFlags.All))))
+                    {
+                        RandomizeSpawnCap();
+                    }
+                    Manager.MultiplySpawnCap(Manager.randomizerspawncap);
+                }
+
+                if ((Configuration.EnableRandomizer != null && !Configuration.EnableRandomizer.Value) ||
+                (Configuration.RandomizeInsidePower != null && !Configuration.RandomizeInsidePower.Value) ||
+                Configuration.speedrunMode.Value)
+                {
+                    Manager.AddInsidePower((int)MEvent.Scale.Compute(Configuration.insideEnemyMaxPowerCountScaling));
+                }
+                else
+                {
+                    if (StartOfRound.Instance.gameStats.daysSpent == 0 || (Configuration.WhenRandomize.Value.HasFlag(Configuration.RandomizeFlags.LeverPull) || (Configuration.WhenRandomize.Value.HasFlag(Configuration.RandomizeFlags.All))))
+                    {
+                        RandomizeInsidePower();
+                    }
+                    Manager.AddInsidePower((int)(Manager.randomizerinsidepower));
+                }
+
+                if ((Configuration.EnableRandomizer != null && !Configuration.EnableRandomizer.Value) ||
+                (Configuration.RandomizeOutsidePower != null && !Configuration.RandomizeOutsidePower.Value) ||
+                Configuration.speedrunMode.Value)
+                {
+                    Manager.AddOutsidePower((int)MEvent.Scale.Compute(Configuration.outsideEnemyPowerCountScaling));
+                }
+                else
+                {
+                    if (StartOfRound.Instance.gameStats.daysSpent == 0 || (Configuration.WhenRandomize.Value.HasFlag(Configuration.RandomizeFlags.LeverPull) || (Configuration.WhenRandomize.Value.HasFlag(Configuration.RandomizeFlags.All))))
+                    {
+                        RandomizeOutsidePower();
+                    }
+                    Manager.AddOutsidePower((int)(Manager.randomizeroutsidepower));
+                }
+
+
+                if ((Configuration.EnableRandomizer != null && !Configuration.EnableRandomizer.Value) ||
+                (Configuration.RandomizeScrapValue != null && !Configuration.RandomizeScrapValue.Value) ||
+                Configuration.speedrunMode.Value)
+                {
+                    Manager.scrapValueMultiplier *= MEvent.Scale.Compute(Configuration.scrapValueMultiplier);
+                }
+                else
+                {
+                    if (StartOfRound.Instance.gameStats.daysSpent == 0 || (Configuration.WhenRandomize.Value.HasFlag(Configuration.RandomizeFlags.LeverPull) || (Configuration.WhenRandomize.Value.HasFlag(Configuration.RandomizeFlags.All))))
+                    {
+                        RandomizeScrapValue();
+                    }
+                    Manager.scrapValueMultiplier *= Manager.randomizerscrapvalue;
+                }
+
+                if ((Configuration.EnableRandomizer != null && !Configuration.EnableRandomizer.Value) ||
+                (Configuration.RandomizeScrapAmount != null && !Configuration.RandomizeScrapAmount.Value) ||
+                Configuration.speedrunMode.Value)
+                {
+                    Manager.scrapAmountMultiplier *= MEvent.Scale.Compute(Configuration.scrapAmountMultiplier);
+                }
+                else
+                {
+                    if (StartOfRound.Instance.gameStats.daysSpent == 0 || (Configuration.WhenRandomize.Value.HasFlag(Configuration.RandomizeFlags.LeverPull) || (Configuration.WhenRandomize.Value.HasFlag(Configuration.RandomizeFlags.All))))
+                    {
+                        RandomizeScrapAmount();
+                    }
+                    Manager.scrapAmountMultiplier *= Manager.randomizerscrapamount;
+                }
+
+
+                if ((Configuration.EnableRandomizer != null && !Configuration.EnableRandomizer.Value) ||
+                (Configuration.RandomizeFactory != null && !Configuration.RandomizeFactory.Value) ||
+                Configuration.speedrunMode.Value)
+                {
+                    Manager.factorySizeMultiplier *= MEvent.Scale.Compute(Configuration.factorySizeMultiplier);
+                }
+                else
+                {
+                    if (StartOfRound.Instance.gameStats.daysSpent == 0 || (Configuration.WhenRandomize.Value.HasFlag(Configuration.RandomizeFlags.LeverPull) || (Configuration.WhenRandomize.Value.HasFlag(Configuration.RandomizeFlags.All))))
+                    {
+                        RandomizeFactory();
+                    }
+                    Manager.factorySizeMultiplier *= Manager.randomizerfactory;
+                }
             }
 
             List<MEvent> additionalEvents = new List<MEvent>();
@@ -923,12 +1110,12 @@ namespace BrutalCompanyMinus.Minus
             }
 
             if (tipEventsToDo.Count > 0)
-            { 
+            {
                 tipEventsToDo.Clear();
             }
             tipEventsToDo.AddRange(currentEvents);
 
-            // Apply maxPower counts
+            // Apply maxPower counts Inside
             RoundManager.Instance.currentLevel.maxEnemyPowerCount = (int)((RoundManager.Instance.currentLevel.maxEnemyPowerCount + Manager.bonusMaxInsidePowerCount) * Manager.spawncapMultipler);
             if (Configuration.scaleHeat.Value && (Configuration.heatSettingsToAffect.Value.HasFlag(Configuration.HeatSettingsFlags.InsidePower) || (Configuration.heatSettingsToAffect.Value.HasFlag(Configuration.HeatSettingsFlags.All))))
             {
@@ -941,7 +1128,7 @@ namespace BrutalCompanyMinus.Minus
                     }
                 }
             }
-            
+
             RoundManager.Instance.currentLevel.maxOutsideEnemyPowerCount = (int)((RoundManager.Instance.currentLevel.maxOutsideEnemyPowerCount + Manager.bonusMaxOutsidePowerCount) * Manager.spawncapMultipler);
             if (Configuration.scaleHeat.Value && (Configuration.heatSettingsToAffect.Value.HasFlag(Configuration.HeatSettingsFlags.OutsidePower) || (Configuration.heatSettingsToAffect.Value.HasFlag(Configuration.HeatSettingsFlags.All))))
             {
@@ -1069,6 +1256,462 @@ namespace BrutalCompanyMinus.Minus
             float computedChance = UnityEngine.Random.Range(0f, 100f);
             return computedChance <= chanceByConfig;
         }
+
+        #region Randomizer
+
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(TimeOfDay), nameof(TimeOfDay.SetNewProfitQuota))]
+        public static void DoRandomOnQuotaFulfill()
+        {
+            if (!RoundManager.Instance.IsServer) return;
+            if (Configuration.speedrunMode.Value) return;
+            if (Configuration.EnableRandomizer.Value && (Configuration.WhenRandomize.Value.HasFlag(Configuration.RandomizeFlags.QuotaFulfill) || (Configuration.WhenRandomize.Value.HasFlag(Configuration.RandomizeFlags.All))))
+            {
+                DoRandomizer();
+            }
+        }
+
+        public static void ResetRandomizerData()
+        {
+            Log.LogInfo("Called a reset of all randomizer values");
+            Manager.randomizerscrapamount = 1;
+            Manager.randomizerscrapvalue = 1;
+            Manager.randomizerspawnchanceinside = 0;
+            Manager.randomizerspawnchanceoutside = 0;
+            Manager.randomizerspawncap = 1;
+            Manager.randomizerspawnchance = 1;
+            Manager.randomizerfactory = 1;
+            Manager.randomizerinsidepower = 0;
+            Manager.randomizeroutsidepower = 0;
+            Manager.randomizerbonusenemyhp = 0;
+        }
+
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(StartOfRound), nameof(StartOfRound.Start))]
+        public static void DoRandomOnStart()
+        {
+            if (!RoundManager.Instance.IsServer) return;
+            if (Configuration.speedrunMode.Value) return;
+
+            //Try loading any randomizer weight data if it exists.
+            LoadRandomizerData();
+
+            if (Configuration.EnableRandomizer.Value && (Configuration.WhenRandomize.Value.HasFlag(Configuration.RandomizeFlags.Start) || (Configuration.WhenRandomize.Value.HasFlag(Configuration.RandomizeFlags.All))))
+            {
+                DoRandomizer();
+            }
+        }
+
+        internal static void DoRandomizer()
+        {
+            Log.LogInfo("Randomizer Called");
+
+            if (Configuration.EnableRandomizer.Value && Configuration.RandomizeWeight.Value)
+            {
+                RandomizeWeight();
+            }
+
+            if (Configuration.EnableRandomizer.Value && Configuration.RandomizeScrapValue.Value)
+            {
+                RandomizeScrapValue();
+            }
+
+            if (Configuration.EnableRandomizer.Value && Configuration.RandomizeScrapAmount.Value)
+            {
+                RandomizeScrapAmount();
+            }
+
+            if (Configuration.EnableRandomizer.Value && Configuration.RandomizeFactory.Value)
+            {
+                RandomizeFactory();
+            }
+
+            if (Configuration.EnableRandomizer.Value && Configuration.RandomizeSpawnChanceInside.Value)
+            {
+                RandomizeSpawnChanceInside();
+            }
+
+            if (Configuration.EnableRandomizer.Value && Configuration.RandomizeSpawnChanceOutside.Value)
+            {
+                RandomizeSpawnChanceOutside();
+            }
+
+            if (Configuration.EnableRandomizer.Value && Configuration.RandomizeSpawnChance.Value)
+            {
+                RandomizeSpawnCap();
+            }
+
+            if (Configuration.EnableRandomizer.Value && Configuration.RandomizeSpawnCap.Value)
+            {
+                RandomizeSpawnChance();
+            }
+
+            if (Configuration.EnableRandomizer.Value && Configuration.RandomizeEnemyHP.Value)
+            {
+                RandomizeBonusEnemyHP();
+            }
+
+            if (Configuration.EnableRandomizer.Value && Configuration.RandomizeInsidePower.Value)
+            {
+                RandomizeInsidePower();
+            }
+
+            if (Configuration.EnableRandomizer.Value && Configuration.RandomizeOutsidePower.Value)
+            {
+                RandomizeOutsidePower();
+            }
+            SaveRandomizerData();
+        }
+        
+
+        internal static void SaveRandomizerData()
+        {
+            string gameSaveName = GameNetworkManager.Instance.currentSaveFileName;
+
+            try
+            {
+                var randomizerweight = events.ToDictionary(e => e.Name(), e => (float)e.Weight);
+                ES3.Save("randomizerweights", randomizerweight, $"{gameSaveName}_Brutal");
+            }
+            catch (Exception ex)
+            {
+                Log.LogError($"Error saving randomizer weights to save file: {ex.Message}");
+            }
+
+            try
+            {
+                ES3.Save("randomizerscrapvalue", Manager.randomizerscrapvalue, $"{gameSaveName}_Brutal");
+            }
+            catch (Exception ex)
+            {
+                Log.LogError($"Error saving randomizer scrap value to save file: {ex.Message}");
+            }
+
+            try
+            {
+                ES3.Save("randomizerscrapamount", Manager.randomizerscrapamount, $"{gameSaveName}_Brutal");
+            }
+            catch (Exception ex)
+            {
+                Log.LogError($"Error saving randomizer scrap amount to save file: {ex.Message}");
+            }
+
+            try
+            {
+                ES3.Save("randomizerfactory", Manager.randomizerfactory, $"{gameSaveName}_Brutal");
+            }
+            catch (Exception ex)
+            {
+                Log.LogError($"Error saving randomizer factory size to save file: {ex.Message}");
+            }
+
+            try
+            {
+                ES3.Save("randomizerspawnchanceinside", Manager.randomizerspawnchanceinside, $"{gameSaveName}_Brutal");
+            }
+            catch (Exception ex)
+            {
+                Log.LogError($"Error saving randomizer inside power to save file: {ex.Message}");
+            }
+
+            try
+            {
+                ES3.Save("randomizerspawnchanceoutside", Manager.randomizerspawnchanceoutside, $"{gameSaveName}_Brutal");
+            }
+            catch (Exception ex)
+            {
+                Log.LogError($"Error saving randomizer outside power to save file: {ex.Message}");
+            }
+
+            try
+            {
+                ES3.Save("randomizerspawncap", Manager.randomizerspawncap, $"{gameSaveName}_Brutal");
+            }
+            catch (Exception ex)
+            {
+                Log.LogError($"Error saving randomizer spawn cap to save file: {ex.Message}");
+            }
+
+            try
+            {
+                ES3.Save("randomizerspawnchance", Manager.randomizerspawnchance, $"{gameSaveName}_Brutal");
+            }
+            catch (Exception ex)
+            {
+                Log.LogError($"Error saving randomizer spawn chance to save file: {ex.Message}");
+            }
+
+            try
+            {
+                ES3.Save("randomizerbonusenemyhp", Manager.randomizerbonusenemyhp, $"{gameSaveName}_Brutal");
+            }
+            catch (Exception ex)
+            {
+                Log.LogError($"Error saving randomizer bonus enemy HP to save file: {ex.Message}");
+            }
+
+            try
+            {
+                ES3.Save("randomizerinsidepower", Manager.randomizerinsidepower, $"{gameSaveName}_Brutal");
+            }
+            catch (Exception ex)
+            {
+                Log.LogError($"Error saving randomizer inside power to save file: {ex.Message}");
+            }
+
+            try
+            {
+                ES3.Save("randomizeroutsidepower", Manager.randomizeroutsidepower, $"{gameSaveName}_Brutal");
+            }
+            catch (Exception ex)
+            {
+                Log.LogError($"Error saving randomizer outside power to save file: {ex.Message}");
+            }
+        }
+
+        internal static void LoadRandomizerData()
+        {
+            string gameSaveName = GameNetworkManager.Instance.currentSaveFileName;
+
+            Log.LogInfo("Attempting to load randomizer data");
+
+            try
+            {
+                if (ES3.KeyExists("randomizerweights", $"{gameSaveName}_Brutal"))
+                {
+                    var randomizerweight = ES3.Load<Dictionary<string, float>>("randomizerweights", $"{gameSaveName}_Brutal");
+                    foreach (MEvent e in events)
+                    {
+                        e.Weight = randomizerweight.ContainsKey(e.Name()) ? (int)randomizerweight[e.Name()] : e.Weight;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.LogError($"Error checking for randomizer weight in save file: {ex.Message}");
+            }
+
+            try
+            {
+                if (ES3.KeyExists("randomizerscrapvalue", $"{gameSaveName}_Brutal"))
+                {
+                    Manager.randomizerscrapvalue = ES3.Load<float>("randomizerscrapvalue");
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.LogError($"Error checking for randomizer scrap value in save file: {ex.Message}");
+            }
+
+            try
+            {
+                if (ES3.KeyExists("randomizerscrapamount", $"{gameSaveName}_Brutal"))
+                {
+                    Manager.randomizerscrapamount = ES3.Load<float>("randomizerscrapamount");
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.LogError($"Error checking for randomizer scrap amount in save file: {ex.Message}");
+            }
+
+            try
+            {
+                if (ES3.KeyExists("randomizerfactory", $"{gameSaveName}_Brutal"))
+                {
+                    Manager.randomizerfactory = ES3.Load<float>("randomizerfactory");
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.LogError($"Error checking for randomizer factory in save file: {ex.Message}");
+            }
+
+            try
+            {
+                if (ES3.KeyExists("randomizerspawnchanceinside", $"{gameSaveName}_Brutal"))
+                {
+                    Manager.randomizerspawnchanceinside = ES3.Load<float>("randomizerspawnchanceinside");
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.LogError($"Error checking for randomizer inside chance in save file: {ex.Message}");
+            }
+
+            try
+            {
+                if (ES3.KeyExists("randomizerspawnchanceoutside", $"{gameSaveName}_Brutal"))
+                {
+                    Manager.randomizerspawnchanceoutside = ES3.Load<float>("randomizerspawnchanceoutside");
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.LogError($"Error checking for randomizer outside chance in save file: {ex.Message}");
+            }
+
+            try
+            {
+                if (ES3.KeyExists("randomizerspawncap", $"{gameSaveName}_Brutal"))
+                {
+                    Manager.randomizerspawncap = ES3.Load<float>("randomizerspawncap");
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.LogError($"Error checking for randomizer spawn cap in save file: {ex.Message}");
+            }
+
+            try
+            {
+                if (ES3.KeyExists("randomizerspawnchance", $"{gameSaveName}_Brutal"))
+                {
+                    Manager.randomizerspawnchance = ES3.Load<float>("randomizerspawnchance");
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.LogError($"Error checking for randomizer spawn chance in save file: {ex.Message}");
+            }
+
+            try
+            {
+                if (ES3.KeyExists("randomizerbonusenemyhp", $"{gameSaveName}_Brutal"))
+                {
+                    Manager.randomizerbonusenemyhp = ES3.Load<int>("randomizerbonusenemyhp");
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.LogError($"Error checking for randomizer bonus enemy hp in save file: {ex.Message}");
+            }
+
+            try
+            {
+                if (ES3.KeyExists("randomizerinsidepower", $"{gameSaveName}_Brutal"))
+                {
+                    Manager.randomizerinsidepower = ES3.Load<int>("randomizerinsidepower");
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.LogError($"Error checking for randomizer inside power in save file: {ex.Message}");
+            }
+
+            try
+            {
+                if (ES3.KeyExists("randomizeroutsidepower", $"{gameSaveName}_Brutal"))
+                {
+                    Manager.randomizeroutsidepower = ES3.Load<int>("randomizeroutsidepower");
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.LogError($"Error checking for randomizer outside  power in save file: {ex.Message}");
+            }
+
+        }
+
+        public static void RandomizeWeight()
+        {
+            Log.LogInfo("Randomizing all event weights");
+
+            float minAmount = MEvent.Scale.Compute(Configuration.RandomizeWeightMin);
+            float maxAmount = MEvent.Scale.Compute(Configuration.RandomizeWeightMax);
+
+            foreach (MEvent e in events)
+            {
+                int newWeight = Mathf.RoundToInt(UnityEngine.Random.Range(minAmount, Mathf.Ceil(maxAmount) + 1));
+
+                Log.LogInfo($"Randomized weight for {e.Name()} from {e.Weight} to {newWeight}");
+                e.Weight = newWeight;
+            }
+        }
+
+        public static void RandomizeFactory()
+        {
+            Log.LogInfo("Randomizing all event weights");
+            float minAmount = MEvent.Scale.Compute(Configuration.RandomizeFactoryMin);
+            float maxAmount = MEvent.Scale.Compute(Configuration.RandomizeFactoryMax);
+            Manager.randomizerfactory = UnityEngine.Random.Range(minAmount, maxAmount);
+        }
+
+        public static void RandomizeScrapValue()
+        {
+            Log.LogInfo("Randomizing scrap value multiplier");
+            float minAmount = MEvent.Scale.Compute(Configuration.RandomizeScrapValueMin);
+            float maxAmount = MEvent.Scale.Compute(Configuration.RandomizeScrapValueMax);
+            Manager.randomizerscrapvalue = UnityEngine.Random.Range(minAmount, maxAmount);
+        }
+
+        public static void RandomizeScrapAmount()
+        {
+            Log.LogInfo("Randomizing scrap amount multiplier");
+            float minAmount = MEvent.Scale.Compute(Configuration.RandomizeScrapAmountMin);
+            float maxAmount = MEvent.Scale.Compute(Configuration.RandomizeScrapAmountMax);
+            Manager.randomizerscrapamount = UnityEngine.Random.Range(minAmount, maxAmount);
+        }
+
+        public static void RandomizeSpawnChanceInside()
+        {
+            Log.LogInfo("Randomizing inside spawn chance");
+            float minAmount = MEvent.Scale.Compute(Configuration.RandomizeSpawnChanceInsideMin);
+            float maxAmount = MEvent.Scale.Compute(Configuration.RandomizeSpawnChanceInsideMax);
+            Manager.randomizerspawnchanceinside = UnityEngine.Random.Range(minAmount, maxAmount);
+        }
+
+        public static void RandomizeSpawnChanceOutside()
+        {
+            Log.LogInfo("Randomizing outside spawn chance");
+            float minAmount = MEvent.Scale.Compute(Configuration.RandomizeSpawnChanceOutsideMin);
+            float maxAmount = MEvent.Scale.Compute(Configuration.RandomizeSpawnChanceOutsideMax);
+            Manager.randomizerspawnchanceoutside = UnityEngine.Random.Range(minAmount, maxAmount);
+        }
+
+        public static void RandomizeSpawnCap()
+        {
+            Log.LogInfo("Randomizing spawn cap");
+            float minAmount = MEvent.Scale.Compute(Configuration.RandomizeSpawnCapMin);
+            float maxAmount = MEvent.Scale.Compute(Configuration.RandomizeSpawnCapMax);
+            Manager.randomizerspawncap = UnityEngine.Random.Range(minAmount, maxAmount);
+        }
+
+        public static void RandomizeSpawnChance()
+        {
+            Log.LogInfo("Randomizing spawn chance");
+            float minAmount = MEvent.Scale.Compute(Configuration.RandomizeSpawnChanceMin);
+            float maxAmount = MEvent.Scale.Compute(Configuration.RandomizeSpawnChanceMax);
+            Manager.randomizerspawnchance = UnityEngine.Random.Range(minAmount, maxAmount);
+        }
+
+        public static void RandomizeBonusEnemyHP()
+        {
+            Log.LogInfo("Randomizing bonus enemy HP");
+            float minAmount = MEvent.Scale.Compute(Configuration.RandomizeEnemyHPMin);
+            float maxAmount = MEvent.Scale.Compute(Configuration.RandomizeEnemyHPMax);
+            Manager.randomizerbonusenemyhp = Mathf.RoundToInt(UnityEngine.Random.Range(minAmount, maxAmount));
+        }
+
+        public static void RandomizeInsidePower()
+        {
+            Log.LogInfo("Randomizing inside power");
+            float minAmount = MEvent.Scale.Compute(Configuration.RandomizeInsidePowerMin);
+            float maxAmount = MEvent.Scale.Compute(Configuration.RandomizeInsidePowerMax);
+            Manager.randomizerinsidepower = Mathf.RoundToInt(UnityEngine.Random.Range(minAmount, maxAmount));
+        }
+
+        public static void RandomizeOutsidePower()
+        {
+            Log.LogInfo("Randomizing outside power");
+            float minAmount = MEvent.Scale.Compute(Configuration.RandomizeOutsidePowerMin);
+            float maxAmount = MEvent.Scale.Compute(Configuration.RandomizeOutsidePowerMax);
+            Manager.randomizeroutsidepower = Mathf.RoundToInt(UnityEngine.Random.Range(minAmount, maxAmount));
+        }
+    
+
+
+        #endregion
 
         /// <summary>
         /// Check if event is ignored by moon blacklist
