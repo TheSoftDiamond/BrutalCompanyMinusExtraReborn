@@ -33,6 +33,7 @@ namespace BrutalCompanyMinus.Minus.Events
             ColorHex = "#280000";
             Type = EventType.VeryBad;
             Aliases = new List<string>() { "ExplodingScrap", "ScrapExplodes", "ScrapGoBoom" };
+            isBetaEvent = true;
 
             ScaleList.Add(ScaleType.Percentage, new Scale(40.0f, 2.5f, 40.0f, 85.0f));
         }
