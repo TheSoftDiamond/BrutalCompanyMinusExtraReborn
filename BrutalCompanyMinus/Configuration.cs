@@ -203,6 +203,64 @@ namespace BrutalCompanyMinus
         public static Scale EventChanceGlobal = new Scale();
         public static ConfigEntry<float>? timeBetweenTips, InitTimePopUp;
 
+        [Flags]
+        public enum RandomizeFlags
+        {
+            None = 0,
+            QuotaFulfill = 1 << 0,
+            LeverPull = 1 << 1,
+            Start = 1 << 2,
+            All = ~0
+        }
+
+        public static ConfigEntry<bool>? EnableRandomizer;
+
+        public static ConfigEntry<bool>? RandomizeWeight;
+        public static Scale RandomizeWeightMin = new Scale();
+        public static Scale RandomizeWeightMax = new Scale();
+
+        public static ConfigEntry<bool>? RandomizeFactory;
+        public static Scale RandomizeFactoryMin = new Scale();
+        public static Scale RandomizeFactoryMax = new Scale();
+
+        public static ConfigEntry<bool>? RandomizeScrapAmount;
+        public static Scale RandomizeScrapAmountMin = new Scale();
+        public static Scale RandomizeScrapAmountMax = new Scale();
+
+        public static ConfigEntry<bool>? RandomizeScrapValue;
+        public static Scale RandomizeScrapValueMin = new Scale();
+        public static Scale RandomizeScrapValueMax = new Scale();
+
+        public static ConfigEntry<bool>? RandomizeEnemyHP;
+        public static Scale RandomizeEnemyHPMin = new Scale();
+        public static Scale RandomizeEnemyHPMax = new Scale();
+
+        public static ConfigEntry<bool>? RandomizeSpawnChanceInside;
+        public static Scale RandomizeSpawnChanceInsideMin = new Scale();
+        public static Scale RandomizeSpawnChanceInsideMax = new Scale();
+
+        public static ConfigEntry<bool>? RandomizeSpawnChanceOutside;
+        public static Scale RandomizeSpawnChanceOutsideMin = new Scale();
+        public static Scale RandomizeSpawnChanceOutsideMax = new Scale();
+
+        public static ConfigEntry<bool>? RandomizeSpawnChance;
+        public static Scale RandomizeSpawnChanceMin = new Scale();
+        public static Scale RandomizeSpawnChanceMax = new Scale();
+
+        public static ConfigEntry<bool>? RandomizeSpawnCap;
+        public static Scale RandomizeSpawnCapMin = new Scale();
+        public static Scale RandomizeSpawnCapMax = new Scale();
+
+        public static ConfigEntry<bool>? RandomizeInsidePower;
+        public static Scale RandomizeInsidePowerMin = new Scale();
+        public static Scale RandomizeInsidePowerMax = new Scale();
+
+        public static ConfigEntry<bool>? RandomizeOutsidePower;
+        public static Scale RandomizeOutsidePowerMin = new Scale();
+        public static Scale RandomizeOutsidePowerMax = new Scale();
+
+        public static ConfigEntry<RandomizeFlags>? WhenRandomize;
+
 
         /*   public static ConfigEntry<bool> EnableStreamerEvents;*/
 
@@ -416,11 +474,13 @@ namespace BrutalCompanyMinus
             SilencePrefab = CorePropertiesConfig.Bind("Debugging", "Silence Prefab Warnings?", true, "Silences warnings about potentially missing prefabs");
             GetMethods = CorePropertiesConfig.Bind("Debugging", "Silence Get Method Warnings?", true, "Silences warnings about missing enemies and items from mods not installed.");
             DisableAllEvents = CorePropertiesConfig.Bind("Events Features", "Disable all events?", false, "Setting this to true will disable all events from spawning. This forces zero events.");
+            
             dontHandlePower = CorePropertiesConfig.Bind("Mod Compatibility", "Experimental Dont Handle Power?", false, "If you wish to let other mods handle power levels, enable this. Some settings may affect this.");
             dontHandleSpawnCurves = CorePropertiesConfig.Bind("Mod Compatibility", "Experimental Dont Handle Spawn Chance?", false, "If you wish to let other mods handle spawn curves, enable this. Some settings may affect this.");
             AffectPropertiesOutOfEvents = CorePropertiesConfig.Bind("Mod Compatibility", "Let Brutal handle properties outside of events?", true, "Disable this if you wish to let Brutal not handle any propeties outside of events.");
             deferWeatherToMods = CorePropertiesConfig.Bind("Mod Compatibility", "Defer Weather To Weather ToolKit Mod?", false, "If you wish to let other mods handle Brutal's weather setting effects, enable this. This has no effect on custom events as those use weather toolkit by default.");
             enforceEscapeModChecks = CorePropertiesConfig.Bind("Mod Compatibility", "Enforce Escape Mod Checks?", true, "If you don't have any enemy escape mods (Starlancer AI, for example) installed, should Brutal modify spawning of certain events to prevent improper enemy AI behaviour? Disable this if you wish to run events without the safety check.");
+            
             enableSpecialEvents = CorePropertiesConfig.Bind("Events Features", "Enable Special Events?", false, "Enables special events to be loaded.");
             enableBetaEvents = CorePropertiesConfig.Bind("Events Features", "Enable Beta Events?", false, "Enables beta events to be loaded. These events are untested and may be very buggy, use at your own risk.");
             transmutationBlacklist = CorePropertiesConfig.Bind("Events Features", "Transmutation Blacklist", "", "Blacklist items here to prevent them from being used in scrap transmutation. Uses itemProperties.itemName Component Name.");
@@ -429,6 +489,56 @@ namespace BrutalCompanyMinus
             EventChanceGlobal = getScale(CorePropertiesConfig.Bind("Events Features", "Chance of Events Occurring", "100, 0.0, 100, 100", "Chance of events occurring per day. " + scaleDescription).Value);
             InitTimePopUp = CorePropertiesConfig.Bind("Events Features", "Initial Time PopUp", 5.0f, "Time of initial popup of tips.");
             timeBetweenTips = CorePropertiesConfig.Bind("Events Features", "Time between tips", 5.0f, "Time in between tips messages in seconds.");
+            
+            //Randomizer
+            
+            EnableRandomizer = CorePropertiesConfig.Bind("Randomizer", "Enable Randomizer?", false, "Should the randomizer be enabled?");
+            WhenRandomize = CorePropertiesConfig.Bind("Randomizer", "When to Randomize?", RandomizeFlags.QuotaFulfill, "When should the randomizer be triggered?");
+            
+            RandomizeWeight = CorePropertiesConfig.Bind("Randomizer", "Randomize Event Weights?", false, "If enabled, event weights will be randomized every time depending on the settings of the randomizer.");
+            RandomizeWeightMin = getScale(CorePropertiesConfig.Bind("Randomizer", "Randomize Event Weights Min", "1, 0.0, 1, 1", "Minimum weight for randomization." + scaleDescription).Value);
+            RandomizeWeightMax = getScale(CorePropertiesConfig.Bind("Randomizer", "Randomize Event Weights Max", "100, 0.0, 100, 100", "Maximum weight for randomization." + scaleDescription).Value);
+            
+            RandomizeFactory = CorePropertiesConfig.Bind("Randomizer", "Randomize Factory Size?", false, "If enabled, factory size will be randomized every time depending on the settings of the randomizer.");
+            RandomizeFactoryMin = getScale(CorePropertiesConfig.Bind("Randomizer", "Randomize Factory Size Min", "1, 0.0, 1, 1", "Minimum factory size for randomization." + scaleDescription).Value);
+            RandomizeFactoryMax = getScale(CorePropertiesConfig.Bind("Randomizer", "Randomize Factory Size Max", "3, 0.0, 3, 3", "Maximum factory size for randomization." + scaleDescription).Value);
+            
+            RandomizeScrapValue = CorePropertiesConfig.Bind("Randomizer", "Randomize Scrap Value?", false, "If enabled, scrap value will be randomized every time depending on the settings of the randomizer.");
+            RandomizeScrapValueMin = getScale(CorePropertiesConfig.Bind("Randomizer", "Randomize Scrap Value Min", "1, 0.0, 1, 1", "Minimum scrap value for randomization." + scaleDescription).Value);
+            RandomizeScrapValueMax = getScale(CorePropertiesConfig.Bind("Randomizer", "Randomize Scrap Value Max", "3, 0.0, 3, 3", "Maximum scrap value for randomization." + scaleDescription).Value);
+            
+            RandomizeScrapAmount = CorePropertiesConfig.Bind("Randomizer", "Randomize Scrap Amount?", false, "If enabled, scrap amount will be randomized every time depending on the settings of the randomizer.");
+            RandomizeScrapAmountMin = getScale(CorePropertiesConfig.Bind("Randomizer", "Randomize Scrap Amount Min", "1, 0.0, 1, 1", "Minimum scrap amount for randomization." + scaleDescription).Value);
+            RandomizeScrapAmountMax = getScale(CorePropertiesConfig.Bind("Randomizer", "Randomize Scrap Amount Max", "3, 0.0, 3, 3", "Maximum scrap amount for randomization." + scaleDescription).Value);
+
+            RandomizeEnemyHP = CorePropertiesConfig.Bind("Randomizer", "Randomize Enemy HP?", false, "If enabled, enemy HP will be randomized every time depending on the settings of the randomizer.");
+            RandomizeEnemyHPMin = getScale(CorePropertiesConfig.Bind("Randomizer", "Randomize Enemy HP Min", "1, 0.0, 1, 1", "Minimum enemy HP added for randomization." + scaleDescription).Value);
+            RandomizeEnemyHPMax = getScale(CorePropertiesConfig.Bind("Randomizer", "Randomize Enemy HP Max", "3, 0.0, 3, 3", "Maximum enemy HP added for randomization." + scaleDescription).Value);
+
+            RandomizeSpawnChanceInside = CorePropertiesConfig.Bind("Randomizer", "Randomize Inside Spawn Chance?", false, "If enabled, inside spawn chance will be randomized every time depending on the settings of the randomizer.");
+            RandomizeSpawnChanceInsideMin = getScale(CorePropertiesConfig.Bind("Randomizer", "Randomize Inside Spawn Chance Min", "1, 0.0, 1, 1", "Minimum inside spawn chance added for randomization." + scaleDescription).Value);
+            RandomizeSpawnChanceInsideMax = getScale(CorePropertiesConfig.Bind("Randomizer", "Randomize Inside Spawn Chance Max", "3, 0.0, 3, 3", "Maximum inside spawn chance added for randomization." + scaleDescription).Value);
+
+            RandomizeSpawnChanceOutside = CorePropertiesConfig.Bind("Randomizer", "Randomize Outside Spawn Chance?", false, "If enabled, outside spawn chance will be randomized every time depending on the settings of the randomizer.");
+            RandomizeSpawnChanceOutsideMin = getScale(CorePropertiesConfig.Bind("Randomizer", "Randomize Outside Spawn Chance Min", "1, 0.0, 1, 1", "Minimum outside spawn chance added for randomization." + scaleDescription).Value);
+            RandomizeSpawnChanceOutsideMax = getScale(CorePropertiesConfig.Bind("Randomizer", "Randomize Outside Spawn Chance Max", "3, 0.0, 3, 3", "Maximum outside spawn chance added for randomization." + scaleDescription).Value);
+
+            RandomizeSpawnChance = CorePropertiesConfig.Bind("Randomizer", "Randomize Spawn Chance?", false, "If enabled, spawn chance will be randomized every time depending on the settings of the randomizer.");
+            RandomizeSpawnChanceMin = getScale(CorePropertiesConfig.Bind("Randomizer", "Randomize Spawn Chance Min", "0, 0.0, 0, 0", "Minimum spawn chance for randomization." + scaleDescription).Value);
+            RandomizeSpawnChanceMax = getScale(CorePropertiesConfig.Bind("Randomizer", "Randomize Spawn Chance Max", "3, 0.0, 3, 3", "Maximum spawn chance for randomization." + scaleDescription).Value);
+
+            RandomizeSpawnCap = CorePropertiesConfig.Bind("Randomizer", "Randomize Spawn Cap?", false, "If enabled, spawn Cap will be randomized every time depending on the settings of the randomizer.");
+            RandomizeSpawnCapMin = getScale(CorePropertiesConfig.Bind("Randomizer", "Randomize Spawn Cap Min", "0, 0.0, 0, 0", "Minimum spawn Cap for randomization." + scaleDescription).Value);
+            RandomizeSpawnCapMax = getScale(CorePropertiesConfig.Bind("Randomizer", "Randomize Spawn Cap Max", "3, 0.0, 3, 3", "Maximum spawn Cap for randomization." + scaleDescription).Value);
+
+            RandomizeInsidePower = CorePropertiesConfig.Bind("Randomizer", "Randomize Inside Power?", false, "If enabled, inside power will be randomized every time depending on the settings of the randomizer.");
+            RandomizeInsidePowerMin = getScale(CorePropertiesConfig.Bind("Randomizer", "Randomize Inside Power Min", "0, 0.0, 0, 0", "Minimum inside power added for randomization." + scaleDescription).Value);
+            RandomizeInsidePowerMax = getScale(CorePropertiesConfig.Bind("Randomizer", "Randomize Inside Power Max", "3, 0.0, 3, 3", "Maximum inside power added for randomization." + scaleDescription).Value);
+
+            RandomizeOutsidePower = CorePropertiesConfig.Bind("Randomizer", "Randomize Outside Power?", false, "If enabled, outside power will be randomized every time depending on the settings of the randomizer.");
+            RandomizeOutsidePowerMin = getScale(CorePropertiesConfig.Bind("Randomizer", "Randomize Outside Power Min", "0, 0.0, 0, 0", "Minimum outside power added for randomization." + scaleDescription).Value);
+            RandomizeOutsidePowerMax = getScale(CorePropertiesConfig.Bind("Randomizer", "Randomize Outside Power Max", "3, 0.0, 3, 3", "Maximum outside power added for randomization." + scaleDescription).Value);
+
 
             //Custom Events Folder
             try
