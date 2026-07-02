@@ -27,6 +27,7 @@ using BrutalCompanyMinus.Minus.Handlers.Modded;
 using UnityEngine.UIElements;
 using static BrutalCompanyMinus.Net;
 using BepInEx;
+using com.github.zehsteam.TakeyPlush;
 
 namespace BrutalCompanyMinus.Minus
 {
@@ -50,6 +51,7 @@ namespace BrutalCompanyMinus.Minus
 
         /// This list stores the heat for every moon. Stored in format: PlanetName, Heat
         public static Dictionary<int, float> heatDifficulty = new Dictionary<int, float>();
+        public static Dictionary<string, float> weightMap = new Dictionary<string, float>();
         public static int levelNameOnLeave = -1;
         public static int levelNameOnLand = 0;
 
@@ -91,6 +93,9 @@ namespace BrutalCompanyMinus.Minus
         internal static int bonusMaxInsidePowerCount = 0, bonusMaxOutsidePowerCount = 0;
         internal static int minEnemiesToSpawnInside = 0, minEnemiestoSpawnOutside = 0;
         internal static float spawnChanceMultiplier = 1.0f, spawncapMultipler = 1.0f;
+
+        public static float randomizerscrapamount = 1, randomizerscrapvalue = 1, randomizerspawnchanceinside = 0, randomizerspawnchanceoutside = 0, randomizerspawncap = 1, randomizerspawnchance = 1, randomizerfactory = 1;
+        public static int randomizerinsidepower = 0, randomizeroutsidepower = 0, randomizerbonusenemyhp = 0;
 
         public static bool transmuteScrap = false;
         internal static List<float> scrapTransmuteAmount = new List<float>();
@@ -1037,25 +1042,39 @@ namespace BrutalCompanyMinus.Minus
         {
             if (RoundManager.Instance.IsServer)
             {
+                string gameSaveName = GameNetworkManager.Instance.currentSaveFileName;
                 try
                 {
                     if (RoundManager.Instance.IsServer && Configuration.scaleHeat.Value)
                     {
                         if (Manager.heatDifficulty == null || Manager.heatDifficulty.Count > 0)
                         {
-                            string gameSaveName = GameNetworkManager.Instance.currentSaveFileName;
                             ES3.Save("heatDifficulty", Manager.heatDifficulty, $"{gameSaveName}_Brutal");
                         }
-                        //if (Manager.heatDifficulty == null || Manager.heatDifficulty.Count > 0)
-                        //{
-                        //    Manager.heatDifficulty.Clear();
-                        //}
                     }
                 }
                 catch
                 {
                     Log.LogError("Failed to get game save name on disconnect, skipping heat difficulty save.");
-                    return;
+                    //return;
+                }
+
+                if (RoundManager.Instance.IsServer)
+                {
+                    try
+                    {
+                        if (Configuration.EnableRandomizer.Value & Configuration.RandomizeWeight.Value)
+                        {
+                            var randomizerweight = EventManager.events.ToDictionary(e => e.Name(), e => (float)e.Weight);
+
+                            ES3.Save("randomizerweights", randomizerweight, $"{gameSaveName}_Brutal");
+                        }
+                    }
+                    catch
+                    {
+                        Log.LogError("Failed to get game save name on application quit, skipping randomizer saving.");
+                        //return;
+                    }
                 }
             }
 
@@ -1070,22 +1089,22 @@ namespace BrutalCompanyMinus.Minus
         [HarmonyPatch(typeof(GameNetworkManager), nameof(GameNetworkManager.OnApplicationQuit))]
         private static void OnAppQuit()
         {
-            isApplicationQuitting = true;
-
             if (RoundManager.Instance.IsServer)
             {
+                isApplicationQuitting = true;
+                string gameSaveName = GameNetworkManager.Instance.currentSaveFileName;
+
                 try
                 {
                     if (Manager.heatDifficulty == null || Manager.heatDifficulty.Count > 0)
                     {
-                        string gameSaveName = GameNetworkManager.Instance.currentSaveFileName;
                         ES3.Save("heatDifficulty", Manager.heatDifficulty, $"{gameSaveName}_Brutal");
                     }
                 }
                 catch
                 {
                     Log.LogError("Failed to get game save name on application quit, skipping heat difficulty save.");
-                    return;
+                    //return;
                 }
             }
         }
@@ -1094,6 +1113,8 @@ namespace BrutalCompanyMinus.Minus
         [HarmonyPatch(typeof(StartOfRound), nameof(StartOfRound.FirePlayersAfterDeadlineClientRpc))]
         private static void OnFirePlayersAfterDeadline()
         {
+            string gameSaveName = GameNetworkManager.Instance.currentSaveFileName;
+
             if (Configuration.scaleHeat.Value)
             {
                 Manager.heatDifficulty.Clear();
@@ -1101,16 +1122,182 @@ namespace BrutalCompanyMinus.Minus
                 {
                     try
                     {
-                        string gameSaveName = GameNetworkManager.Instance.currentSaveFileName;
                         ES3.DeleteKey("heatDifficulty", $"{gameSaveName}_Brutal");
                         ES3.Save("heatDifficulty", Manager.heatDifficulty, $"{gameSaveName}_Brutal");
                     }
                     catch
                     {
                         Log.LogError("Failed to get game save name after deadline, skipping heat difficulty reset.");
-                        return;
+                        //return;
                     }
                 }
+            }
+
+            if (RoundManager.Instance.IsServer)
+            {
+                try
+                {
+                    EventManager.ResetRandomizerData();
+                }
+                catch (Exception ex)
+                {
+                    Log.LogError($"Failed to reset randomizer data after deadline: {ex.Message}");
+                }
+
+                try
+                {
+                    if (Configuration.EnableRandomizer.Value & Configuration.RandomizeWeight.Value)
+                    {
+                        ES3.DeleteKey("randomizerweights", $"{gameSaveName}_Brutal");
+                        ES3.Save("randomizerweights", Manager.weightMap, $"{gameSaveName}_Brutal");
+                    }
+                }
+                catch
+                {
+                    Log.LogError("Failed to clear randomizer weight after deadline.");
+                    //return;
+                }
+
+                try
+                {
+                    if (Configuration.EnableRandomizer.Value & Configuration.RandomizeScrapValue.Value)
+                    {
+                        ES3.DeleteKey("randomizerscrapvalue", $"{gameSaveName}_Brutal");
+                        ES3.Save("randomizerscrapvalue", Manager.randomizerscrapvalue, $"{gameSaveName}_Brutal");
+                    }
+                }
+                catch
+                {
+                    Log.LogError("Failed to clear randomizer scrap value after deadline.");
+                    //return;
+                }
+
+                try
+                {
+                    if (Configuration.EnableRandomizer.Value & Configuration.RandomizeScrapAmount.Value)
+                    {
+                        ES3.DeleteKey("randomizerscrapamount", $"{gameSaveName}_Brutal");
+                        ES3.Save("randomizerscrapamount", Manager.randomizerscrapamount, $"{gameSaveName}_Brutal");
+                    }
+                }
+                catch
+                {
+                    Log.LogError("Failed to clear randomizer scrap amount after deadline.");
+                    //return;
+                }
+
+                try
+                {
+                    if (Configuration.EnableRandomizer.Value & Configuration.RandomizeFactory.Value)
+                    {
+                        ES3.DeleteKey("randomizerfactory", $"{gameSaveName}_Brutal");
+                        ES3.Save("randomizerfactory", Manager.randomizerfactory, $"{gameSaveName}_Brutal");
+                    }
+                }
+                catch
+                {
+                    Log.LogError("Failed to clear randomizer factory after deadline.");
+                    //return;
+                }
+
+                try
+                {
+                    if (Configuration.EnableRandomizer.Value & Configuration.RandomizeSpawnChanceInside.Value)
+                    {
+                        ES3.DeleteKey("randomizerspawnchanceinside", $"{gameSaveName}_Brutal");
+                        ES3.Save("randomizerspawnchanceinside", Manager.randomizerspawnchanceinside, $"{gameSaveName}_Brutal");
+                    }
+                }
+                catch
+                {
+                    Log.LogError("Failed to clear randomizer inside chance after deadline.");
+                    //return;
+                }
+
+                try
+                {
+                    if (Configuration.EnableRandomizer.Value & Configuration.RandomizeSpawnChanceOutside.Value)
+                    {
+                        ES3.DeleteKey("randomizerspawnchanceoutside", $"{gameSaveName}_Brutal");
+                        ES3.Save("randomizerspawnchanceoutside", Manager.randomizerspawnchanceoutside, $"{gameSaveName}_Brutal");
+                    }
+                }
+                catch
+                {
+                    Log.LogError("Failed to clear randomizer outside chance after deadline.");
+                    //return;
+                }
+
+                try
+                {
+                    if (Configuration.EnableRandomizer.Value & Configuration.RandomizeSpawnCap.Value)
+                    {
+                        ES3.DeleteKey("randomizerspawncap", $"{gameSaveName}_Brutal");
+                        ES3.Save("randomizerspawncap", Manager.randomizerspawncap, $"{gameSaveName}_Brutal");
+                    }
+                }
+                catch
+                {
+                    Log.LogError("Failed to clear randomizer spawn cap after deadline.");
+                    //return;
+                }
+
+                try
+                {
+                    if (Configuration.EnableRandomizer.Value & Configuration.RandomizeSpawnChance.Value)
+                    {
+                        ES3.DeleteKey("randomizerspawnchance", $"{gameSaveName}_Brutal");
+                        ES3.Save("randomizerspawnchance", Manager.randomizerspawnchance, $"{gameSaveName}_Brutal");
+                    }
+                }
+                catch
+                {
+                    Log.LogError("Failed to clear randomizer spawn chance after deadline.");
+                    //return;
+                }
+
+                try
+                {
+                    if (Configuration.EnableRandomizer.Value & Configuration.RandomizeEnemyHP.Value)
+                    {
+                        ES3.DeleteKey("randomizerbonusenemyhp", $"{gameSaveName}_Brutal");
+                        ES3.Save("randomizerbonusenemyhp", Manager.randomizerbonusenemyhp, $"{gameSaveName}_Brutal");
+                    }
+                }
+                catch
+                {
+                    Log.LogError("Failed to clear randomizer bonus enemy hp after deadline.");
+                    //return;
+                }
+
+                try
+                {
+                    if (Configuration.EnableRandomizer.Value & Configuration.RandomizeInsidePower.Value)
+                    {
+                        ES3.DeleteKey("randomizerinsidepower", $"{gameSaveName}_Brutal");
+                        ES3.Save("randomizerinsidepower", Manager.randomizerinsidepower, $"{gameSaveName}_Brutal");
+                    }
+                }
+                catch
+                {
+                    Log.LogError("Failed to clear randomizer inside power after deadline.");
+                    //return;
+                }
+
+                try
+                {
+                    if (Configuration.EnableRandomizer.Value & Configuration.RandomizeOutsidePower.Value)
+                    {
+                        ES3.DeleteKey("randomizeroutsidepower", $"{gameSaveName}_Brutal");
+                        ES3.Save("randomizeroutsidepower", Manager.randomizeroutsidepower, $"{gameSaveName}_Brutal");
+                    }
+                }
+                catch
+                {
+                    Log.LogError("Failed to clear randomizer outside power after deadline.");
+                    //return;
+                }
+
             }
         }
 
