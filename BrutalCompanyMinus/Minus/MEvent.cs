@@ -141,6 +141,9 @@ namespace BrutalCompanyMinus.Minus
             Percentage, TimeSettings, TimeMin, TimeMax, MinPercentSelected, MaxPercentSelected, ObjectWidth, minMold, maxMold, Slipperyness
         }
 
+        /// <summary>
+        /// This is used to describe the scale types and what they do.
+        /// </summary>
         internal static Dictionary<ScaleType, string> ScaleInfoList = new Dictionary<ScaleType, string>() {
             { ScaleType.InsideEnemyRarity, "Enemy is added to Inside enemy list with rarity." }, 
             { ScaleType.OutsideEnemyRarity, "Enemy is added to Outside enemy list with rarity." }, 
@@ -194,6 +197,13 @@ namespace BrutalCompanyMinus.Minus
         {
             public float Base, Increment, MinCap, MaxCap;
 
+            /// <summary>
+            /// This is used to scale events by difficulty.
+            /// </summary>
+            /// <param name="Base"></param>
+            /// <param name="Increment"></param>
+            /// <param name="MinCap"></param>
+            /// <param name="MaxCap"></param>
             public Scale(float Base, float Increment, float MinCap, float MaxCap)
             {
                 this.Base = Base;
@@ -202,6 +212,12 @@ namespace BrutalCompanyMinus.Minus
                 this.MaxCap = MaxCap;
             }
 
+            /// <summary>
+            /// This will compute the scale based on the given scale and difficulty.
+            /// </summary>
+            /// <param name="scale"></param>
+            /// <param name="Type"></param>
+            /// <returns></returns>
             public static float Compute(Scale scale, EventType Type = EventType.Neutral)
             {
                 float increment = scale.Increment;
@@ -209,8 +225,18 @@ namespace BrutalCompanyMinus.Minus
                 return Mathf.Clamp(scale.Base + (increment * Manager.difficulty), scale.MinCap, Configuration.ignoreMaxCap.Value ? 2147483647.0f : scale.MaxCap);
             }
 
+            /// <summary>
+            /// This will compute the scale based on the given scale and difficulty.
+            /// </summary>
+            /// <param name="type"></param>
+            /// <returns></returns>
             public float Computef(EventType type) => Compute(this, type);
 
+            /// <summary>
+            /// This will compute the scale based on the given scale and difficulty.
+            /// </summary>
+            /// <param name="type"></param>
+            /// <returns></returns>
             public int Compute(EventType type) => (int)Compute(this, type);
         }
 
@@ -290,6 +316,128 @@ namespace BrutalCompanyMinus.Minus
         }
 
         /// <summary>
+        /// Compares two scales and returns the difference between them as an int.
+        /// </summary>
+        /// <param name="scaleMin"></param>
+        /// <param name="scaleMax"></param>
+        /// <returns></returns>
+        public static int CompareScore(Scale scaleMin, Scale scaleMax, int calculated, bool higherBetter)
+        {
+            int lowerVal = (int)Scale.Compute(scaleMin);
+            int upperVal = (int)Scale.Compute(scaleMax);
+
+            if (lowerVal == upperVal) return 50;
+
+            if (higherBetter)
+            {
+                return Math.Clamp((int)(100f * ((float)(calculated - lowerVal) / Math.Abs(upperVal - lowerVal))), 0, 100);
+            }
+            else
+            {
+                return Math.Clamp((int)(100f * ((float)(upperVal - calculated) / Math.Abs(upperVal - lowerVal))), 0, 100);
+            }
+        }
+
+        /// <summary>
+        /// Compares two scales and returns the difference between them as a float.
+        /// </summary>
+        /// <param name="scaleMin"></param>
+        /// <param name="scaleMax"></param>
+        /// <param name="calculated"></param>
+        /// <param name="higherBetter"></param>
+        /// <returns></returns>
+        public static float CompareScoref(Scale scaleMin, Scale scaleMax, float calculated, bool higherBetter)
+        {
+            float lowerVal = Scale.Compute(scaleMin);
+            float upperVal = Scale.Compute(scaleMax);
+
+            if (lowerVal == upperVal) return 50;
+
+            if (higherBetter)
+            {
+                return Math.Clamp((100 * ((calculated - lowerVal) / Math.Abs(upperVal - lowerVal))), 0, 100);
+            }
+            else
+            {
+                return Math.Clamp((100 * ((upperVal - calculated) / Math.Abs(upperVal - lowerVal))), 0, 100);
+            }
+        }
+
+        /// <summary>
+        /// This will return a score based on the given score and amount.
+        /// This is used to average out scores.
+        /// </summary>
+        /// <param name="score"></param>
+        /// <param name="Amount"></param>
+        /// <returns></returns>
+        public static float ReturnScore(float score, int Amount)
+        {
+            return (score / Amount);
+        }
+
+        /// <summary>
+        /// This will calculate the score of all events in the game,
+        /// </summary>
+        /// <returns></returns>
+        public static float CalculateEventsScore()
+        {
+            long insaneWeight = 0;
+            long veryBadWeight = 0;
+            long badWeight = 0;
+            long neutralWeight = 0;
+            long goodWeight = 0;
+            long veryGoodWeight = 0;
+            long rareWeight = 0;
+
+            foreach (MEvent e in EventManager.events)
+            {
+                if (e.Type == MEvent.EventType.Insane) { insaneWeight += e.Weight; }
+                if (e.Type == MEvent.EventType.VeryBad) { veryBadWeight += e.Weight; }
+                if (e.Type == MEvent.EventType.Bad) { badWeight += e.Weight; }
+                if (e.Type == MEvent.EventType.Neutral) { neutralWeight += e.Weight; }
+                if (e.Type == MEvent.EventType.Good) { goodWeight += e.Weight; }
+                if (e.Type == MEvent.EventType.VeryGood) { veryGoodWeight += e.Weight; }
+                if (e.Type == MEvent.EventType.Rare) { rareWeight += e.Weight; }
+            }
+
+            long totalWeight = insaneWeight + veryBadWeight + badWeight + neutralWeight + goodWeight + veryGoodWeight + rareWeight;
+
+            double totalCalculated = (rareWeight * 1.0) + (veryGoodWeight * 0.7) + (goodWeight * 0.58) + (neutralWeight * 0.5) + (badWeight * 0.42) + (veryBadWeight * 0.30);
+            
+            return (float)(totalCalculated/totalWeight) * 100;
+        }
+
+        /// <summary>
+        /// This will return a name for the score given with respect to if higher is better or not.
+        /// </summary>
+        /// <param name="score"></param>
+        /// <param name="higherBetter"></param>
+        /// <returns></returns>
+        public static string ReturnScoreName(float score, bool higherBetter)
+        {
+            if (higherBetter)
+            {
+                if (score <= 4f) return "Abysmal";
+                if (score <= 19f) return "Brutal";
+                if (score <= 39f) return "Poor";
+                if (score <= 59f) return "Fair";
+                if (score <= 79f) return "Good";
+                if (score <= 94f) return "Great";
+                return "Perfect";
+            }
+            else
+            {
+                if (score <= 5f) return "Perfect";
+                if (score <= 20f) return "Great";
+                if (score <= 40f) return "Good";
+                if (score <= 60f) return "Fair";
+                if (score <= 80f) return "Poor";
+                if (score <= 95f) return "Brutal";
+                return "Abysmal";
+            }
+        }
+
+        /// <summary>
         /// Will return an event from name.
         /// </summary>
         /// <param name="name">Name of event to find.</param>
@@ -314,24 +462,63 @@ namespace BrutalCompanyMinus.Minus
 
             public EventType eventType;
 
+            /// <summary>
+            /// This is used to describe a basic monster event.
+            /// </summary>
+            /// <param name="enemy"></param>
+            /// <param name="insideSpawnRarity"></param>
+            /// <param name="outsideSpawnRarity"></param>
+            /// <param name="minInside"></param>
+            /// <param name="maxInside"></param>
+            /// <param name="minOutside"></param>
+            /// <param name="maxOutside"></param>
             public MonsterEvent(EnemyType enemy, Scale insideSpawnRarity, Scale outsideSpawnRarity, Scale minInside, Scale maxInside, Scale minOutside, Scale maxOutside)
             {
                 this.enemy = enemy;
                 assignRarities(insideSpawnRarity, outsideSpawnRarity, minInside, maxInside, minOutside, maxOutside);
             }
 
+            /// <summary>
+            /// This is used to describe a basic monster event.
+            /// </summary>
+            /// <param name="enemyName"></param>
+            /// <param name="insideSpawnRarity"></param>
+            /// <param name="outsideSpawnRarity"></param>
+            /// <param name="minInside"></param>
+            /// <param name="maxInside"></param>
+            /// <param name="minOutside"></param>
+            /// <param name="maxOutside"></param>
             public MonsterEvent(Assets.EnemyName enemyName, Scale insideSpawnRarity, Scale outsideSpawnRarity, Scale minInside, Scale maxInside, Scale minOutside, Scale maxOutside)
             {
                 this.enemy = Assets.GetEnemy(enemyName);
                 assignRarities(insideSpawnRarity, outsideSpawnRarity, minInside, maxInside, minOutside, maxOutside);
             }
 
+            /// <summary>
+            /// This is used to describe a basic monster event.
+            /// </summary>
+            /// <param name="enemyName"></param>
+            /// <param name="insideSpawnRarity"></param>
+            /// <param name="outsideSpawnRarity"></param>
+            /// <param name="minInside"></param>
+            /// <param name="maxInside"></param>
+            /// <param name="minOutside"></param>
+            /// <param name="maxOutside"></param>
             public MonsterEvent(string enemyName, Scale insideSpawnRarity, Scale outsideSpawnRarity, Scale minInside, Scale maxInside, Scale minOutside, Scale maxOutside)
             {
                 this.enemy = Assets.GetEnemy(enemyName);
                 assignRarities(insideSpawnRarity, outsideSpawnRarity, minInside, maxInside, minOutside, maxOutside);
             }
 
+            /// <summary>
+            /// This will assign rarities and amounts to the monster event.=
+            /// </summary>
+            /// <param name="insideSpawnRarity"></param>
+            /// <param name="outsideSpawnRarity"></param>
+            /// <param name="minInside"></param>
+            /// <param name="maxInside"></param>
+            /// <param name="minOutside"></param>
+            /// <param name="maxOutside"></param>
             internal void assignRarities(Scale insideSpawnRarity, Scale outsideSpawnRarity, Scale minInside, Scale maxInside, Scale minOutside, Scale maxOutside)
             {
                 this.insideSpawnRarity = insideSpawnRarity;
@@ -342,6 +529,9 @@ namespace BrutalCompanyMinus.Minus
                 this.maxOutside = maxOutside;
             }
 
+            /// <summary>
+            /// This will execute the monster event and spawn the given enemy with the given rarities and amounts.
+            /// </summary>
             public void Execute()
             {
                 Manager.AddEnemyToPoolWithRarity(ref RoundManager.Instance.currentLevel.Enemies, enemy, insideSpawnRarity.Compute(eventType));
@@ -360,12 +550,20 @@ namespace BrutalCompanyMinus.Minus
 
             public SpawnableItemWithRarity[] items;
 
+            /// <summary>
+            /// Describes a scrap transmutation event, which will transmute scrap into the given items with the given amount.
+            /// </summary>
+            /// <param name="amount"></param>
+            /// <param name="items"></param>
             public ScrapTransmutationEvent(Scale amount, params SpawnableItemWithRarity[] items)
             {
                 this.items = items;
                 this.amount = amount;
             }
 
+            /// <summary>
+            /// Execute the scrap transmutation event with the given amount and items.
+            /// </summary>
             public void Execute()
             {
                 Manager.TransmuteScrap(amount.Computef(EventType.Neutral), items);

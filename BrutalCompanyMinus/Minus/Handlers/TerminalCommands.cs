@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using BepInEx;
 using BepInEx.Bootstrap;
+using Dawn;
 using HarmonyLib;
 using JetBrains.Annotations;
 using Unity.Netcode;
@@ -241,6 +242,127 @@ namespace BrutalCompanyMinus.Minus.Handlers
                             Respond($"Failed to find event {arguments[0]} in events list.");
                         }
                     }
+                })
+            },
+            #endregion
+
+            #region MEvents
+            new MCommand()
+            {
+                command = "MRANDOM",
+                tag = "SERVER",
+                shortinfo = "Displays details about your run.",
+                info = "MRANDOM\n   Will display data about the randomizer and your current run.",
+                execute = new Action<string[]>((arguments) =>
+                {
+                    //if(arguments.Length == 0)
+                    //{
+                        int optionsSelected = 0;
+                        float totalScore = 0;
+
+                        if(Configuration.EnableRandomizer.Value)
+                        {
+                            string text = $"[Randomizer Run]:\n\n";
+
+                            if(Configuration.RandomizeWeight.Value)
+                            {
+                                float score = MEvent.CalculateEventsScore();
+                                text += $"[EventWeight]: Score: {score:F2}% - {MEvent.ReturnScoreName(score, true)}\n\n";
+                                //text += $"Most Favored Category: {MEvent.ReturnMostFavoredCategory()}\n\n";
+                                optionsSelected++;
+                                totalScore += score;
+                            }
+
+                            if(Configuration.RandomizeScrapAmount.Value)
+                            {
+                                float score = MEvent.CompareScoref(Configuration.RandomizeScrapAmountMin, Configuration.RandomizeScrapAmountMax, Manager.randomizerscrapamount, true);
+                                text += $"[ScrapAmount]: Score: {score:F2}% - {MEvent.ReturnScoreName(score, true)} - Min:{MEvent.Scale.Compute(Configuration.RandomizeScrapAmountMin)},Max:{MEvent.Scale.Compute(Configuration.RandomizeScrapAmountMax)},Got:{Manager.randomizerscrapamount}\n\n";
+                                optionsSelected++;
+                                totalScore += score;
+                            }
+
+                            if(Configuration.RandomizeScrapValue.Value)
+                            {
+                                float score = MEvent.CompareScoref(Configuration.RandomizeScrapValueMin, Configuration.RandomizeScrapValueMax, Manager.randomizerscrapvalue, true);
+                                text += $"[ScrapValue]: Score: {score:F2}% - {MEvent.ReturnScoreName(score, true)} - Min:{MEvent.Scale.Compute(Configuration.RandomizeScrapValueMin)},Max:{MEvent.Scale.Compute(Configuration.RandomizeScrapValueMax)},Got:{Manager.randomizerscrapvalue}\n\n";
+                                optionsSelected++;
+                                totalScore += score;
+                            }
+
+                            if(Configuration.RandomizeEnemyHP.Value)
+                            {
+                                float score = MEvent.CompareScore(Configuration.RandomizeEnemyHPMin, Configuration.RandomizeEnemyHPMax, Manager.randomizerbonusenemyhp, false);
+                                text += $"[EnemyHP]: Score: {score:F2}% - {MEvent.ReturnScoreName(score, true)} - Min:{MEvent.Scale.Compute(Configuration.RandomizeEnemyHPMin)},Max:{MEvent.Scale.Compute(Configuration.RandomizeEnemyHPMax)},Got:{Manager.randomizerbonusenemyhp} \n\n";
+                                optionsSelected++;
+                                totalScore += score;
+                            }
+
+                            if(Configuration.RandomizeSpawnChance.Value)
+                            {
+                                float score = MEvent.CompareScoref(Configuration.RandomizeSpawnChanceMin, Configuration.RandomizeSpawnChanceMax, Manager.randomizerspawnchance, false);
+                                text += $"[SpawnChance]: Score: {score:F2}% - {MEvent.ReturnScoreName(score, true)} - Min:{MEvent.Scale.Compute(Configuration.RandomizeSpawnChanceMin)},Max:{MEvent.Scale.Compute(Configuration.RandomizeSpawnChanceMax)},Got:{Manager.randomizerspawnchance} \n\n";
+                                optionsSelected++;
+                                totalScore += score;
+                            }
+
+                            if(Configuration.RandomizeSpawnChanceInside.Value)
+                            {
+                                float score = MEvent.CompareScoref(Configuration.RandomizeSpawnChanceInsideMin, Configuration.RandomizeSpawnChanceInsideMax, Manager.randomizerspawnchanceinside, false);
+                                text += $"[SpawnChanceIn]: Score: {score:F2}% - {MEvent.ReturnScoreName(score, true)} - Min:{MEvent.Scale.Compute(Configuration.RandomizeSpawnChanceInsideMin)},Max:{MEvent.Scale.Compute(Configuration.RandomizeSpawnChanceInsideMax)},Got:{Manager.randomizerspawnchanceinside} \n\n";
+                                optionsSelected++;
+                                totalScore += score;
+                            }
+
+                            if(Configuration.RandomizeSpawnChanceOutside.Value)
+                            {
+                                float score = MEvent.CompareScoref(Configuration.RandomizeSpawnChanceOutsideMin, Configuration.RandomizeSpawnChanceOutsideMax, Manager.randomizerspawnchanceoutside, false);
+                                text += $"[SpawnChanceOut]: Score: {score:F2}% - {MEvent.ReturnScoreName(score, true)} - Min:{MEvent.Scale.Compute(Configuration.RandomizeSpawnChanceOutsideMin)},Max:{MEvent.Scale.Compute(Configuration.RandomizeSpawnChanceOutsideMax)},Got:{Manager.randomizerspawnchanceoutside} \n\n";
+                                optionsSelected++;
+                                totalScore += score;
+                            }
+
+                            if(Configuration.RandomizeSpawnCap.Value)
+                            {
+                                float score = MEvent.CompareScoref(Configuration.RandomizeSpawnCapMin, Configuration.RandomizeSpawnCapMax, Manager.randomizerspawncap, false);
+                                text += $"[SpawnCap]: Score: {score:F2}% - {MEvent.ReturnScoreName(score, true)} - Min:{MEvent.Scale.Compute(Configuration.RandomizeSpawnCapMin)},Max:{MEvent.Scale.Compute(Configuration.RandomizeSpawnCapMax)},Got:{Manager.randomizerspawncap} \n\n";
+                                optionsSelected++;
+                                totalScore += score;
+                            }
+
+                            if(Configuration.RandomizeInsidePower.Value)
+                            {
+                                float score = MEvent.CompareScore(Configuration.RandomizeInsidePowerMin, Configuration.RandomizeInsidePowerMax, (int)Manager.randomizerinsidepower, false);
+                                text += $"[InsidePower]: Score: {score:F2}% - {MEvent.ReturnScoreName(score, true)} - Min:{MEvent.Scale.Compute(Configuration.RandomizeInsidePowerMin)},Max:{MEvent.Scale.Compute(Configuration.RandomizeInsidePowerMax)},Got:{(int)Manager.randomizerinsidepower} \n\n";
+                                optionsSelected++;
+                                totalScore += score;
+                            }
+
+                            if(Configuration.RandomizeOutsidePower.Value)
+                            {
+                                float score = MEvent.CompareScore(Configuration.RandomizeOutsidePowerMin, Configuration.RandomizeOutsidePowerMax, (int)Manager.randomizeroutsidepower, false);
+                                text += $"[OutsidePower]: Score: {score:F2}% - {MEvent.ReturnScoreName(score, true)} - Min:{MEvent.Scale.Compute(Configuration.RandomizeOutsidePowerMin)},Max:{MEvent.Scale.Compute(Configuration.RandomizeOutsidePowerMax)},Got:{(int)Manager.randomizeroutsidepower} \n\n";
+                                optionsSelected++;
+                                totalScore += score;
+                            }
+
+                            if(optionsSelected == 0)
+                            {
+                                text += "No randomizer options are enabled.";
+                            }
+                            else
+                            {
+                                float overallScore = MEvent.ReturnScore(totalScore, optionsSelected);
+                                text += $"[Overall]: Score: {overallScore:F2}% - {MEvent.ReturnScoreName(overallScore, true)}\n\n";
+
+                                Respond(text);
+                                Console.WriteLine(text);
+                            }
+                        }
+                        else 
+                        {
+                            Respond("Randomizer is not enabled.");
+                        }
+                    //}
                 })
             },
             #endregion
