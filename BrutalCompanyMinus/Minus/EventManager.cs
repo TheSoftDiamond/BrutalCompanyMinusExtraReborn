@@ -1,6 +1,7 @@
 ﻿using BepInEx;
 using BepInEx.Configuration;
 using BrutalCompanyMinus.Minus.Handlers;
+using Dawn.Utils;
 using Discord;
 using HarmonyLib;
 using System;
@@ -339,9 +340,11 @@ namespace BrutalCompanyMinus.Minus
         {
             if (_events.Count == 0) return new Events.Nothing();
 
-            int WeightedSum = 0;
-            foreach (MEvent e in _events) WeightedSum += e.Weight;
+            ulong WeightedSum = 0;
 
+            foreach (MEvent e in _events) WeightedSum += (ulong)e.Weight;
+
+            /*
             foreach (MEvent e in _events)
             {
                 if (rng.Next(0, WeightedSum) < e.Weight)
@@ -349,6 +352,17 @@ namespace BrutalCompanyMinus.Minus
                     return e;
                 }
                 WeightedSum -= e.Weight;
+            }*/
+
+            foreach (MEvent e in _events)
+            {
+                if (WeightedSum <= 0) break;
+
+                if ((ulong)(rng.NextDouble() * WeightedSum) < (ulong)e.Weight)
+                {
+                    return e;
+                }
+                WeightedSum -= (ulong)e.Weight;
             }
 
             return _events[_events.Count - 1];
@@ -510,6 +524,7 @@ namespace BrutalCompanyMinus.Minus
             currentEvents = chosenEvents;
             return chosenEvents;
         }
+
 
         internal static void ApplyEvents(List<MEvent> currentEvents)
         {
