@@ -8,12 +8,21 @@ using UnityEngine;
 using BrutalCompanyMinus.Minus.Events;
 using Object = UnityEngine.Object;
 using Steamworks.Ugc;
+using Unity.Netcode;
 
 namespace BrutalCompanyMinus.Minus.Handlers
 {
     [HarmonyPatch]
     public class ExplodingItemPatches
     {
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(NetworkObject), "Awake")]
+        private static void NetworkObjectAwakePrefix(NetworkObject __instance)
+        {
+            if (__instance.TryGetComponent(out GrabbableObject item))
+                ApplyExplosiveStates(item);
+        }
+
         [HarmonyPostfix]
         [HarmonyPatch(typeof(GrabbableObject), nameof(GrabbableObject.Start))]
         private static void GrabbableObjectStartPostfix(GrabbableObject __instance)

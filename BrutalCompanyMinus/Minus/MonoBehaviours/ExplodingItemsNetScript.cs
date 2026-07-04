@@ -9,27 +9,71 @@ using UnityEngine;
 
 namespace BrutalCompanyMinus.Minus.MonoBehaviours;
 
-public class ExplodingItemsNetScript : MonoBehaviour, IHittable
+internal class ExplodingItemsNetScript : NetworkBehaviour, IHittable
 {
-    public const float DestroyTimer = 5f;
-    public const float FuseDuration = 6f;
-    public const float ChainDelay = 0.2f;
-    public const float FuseLightBlinkInterval = 0.5f;
-    public const float FuseLightOnDuration = 0.07f;
+    private const float DestroyTimer = 5f;
+    private const float FuseDuration = 6f;
+    private const float ChainDelay = 0.2f;
 
-    public bool HasExploded { get; private set; }
-    public bool wasHeld;
+    private static readonly float[] FuseLightBlinkTimes =
+    [
+        0.262f,
+        1.267f,
+        2.268f,
+        3.270f,
+        4.271f,
+        4.399f,
+        4.522f,
+        4.646f,
+        4.774f,
+        4.897f,
+        5.021f,
+        5.149f,
+        5.276f,
+        5.400f,
+        5.503f,
+        5.626f,
+        5.750f,
+        5.878f
+    ];
 
-    public GrabbableObject item = null!;
-    public AudioSource mineAudio = null!;
-    public AudioSource mineTickSource = null!;
-    public AudioClip mineDetonate = null!;
-    public AudioClip mineTrigger = null!;
-    public Coroutine fuseCoroutine = null!;
-    public Light brightLight = null!;
-    public Light indirectLight = null!;
+    private static readonly float[] FuseLightBlinkDurations =
+    [
+        0.092f,
+        0.088f,
+        0.088f,
+        0.092f,
+        0.092f,
+        0.088f,
+        0.092f,
+        0.096f,
+        0.092f,
+        0.092f,
+        0.096f,
+        0.092f,
+        0.088f,
+        0.085f,
+        0.088f,
+        0.096f,
+        0.096f,
+        0.088f
+    ];
 
-    public void Awake()
+    internal bool HasExploded { get; private set; }
+    private bool hasExplosionBeenRequested;
+    private bool localClientTriggeredFuse;
+    private bool wasHeld;
+
+    private GrabbableObject item = null!;
+    private AudioSource mineAudio = null!;
+    private AudioSource mineTickSource = null!;
+    private AudioClip mineDetonate = null!;
+    private AudioClip mineTrigger = null!;
+    private Coroutine fuseCoroutine = null!;
+    private Light brightLight = null!;
+    private Light indirectLight = null!;
+
+    private void Awake()
     {
         item = GetComponent<GrabbableObject>();
 
@@ -50,13 +94,13 @@ public class ExplodingItemsNetScript : MonoBehaviour, IHittable
         mineAudio.playOnAwake = false;
         mineAudio.volume = sourceMine.mineAudio.volume;
         mineAudio.pitch = sourceMine.mineAudio.pitch;
-        mineAudio.spatialBlend = sourceMine.mineAudio.spatialBlend;
+        mineAudio.spatialBlend = 1f;
         mineAudio.reverbZoneMix = sourceMine.mineAudio.reverbZoneMix;
         mineAudio.dopplerLevel = sourceMine.mineAudio.dopplerLevel;
         mineAudio.spread = sourceMine.mineAudio.spread;
-        mineAudio.rolloffMode = sourceMine.mineAudio.rolloffMode;
-        mineAudio.minDistance = sourceMine.mineAudio.minDistance;
-        mineAudio.maxDistance = sourceMine.mineAudio.maxDistance;
+        mineAudio.rolloffMode = AudioRolloffMode.Linear;
+        mineAudio.minDistance = 3f;
+        mineAudio.maxDistance = 25f;
 
         GameObject mineTickObject = new("ExplodingItemTickAudio");
         mineTickObject.transform.SetParent(transform, false);
@@ -73,13 +117,13 @@ public class ExplodingItemsNetScript : MonoBehaviour, IHittable
         mineTickSource.loop = sourceMine.mineTickSource.loop;
         mineTickSource.volume = sourceMine.mineTickSource.volume;
         mineTickSource.pitch = sourceMine.mineTickSource.pitch;
-        mineTickSource.spatialBlend = sourceMine.mineTickSource.spatialBlend;
+        mineTickSource.spatialBlend = 1f;
         mineTickSource.reverbZoneMix = sourceMine.mineTickSource.reverbZoneMix;
         mineTickSource.dopplerLevel = sourceMine.mineTickSource.dopplerLevel;
         mineTickSource.spread = sourceMine.mineTickSource.spread;
-        mineTickSource.rolloffMode = sourceMine.mineTickSource.rolloffMode;
-        mineTickSource.minDistance = sourceMine.mineTickSource.minDistance;
-        mineTickSource.maxDistance = sourceMine.mineTickSource.maxDistance;
+        mineTickSource.rolloffMode = AudioRolloffMode.Linear;
+        mineTickSource.minDistance = 3f;
+        mineTickSource.maxDistance = 25f;
 
         GameObject brightLightObject = new("BrightLight");
         brightLightObject.transform.SetParent(transform, false);
@@ -110,7 +154,7 @@ public class ExplodingItemsNetScript : MonoBehaviour, IHittable
         indirectLight.enabled = false;
     }
 
-    public void Update()
+    private void Update()
     {
         if (HasExploded)
             return;
@@ -124,71 +168,139 @@ public class ExplodingItemsNetScript : MonoBehaviour, IHittable
 
         if (isHeldNow)
         {
-            // On grab
-            if (HasExploded)
-                return;
-
-            if (fuseCoroutine != null)
+            if ((item.isHeld && item.playerHeldBy == GameNetworkManager.Instance.localPlayerController) || (item.isHeldByEnemy && NetworkManager.Singleton.IsServer))
             {
-                StopCoroutine(fuseCoroutine);
-                fuseCoroutine = null!;
-                mineTickSource.Stop();
-                brightLight.enabled = false;
-                indirectLight.enabled = false;
+                localClientTriggeredFuse = true;
+                StartFuseServerRpc();
             }
-
-            fuseCoroutine = StartCoroutine(FuseTimer());
         }
-        else
+        else if (localClientTriggeredFuse)
         {
-            // On discard
-            if (fuseCoroutine == null)
-                return;
+            localClientTriggeredFuse = false;
+            StopFuseServerRpc();
+        }
+    }
 
+    [Rpc(SendTo.Server, RequireOwnership = false)]
+    private void StartFuseServerRpc()
+    {
+        if (HasExploded || hasExplosionBeenRequested)
+            return;
+
+        StartFuseClientRpc();
+    }
+
+    [Rpc(SendTo.ClientsAndHost)]
+    private void StartFuseClientRpc()
+    {
+        if (HasExploded || hasExplosionBeenRequested)
+            return;
+
+        if (fuseCoroutine != null)
+        {
             StopCoroutine(fuseCoroutine);
             fuseCoroutine = null!;
             mineTickSource.Stop();
             brightLight.enabled = false;
             indirectLight.enabled = false;
         }
+
+        fuseCoroutine = StartCoroutine(FuseTimer());
     }
 
-    public IEnumerator FuseTimer()
+    [Rpc(SendTo.Server, RequireOwnership = false)]
+    private void StopFuseServerRpc()
+    {
+        StopFuseClientRpc();
+    }
+
+    [Rpc(SendTo.ClientsAndHost)]
+    private void StopFuseClientRpc()
+    {
+        if (fuseCoroutine == null)
+            return;
+
+        StopCoroutine(fuseCoroutine);
+        fuseCoroutine = null!;
+        mineTickSource.Stop();
+        brightLight.enabled = false;
+        indirectLight.enabled = false;
+    }
+
+    private IEnumerator FuseTimer()
     {
         float fuseTime = 0f;
         mineTickSource.time = 0f;
         mineTickSource.Play();
 
-        // Landmine "animator"
-        while (fuseTime < FuseDuration)
+        for (int i = 0; i < FuseLightBlinkTimes.Length; i++)
         {
+            float waitTime = FuseLightBlinkTimes[i] - fuseTime;
+
+            if (waitTime > 0f)
+            {
+                yield return new WaitForSeconds(waitTime);
+                fuseTime += waitTime;
+            }
+
             brightLight.enabled = true;
             indirectLight.enabled = true;
 
-            yield return new WaitForSeconds(FuseLightOnDuration);
-            fuseTime += FuseLightOnDuration;
+            yield return new WaitForSeconds(FuseLightBlinkDurations[i]);
+            fuseTime += FuseLightBlinkDurations[i];
 
             brightLight.enabled = false;
             indirectLight.enabled = false;
+        }
 
-            float tickDelay = Mathf.Min(Mathf.Max(0f, FuseLightBlinkInterval - FuseLightOnDuration), FuseDuration - fuseTime);
-            yield return new WaitForSeconds(tickDelay);
-            fuseTime += tickDelay;
+        float remainingTime = FuseDuration - fuseTime;
+
+        if (remainingTime > 0f)
+        {
+            yield return new WaitForSeconds(remainingTime);
+            fuseTime += remainingTime;
         }
 
         fuseCoroutine = null!;
         mineTickSource.Stop();
         brightLight.enabled = false;
         indirectLight.enabled = false;
-        ExplodeServerRpc();
+
+        if (IsServer)
+            ExplodeClientRpc(Random.Range(0.93f, 1.07f));
     }
 
-    public void Explode()
+    internal void Explode()
+    {
+        if (HasExploded || hasExplosionBeenRequested)
+            return;
+
+        hasExplosionBeenRequested = true;
+
+        if (IsServer)
+            ExplodeClientRpc(Random.Range(0.93f, 1.07f));
+        else
+            ExplodeServerRpc();
+    }
+
+    [Rpc(SendTo.Server, RequireOwnership = false)]
+    private void ExplodeServerRpc()
     {
         if (HasExploded)
             return;
 
+        ExplodeClientRpc(Random.Range(0.93f, 1.07f));
+    }
+
+    [Rpc(SendTo.ClientsAndHost)]
+    private void ExplodeClientRpc(float detonatePitch)
+    {
+        if (HasExploded)
+            return;
+
+        hasExplosionBeenRequested = true;
         HasExploded = true;
+        localClientTriggeredFuse = false;
 
         if (fuseCoroutine != null)
         {
@@ -201,7 +313,7 @@ public class ExplodingItemsNetScript : MonoBehaviour, IHittable
         indirectLight.enabled = false;
 
         mineAudio.PlayOneShot(mineTrigger, 1f);
-        mineAudio.pitch = Random.Range(0.93f, 1.07f);
+        mineAudio.pitch = detonatePitch;
         mineAudio.PlayOneShot(mineDetonate, 1f);
         WalkieTalkie.TransmitOneShotAudio(mineAudio, mineTrigger);
         WalkieTalkie.TransmitOneShotAudio(mineAudio, mineDetonate);
@@ -214,21 +326,22 @@ public class ExplodingItemsNetScript : MonoBehaviour, IHittable
         if (item.isHeld && item.playerHeldBy != null)
             item.DestroyObjectInHand(item.playerHeldBy);
 
-        if (NetworkManager.Singleton.IsServer)
+        if (IsServer)
             StartCoroutine(DestroyObject());
     }
 
-    public IEnumerator TriggerOtherMineDelayed()
+    internal IEnumerator TriggerOtherMineDelayed()
     {
         if (HasExploded)
             yield break;
 
-        mineAudio.pitch = Random.Range(0.75f, 1.07f);
         yield return new WaitForSeconds(ChainDelay);
-        ExplodeServerRpc();
+
+        if (IsServer)
+            ExplodeClientRpc(Random.Range(0.75f, 1.07f));
     }
 
-    public IEnumerator DestroyObject()
+    private IEnumerator DestroyObject()
     {
         yield return new WaitForSeconds(DestroyTimer);
 
@@ -241,19 +354,7 @@ public class ExplodingItemsNetScript : MonoBehaviour, IHittable
         if (item.isHeld)
             return false;
 
-        ExplodeServerRpc();
-        return true;
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    public void ExplodeServerRpc()
-    {
-        ExplodeClientRpc();
-    }
-
-    [ClientRpc]
-    public void ExplodeClientRpc()
-    {
         Explode();
+        return true;
     }
 }
