@@ -591,11 +591,6 @@ namespace BrutalCompanyMinus.Minus
             {
                 e.OnShipLeave();
             }
-
-            //foreach(MEvent e in ExternalEvents)
-            //{
-            //    e.OnShipLeave();
-            //}
         }
 
         /// <summary>
@@ -631,11 +626,6 @@ namespace BrutalCompanyMinus.Minus
             {
                 e.OnGameStart();
             }
-
-            //foreach (MEvent e in ExternalEvents)
-            //{
-            //    e.OnGameStart();
-            //}
         }
 
         /// <summary>
@@ -658,11 +648,6 @@ namespace BrutalCompanyMinus.Minus
             {
                 e.OnLocalDisconnect();
             }
-
-            //foreach (MEvent e in ExternalEvents)
-            //{
-            //    e.OnLocalDisconnect();
-            //}
         }
 
         internal static void UpdateAllEventWeights()
@@ -1637,7 +1622,7 @@ namespace BrutalCompanyMinus.Minus
 
             foreach (MEvent e in events)
             {
-                int newWeight = Mathf.RoundToInt(UnityEngine.Random.Range(minAmount, Mathf.Ceil(maxAmount) + 1));
+                int newWeight = Mathf.Clamp(Mathf.RoundToInt(UnityEngine.Random.Range(minAmount, Mathf.Ceil(maxAmount) + 1)), 1, 2147483647);
 
                 Log.LogInfo($"Randomized weight for {e.Name()} from {e.Weight} to {newWeight}");
                 e.Weight = newWeight;
