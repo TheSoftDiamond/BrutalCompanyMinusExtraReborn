@@ -309,8 +309,8 @@ namespace BrutalCompanyMinus
             MsgQuota = LanguageConfig.Bind("UI Text (Difficulty)", "Quota Text", @"Quota:\s\s\s\s\s\s", LanguageDescription);
             MsgShipScrap = LanguageConfig.Bind("UI Text (Difficulty)", "Ship Scrap Text", @"Ship Scrap:\s", LanguageDescription);
             MsgMoonRisk = LanguageConfig.Bind("UI Text (Difficulty)", "Moon Risk Text", @"Moon Risk:\s\s", LanguageDescription);
-            MsgWeather = LanguageConfig.Bind("UI Text (Difficulty)", "Weather Text", @"Weather:\s\s", LanguageDescription);
-            MsgHeat = LanguageConfig.Bind("UI Text (Difficulty)", "Heat Text", @"Heat:\s\s\s\s\s\s", LanguageDescription);
+            MsgWeather = LanguageConfig.Bind("UI Text (Difficulty)", "Weather Text", @"Weather:\s\s\s\s", LanguageDescription);
+            MsgHeat = LanguageConfig.Bind("UI Text (Difficulty)", "Heat Text", @"Heat:\s\s\s\s\s\s\s", LanguageDescription);
 
 
             difficultyTransitions = GetDifficultyTransitionsFromString(difficultyConfig.Bind("Difficulty Scaling", "Difficulty Transitions", "Easy,00FF00,0|Medium,008000,15|Hard,FF0000,30|Very Hard,800000,50|Insane,140000,75", "Format: NAME,HEX,ABOVE, above is the value the name will be shown at.").Value);
