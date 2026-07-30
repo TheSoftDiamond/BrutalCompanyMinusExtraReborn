@@ -222,7 +222,7 @@ namespace BrutalCompanyMinus.Minus
             {
                 float increment = scale.Increment;
 
-                return Mathf.Clamp(scale.Base + (increment * Manager.difficulty), scale.MinCap, Configuration.ignoreMaxCap.Value ? 2147483647.0f : scale.MaxCap);
+                return Mathf.Clamp(scale.Base + (increment * Manager.difficulty), scale.MinCap, Configuration.ignoreMaxCapOther.Value ? 2147483647.0f : scale.MaxCap);
             }
 
             /// <summary>
