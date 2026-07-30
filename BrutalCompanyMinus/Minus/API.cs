@@ -340,6 +340,23 @@ namespace BrutalCompanyMinus.Minus
         }
 
         /// <summary>
+        /// This method returns a list of all executed events. (AKA Active at the moment)
+        /// </summary>
+        /// <returns></returns>
+        public static IReadOnlyList<MEvent> GetAllExecutedEvents()
+        {
+            try
+            {
+                return EventManager.events.Where(e => e.Executed).ToList();
+            }
+            catch (Exception ex)
+            {
+                Log.LogError($"Error while getting all active events: {ex.Message}");
+                return new List<MEvent>();
+            }
+        }
+
+        /// <summary>
         /// This method checks if an event is enabled or not.
         /// </summary>
         /// <param name="e"></param>
