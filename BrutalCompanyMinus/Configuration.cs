@@ -73,7 +73,7 @@ namespace BrutalCompanyMinus
             insideSpawnChanceAdditive = new Scale(),
             outsideSpawnChanceAdditive = new Scale();
         public static ConfigEntry<float>? difficultyMaxCap, scrapValueMax, scrapAmountMax, FactorySizeMax, FactorySizeMin;
-        public static ConfigEntry<bool>? ignoreMaxCap, scaleByDaysPassed, scaleByScrapInShip, scaleByMoonGrade, scaleByWeather, scaleByQuota, scaleHeat;
+        public static ConfigEntry<bool>? ignoreMaxCap, ignoreMaxCapOther, scaleByDaysPassed, scaleByScrapInShip, scaleByMoonGrade, scaleByWeather, scaleByQuota, scaleHeat;
         public static ConfigEntry<float>? daysPassedDifficultyMultiplier, daysPassedDifficultyCap, scrapInShipDifficultyMultiplier, scrapInShipDifficultyCap, quotaDifficultyMultiplier, quotaDifficultyCap;
         public static Dictionary<string, float> gradeAdditives = new Dictionary<string, float>();
         public static Dictionary<LevelWeatherType, float> weatherAdditives = new Dictionary<LevelWeatherType, float>();
@@ -315,6 +315,7 @@ namespace BrutalCompanyMinus
 
             difficultyTransitions = GetDifficultyTransitionsFromString(difficultyConfig.Bind("Difficulty Scaling", "Difficulty Transitions", "Easy,00FF00,0|Medium,008000,15|Hard,FF0000,30|Very Hard,800000,50|Insane,140000,75", "Format: NAME,HEX,ABOVE, above is the value the name will be shown at.").Value);
             ignoreMaxCap = difficultyConfig.Bind("Difficulty Scaling", "Ignore max cap?", false, "Will ignore max cap if true, upperlimit is dictated by difficulty max cap setting as well.");
+            ignoreMaxCapOther = difficultyConfig.Bind("Difficulty Scaling", "Ignore max cap (Other)?", false, "Will ignore max cap if true, upperlimit is dictated by difficulty max cap setting as well.");
             difficultyMaxCap = difficultyConfig.Bind("Difficulty Scaling", "Difficulty max cap", 100.0f, "The difficulty value wont go beyond this.");
             scaleByDaysPassed = difficultyConfig.Bind("Difficulty Scaling", "Scale by days passed?", true, "Will add to difficulty depending on how many days have passed.");
             daysPassedDifficultyMultiplier = difficultyConfig.Bind("Difficulty Scaling", "Difficulty per days passed?", 1.0f, "");
