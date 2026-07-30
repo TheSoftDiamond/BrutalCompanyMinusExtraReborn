@@ -1,18 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
 using BepInEx;
-using BepInEx.Bootstrap;
-using Dawn;
 using HarmonyLib;
-using JetBrains.Annotations;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.UI;
-using WeatherRegistry;
-using static BrutalCompanyMinus.Assets;
 
 namespace BrutalCompanyMinus.Minus.Handlers
 {
@@ -155,7 +147,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
                                 EventManager.allSpecial.Add(e);
                             }
                             if (e.isBetaEvent)
-                            { 
+                            {
                                 EventManager.allBeta.Add(e);
                             }
                         }
@@ -358,7 +350,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
                                 Console.WriteLine(text);
                             }
                         }
-                        else 
+                        else
                         {
                             Respond("Randomizer is not enabled.");
                         }

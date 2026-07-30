@@ -340,6 +340,23 @@ namespace BrutalCompanyMinus.Minus
         }
 
         /// <summary>
+        /// This method returns a list of all executed events. (AKA Active at the moment)
+        /// </summary>
+        /// <returns></returns>
+        public static IReadOnlyList<MEvent> GetAllExecutedEvents()
+        {
+            try
+            {
+                return EventManager.events.Where(e => e.Executed).ToList();
+            }
+            catch (Exception ex)
+            {
+                Log.LogError($"Error while getting all active events: {ex.Message}");
+                return new List<MEvent>();
+            }
+        }
+
+        /// <summary>
         /// This method checks if an event is enabled or not.
         /// </summary>
         /// <param name="e"></param>
@@ -681,6 +698,367 @@ namespace BrutalCompanyMinus.Minus
                 return false;
             }
         }
+        #endregion
+
+        #region Getters (Miscellaneous)
+
+        /// <summary>
+        /// This method checks if the randomizer is on.
+        /// </summary>
+        /// <returns></returns>
+        public static bool IsRandomizerOn()
+        {
+            try
+            {
+                return Configuration.EnableRandomizer.Value;
+            }
+            catch (Exception e)
+            {
+                Log.LogError($"Error occurred while checking if randomizer is on: {e}");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// This method checks if factory is randomized.
+        /// </summary>
+        /// <returns></returns>
+        public static bool IsFactoryRandomized()
+        {
+            try
+            {
+                return Configuration.RandomizeFactory.Value;
+            }
+            catch (Exception e)
+            {
+                Log.LogError($"Error occurred while checking if factory is randomized: {e}");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// This method checks if scrap value is randomized.
+        /// </summary>
+        /// <returns></returns>
+        public static bool IsScrapValueRandomized()
+        {
+            try
+            {
+                return Configuration.RandomizeScrapValue.Value;
+            }
+            catch (Exception e)
+            {
+                Log.LogError($"Error occurred while checking if scrap value is randomized: {e}");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// This method checks if scrap amount is randomized.
+        /// </summary>
+        /// <returns></returns>
+        public static bool IsScrapAmountRandomized()
+        {
+            try
+            {
+                return Configuration.RandomizeScrapAmount.Value;
+            }
+            catch (Exception e)
+            {
+                Log.LogError($"Error occurred while checking if scrap amount is randomized: {e}");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// This method checks if enemy HP is randomized.
+        /// </summary>
+        /// <returns></returns>
+        public static bool IsEnemyHPRandomized()
+        {
+            try
+            {
+                return Configuration.RandomizeEnemyHP.Value;
+            }
+            catch (Exception e)
+            {
+                Log.LogError($"Error occurred while checking if enemies are randomized: {e}");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// This method checks if spawn chance is randomized.
+        /// </summary>
+        /// <returns></returns>
+        public static bool IsSpawnChanceRandomized()
+        {
+            try
+            {
+                return Configuration.RandomizeSpawnChance.Value;
+            }
+            catch (Exception e)
+            {
+                Log.LogError($"Error occurred while checking if spawn chance is randomized: {e}");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// This method checks if event weight is randomized.
+        /// </summary>
+        /// <returns></returns>
+        public static bool IsEventWeightRandomized()
+        {
+            try
+            {
+                return Configuration.RandomizeWeight.Value;
+            }
+            catch (Exception e)
+            {
+                Log.LogError($"Error occurred while checking if event weight is randomized: {e}");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// This method checks if inside chance is randomized.
+        /// </summary>
+        /// <returns></returns>
+        public static bool IsInsideChanceRandomized()
+        {
+            try
+            {
+                return Configuration.RandomizeSpawnChanceInside.Value;
+            }
+            catch (Exception e)
+            {
+                Log.LogError($"Error occurred while checking if inside chance is randomized: {e}");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// This method checks if outside chance is randomized.
+        /// </summary>
+        /// <returns></returns>
+        public static bool IsOutsideChanceRandomized()
+        {
+            try
+            {
+                return Configuration.RandomizeSpawnChanceOutside.Value;
+            }
+            catch (Exception e)
+            {
+                Log.LogError($"Error occurred while checking if outside chance is randomized: {e}");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// This method checks if spawn cap is randomized.
+        /// </summary>
+        /// <returns></returns>
+        public static bool IsSpawnCapRandomized()
+        {
+            try
+            {
+                return Configuration.RandomizeSpawnCap.Value;
+            }
+            catch (Exception e)
+            {
+                Log.LogError($"Error occurred while checking if spawn cap is randomized: {e}");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// This method checks if inside power is randomized.
+        /// </summary>
+        /// <returns></returns>
+        public static bool IsInsidePowerRandomized()
+        {
+            try
+            {
+                return Configuration.RandomizeInsidePower.Value;
+            }
+            catch (Exception e)
+            {
+                Log.LogError($"Error occurred while checking if inside power is randomized: {e}");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// This method checks if outside power is randomized.
+        /// </summary>
+        /// <returns></returns>
+        public static bool IsOutsidePowerRandomized()
+        {
+            try
+            {
+                return Configuration.RandomizeOutsidePower.Value;
+            }
+            catch (Exception e)
+            {
+                Log.LogError($"Error occurred while checking if outside power is randomized: {e}");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// This method checks if enforce escape check is enabled.
+        /// </summary>
+        /// <returns></returns>
+        public static bool IsEnforceEscapeCheckEnabled()
+        {
+            try
+            {
+                return Configuration.enforceEscapeModChecks.Value;
+            }
+            catch (Exception e)
+            {
+                Log.LogError($"Error occurred while checking if enforce escape check is enabled: {e}");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// This method checks if custom events are enabled.
+        /// </summary>
+        /// <returns></returns>
+        public static bool IsCustomEventsEnabled()
+        {
+            try
+            {
+                return Configuration.enableCustomEvents.Value;
+            }
+            catch (Exception e)
+            {
+                Log.LogError($"Error occurred while checking if custom events are enabled: {e}");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// This method checks if scaling by days is enabled.
+        /// </summary>
+        /// <returns></returns>
+        public static bool IsScaleByDaysEnabled()
+        {
+            try
+            {
+                return Configuration.scaleByDaysPassed.Value;
+            }
+            catch (Exception e)
+            {
+                Log.LogError($"Error occurred while checking if scale by days is enabled: {e}");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// This method checks if scaling by scrap is enabled.
+        /// </summary>
+        /// <returns></returns>
+        public static bool IsScaleByScrapEnabled()
+        {
+            try
+            {
+                return Configuration.scaleByScrapInShip.Value;
+            }
+            catch (Exception e)
+            {
+                Log.LogError($"Error occurred while checking if scale by scrap is enabled: {e}");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// This method checks if scaling by quota is enabled.
+        /// </summary>
+        /// <returns></returns>
+        public static bool IsScaleByQuotaEnabled()
+        {
+            try
+            {
+                return Configuration.scaleByQuota.Value;
+            }
+            catch (Exception e)
+            {
+                Log.LogError($"Error occurred while checking if scale by quota is enabled: {e}");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// This method checks if scaling by moon grade is enabled.
+        /// </summary>
+        /// <returns></returns>
+        public static bool IsScaleByMoonGradeEnabled()
+        {
+            try
+            {
+                return Configuration.scaleByMoonGrade.Value;
+            }
+            catch (Exception e)
+            {
+                Log.LogError($"Error occurred while checking if scale by moon grade is enabled: {e}");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// This method checks if scaling by weather is enabled.
+        /// </summary>
+        /// <returns></returns>
+        public static bool IsScaleByWeatherEnabled()
+        {
+            try
+            {
+                return Configuration.scaleByWeather.Value;
+            }
+            catch (Exception e)
+            {
+                Log.LogError($"Error occurred while checking if scale by weather is enabled: {e}");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// This method checks if scaling by heat is enabled.
+        /// </summary>
+        /// <returns></returns>
+        public static bool IsScaleByHeatEnabled()
+        {
+            try
+            {
+                return Configuration.scaleHeat.Value;
+            }
+            catch (Exception e)
+            {
+                Log.LogError($"Error occurred while checking if scale by heat is enabled: {e}");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// This method checks if player scaling is enabled.
+        /// </summary>
+        /// <returns></returns>
+        public static bool IsPlayerScalingEnabled()
+        {
+            try
+            {
+                return Configuration.enablePlayerScaling.Value;
+            }
+            catch (Exception e)
+            {
+                Log.LogError($"Error occurred while checking if scale by players is enabled: {e}");
+                return false;
+            }
+        }
+
         #endregion
 
         #region Setters

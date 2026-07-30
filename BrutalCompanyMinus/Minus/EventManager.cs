@@ -659,7 +659,7 @@ namespace BrutalCompanyMinus.Minus
                 if (RoundManager.Instance.IsServer)
                 {
                         // If the game is day 0, then we want to randomize the weights.
-                        if (StartOfRound.Instance.gameStats.daysSpent == 0 && (Configuration.WhenRandomize.Value.HasFlag(Configuration.RandomizeFlags.Start) || (Configuration.WhenRandomize.Value.HasFlag(Configuration.RandomizeFlags.All))))
+                        if ((StartOfRound.Instance.gameStats.daysSpent == 0 && (Configuration.WhenRandomize.Value.HasFlag(Configuration.RandomizeFlags.Start)) || (Configuration.WhenRandomize.Value.HasFlag(Configuration.RandomizeFlags.All))))
                         {
                             if (Configuration.RandomizeWeight.Value && Configuration.RandomizeWeight != null)
                             {
@@ -891,105 +891,156 @@ namespace BrutalCompanyMinus.Minus
                  * 3. Otherwise, use the randomizer value stored from the save.
                  */
 
-                if ((Configuration.EnableRandomizer != null && !Configuration.EnableRandomizer.Value) ||
-                    (Configuration.RandomizeEnemyHP != null && !Configuration.RandomizeEnemyHP.Value) ||
-                    Configuration.speedrunMode.Value)
+                bool isRandomizerDisabled = !(Configuration.EnableRandomizer?.Value ?? false);
+                bool isSpeedrun = Configuration.speedrunMode?.Value ?? true;
+
+                bool isEnemyHPDisabled = !(Configuration.RandomizeEnemyHP?.Value ?? false);
+                bool isSpawnChanceInsideDisabled = !(Configuration.RandomizeSpawnChanceInside?.Value ?? false);
+                bool isSpawnChanceOutsideDisabled = !(Configuration.RandomizeSpawnChanceOutside?.Value ?? false);
+                bool isSpawnChanceDisabled = !(Configuration.RandomizeSpawnChance?.Value ?? false);
+                bool isSpawnCapDisabled = !(Configuration.RandomizeSpawnCap?.Value ?? false);
+                bool isInsidePowerDisabled = !(Configuration.RandomizeInsidePower?.Value ?? false);
+                bool isOutsidePowerDisabled = !(Configuration.RandomizeOutsidePower?.Value ?? false);
+                bool isScrapValueDisabled = !(Configuration.RandomizeScrapValue?.Value ?? false);
+                bool isScrapAmountDisabled = !(Configuration.RandomizeScrapAmount?.Value ?? false);
+                bool isFactorySizeDisabled = !(Configuration.RandomizeFactory?.Value ?? false);
+
+                var flags = Configuration.WhenRandomize.Value;
+                bool shouldRandomize = flags.HasFlag(Configuration.RandomizeFlags.All)
+                    || flags.HasFlag(Configuration.RandomizeFlags.LeverPull)
+                    || (flags.HasFlag(Configuration.RandomizeFlags.Start) && StartOfRound.Instance.gameStats.daysSpent == 0);
+
+                if (Configuration.ExtraLogging.Value)
+                {
+                    Log.LogInfo("Randomizer Enabled?: " + !isRandomizerDisabled);
+                    Log.LogInfo("Randomizer Enemy HP Enabled?: " + !isEnemyHPDisabled);
+                    Log.LogInfo("Randomizer Spawn Chance Inside Enabled?: " + !isSpawnChanceInsideDisabled);
+                    Log.LogInfo("Randomizer Spawn Chance Outside Enabled?: " + !isSpawnChanceOutsideDisabled);
+                    Log.LogInfo("Randomizer Spawn Chance Enabled?: " + !isSpawnChanceDisabled);
+                    Log.LogInfo("Randomizer Spawn Cap Enabled?: " + !isSpawnCapDisabled);
+                    Log.LogInfo("Randomizer Inside Power Enabled?: " + !isInsidePowerDisabled);
+                    Log.LogInfo("Randomizer Outside Power Enabled?: " + !isOutsidePowerDisabled);
+                    Log.LogInfo("Randomizer Scrap Value Enabled?: " + !isScrapValueDisabled);
+                    Log.LogInfo("Randomizer Scrap Amount Enabled?: " + !isScrapAmountDisabled);
+                    Log.LogInfo("Randomizer Factory Size Enabled?: " + !isFactorySizeDisabled);
+                    Log.LogInfo("Speedrun Mode Enabled?: " + isSpeedrun);
+                    Log.LogInfo("Should Randomize?: " + shouldRandomize);
+                }
+
+
+                if (isRandomizerDisabled || isEnemyHPDisabled || isSpeedrun)
                 {
                     Manager.AddEnemyHp((int)MEvent.Scale.Compute(Configuration.enemyBonusHpScaling));
+                    if (Configuration.ExtraLogging.Value)
+                    {
+                        Log.LogInfo("Enemy HP Scaling: " + MEvent.Scale.Compute(Configuration.enemyBonusHpScaling));
+                    }
                 }
                 else
                 {
-                    if (StartOfRound.Instance.gameStats.daysSpent == 0 || (Configuration.WhenRandomize.Value.HasFlag(Configuration.RandomizeFlags.LeverPull) || (Configuration.WhenRandomize.Value.HasFlag(Configuration.RandomizeFlags.All))))
+                    if (shouldRandomize)
                     {
                         RandomizeBonusEnemyHP();
                     }
                     Manager.AddEnemyHp((int)(Manager.randomizerbonusenemyhp));
                 }
 
-                if ((Configuration.EnableRandomizer != null && !Configuration.EnableRandomizer.Value) ||
-                (Configuration.RandomizeSpawnChanceInside != null && !Configuration.RandomizeSpawnChanceInside.Value) ||
-                Configuration.speedrunMode.Value)
+                if (isRandomizerDisabled || isSpawnChanceInsideDisabled || isSpeedrun)
                 {
                     Manager.AddInsideSpawnChance(newLevel, MEvent.Scale.Compute(Configuration.insideSpawnChanceAdditive));
+                    if (Configuration.ExtraLogging.Value)
+                    {
+                        Log.LogInfo("Inside Spawn Chance Scaling: " + MEvent.Scale.Compute(Configuration.insideSpawnChanceAdditive));
+                    }
                 }
                 else
                 {
-                    if (StartOfRound.Instance.gameStats.daysSpent == 0 || (Configuration.WhenRandomize.Value.HasFlag(Configuration.RandomizeFlags.LeverPull) || (Configuration.WhenRandomize.Value.HasFlag(Configuration.RandomizeFlags.All))))
+                    if (shouldRandomize)
                     {
                         RandomizeSpawnChanceInside();
                     }
                     Manager.AddInsideSpawnChance(newLevel, Manager.randomizerspawnchanceinside);
                 }
 
-                if ((Configuration.EnableRandomizer != null && !Configuration.EnableRandomizer.Value) ||
-                (Configuration.RandomizeSpawnChanceOutside != null && !Configuration.RandomizeSpawnChanceOutside.Value) ||
-                Configuration.speedrunMode.Value)
+                if (isRandomizerDisabled || isSpawnChanceOutsideDisabled || isSpeedrun)
                 {
                     Manager.AddOutsideSpawnChance(newLevel, MEvent.Scale.Compute(Configuration.outsideSpawnChanceAdditive));
+                    if (Configuration.ExtraLogging.Value)
+                    {
+                        Log.LogInfo("Outside Spawn Chance Scaling: " + MEvent.Scale.Compute(Configuration.outsideSpawnChanceAdditive));
+                    }
                 }
                 else
                 {
-                    if (StartOfRound.Instance.gameStats.daysSpent == 0 || (Configuration.WhenRandomize.Value.HasFlag(Configuration.RandomizeFlags.LeverPull) || (Configuration.WhenRandomize.Value.HasFlag(Configuration.RandomizeFlags.All))))
+                    if (shouldRandomize)
                     {
                         RandomizeSpawnChanceOutside();
                     }
                     Manager.AddOutsideSpawnChance(newLevel, Manager.randomizerspawnchanceoutside);
                 }
 
-                if ((Configuration.EnableRandomizer != null && !Configuration.EnableRandomizer.Value) ||
-                (Configuration.RandomizeSpawnChance != null && !Configuration.RandomizeSpawnChance.Value) ||
-                Configuration.speedrunMode.Value)
+                if (isRandomizerDisabled || isSpawnChanceDisabled || isSpeedrun)
                 {
-                    Manager.MultiplySpawnChance(newLevel, MEvent.Scale.Compute(Configuration.insideSpawnChanceAdditive));
+                    Manager.MultiplySpawnChance(newLevel, MEvent.Scale.Compute(Configuration.spawnChanceMultiplierScaling));
+                    if (Configuration.ExtraLogging.Value)
+                    {
+                        Log.LogInfo("Spawn Chance Multiplier Scaling: " + MEvent.Scale.Compute(Configuration.spawnChanceMultiplierScaling));
+                    }
                 }
                 else
                 {
-                    if (StartOfRound.Instance.gameStats.daysSpent == 0 || (Configuration.WhenRandomize.Value.HasFlag(Configuration.RandomizeFlags.LeverPull) || (Configuration.WhenRandomize.Value.HasFlag(Configuration.RandomizeFlags.All))))
+                    if (shouldRandomize)
                     {
                         RandomizeSpawnChance();
                     }
                     Manager.MultiplySpawnChance(newLevel, Manager.randomizerspawnchance);
                 }
 
-                if ((Configuration.EnableRandomizer != null && !Configuration.EnableRandomizer.Value) ||
-                (Configuration.RandomizeSpawnCap != null && !Configuration.RandomizeSpawnCap.Value) ||
-                Configuration.speedrunMode.Value)
+                if (isRandomizerDisabled || isSpawnCapDisabled || isSpeedrun)
                 {
                     Manager.MultiplySpawnCap(MEvent.Scale.Compute(Configuration.spawnCapMultiplier));
+                    if (Configuration.ExtraLogging.Value)
+                    {
+                        Log.LogInfo("Spawn Cap Multiplier Scaling: " + MEvent.Scale.Compute(Configuration.spawnCapMultiplier));
+                    }
                 }
                 else
                 {
-                    if (StartOfRound.Instance.gameStats.daysSpent == 0 || (Configuration.WhenRandomize.Value.HasFlag(Configuration.RandomizeFlags.LeverPull) || (Configuration.WhenRandomize.Value.HasFlag(Configuration.RandomizeFlags.All))))
+                    if (shouldRandomize)
                     {
                         RandomizeSpawnCap();
                     }
                     Manager.MultiplySpawnCap(Manager.randomizerspawncap);
                 }
 
-                if ((Configuration.EnableRandomizer != null && !Configuration.EnableRandomizer.Value) ||
-                (Configuration.RandomizeInsidePower != null && !Configuration.RandomizeInsidePower.Value) ||
-                Configuration.speedrunMode.Value)
+                if (isRandomizerDisabled || isInsidePowerDisabled || isSpeedrun)
                 {
                     Manager.AddInsidePower((int)MEvent.Scale.Compute(Configuration.insideEnemyMaxPowerCountScaling));
+                    if (Configuration.ExtraLogging.Value)
+                    {
+                        Log.LogInfo("Inside Power Scaling: " + MEvent.Scale.Compute(Configuration.insideEnemyMaxPowerCountScaling));
+                    }
                 }
                 else
                 {
-                    if (StartOfRound.Instance.gameStats.daysSpent == 0 || (Configuration.WhenRandomize.Value.HasFlag(Configuration.RandomizeFlags.LeverPull) || (Configuration.WhenRandomize.Value.HasFlag(Configuration.RandomizeFlags.All))))
+                    if (shouldRandomize)
                     {
                         RandomizeInsidePower();
                     }
                     Manager.AddInsidePower((int)(Manager.randomizerinsidepower));
                 }
 
-                if ((Configuration.EnableRandomizer != null && !Configuration.EnableRandomizer.Value) ||
-                (Configuration.RandomizeOutsidePower != null && !Configuration.RandomizeOutsidePower.Value) ||
-                Configuration.speedrunMode.Value)
+                if (isRandomizerDisabled || isOutsidePowerDisabled || isSpeedrun)
                 {
                     Manager.AddOutsidePower((int)MEvent.Scale.Compute(Configuration.outsideEnemyPowerCountScaling));
+                    if (Configuration.ExtraLogging.Value)
+                    {
+                        Log.LogInfo("Outside Power Scaling: " + MEvent.Scale.Compute(Configuration.outsideEnemyPowerCountScaling));
+                    }
                 }
                 else
                 {
-                    if (StartOfRound.Instance.gameStats.daysSpent == 0 || (Configuration.WhenRandomize.Value.HasFlag(Configuration.RandomizeFlags.LeverPull) || (Configuration.WhenRandomize.Value.HasFlag(Configuration.RandomizeFlags.All))))
+                    if (shouldRandomize)
                     {
                         RandomizeOutsidePower();
                     }
@@ -997,30 +1048,34 @@ namespace BrutalCompanyMinus.Minus
                 }
 
 
-                if ((Configuration.EnableRandomizer != null && !Configuration.EnableRandomizer.Value) ||
-                (Configuration.RandomizeScrapValue != null && !Configuration.RandomizeScrapValue.Value) ||
-                Configuration.speedrunMode.Value)
+                if (isRandomizerDisabled || isScrapValueDisabled || isSpeedrun)
                 {
                     Manager.scrapValueMultiplier *= MEvent.Scale.Compute(Configuration.scrapValueMultiplier);
+                    if (Configuration.ExtraLogging.Value)
+                    {
+                        Log.LogInfo("Scrap Value Multiplier Scaling: " + MEvent.Scale.Compute(Configuration.scrapValueMultiplier));
+                    }
                 }
                 else
                 {
-                    if (StartOfRound.Instance.gameStats.daysSpent == 0 || (Configuration.WhenRandomize.Value.HasFlag(Configuration.RandomizeFlags.LeverPull) || (Configuration.WhenRandomize.Value.HasFlag(Configuration.RandomizeFlags.All))))
+                    if (shouldRandomize)
                     {
                         RandomizeScrapValue();
                     }
                     Manager.scrapValueMultiplier *= Manager.randomizerscrapvalue;
                 }
 
-                if ((Configuration.EnableRandomizer != null && !Configuration.EnableRandomizer.Value) ||
-                (Configuration.RandomizeScrapAmount != null && !Configuration.RandomizeScrapAmount.Value) ||
-                Configuration.speedrunMode.Value)
+                if (isRandomizerDisabled || isScrapAmountDisabled || isSpeedrun)
                 {
                     Manager.scrapAmountMultiplier *= MEvent.Scale.Compute(Configuration.scrapAmountMultiplier);
+                    if (Configuration.ExtraLogging.Value)
+                    {
+                        Log.LogInfo("Scrap Amount Multiplier Scaling: " + MEvent.Scale.Compute(Configuration.scrapAmountMultiplier));
+                    }
                 }
                 else
                 {
-                    if (StartOfRound.Instance.gameStats.daysSpent == 0 || (Configuration.WhenRandomize.Value.HasFlag(Configuration.RandomizeFlags.LeverPull) || (Configuration.WhenRandomize.Value.HasFlag(Configuration.RandomizeFlags.All))))
+                    if (shouldRandomize)
                     {
                         RandomizeScrapAmount();
                     }
@@ -1028,15 +1083,17 @@ namespace BrutalCompanyMinus.Minus
                 }
 
 
-                if ((Configuration.EnableRandomizer != null && !Configuration.EnableRandomizer.Value) ||
-                (Configuration.RandomizeFactory != null && !Configuration.RandomizeFactory.Value) ||
-                Configuration.speedrunMode.Value)
+                if (isRandomizerDisabled || isFactorySizeDisabled || isSpeedrun)
                 {
                     Manager.factorySizeMultiplier *= MEvent.Scale.Compute(Configuration.factorySizeMultiplier);
+                    if (Configuration.ExtraLogging.Value)
+                    {
+                        Log.LogInfo("Factory Size Multiplier Scaling: " + MEvent.Scale.Compute(Configuration.factorySizeMultiplier));
+                    }
                 }
                 else
                 {
-                    if (StartOfRound.Instance.gameStats.daysSpent == 0 || (Configuration.WhenRandomize.Value.HasFlag(Configuration.RandomizeFlags.LeverPull) || (Configuration.WhenRandomize.Value.HasFlag(Configuration.RandomizeFlags.All))))
+                    if (shouldRandomize)
                     {
                         RandomizeFactory();
                     }
@@ -1267,6 +1324,7 @@ namespace BrutalCompanyMinus.Minus
             if (Configuration.speedrunMode.Value) return;
             if (Configuration.EnableRandomizer.Value && (Configuration.WhenRandomize.Value.HasFlag(Configuration.RandomizeFlags.QuotaFulfill) || (Configuration.WhenRandomize.Value.HasFlag(Configuration.RandomizeFlags.All))))
             {
+                ResetRandomizerData();
                 DoRandomizer();
             }
         }
@@ -1338,12 +1396,12 @@ namespace BrutalCompanyMinus.Minus
 
             if (Configuration.EnableRandomizer.Value && Configuration.RandomizeSpawnChance.Value)
             {
-                RandomizeSpawnCap();
+                RandomizeSpawnChance();
             }
 
             if (Configuration.EnableRandomizer.Value && Configuration.RandomizeSpawnCap.Value)
             {
-                RandomizeSpawnChance();
+                RandomizeSpawnCap();
             }
 
             if (Configuration.EnableRandomizer.Value && Configuration.RandomizeEnemyHP.Value)
@@ -1495,7 +1553,7 @@ namespace BrutalCompanyMinus.Minus
             {
                 if (ES3.KeyExists("randomizerscrapvalue", $"{gameSaveName}_Brutal"))
                 {
-                    Manager.randomizerscrapvalue = ES3.Load<float>("randomizerscrapvalue");
+                    Manager.randomizerscrapvalue = ES3.Load<float>("randomizerscrapvalue", $"{gameSaveName}_Brutal");
                 }
             }
             catch (Exception ex)
@@ -1507,7 +1565,7 @@ namespace BrutalCompanyMinus.Minus
             {
                 if (ES3.KeyExists("randomizerscrapamount", $"{gameSaveName}_Brutal"))
                 {
-                    Manager.randomizerscrapamount = ES3.Load<float>("randomizerscrapamount");
+                    Manager.randomizerscrapamount = ES3.Load<float>("randomizerscrapamount", $"{gameSaveName}_Brutal");
                 }
             }
             catch (Exception ex)
@@ -1519,7 +1577,7 @@ namespace BrutalCompanyMinus.Minus
             {
                 if (ES3.KeyExists("randomizerfactory", $"{gameSaveName}_Brutal"))
                 {
-                    Manager.randomizerfactory = ES3.Load<float>("randomizerfactory");
+                    Manager.randomizerfactory = ES3.Load<float>("randomizerfactory", $"{gameSaveName}_Brutal");
                 }
             }
             catch (Exception ex)
@@ -1531,7 +1589,7 @@ namespace BrutalCompanyMinus.Minus
             {
                 if (ES3.KeyExists("randomizerspawnchanceinside", $"{gameSaveName}_Brutal"))
                 {
-                    Manager.randomizerspawnchanceinside = ES3.Load<float>("randomizerspawnchanceinside");
+                    Manager.randomizerspawnchanceinside = ES3.Load<float>("randomizerspawnchanceinside", $"{gameSaveName}_Brutal");
                 }
             }
             catch (Exception ex)
@@ -1543,7 +1601,7 @@ namespace BrutalCompanyMinus.Minus
             {
                 if (ES3.KeyExists("randomizerspawnchanceoutside", $"{gameSaveName}_Brutal"))
                 {
-                    Manager.randomizerspawnchanceoutside = ES3.Load<float>("randomizerspawnchanceoutside");
+                    Manager.randomizerspawnchanceoutside = ES3.Load<float>("randomizerspawnchanceoutside", $"{gameSaveName}_Brutal");
                 }
             }
             catch (Exception ex)
@@ -1555,7 +1613,7 @@ namespace BrutalCompanyMinus.Minus
             {
                 if (ES3.KeyExists("randomizerspawncap", $"{gameSaveName}_Brutal"))
                 {
-                    Manager.randomizerspawncap = ES3.Load<float>("randomizerspawncap");
+                    Manager.randomizerspawncap = ES3.Load<float>("randomizerspawncap", $"{gameSaveName}_Brutal");
                 }
             }
             catch (Exception ex)
@@ -1567,7 +1625,7 @@ namespace BrutalCompanyMinus.Minus
             {
                 if (ES3.KeyExists("randomizerspawnchance", $"{gameSaveName}_Brutal"))
                 {
-                    Manager.randomizerspawnchance = ES3.Load<float>("randomizerspawnchance");
+                    Manager.randomizerspawnchance = ES3.Load<float>("randomizerspawnchance", $"{gameSaveName}_Brutal");
                 }
             }
             catch (Exception ex)
@@ -1579,7 +1637,7 @@ namespace BrutalCompanyMinus.Minus
             {
                 if (ES3.KeyExists("randomizerbonusenemyhp", $"{gameSaveName}_Brutal"))
                 {
-                    Manager.randomizerbonusenemyhp = ES3.Load<int>("randomizerbonusenemyhp");
+                    Manager.randomizerbonusenemyhp = ES3.Load<int>("randomizerbonusenemyhp", $"{gameSaveName}_Brutal");
                 }
             }
             catch (Exception ex)
@@ -1591,7 +1649,7 @@ namespace BrutalCompanyMinus.Minus
             {
                 if (ES3.KeyExists("randomizerinsidepower", $"{gameSaveName}_Brutal"))
                 {
-                    Manager.randomizerinsidepower = ES3.Load<int>("randomizerinsidepower");
+                    Manager.randomizerinsidepower = ES3.Load<int>("randomizerinsidepower", $"{gameSaveName}_Brutal");
                 }
             }
             catch (Exception ex)
@@ -1603,7 +1661,7 @@ namespace BrutalCompanyMinus.Minus
             {
                 if (ES3.KeyExists("randomizeroutsidepower", $"{gameSaveName}_Brutal"))
                 {
-                    Manager.randomizeroutsidepower = ES3.Load<int>("randomizeroutsidepower");
+                    Manager.randomizeroutsidepower = ES3.Load<int>("randomizeroutsidepower", $"{gameSaveName}_Brutal");
                 }
             }
             catch (Exception ex)
@@ -1619,6 +1677,7 @@ namespace BrutalCompanyMinus.Minus
 
             float minAmount = MEvent.Scale.Compute(Configuration.RandomizeWeightMin);
             float maxAmount = MEvent.Scale.Compute(Configuration.RandomizeWeightMax);
+            Log.LogInfo("Randomizing event weights between " + minAmount + " and " + maxAmount);
 
             foreach (MEvent e in events)
             {
@@ -1634,6 +1693,7 @@ namespace BrutalCompanyMinus.Minus
             Log.LogInfo("Randomizing all event weights");
             float minAmount = MEvent.Scale.Compute(Configuration.RandomizeFactoryMin);
             float maxAmount = MEvent.Scale.Compute(Configuration.RandomizeFactoryMax);
+            Log.LogInfo("Randomizing factory size multiplier between " + minAmount + " and " + maxAmount);
             Manager.randomizerfactory = UnityEngine.Random.Range(minAmount, maxAmount);
         }
 
@@ -1642,6 +1702,7 @@ namespace BrutalCompanyMinus.Minus
             Log.LogInfo("Randomizing scrap value multiplier");
             float minAmount = MEvent.Scale.Compute(Configuration.RandomizeScrapValueMin);
             float maxAmount = MEvent.Scale.Compute(Configuration.RandomizeScrapValueMax);
+            Log.LogInfo("Randomizing scrap value multiplier between " + minAmount + " and " + maxAmount);
             Manager.randomizerscrapvalue = UnityEngine.Random.Range(minAmount, maxAmount);
         }
 
@@ -1650,6 +1711,7 @@ namespace BrutalCompanyMinus.Minus
             Log.LogInfo("Randomizing scrap amount multiplier");
             float minAmount = MEvent.Scale.Compute(Configuration.RandomizeScrapAmountMin);
             float maxAmount = MEvent.Scale.Compute(Configuration.RandomizeScrapAmountMax);
+            Log.LogInfo("Randomizing scrap amount multiplier between " + minAmount + " and " + maxAmount);
             Manager.randomizerscrapamount = UnityEngine.Random.Range(minAmount, maxAmount);
         }
 
@@ -1658,6 +1720,7 @@ namespace BrutalCompanyMinus.Minus
             Log.LogInfo("Randomizing inside spawn chance");
             float minAmount = MEvent.Scale.Compute(Configuration.RandomizeSpawnChanceInsideMin);
             float maxAmount = MEvent.Scale.Compute(Configuration.RandomizeSpawnChanceInsideMax);
+            Log.LogInfo("Randomizing inside spawn chance between " + minAmount + " and " + maxAmount);
             Manager.randomizerspawnchanceinside = UnityEngine.Random.Range(minAmount, maxAmount);
         }
 
@@ -1666,6 +1729,7 @@ namespace BrutalCompanyMinus.Minus
             Log.LogInfo("Randomizing outside spawn chance");
             float minAmount = MEvent.Scale.Compute(Configuration.RandomizeSpawnChanceOutsideMin);
             float maxAmount = MEvent.Scale.Compute(Configuration.RandomizeSpawnChanceOutsideMax);
+            Log.LogInfo("Randomizing outside spawn chance between " + minAmount + " and " + maxAmount);
             Manager.randomizerspawnchanceoutside = UnityEngine.Random.Range(minAmount, maxAmount);
         }
 
@@ -1674,6 +1738,7 @@ namespace BrutalCompanyMinus.Minus
             Log.LogInfo("Randomizing spawn cap");
             float minAmount = MEvent.Scale.Compute(Configuration.RandomizeSpawnCapMin);
             float maxAmount = MEvent.Scale.Compute(Configuration.RandomizeSpawnCapMax);
+            Log.LogInfo("Randomizing spawn cap between " + minAmount + " and " + maxAmount);
             Manager.randomizerspawncap = UnityEngine.Random.Range(minAmount, maxAmount);
         }
 
@@ -1682,6 +1747,7 @@ namespace BrutalCompanyMinus.Minus
             Log.LogInfo("Randomizing spawn chance");
             float minAmount = MEvent.Scale.Compute(Configuration.RandomizeSpawnChanceMin);
             float maxAmount = MEvent.Scale.Compute(Configuration.RandomizeSpawnChanceMax);
+            Log.LogInfo("Randomizing spawn chance between " + minAmount + " and " + maxAmount);
             Manager.randomizerspawnchance = UnityEngine.Random.Range(minAmount, maxAmount);
         }
 
@@ -1690,6 +1756,7 @@ namespace BrutalCompanyMinus.Minus
             Log.LogInfo("Randomizing bonus enemy HP");
             float minAmount = MEvent.Scale.Compute(Configuration.RandomizeEnemyHPMin);
             float maxAmount = MEvent.Scale.Compute(Configuration.RandomizeEnemyHPMax);
+            Log.LogInfo("Randomizing bonus enemy HP between " + minAmount + " and " + maxAmount);
             Manager.randomizerbonusenemyhp = Mathf.RoundToInt(UnityEngine.Random.Range(minAmount, maxAmount));
         }
 
@@ -1698,6 +1765,7 @@ namespace BrutalCompanyMinus.Minus
             Log.LogInfo("Randomizing inside power");
             float minAmount = MEvent.Scale.Compute(Configuration.RandomizeInsidePowerMin);
             float maxAmount = MEvent.Scale.Compute(Configuration.RandomizeInsidePowerMax);
+            Log.LogInfo("Randomizing inside power between " + minAmount + " and " + maxAmount);
             Manager.randomizerinsidepower = Mathf.RoundToInt(UnityEngine.Random.Range(minAmount, maxAmount));
         }
 
@@ -1706,6 +1774,7 @@ namespace BrutalCompanyMinus.Minus
             Log.LogInfo("Randomizing outside power");
             float minAmount = MEvent.Scale.Compute(Configuration.RandomizeOutsidePowerMin);
             float maxAmount = MEvent.Scale.Compute(Configuration.RandomizeOutsidePowerMax);
+            Log.LogInfo("Randomizing outside power between " + minAmount + " and " + maxAmount);
             Manager.randomizeroutsidepower = Mathf.RoundToInt(UnityEngine.Random.Range(minAmount, maxAmount));
         }
     
@@ -1763,7 +1832,7 @@ namespace BrutalCompanyMinus.Minus
                 Log.LogInfo($"Event {mEvent.Name()} has an empty moon whitelist, but whitelist mode is on. Please consider either entering entries for the list or turn off the whitelist mode");
                 return false; // Whitelist is empty, but whitelist mode is on, so no moons are valid
             }
-            if (mEvent.Whitelist.Contains(currentMoonPlanetName, StringComparer.OrdinalIgnoreCase) || mEvent.Blacklist.Contains(currentMoonPlanetName, StringComparer.OrdinalIgnoreCase) || mEvent.Blacklist.Contains(currentMoonName, StringComparer.OrdinalIgnoreCase) || mEvent.Blacklist.Contains(currentMoonNameNoNumbers, StringComparer.OrdinalIgnoreCase))
+            if (mEvent.Whitelist.Contains(currentMoonPlanetName, StringComparer.OrdinalIgnoreCase) || mEvent.Whitelist.Contains(currentMoonPlanetNameNoNumbers, StringComparer.OrdinalIgnoreCase) || mEvent.Whitelist.Contains(currentMoonName, StringComparer.OrdinalIgnoreCase) || mEvent.Whitelist.Contains(currentMoonNameNoNumbers, StringComparer.OrdinalIgnoreCase))
             {
                 Log.LogInfo($"Event {mEvent.Name()} is chosen due to moon whitelist.");
                 return true; // Event is on whitelist, and valid moon
