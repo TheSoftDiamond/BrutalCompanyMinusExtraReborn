@@ -1553,7 +1553,7 @@ namespace BrutalCompanyMinus.Minus
             {
                 if (ES3.KeyExists("randomizerscrapvalue", $"{gameSaveName}_Brutal"))
                 {
-                    Manager.randomizerscrapvalue = ES3.Load<float>("randomizerscrapvalue");
+                    Manager.randomizerscrapvalue = ES3.Load<float>("randomizerscrapvalue", $"{gameSaveName}_Brutal");
                 }
             }
             catch (Exception ex)
@@ -1565,7 +1565,7 @@ namespace BrutalCompanyMinus.Minus
             {
                 if (ES3.KeyExists("randomizerscrapamount", $"{gameSaveName}_Brutal"))
                 {
-                    Manager.randomizerscrapamount = ES3.Load<float>("randomizerscrapamount");
+                    Manager.randomizerscrapamount = ES3.Load<float>("randomizerscrapamount", $"{gameSaveName}_Brutal");
                 }
             }
             catch (Exception ex)
@@ -1577,7 +1577,7 @@ namespace BrutalCompanyMinus.Minus
             {
                 if (ES3.KeyExists("randomizerfactory", $"{gameSaveName}_Brutal"))
                 {
-                    Manager.randomizerfactory = ES3.Load<float>("randomizerfactory");
+                    Manager.randomizerfactory = ES3.Load<float>("randomizerfactory", $"{gameSaveName}_Brutal");
                 }
             }
             catch (Exception ex)
@@ -1589,7 +1589,7 @@ namespace BrutalCompanyMinus.Minus
             {
                 if (ES3.KeyExists("randomizerspawnchanceinside", $"{gameSaveName}_Brutal"))
                 {
-                    Manager.randomizerspawnchanceinside = ES3.Load<float>("randomizerspawnchanceinside");
+                    Manager.randomizerspawnchanceinside = ES3.Load<float>("randomizerspawnchanceinside", $"{gameSaveName}_Brutal");
                 }
             }
             catch (Exception ex)
@@ -1601,7 +1601,7 @@ namespace BrutalCompanyMinus.Minus
             {
                 if (ES3.KeyExists("randomizerspawnchanceoutside", $"{gameSaveName}_Brutal"))
                 {
-                    Manager.randomizerspawnchanceoutside = ES3.Load<float>("randomizerspawnchanceoutside");
+                    Manager.randomizerspawnchanceoutside = ES3.Load<float>("randomizerspawnchanceoutside", $"{gameSaveName}_Brutal");
                 }
             }
             catch (Exception ex)
@@ -1613,7 +1613,7 @@ namespace BrutalCompanyMinus.Minus
             {
                 if (ES3.KeyExists("randomizerspawncap", $"{gameSaveName}_Brutal"))
                 {
-                    Manager.randomizerspawncap = ES3.Load<float>("randomizerspawncap");
+                    Manager.randomizerspawncap = ES3.Load<float>("randomizerspawncap", $"{gameSaveName}_Brutal");
                 }
             }
             catch (Exception ex)
@@ -1625,7 +1625,7 @@ namespace BrutalCompanyMinus.Minus
             {
                 if (ES3.KeyExists("randomizerspawnchance", $"{gameSaveName}_Brutal"))
                 {
-                    Manager.randomizerspawnchance = ES3.Load<float>("randomizerspawnchance");
+                    Manager.randomizerspawnchance = ES3.Load<float>("randomizerspawnchance", $"{gameSaveName}_Brutal");
                 }
             }
             catch (Exception ex)
@@ -1637,7 +1637,7 @@ namespace BrutalCompanyMinus.Minus
             {
                 if (ES3.KeyExists("randomizerbonusenemyhp", $"{gameSaveName}_Brutal"))
                 {
-                    Manager.randomizerbonusenemyhp = ES3.Load<int>("randomizerbonusenemyhp");
+                    Manager.randomizerbonusenemyhp = ES3.Load<int>("randomizerbonusenemyhp", $"{gameSaveName}_Brutal");
                 }
             }
             catch (Exception ex)
@@ -1649,7 +1649,7 @@ namespace BrutalCompanyMinus.Minus
             {
                 if (ES3.KeyExists("randomizerinsidepower", $"{gameSaveName}_Brutal"))
                 {
-                    Manager.randomizerinsidepower = ES3.Load<int>("randomizerinsidepower");
+                    Manager.randomizerinsidepower = ES3.Load<int>("randomizerinsidepower", $"{gameSaveName}_Brutal");
                 }
             }
             catch (Exception ex)
@@ -1661,7 +1661,7 @@ namespace BrutalCompanyMinus.Minus
             {
                 if (ES3.KeyExists("randomizeroutsidepower", $"{gameSaveName}_Brutal"))
                 {
-                    Manager.randomizeroutsidepower = ES3.Load<int>("randomizeroutsidepower");
+                    Manager.randomizeroutsidepower = ES3.Load<int>("randomizeroutsidepower", $"{gameSaveName}_Brutal");
                 }
             }
             catch (Exception ex)
