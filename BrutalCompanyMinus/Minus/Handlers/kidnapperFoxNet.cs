@@ -24,12 +24,12 @@ namespace BrutalCompanyMinus.Minus.Handlers
         {
             if (instance != null) DestroyKidnapperNet();
             instance = this;
-            Net.Instance.SetKidnapperFoxNetServerRpc(true);
+            Net.Instance.SetEventActiveServerRPC(nameof(KidnapperFox), true);
         }
 
         public static void DestroyKidnapperNet() // Delete   
         {
-            Events.KidnapperFox.Active = false;
+            Events.KidnapperFox.Instance.Active = false;
             GameObject KidnapperFoxNet = GameObject.Find("KidnapperFoxNet");
             if (KidnapperFoxNet != null)
             {

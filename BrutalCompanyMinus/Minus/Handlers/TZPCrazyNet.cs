@@ -12,22 +12,21 @@ using System.Collections;
 namespace BrutalCompanyMinus.Minus.MonoBehaviours
 {
     [HarmonyPatch]
-    internal class DoorFailureFailureNet : NetworkBehaviour
+    internal class TZPCrazyNet : NetworkBehaviour
     {
-        public static DoorFailureFailureNet instance;
+        public static TZPCrazyNet instance;
 
         public void Awake()
         {
             if (instance != null) DestroyInstance();
             instance = this;
-            Net.Instance.SetEventActiveServerRPC(nameof(DoorFailure), true);
+            Net.Instance.SetEventActiveServerRPC(nameof(TZPCrazy), true);
         }
 
         public static void DestroyInstance() // This handles the deletion of Time Chaosness
         {
-            Events.DoorFailure.Instance.Active = false;
-            TimeOfDay.Instance.globalTimeSpeedMultiplier = 1.0f;
-            GameObject netObject = GameObject.Find("DoorFailureEvent");
+            Events.TZPCrazy.Instance.Active = false;
+            GameObject netObject = GameObject.Find("TZPCrazyNet");
             if (netObject != null)
             {
                 GameObject.Destroy(netObject);

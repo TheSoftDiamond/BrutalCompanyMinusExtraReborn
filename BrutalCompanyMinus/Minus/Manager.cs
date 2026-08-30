@@ -259,7 +259,7 @@ namespace BrutalCompanyMinus.Minus
             /// <returns>Returns EnemyAI scripts after spawned.</returns>
             public static List<EnemyAI> DoSpawnOutsideEnemies()
             {
-                if (Events.SafeOutside.Active)
+                if (Events.SafeOutside.Instance.Active)
                 {
                     Log.LogInfo("Outside spawning prevented by OutsideSafe");
                     return new List<EnemyAI>();

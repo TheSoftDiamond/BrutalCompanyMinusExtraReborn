@@ -11,7 +11,6 @@ namespace BrutalCompanyMinus.Minus.Events
 {
     internal class GrabbableTurrets : MEvent
     {
-        public static bool Active = false;
         public override string Name() => nameof(GrabbableTurrets);
 
         public static GrabbableTurrets Instance;
@@ -35,7 +34,7 @@ namespace BrutalCompanyMinus.Minus.Events
 
         public override void Execute()
         {
-            Active = true;
+            Net.Instance.SetEventActiveServerRPC(Name(), true);
 
             var turret = new IndoorMapHazard()
             {

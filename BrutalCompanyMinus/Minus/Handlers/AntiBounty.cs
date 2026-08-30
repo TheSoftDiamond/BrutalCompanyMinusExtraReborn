@@ -31,7 +31,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
                 HUDManager.Instance.AddTextToChatOnServer(string.Format("<color=#FF0000>New Due balance:</color> <color=#800000>{0}</color>", due));
             }
 
-            if (!Events.AntiBounty.AntiBountyActive) return;
+            if (!Events.AntiBounty.Instance.Active) return;
             foreach (int id in enemyObjectIDs)
             {
                 if (__instance.gameObject.GetInstanceID() == id) return;

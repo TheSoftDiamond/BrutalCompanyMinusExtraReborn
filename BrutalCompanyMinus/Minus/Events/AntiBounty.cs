@@ -10,7 +10,6 @@ namespace BrutalCompanyMinus.Minus.Events
 {
     internal class AntiBounty : MEvent
     {
-        public static bool AntiBountyActive = false;
         public override string Name() => nameof(AntiBounty);
 
         public static AntiBounty Instance;
@@ -33,16 +32,16 @@ namespace BrutalCompanyMinus.Minus.Events
         public override void Execute()
         {
             Handlers.AntiBounty.enemyObjectIDs.Clear();
-            AntiBountyActive = true;
+            Net.Instance.SetEventActiveServerRPC(Name(), true);
         }
 
         public override void OnShipLeave()
         {
-            AntiBountyActive = false;
+            Active = false;
         }
         public override void OnGameStart()
         {
-            AntiBountyActive = false;
+            Active = false;
         }
     }
 }

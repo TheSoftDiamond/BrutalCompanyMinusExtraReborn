@@ -26,7 +26,7 @@ namespace BrutalCompanyMinus.Minus.Events
         public override void Execute()
         {
             // Declare the event active
-            Active = true;
+            Net.Instance.SetEventActiveServerRPC(Name(), true);
             GameObject netObject = new GameObject("DoorFailureEvent");
             netObject.AddComponent<DoorFailureFailureNet>();
         }

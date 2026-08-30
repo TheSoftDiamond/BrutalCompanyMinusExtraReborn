@@ -1,7 +1,6 @@
 ﻿using BrutalCompanyMinus.Minus.Events;
 using HarmonyLib;
 using UnityEngine;
-using static BrutalCompanyMinus.Minus.Events.ManualCameraFailure;
 
 namespace BrutalCompanyMinus.Minus.Handlers
 {
@@ -12,9 +11,11 @@ namespace BrutalCompanyMinus.Minus.Handlers
         [HarmonyPatch("SwitchScreenButton")]
         private static bool InterruptSwitchScreenButton(ManualCameraRenderer __instance)
         {
-            if (Events.ManualCameraFailure.Active)
+            if (Events.ManualCameraFailure.Instance.Active)
             {
-                __instance.offScreenMat.color = Color.black;
+                __instance.SwitchScreenOn(false);
+                __instance.syncingSwitchScreen = true;
+                __instance.SwitchScreenOnServerRpc(false);
                 return false;
             }
             return true;
@@ -24,10 +25,37 @@ namespace BrutalCompanyMinus.Minus.Handlers
         [HarmonyPatch("SwitchRadarTargetClientRpc")]
         private static bool InterruptSwitchCameraView(ManualCameraRenderer __instance)
         {
-            if (Events.ManualCameraFailure.Active)
-            {   
-                __instance.offScreenMat.color = Color.black;
-                __instance.currentCameraDisabled = true;
+            if (Events.ManualCameraFailure.Instance.Active)
+            {
+                if (__instance.isScreenOn)
+                {
+                    __instance.SwitchScreenOn(false);
+                    __instance.syncingSwitchScreen = true;
+                    __instance.SwitchScreenOnServerRpc(false);
+                }
+                return false;
+            }
+            return true;
+        }
+
+        [HarmonyPrefix]
+        [HarmonyPatch("SwitchScreenButton")]
+        [HarmonyPatch("SwitchRadarTargetForward")]
+        private static bool BlockSwitchScreen()
+        {
+            if (Events.ManualCameraFailure.Instance.Active)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        [HarmonyPrefix]
+        [HarmonyPatch("SwitchScreenOn")]
+        private static bool BlockSwitchScreenOn(bool on)
+        {
+            if (Events.ManualCameraFailure.Instance.Active && on)
+            {
                 return false;
             }
             return true;

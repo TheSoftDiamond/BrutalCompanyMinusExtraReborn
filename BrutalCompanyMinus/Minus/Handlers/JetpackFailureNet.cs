@@ -20,7 +20,7 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
         {
             if (instance != null) DestroyInstance();
             instance = this;
-            Net.Instance.SetEventActiveServerRPC("JetpackFailure", true);
+            Net.Instance.SetEventActiveServerRPC(nameof(JetpackFailure), true);
         }
 
         public static void DestroyInstance() // This handles the deletion of Time Chaosness

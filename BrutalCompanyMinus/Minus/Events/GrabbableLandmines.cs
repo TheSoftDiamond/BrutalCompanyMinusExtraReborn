@@ -11,7 +11,6 @@ namespace BrutalCompanyMinus.Minus.Events
 {
     internal class GrabbableLandmines : MEvent
     {
-        public static bool Active = false;
         public static bool LandmineDisabled = false;
         public override string Name() => nameof(GrabbableLandmines);
 
@@ -36,7 +35,7 @@ namespace BrutalCompanyMinus.Minus.Events
 
         public override void Execute() 
         {
-            Active = true;
+            Net.Instance.SetEventActiveServerRPC(Name(), true);
             LandmineDisabled = false;
             var landmine = new IndoorMapHazard()
             {

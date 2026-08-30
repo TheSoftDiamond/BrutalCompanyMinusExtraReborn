@@ -60,7 +60,7 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
 
         public void Update() // I honestly dont even know how it's possible for this to persist... It dosen't make any sense to me, how is this even possible.....
         {
-            if (!Events.Warzone.Active || !RoundManager.Instance.IsHost) return;
+            if (!Events.Warzone.Instance.Active || !RoundManager.Instance.IsHost) return;
             if (currentTime > 0)
             {
                 currentTime -= Time.deltaTime;
@@ -153,7 +153,7 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
 
         public static void DestroyInstance()
         {
-            Events.Warzone.Active = false;
+            Events.Warzone.Instance.Active = false;
             try
             {
                 NetworkObject netObject = instance.transform.GetComponent<NetworkObject>();
@@ -168,7 +168,7 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
         [HarmonyPatch(typeof(StartOfRound), nameof(StartOfRound.EndGameServerRpc))]
         public static void DestroyForGodsSake()
         {
-            Events.Warzone.Active = false;
+            Events.Warzone.Instance.Active = false;
             DestroyInstance();
         }
 
@@ -176,7 +176,7 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
         [HarmonyPatch(typeof(StartOfRound), "OnShipLandedMiscEvents")]
         public static void OnShipLanded()
         {
-            if (!RoundManager.Instance.IsHost || !Events.Warzone.Active) return;
+            if (!RoundManager.Instance.IsHost || !Events.Warzone.Instance.Active) return;
             SpawnInstance();
         }
     }

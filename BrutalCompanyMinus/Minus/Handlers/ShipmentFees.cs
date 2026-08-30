@@ -30,7 +30,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
                 HUDManager.Instance.AddTextToChatOnServer(string.Format("<color=#FF0000>New Due balance:</color> <color=#800000>{0}</color>", due));
             }
 
-            if(Events.ShipmentFees.Active)
+            if(Events.ShipmentFees.Instance.Active)
             {
                 MEvent shipmentEvent = Events.ShipmentFees.Instance;
                 float min = shipmentEvent.Getf(MEvent.ScaleType.MinCut);

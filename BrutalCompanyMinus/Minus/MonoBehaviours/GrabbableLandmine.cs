@@ -45,7 +45,7 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
         [HarmonyPatch(typeof(Landmine), nameof(Landmine.Start))]
         private static void onLandmineStart(Landmine __instance)
         {
-            if (Events.GrabbableLandmines.Active)
+            if (Events.GrabbableLandmines.Instance.Active)
             {
                 // Parent holds the doorcode object on vanilla mines
                 GameObject terminalObjectRoot = __instance.transform.parent != null ? __instance.transform.parent.gameObject : __instance.gameObject;

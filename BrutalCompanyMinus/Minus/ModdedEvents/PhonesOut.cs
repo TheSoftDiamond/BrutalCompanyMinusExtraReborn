@@ -10,8 +10,6 @@ namespace BrutalCompanyMinus.Minus.Events
 
         public static PhonesOut Instance;
 
-        public static bool Active = false;
-
         public override void Initalize()
         {
             Instance = this;
@@ -29,7 +27,7 @@ namespace BrutalCompanyMinus.Minus.Events
         {
 
             // Declare the Active state to true globally
-            Net.Instance.SetPhonesOutServerRpc(true);
+            Net.Instance.SetEventActiveServerRPC(Name(), true);
 
             // Bind the PhonesOut to an GameObject
             GameObject PhonesOutObject = new GameObject("PhonesOutFailureObject");

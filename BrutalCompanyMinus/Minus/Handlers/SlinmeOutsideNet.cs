@@ -8,32 +8,32 @@ using BrutalCompanyMinus.Minus.Events;
 using GameNetcodeStuff;
 using System.Linq;
 using Unity.Netcode;
-using static BrutalCompanyMinus.Minus.Events.LockedEntrance;
+using static BrutalCompanyMinus.Minus.Events.SlimeInside;
 using System.IO;
 
 
 namespace BrutalCompanyMinus.Minus.Handlers
 {
-    public class DoorLockPatches : NetworkBehaviour
+    public class SlimeOutsideNet : NetworkBehaviour
     {
 
         // I literally tried several methods. This one isn't my favorite but... here we are.
         // I really hate this spaghetti code. May I find a better solution one day.
-        public static DoorLockPatches instance;
+        public static SlimeOutsideNet instance;
         public void Awake()
         {
-            if (instance != null) DestroyDoorLockPatches();
+            if (instance != null) DestroySlime();
             instance = this;
-            Net.Instance.SetEventActiveServerRPC(nameof(LockedEntrance),true);
+            Net.Instance.SetEventActiveServerRPC(nameof(SlimeOutside), true);
         }
 
-        public static void DestroyDoorLockPatches() // Delete   
+        public static void DestroySlime() // Delete   
         {
-            Events.LockedEntrance.Instance.Active = false;
-            GameObject LockEntranceObject = GameObject.Find("LockEntranceObject");
-            if (LockEntranceObject != null)
+            Events.SlimeOutside.Instance.Active = false;
+            GameObject SlimeObj = GameObject.Find("SlimeOutsideObj");
+            if (SlimeObj != null)
             {
-                GameObject.Destroy(LockEntranceObject);
+                GameObject.Destroy(SlimeObj);
             }
         }
 
@@ -41,14 +41,14 @@ namespace BrutalCompanyMinus.Minus.Handlers
         [HarmonyPatch(typeof(StartOfRound), nameof(StartOfRound.ShipLeave))]
         public static void OnShipLeave()
         {
-            DestroyDoorLockPatches();
+            DestroySlime();
         }
 
         [HarmonyPrefix]
         [HarmonyPatch(typeof(StartOfRound), nameof(StartOfRound.EndGameServerRpc))]
         public static void DestroyForGodsSake()
         {
-            DestroyDoorLockPatches();
+            DestroySlime();
         }
     }
 }

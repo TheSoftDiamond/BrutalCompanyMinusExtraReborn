@@ -10,7 +10,6 @@ namespace BrutalCompanyMinus.Minus.Events
 {
     internal class RealityShift : MEvent
     {
-        public static bool Active = false;
         public override string Name() => nameof(RealityShift);
 
         public static RealityShift Instance;
@@ -25,9 +24,9 @@ namespace BrutalCompanyMinus.Minus.Events
             Type = EventType.Bad;
         }
 
-        public override void Execute() => Net.Instance.SetRealityShiftActiveServerRpc(true);
+        public override void Execute() => Net.Instance.SetEventActiveServerRPC(Name(), true);
 
-        public override void OnShipLeave() => Net.Instance.SetRealityShiftActiveServerRpc(false);
+        public override void OnShipLeave() => Active = false;
 
         public override void OnGameStart() => Active = false;
     }

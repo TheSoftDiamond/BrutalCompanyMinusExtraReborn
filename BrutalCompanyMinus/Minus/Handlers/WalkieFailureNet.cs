@@ -20,7 +20,7 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
         {
             if (instance != null) DestroyInstance();
             instance = this;
-            Net.Instance.SetEventActiveServerRPC("WalkieFailure", true);
+            Net.Instance.SetEventActiveServerRPC(nameof(WalkieFailure), true);
         }
 
         public static void DestroyInstance() // This handles the deletion of Time Chaosness

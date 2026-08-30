@@ -20,12 +20,12 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
         {
             if (instance != null) DestroyInstance();
             instance = this;
-            Net.Instance.SetEventActiveServerRPC("ExplodingItems", true);
+            Net.Instance.SetEventActiveServerRPC(nameof(ExplodingItems), true);
         }
 
         public static void DestroyInstance()
         {
-            Events.ExplodingItems.Active = false;
+            ExplodingItems.Instance.Active = false;
             GameObject netObject = GameObject.Find("ExplodingItemsEvent");
             if (netObject != null)
             {

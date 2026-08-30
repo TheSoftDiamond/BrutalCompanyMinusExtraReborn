@@ -23,7 +23,9 @@ namespace BrutalCompanyMinus.Minus
         internal static List<MEvent> vanillaEvents = new List<MEvent>() {
             //Rare
             new Events.SID(), // Requires Beta Events
+            new Events.SafeEverywhere(),
             // Very Good
+            new Events.SafeInside(),
             new Events.BigBonus(),
             new Events.ScrapGalore(),
             new Events.GoldenBars(),
@@ -78,6 +80,7 @@ namespace BrutalCompanyMinus.Minus
             new Events.GarbageLid(),
             new Events.SeveredBits(),
             // Bad
+            new Events.TZPCrazy(),
             new Events.HoardingBugs(),
             new Events.Dustpans(),
             new Events.Bees(),
@@ -163,6 +166,7 @@ namespace BrutalCompanyMinus.Minus
             new Events.TimeChaos(),// Requires Special Events
             new Events.NutSlayersMore(),
             new Events.SlimeInside(),
+            new Events.SlimeOutside(),
             // No Enemy
             new Events.NoBaboons(),
             new Events.NoBracken(),
@@ -645,6 +649,11 @@ namespace BrutalCompanyMinus.Minus
             }
 
             foreach (MEvent e in moddedEvents)
+            {
+                e.OnLocalDisconnect();
+            }
+
+            foreach (MEvent e in customEvents)
             {
                 e.OnLocalDisconnect();
             }

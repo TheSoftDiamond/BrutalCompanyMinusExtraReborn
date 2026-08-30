@@ -25,7 +25,7 @@ namespace BrutalCompanyMinus.Minus.Events
 
         public override void Execute()
         {
-            Active = true;
+            Net.Instance.SetEventActiveServerRPC(nameof(LeverFailure), true);
             GameObject netObject = new GameObject("LeverEvent");
             netObject.AddComponent<LeverNet>();
         }

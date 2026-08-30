@@ -20,7 +20,7 @@ namespace BrutalCompanyMinus.Minus.Events
 
         public static SpawnCycle insideHellSpawnCycle, outsideHellSpawnCycle; // I need to make these configurable
 
-        public static bool Active = false, SpawnCycle = false;
+        public static bool SpawnCycle = false;
         private string currentIngameWeather;
 
         public override void Initalize()
@@ -331,7 +331,8 @@ namespace BrutalCompanyMinus.Minus.Events
 
             ExecuteAllMonsterEvents();
 
-            Active = true;
+            Net.Instance.SetEventActiveServerRPC(Name(), true);
+
             SpawnCycle = true;
         }
 

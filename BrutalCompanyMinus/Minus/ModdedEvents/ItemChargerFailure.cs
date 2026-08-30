@@ -25,7 +25,7 @@ namespace BrutalCompanyMinus.Minus.Events
 
         public override void Execute()
         {
-            Active = false;
+            Net.Instance.SetEventActiveServerRPC(Name(), true);
             GameObject netObject = new GameObject("ItemChargerFailureEvent");
             netObject.AddComponent<ItemChargerFailureNet>();
         }

@@ -19,8 +19,6 @@ namespace BrutalCompanyMinus.Minus.Events
 
         public static NotMetal Instance;
 
-        public static bool Active = false;
-
         public override void Initalize()
         {
             Instance = this;
@@ -37,7 +35,7 @@ namespace BrutalCompanyMinus.Minus.Events
         {
 
             // Declare the Active state to true globally
-            Net.Instance.SetMetalOffNetServerRpc(true);
+            Net.Instance.SetEventActiveServerRPC(Name(), true);
 
             // Bind the FlashLightFailure to an GameObject
             GameObject NotMetalObj = new GameObject("NotMetal");

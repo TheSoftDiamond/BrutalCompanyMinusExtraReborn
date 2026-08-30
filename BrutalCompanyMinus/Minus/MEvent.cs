@@ -138,7 +138,7 @@ namespace BrutalCompanyMinus.Minus
             InsideEnemyRarity, OutsideEnemyRarity, DaytimeEnemyRarity, MinOutsideEnemy, MinInsideEnemy, MaxOutsideEnemy, MaxInsideEnemy,
             ScrapValue, ScrapAmount, FactorySize, MinDensity, MaxDensity, MinCash, MaxCash, MinItemAmount, MaxItemAmount, MinValue, MaxValue, Rarity, MinRarity, MaxRarity,
             MinCut, MaxCut, MinHp, MaxHp, SpawnMultiplier, MaxInsideEnemyCount, MaxOutsideEnemyCount, SpawnCapMultiplier, MinPercentageCut, MaxPercentageCut, MinAmount, MaxAmount, 
-            Percentage, TimeSettings, TimeMin, TimeMax, MinPercentSelected, MaxPercentSelected, ObjectWidth, minMold, maxMold, Slipperyness
+            Percentage, TimeSettings, TimeMin, TimeMax, MinPercentSelected, MaxPercentSelected, ObjectWidth, minMold, maxMold, Slipperyness, SpawnChance, DrunknessMin, DrunknessMax
         }
 
         /// <summary>
@@ -187,7 +187,10 @@ namespace BrutalCompanyMinus.Minus
             { ScaleType.ObjectWidth, "How close an object can spawn to the edges of the navmesh" },
             { ScaleType.minMold, "Minimum amount of mold to be chosen." },
             { ScaleType.maxMold, "Maximum amount of mold to be chosen." },
-            { ScaleType.Slipperyness, "How slippery is the floor is" }
+            { ScaleType.Slipperyness, "How slippery is the floor is" },
+            { ScaleType.SpawnChance, "The chance of something spawning." },
+            { ScaleType.DrunknessMin, "How drunk the player is at minimum." },
+            { ScaleType.DrunknessMax, "How drunk the player is at maximum."   }
         };
 
         /// <summary>
@@ -444,7 +447,7 @@ namespace BrutalCompanyMinus.Minus
         /// <returns>Will return said event if found, otherwise it will return the Nothing event.</returns>
         public static MEvent GetEvent(string name)
         {
-            int index = EventManager.events.FindIndex(x => x.Name() == name);
+            int index = EventManager.events.FindIndex(x => x.Name().Equals(name, StringComparison.InvariantCultureIgnoreCase));
             if (index != -1) return EventManager.events[index];
 
             Log.LogError(string.Format("Event '{0}' dosen't exist, returning nothing event", name));

@@ -14,8 +14,6 @@ namespace BrutalCompanyMinus.Minus.Events
 
         public static CruiserFailure Instance;
 
-        public static bool Active = false;
-
         public override void Initalize()
         {
             Instance = this;
@@ -32,7 +30,7 @@ namespace BrutalCompanyMinus.Minus.Events
             Net.Instance.SetCruiserOfflineServerRpc();
 
             // Declare the event active
-            Active = true;
+            Net.Instance.SetEventActiveServerRPC(Name(), true);
 
             if (Compatibility.ScanVanPresent)
             {

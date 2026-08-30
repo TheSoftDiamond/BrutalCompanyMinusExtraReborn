@@ -62,7 +62,7 @@ namespace BrutalCompanyMinus.Minus.Events
                     PlayerControllerB component = player.GetComponent<PlayerControllerB>();
                     if (component != null)
                     {
-                        if (component.isPlayerDead) continue; // Ignore anyone stupid enough to die before the teleport
+                        if (component.isPlayerDead || !component.isPlayerControlled) continue; // Ignore anyone stupid enough to die before the teleport
                                                               // Rest in pieces - SoftDiamond
                                                               // Thank you Jacon for the code help here
 

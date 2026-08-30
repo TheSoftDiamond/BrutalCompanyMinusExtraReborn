@@ -22,7 +22,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
         [HarmonyPatch(typeof(RoundManager), "SpawnOutsideHazards")]
         private static void OnSpawnOutsideHazards()
         {
-            if (!Events.AllWeather.Active || RoundManager.Instance.currentLevel.currentWeather == LevelWeatherType.Rainy || !raining) return;
+            if (!Events.AllWeather.Instance.Active || RoundManager.Instance.currentLevel.currentWeather == LevelWeatherType.Rainy || !raining) return;
             if(RoundManager.Instance.IsHost) Net.Instance.SpawnMudPilesOutsideServerRpc(UnityEngine.Random.Range(8, 16));
         }
 
@@ -30,7 +30,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
         [HarmonyPatch(typeof(FloodWeather), "OnGlobalTimeSync")]
         private static void OnGlobalTimeSync(ref FloodWeather __instance)
         {
-            if (!Events.AllWeather.Active || RoundManager.Instance.currentLevel.currentWeather == LevelWeatherType.Flooded || spawnedFloodedWeather == null) return;
+            if (!Events.AllWeather.Instance.Active || RoundManager.Instance.currentLevel.currentWeather == LevelWeatherType.Flooded || spawnedFloodedWeather == null) return;
             floodLevelOffset.SetValue(spawnedFloodedWeather, (Mathf.Clamp(TimeOfDay.Instance.globalTime / 1080f, 0f, 100f) * floodVariable2) + floodVariable1 - 1.0f);
         }
 
@@ -38,7 +38,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
         [HarmonyPatch(typeof(FloodWeather), "OnEnable")]
         private static void OnOnEnable(ref FloodWeather __instance)
         {
-            if (!Events.AllWeather.Active || RoundManager.Instance.currentLevel.currentWeather == LevelWeatherType.Flooded || spawnedFloodedWeather == null) return;
+            if (!Events.AllWeather.Instance.Active || RoundManager.Instance.currentLevel.currentWeather == LevelWeatherType.Flooded || spawnedFloodedWeather == null) return;
             __instance.transform.position = new Vector3(0.0f, floodVariable1, 0.0f);
             floodLevelOffset.SetValue(spawnedFloodedWeather, (Mathf.Clamp(TimeOfDay.Instance.globalTime / 1080f, 0f, 100f) * floodVariable2) + floodVariable1 - 1.0f);
         }
@@ -47,7 +47,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
         [HarmonyPatch(typeof(RoundManager), "SetToCurrentLevelWeather")]
         private static void OnSetToCurrentLevelWeather()
         {
-            if (!Events.AllWeather.Active || RoundManager.Instance.currentLevel.currentWeather == LevelWeatherType.Stormy) return;
+            if (!Events.AllWeather.Instance.Active || RoundManager.Instance.currentLevel.currentWeather == LevelWeatherType.Stormy) return;
             TimeOfDay.Instance.currentWeatherVariable = lightningVariable1;
             TimeOfDay.Instance.currentWeatherVariable = LightningVariable2;
         }
