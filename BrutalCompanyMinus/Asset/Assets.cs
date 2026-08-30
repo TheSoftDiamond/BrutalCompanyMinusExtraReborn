@@ -10,7 +10,7 @@ using UnityEngine.Rendering.HighDefinition;
 using UnityEngine.SceneManagement;
 using System.Text.RegularExpressions;
 using BepInEx;
-using BrutalCompanyMinus.Minus.Events;
+using BrutalCompanyMinus.Minus.MonoBehaviours;
 
 namespace BrutalCompanyMinus
 {
@@ -18,6 +18,12 @@ namespace BrutalCompanyMinus
     public class Assets
     {
         internal static AssetBundle bundle, customAssetBundle;
+
+        // Exploding Items
+        public static AudioClip mineTickSound = null!;
+        public static AudioClip mineDetonateSound = null!;
+        public static AudioClip mineTriggerSound = null!;
+        public static AudioClip minePressSound = null!;
 
         public enum EnemyName
         {
@@ -70,20 +76,44 @@ namespace BrutalCompanyMinus
             { AtmosphereName.RollingGroundFog, "rolling ground fog" }, { AtmosphereName.Rainy, "rainy" }, { AtmosphereName.Stormy, "stormy" }, { AtmosphereName.Foggy, "foggy" }, { AtmosphereName.Flooded, "flooded" },
             { AtmosphereName.Eclipsed, "eclipsed" }
         };
-        
+
+        private static GameObject? _hangarShip = null;
         internal static GameObject hangarShip
         {
-            get => GameObject.Find("/Environment/HangarShip");
+            get
+            {
+                if (_hangarShip == null)
+                {
+                    _hangarShip = GameObject.Find("/Environment/HangarShip");
+                }
+                return _hangarShip;
+            }
         }
 
+        private static GameObject? _cruiser = null;
         internal static GameObject cruiser
         {
-            get => GameObject.Find("CompanyCruiser(Clone)");
+            get
+            {
+                if (_cruiser == null)
+                {
+                    _cruiser = GameObject.Find("CompanyCruiser(Clone)");
+                }
+                return _cruiser;
+            }
         }
 
+        private static GameObject? _Microwave = null;
         internal static GameObject Microwave
         {
-            get => GameObject.Find("MicrowaveContainer(Clone)");
+            get
+            {
+                if (_Microwave == null)
+                {
+                    _Microwave = GameObject.Find("MicrowaveContainer(Clone)");
+                }
+                return _Microwave;
+            }
         }
 
         public static bool ReadSettingEarly(string filePath, string settingName)
@@ -174,6 +204,17 @@ namespace BrutalCompanyMinus
             bunkerEscape = (GameObject)customAssetBundle.LoadAsset("BunkerEscape");
             teleportAudio = (GameObject)customAssetBundle.LoadAsset("TeleportAudioSource");
             bloodRain = (GameObject)customAssetBundle.LoadAsset("BloodRainParticleContainer");
+
+            // HACKHACK: Grab the assets from the other prefabs
+            GrabbableLandmine temp = grabbableLandmine.spawnPrefab.GetComponent<GrabbableLandmine>();
+            KamikazieBugAI temp2 = kamikazieBug.enemyPrefab.GetComponent<KamikazieBugAI>();
+            if (temp != null)
+            {
+                mineTickSound = temp2?.tickingAudio != null ? temp2.tickingAudio.clip : null!;
+                mineDetonateSound = temp.mineDetonate;
+                mineTriggerSound = temp.mineTrigger;
+                minePressSound = temp.minePress;
+            }
 
             RegisterNetworkPrefabs(antiCoilHead.enemyPrefab, nutSlayer.enemyPrefab, kamikazieBug.enemyPrefab, slayerShotgun.spawnPrefab, grabbableTurret.spawnPrefab, grabbableLandmine.spawnPrefab, artillerySirens, bunkerEntrance, bunkerEscape);
         }
@@ -320,8 +361,6 @@ namespace BrutalCompanyMinus
             }
 
             Log.LogInfo(string.Format("Finished generating 'ItemList', Count:{0}", ItemList.Count));
-
-
 
             // Generate Object List
             Log.LogInfo("Generating 'ObjectList'");
@@ -473,58 +512,6 @@ namespace BrutalCompanyMinus
             empty.itemName = name;
             empty.name = name;
             return empty;
-        }
-
-
-        /// <summary>
-        /// Improved method to spawn vanilla items, by Zehs
-        /// </summary>
-        /// <param name="itemName"></param>
-        /// <param name="matchCase"></param>
-        /// <returns></returns>
-        [Obsolete("Causes the mod to fail, do not use on modded item events", false)]
-        public static Item GetItemByName(string itemName, bool matchCase = true)
-        {
-            System.StringComparison comparisonType = matchCase ? System.StringComparison.CurrentCulture : System.StringComparison.OrdinalIgnoreCase;
-
-            foreach (var item in StartOfRound.Instance.allItemsList.itemsList)
-            {
-                if (item.itemName.Equals(itemName, comparisonType))
-                {
-                    return item;
-                }
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// Moddified method to spawn modded items, by Zehs
-        /// </summary>
-        /// <param name="itemName">Name of the item</param>
-        /// <param name="matchCase">Case sensitive?</param>
-        /// <param name="isModPresent">Is mod present?</param>
-        /// <returns></returns>
-        [Obsolete("Causes the mod to fail, do not use on vanilla item events", true)]
-        public static Item GetItemByNameModded(string itemName, bool isModPresent, bool matchCase = true)
-        {
-            if (isModPresent == true)
-            {
-                System.StringComparison comparisonType = matchCase ? System.StringComparison.CurrentCulture : System.StringComparison.OrdinalIgnoreCase;
-
-                foreach (var item in StartOfRound.Instance.allItemsList.itemsList)
-                {
-                    if (item.itemName.Equals(itemName, comparisonType))
-                    {
-                        return item;
-                    }
-                }
-            }
-            else
-            {
-                return null;
-            }
-            return null;
         }
 
         public static GameObject GetObject(ObjectName name) => GetObject(ObjectNameList[name]);
