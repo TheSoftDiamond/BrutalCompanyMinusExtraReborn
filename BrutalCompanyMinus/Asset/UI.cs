@@ -419,6 +419,18 @@ namespace BrutalCompanyMinus
             eventUIObject = Instantiate(eventUIObject, Vector3.zero, Quaternion.identity);
         }
 
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(PlayerControllerB), nameof(PlayerControllerB.ConnectClientToPlayerObject))]
+        public static void ConnectClientToPlayerObject_Postfix(PlayerControllerB __instance)
+        {
+            if (__instance.IsServer) return;
+
+            ClearText();
+            GenerateText(EventManager.currentEvents);
+
+        }
+
+
         public static void GenerateText(List<MEvent> events)
         {
             // Generate Text
