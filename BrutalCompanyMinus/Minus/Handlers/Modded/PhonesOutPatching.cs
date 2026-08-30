@@ -39,7 +39,7 @@ namespace BrutalCompanyMinus.Minus.Handlers.Modded
         public static bool InterruptPhoneUsage(bool active)
         {
             // Interrupt the phone pickup  
-            if (PhonesOut.Active)
+            if (PhonesOut.Instance.Active)
             {
                 HUDManager.Instance.globalNotificationText.text =
                     "BAD PHONE RECEPTION!!!!";

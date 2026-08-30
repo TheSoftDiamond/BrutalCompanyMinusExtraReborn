@@ -43,6 +43,13 @@ namespace BrutalCompanyMinus.Minus.Events
 
         public override void Execute() 
         {
+            if (Configuration.enforceEscapeModChecks.Value && !Compatibility.StarLancereNemyEscapePresent)
+            {
+                Instance.monstersToSpawn[0].minOutside = new Scale(0f, 0f, 0f, 0f);
+                Instance.monstersToSpawn[0].maxOutside = new Scale(0f, 0f, 0f, 0f);
+                Instance.monstersToSpawn[0].outsideSpawnRarity = new Scale(0f, 0f, 0f, 0f);
+            }
+
             ExecuteAllMonsterEvents();
 
             Manager.MultiplySpawnChance(RoundManager.Instance.currentLevel, Getf(ScaleType.SpawnMultiplier));

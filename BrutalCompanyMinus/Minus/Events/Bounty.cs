@@ -12,7 +12,6 @@ namespace BrutalCompanyMinus.Minus.Events
 {
     internal class Bounty : MEvent
     {
-        public static bool Active = false;
         public override string Name() => nameof(Bounty);
 
         public static Bounty Instance;
@@ -35,7 +34,7 @@ namespace BrutalCompanyMinus.Minus.Events
         public override void Execute()
         {
             Handlers.Bounty.enemyObjectIDs.Clear();
-            Active = true;
+            Net.Instance.SetEventActiveServerRPC(Name(), true);
         }
 
         public override void OnShipLeave() => Active = false;

@@ -18,8 +18,6 @@ namespace BrutalCompanyMinus.Minus.Events
 
         public static KidnapperFox Instance;
 
-        public static bool Active = false;
-
         public override void Initalize()
         {
             Instance = this;
@@ -60,7 +58,7 @@ namespace BrutalCompanyMinus.Minus.Events
             Net.Instance.SaveOriginalMoldPreviousDataServerRpc();
 
             // Declare the Active state to true globally
-            Net.Instance.SetKidnapperFoxNetServerRpc(true);
+            Net.Instance.SetEventActiveServerRPC(Name(), true);
 
             // Bind the FlashLightFailure to an GameObject
             GameObject KidnapperFoxNet = new GameObject("KidnapperFoxNet");

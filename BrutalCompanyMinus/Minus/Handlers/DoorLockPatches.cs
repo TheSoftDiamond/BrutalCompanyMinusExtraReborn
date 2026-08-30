@@ -24,12 +24,12 @@ namespace BrutalCompanyMinus.Minus.Handlers
         {
             if (instance != null) DestroyDoorLockPatches();
             instance = this;
-            Net.Instance.SetEntranceServerRpc(true);
+            Net.Instance.SetEventActiveServerRPC(nameof(LockedEntrance),true);
         }
 
         public static void DestroyDoorLockPatches() // Delete   
         {
-            Events.LockedEntrance.Active = false;
+            Events.LockedEntrance.Instance.Active = false;
             GameObject LockEntranceObject = GameObject.Find("LockEntranceObject");
             if (LockEntranceObject != null)
             {

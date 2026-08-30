@@ -27,7 +27,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
         [HarmonyPatch(typeof(RoundManager), "Update")]
         private static void OnUpdate()
         {
-            if (!Events.FacilityGhost.Active || !RoundManager.Instance.IsHost) return;
+            if (!Events.FacilityGhost.Instance.Active || !RoundManager.Instance.IsHost) return;
 
             if(ghostCrazyCurrentTime > 0.0f)
             {

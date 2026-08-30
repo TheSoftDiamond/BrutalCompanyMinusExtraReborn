@@ -20,12 +20,12 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
         {
             if (instance != null) DestroyInstance();
             instance = this;
-            Net.Instance.SetEventActiveServerRPC("ManualCameraFailure", true);
+            Net.Instance.SetEventActiveServerRPC(nameof(ManualCameraFailure), true);
         }
 
         public static void DestroyInstance() // This handles the deletion of Time Chaosness
         {
-            Events.ManualCameraFailure.Active = false;
+            Events.ManualCameraFailure.Instance.Active = false;
             GameObject netObject = GameObject.Find("ManualCameraFailureEvent");
             if (netObject != null)
             {

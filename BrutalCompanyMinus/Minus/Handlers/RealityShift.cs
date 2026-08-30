@@ -43,7 +43,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
         [HarmonyPatch(typeof(PlayerControllerB), "BeginGrabObject")]
         public static void OnBeginGrabObject(ref PlayerControllerB __instance)
         {
-            if (!Events.RealityShift.Active || GameNetworkManager.Instance.localPlayerController == null) return;
+            if (!Events.RealityShift.Instance.Active || GameNetworkManager.Instance.localPlayerController == null) return;
 
             Ray interactRay = new Ray(__instance.gameplayCamera.transform.position, __instance.gameplayCamera.transform.forward);
             RaycastHit hit;
@@ -79,7 +79,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
         [HarmonyPatch(typeof(EnemyAI), nameof(EnemyAI.HitEnemy))]
         private static void OnHitEnemy(ref EnemyAI __instance)
         {
-            if (!Events.RealityShift.Active || !NetworkManager.Singleton.IsServer || __instance == null || __instance.transform == null) return;
+            if (!Events.RealityShift.Instance.Active || !NetworkManager.Singleton.IsServer || __instance == null || __instance.transform == null) return;
             System.Random rng = new System.Random(Net.Instance._seed++);
 
             if (rng.NextDouble() <= enemyTeleportChance)
@@ -171,7 +171,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
         [HarmonyPatch(typeof(RoundManager), "waitForScrapToSpawnToSync")]
         public static void OnwaitForScrapToSpawnToSync(ref NetworkObjectReference[] spawnedScrap)
         {
-            if (!Events.RealityShift.Active) return;
+            if (!Events.RealityShift.Instance.Active) return;
 
             shiftList.Clear();
             shiftListValues.Clear();
@@ -183,7 +183,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
             {
                 if (item != null)
                 {
-                    weights.Add(item.rarity);
+                    weights.Add(item.rarity);        
                 }
                 else
                 {

@@ -20,20 +20,19 @@ namespace BrutalCompanyMinus.Minus.Handlers
         private static void NetworkObjectAwakePrefix(NetworkObject __instance)
         {
             if (__instance.TryGetComponent(out GrabbableObject item))
+            {
+                    Log.LogDebug("Exploding Item called for " + __instance.name + " with ID " + __instance.NetworkObjectId);
+
                 ApplyExplosiveStates(item);
+            }
         }
 
         [HarmonyPostfix]
         [HarmonyPatch(typeof(GrabbableObject), nameof(GrabbableObject.Start))]
         private static void GrabbableObjectStartPostfix(GrabbableObject __instance)
         {
-            int seed = StartOfRound.Instance.randomMapSeed + (int)__instance.NetworkObject.NetworkObjectId;
-            System.Random seeded = new System.Random(seed);
 
-            int roll = seeded.Next(1, 101);
-
-            if (roll > ExplodingItems.AmountValue)
-                return;
+                Log.LogDebug("[START] Exploding Item called for " + __instance.name + " with ID " + __instance.NetworkObject.NetworkObjectId);
 
             ApplyExplosiveStates(__instance);
         }
@@ -43,10 +42,39 @@ namespace BrutalCompanyMinus.Minus.Handlers
         /// </summary>
         public static void ApplyExplosiveStates(GrabbableObject item)
         {
-            if (!ExplodingItems.Active || item == null)
-                return;
+            if (!ExplodingItems.Instance.Active || item == null)
+            {
 
-            if (item.isInShipRoom || item.isInElevator || !item.itemProperties.isScrap || item is GrabbableLandmine || item.GetComponent<ExplodingItemsNetScript>() != null)
+                    Log.LogDebug("Exploding Item skipped for " + (item != null ? item.name : "null") + " with ID " + (item != null ? item.NetworkObject.NetworkObjectId.ToString() : "null") + " because ExplodingItems is not active or item is null.");
+                
+                return;
+            }
+
+            if (item.isInShipRoom || !item.itemProperties.isScrap || item is GrabbableLandmine || item.GetComponent<ExplodingItemsNetScript>() != null)
+            {
+
+                
+                    if (item.isInShipRoom)
+                        Log.LogDebug("Exploding Item skipped for " + item.name + " with ID " + item.NetworkObject.NetworkObjectId + " because it is in the ship room.");
+                    else if (!item.itemProperties.isScrap)
+                        Log.LogDebug("Exploding Item skipped for " + item.name + " with ID " + item.NetworkObject.NetworkObjectId + " because it is not scrap.");
+                    else if (item is GrabbableLandmine)
+                        Log.LogDebug("Exploding Item skipped for " + item.name + " with ID " + item.NetworkObject.NetworkObjectId + " because it is a landmine.");
+                    else if (item.GetComponent<ExplodingItemsNetScript>() != null)
+                        Log.LogDebug("Exploding Item skipped for " + item.name + " with ID " + item.NetworkObject.NetworkObjectId + " because it already has ExplodingItemsNetScript.");
+
+                
+                return;
+            }
+
+            int seed = StartOfRound.Instance.randomMapSeed + (int)item.NetworkObject.NetworkObjectId;
+            System.Random seeded = new System.Random(seed);
+
+            int roll = seeded.Next(1, 101);
+
+            Log.LogDebug(roll + " rolled for " + item.name + " with ID " + item.NetworkObject.NetworkObjectId + " against threshold of " + ExplodingItems.AmountValue);
+
+            if (roll > ExplodingItems.AmountValue)
                 return;
 
             item.gameObject.AddComponent<ExplodingItemsNetScript>();
@@ -57,7 +85,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
         [HarmonyPatch(typeof(Landmine), nameof(Landmine.SpawnExplosion))]
         private static void ChainExplodingItems(Vector3 explosionPosition, float damageRange)
         {
-            if (!ExplodingItems.Active || !RoundManager.Instance.IsServer)
+            if (!ExplodingItems.Instance.Active || !RoundManager.Instance.IsServer)
                 return;
 
             ExplodingItemsNetScript[] items = Object.FindObjectsByType<ExplodingItemsNetScript>(FindObjectsSortMode.None);

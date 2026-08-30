@@ -20,7 +20,7 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
         {
             if (instance != null) DestroyInstance();
             instance = this;
-            Net.Instance.SetEventActiveServerRPC("DoorOverdriveEv", true);
+            Net.Instance.SetEventActiveServerRPC(nameof(DoorOverdriveEv), true);
         }
 
         public static void DestroyInstance() // This handles the deletion of Time Chaosness

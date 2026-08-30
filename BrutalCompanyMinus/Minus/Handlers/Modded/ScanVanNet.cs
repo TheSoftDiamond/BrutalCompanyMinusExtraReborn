@@ -24,12 +24,12 @@ namespace BrutalCompanyMinus.Minus.Handlers
         {
             if (instance != null) DestroyCruiserFailure();
             instance = this;
-            Net.Instance.CruiserFailureServerRpc(true);
+            Net.Instance.SetEventActiveServerRPC(nameof(CruiserFailure), true);
         }
 
         public static void DestroyCruiserFailure() // Delete   
         {
-            Events.CruiserFailure.Active = false;
+            Events.CruiserFailure.Instance.Active = false;
             GameObject netObject = GameObject.Find("ScanVanFailure");
             if (netObject != null)
             {

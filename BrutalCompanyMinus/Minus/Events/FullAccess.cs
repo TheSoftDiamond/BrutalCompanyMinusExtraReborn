@@ -18,8 +18,6 @@ namespace BrutalCompanyMinus.Minus.Events
 
         public static FullAccess Instance;
 
-        public static bool Active = false;
-
         public override void Initalize()
         {
             Instance = this;
@@ -32,7 +30,7 @@ namespace BrutalCompanyMinus.Minus.Events
             EventsToRemove = new List<string>() { nameof(FacilityGhost) };
         }
 
-        public override void Execute() => Active = true;
+        public override void Execute() => Net.Instance.SetEventActiveServerRPC(Name(), true);
 
         public override void OnShipLeave() => Active = false;
 

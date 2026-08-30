@@ -25,7 +25,7 @@ namespace BrutalCompanyMinus.Minus.Events
 
         public override void Execute()
         {
-            Active = true;
+            Net.Instance.SetEventActiveServerRPC(Name(), true);
             GameObject netObject = new GameObject("DoorOverdriveEvEvent");
             netObject.AddComponent<DoorOverDriveNet>();
         }

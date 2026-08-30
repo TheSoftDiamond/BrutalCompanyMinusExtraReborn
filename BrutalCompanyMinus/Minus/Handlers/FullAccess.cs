@@ -16,10 +16,10 @@ namespace BrutalCompanyMinus.Minus.Handlers
         [HarmonyPatch(typeof(RoundManager), "RefreshEnemiesList")]
         private static void OnRefreshEnemiesList()
         {
-            if(Events.FullAccess.Active && NetworkManager.Singleton.IsServer)
+            if(Events.FullAccess.Instance.Active && NetworkManager.Singleton.IsServer)
             {
                 RoundManager.Instance.StartCoroutine(OpenAll());
-                Events.FullAccess.Active = false;
+                Events.FullAccess.Instance.Active = false;
             }
         }
 

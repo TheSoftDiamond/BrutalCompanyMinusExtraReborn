@@ -24,12 +24,12 @@ namespace BrutalCompanyMinus.Minus.Handlers
         {
             if (instance != null) DestroySlime();
             instance = this;
-            Net.Instance.SetSlimeServerRpc(true);
+            Net.Instance.SetEventActiveServerRPC(nameof(SlimeInside), true);
         }
 
         public static void DestroySlime() // Delete   
         {
-            Events.SlimeInside.Active = false;
+            Events.SlimeInside.Instance.Active = false;
             GameObject SlimeObj = GameObject.Find("SlimeInsideObj");
             if (SlimeObj != null)
             {

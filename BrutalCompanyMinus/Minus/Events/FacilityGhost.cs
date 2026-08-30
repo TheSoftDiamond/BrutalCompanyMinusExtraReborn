@@ -10,8 +10,6 @@ namespace BrutalCompanyMinus.Minus.Events
 {
     internal class FacilityGhost : MEvent
     {
-        public static bool Active = false;
-
         public override string Name() => nameof(FacilityGhost);
 
         public static FacilityGhost Instance;
@@ -26,7 +24,7 @@ namespace BrutalCompanyMinus.Minus.Events
             Type = EventType.Bad;
         }
 
-        public override void Execute() => Active = true;
+        public override void Execute() => Net.Instance.SetEventActiveServerRPC(Name(), true);
 
         public override void OnShipLeave() => Active = false;
 

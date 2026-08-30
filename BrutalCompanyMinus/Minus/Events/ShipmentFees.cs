@@ -10,7 +10,6 @@ namespace BrutalCompanyMinus.Minus.Events
 {
     internal class ShipmentFees : MEvent
     {
-        public static bool Active = false;
         public override string Name() => nameof(ShipmentFees);
 
         public static ShipmentFees Instance;

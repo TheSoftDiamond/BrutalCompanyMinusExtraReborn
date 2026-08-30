@@ -13,8 +13,6 @@ namespace BrutalCompanyMinus.Minus.Events
     internal class Warzone : MEvent
     {
 
-        public static bool Active = false;
-
         public override string Name() => nameof(Warzone);
 
         public static Warzone Instance;
@@ -34,7 +32,7 @@ namespace BrutalCompanyMinus.Minus.Events
 
         public override bool AddEventIfOnly() => RoundManager.Instance.currentLevel.spawnableMapObjects.ToList().Exists(x => x.prefabToSpawn.name == Assets.ObjectNameList[Assets.ObjectName.Turret]) || RoundManager.Instance.currentLevel.spawnableMapObjects.ToList().Exists(x => x.prefabToSpawn.name == Assets.ObjectNameList[Assets.ObjectName.Landmine]);
 
-        public override void Execute() => Active = true;
+        public override void Execute() => Net.Instance.SetEventActiveServerRPC(Name(), true);
 
         public override void OnShipLeave()
         {

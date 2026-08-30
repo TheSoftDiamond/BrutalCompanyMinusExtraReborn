@@ -1,6 +1,7 @@
 ﻿using HarmonyLib;
 using UnityEngine;
 using Unity.Netcode;
+using BrutalCompanyMinus.Minus.Events;
 
 
 namespace BrutalCompanyMinus.Minus.Handlers.Modded
@@ -14,12 +15,12 @@ namespace BrutalCompanyMinus.Minus.Handlers.Modded
         {
             if (instance != null) DestroyPhonesOut();
             instance = this;
-            Net.Instance.SetPhonesOutServerRpc(true);
+            Net.Instance.SetEventActiveServerRPC(nameof(PhonesOut), true);
         }
 
         public static void DestroyPhonesOut() // Delete   
         {
-            Events.PhonesOut.Active = false;
+            Events.PhonesOut.Instance.Active = false;
             GameObject PhonesOutObject = GameObject.Find("PhonesOutFailureObject");
             if (PhonesOutObject != null)
             {

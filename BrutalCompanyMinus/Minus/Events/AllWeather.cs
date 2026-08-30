@@ -12,7 +12,6 @@ namespace BrutalCompanyMinus.Minus.Events
     [HarmonyPatch]
     internal class AllWeather : MEvent
     {
-        public static bool Active = false;
         public override string Name() => nameof(AllWeather);
 
         public static AllWeather Instance;
@@ -37,7 +36,7 @@ namespace BrutalCompanyMinus.Minus.Events
 
         public override void Execute()
         {
-            Net.Instance.SetAllWeatherActiveServerRpc(true);
+            Net.Instance.SetEventActiveServerRPC(Name(), true);
 
             Net.Instance.SpawnAllWeatherServerRpc(Net.Instance._seed++);
 
@@ -70,7 +69,7 @@ namespace BrutalCompanyMinus.Minus.Events
             }
         }
 
-        public override void OnShipLeave() => Net.Instance.SetAllWeatherActiveServerRpc(false);
+        public override void OnShipLeave() => Active = false;
 
         public override void OnGameStart() => Active = false;
     }

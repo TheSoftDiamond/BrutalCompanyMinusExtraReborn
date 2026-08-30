@@ -17,7 +17,7 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
         [HarmonyPatch(typeof(Turret), nameof(Turret.Start))]
         private static void onTurretStart(Turret __instance)
         {
-            if (Events.GrabbableTurrets.Active)
+            if (Events.GrabbableTurrets.Instance.Active)
             {
                 GameObject terminalObjectRoot = __instance.transform.parent != null ? __instance.transform.parent.gameObject : __instance.gameObject;
                 DisableTerminalAccessibleObjects(terminalObjectRoot);

@@ -23,7 +23,7 @@ namespace BrutalCompanyMinus.Minus.Events
 
         public override void Execute()
         {
-            Active = true;
+            Net.Instance.SetEventActiveServerRPC(nameof(TerminalFailure), true);
             GameObject netObject = new GameObject("TerminalFailureEvent");
             netObject.AddComponent<TerminalFailureNet>();
         }

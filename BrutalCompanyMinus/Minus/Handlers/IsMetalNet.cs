@@ -24,12 +24,12 @@ namespace BrutalCompanyMinus.Minus.Handlers
         {
             if (instance != null) DestroyMetalPatch();
             instance = this;
-            Net.Instance.SetMetalOnNetServerRpc(true);
+            Net.Instance.SetEventActiveServerRPC(nameof(IsMetal),true);
         }
 
         public static void DestroyMetalPatch() // Delete   
         {
-            Events.IsMetal.Active = false;
+            Events.IsMetal.Instance.Active = false;
             GameObject IsMetalObj = GameObject.Find("IsMetalObj");
             if (IsMetalObj != null)
             {

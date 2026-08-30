@@ -29,13 +29,24 @@ namespace BrutalCompanyMinus.Minus.Events
                 new Scale(8.0f, 0.0f, 8.0f, 8.0f),
                 new Scale(12.0f, 0.0f, 12.0f, 12.0f))
             };
+
+            ScaleList.Add(ScaleType.ScrapValue, new Scale(4.5f, 0.0f, 4.5f, 4.5f));
+
+            ScaleList.Add(ScaleType.SpawnChance, new Scale(2.0f, 0.0f, 2.0f, 2.0f));
         }
 
         public override void Execute() 
         {
+            if (Configuration.enforceEscapeModChecks.Value && !Compatibility.StarLancereNemyEscapePresent)
+            {
+                Instance.monstersToSpawn[0].minOutside = new Scale(0f, 0f, 0f, 0f);
+                Instance.monstersToSpawn[0].maxOutside = new Scale(0f, 0f, 0f, 0f);
+                Instance.monstersToSpawn[0].outsideSpawnRarity = new Scale(0f, 0f, 0f, 0f);
+            }
+
             ExecuteAllMonsterEvents();
-            Manager.MultiplySpawnChance(RoundManager.Instance.currentLevel, 2f);
-            Manager.scrapValueMultiplier *= 4.5f;
+            Manager.MultiplySpawnChance(RoundManager.Instance.currentLevel, Getf(ScaleType.SpawnChance));
+            Manager.scrapValueMultiplier *= Getf(ScaleType.ScrapValue);
         }
     }
 }

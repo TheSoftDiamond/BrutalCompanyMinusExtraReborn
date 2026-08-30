@@ -23,8 +23,6 @@ namespace BrutalCompanyMinus.Minus.Events
         public override string Name() => nameof(FlashLightsFailure);
 
         public static FlashLightsFailure Instance;
-        
-        public static bool Active = false;
 
         public override void Initalize()
         {
@@ -42,7 +40,7 @@ namespace BrutalCompanyMinus.Minus.Events
             FlashlightsGoEmptyAtStart();
 
             // Declare the Active state to true globally
-            Net.Instance.SetFlashlightsServerRpc(true);
+            Net.Instance.SetEventActiveServerRPC(Name(), true);
 
             // Bind the FlashLightFailure to an GameObject
             GameObject flashlightObject = new GameObject("FlashlightsFailureObject");
@@ -199,7 +197,7 @@ namespace BrutalCompanyMinus.Minus.Events
         public static bool InterruptChargeFlashlightItem(ItemCharger __instance)
         {
             // Interrupt the charger method
-            if (Events.FlashLightsFailure.Active)
+            if (Events.FlashLightsFailure.Instance.Active)
             {
                 PlayerControllerB localPlayer = GameNetworkManager.Instance.localPlayerController;
                 if (localPlayer != null && localPlayer.currentlyHeldObjectServer != null)
@@ -229,7 +227,7 @@ namespace BrutalCompanyMinus.Minus.Events
         public static void FlashlightFailureItemGrab(GrabbableObject __instance)
         {
             // Interrupt the grab item method 
-            if (Events.FlashLightsFailure.Active)
+            if (Events.FlashLightsFailure.Instance.Active)
             {
                 if (__instance.itemProperties.itemName == "Flashlight" || __instance.itemProperties.itemName == "Pro-flashlight")
                 {

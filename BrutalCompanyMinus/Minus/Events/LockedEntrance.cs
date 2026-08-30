@@ -14,8 +14,6 @@ namespace BrutalCompanyMinus.Minus.Events
 
         public static LockedEntrance Instance;
 
-        public static bool Active = false;
-
         public override void Initalize()
         {
             Instance = this;
@@ -31,7 +29,7 @@ namespace BrutalCompanyMinus.Minus.Events
         {
 
             // Declare the Active state to true globally
-            Net.Instance.SetEntranceServerRpc(true);
+            Net.Instance.SetEventActiveServerRPC(Name(), true);
 
             // Bind the FlashLightFailure to an GameObject
             GameObject LockEntranceObject = new GameObject("LockEntranceObject");
@@ -62,7 +60,7 @@ namespace BrutalCompanyMinus.Minus.Events
         public static bool InterruptEntranceTeleport(Transform playerTransform, InteractTrigger __instance)
         {
             // Interrupt the charger method  
-            if (Events.LockedEntrance.Active)
+            if (Events.LockedEntrance.Instance.Active)
             {
 
                 PlayerControllerB localPlayer = GameNetworkManager.Instance.localPlayerController;

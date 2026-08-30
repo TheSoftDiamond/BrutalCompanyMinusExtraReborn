@@ -25,7 +25,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
         [HarmonyPatch(typeof(GrabbableObject), "Start")]
         public static void MetalOffFix(GrabbableObject __instance)
         {
-            if (!Events.NotMetal.Active) return;
+            if (!Events.NotMetal.Instance.Active) return;
 
             ApplyMetalStates(__instance, false);
         }
@@ -38,7 +38,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
         [HarmonyPatch(typeof(GrabbableObject), "Start")]
         public static void MetalOnFix(GrabbableObject __instance)
         {
-            if (!Events.IsMetal.Active) return;
+            if (!Events.IsMetal.Instance.Active) return;
 
             ApplyMetalStates(__instance, true);
         }
@@ -51,7 +51,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
         [HarmonyPatch(typeof(GrabbableObject), "Start")]
         public static void MetalSwitch(GrabbableObject __instance)
         {
-            if (!Events.MetalSwitch.Active) return;
+            if (!Events.MetalSwitch.Instance.Active) return;
 
             if (__instance != null && __instance.itemProperties != null)
             {
@@ -66,7 +66,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
         [HarmonyPatch(typeof(StartOfRound), "OpenShipDoors")]
         public static void MetalOffSweep()
         {
-            if (!Events.NotMetal.Active) return;
+            if (!Events.NotMetal.Instance.Active) return;
 
             GrabbableObject[] allItems = Object.FindObjectsOfType<GrabbableObject>();
 
@@ -83,7 +83,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
         [HarmonyPatch(typeof(StartOfRound), "OpenShipDoors")]
         public static void MetalOnSweep()
         {
-            if (!Events.IsMetal.Active) return;
+            if (!Events.IsMetal.Instance.Active) return;
 
             GrabbableObject[] allItems = Object.FindObjectsOfType<GrabbableObject>();
 
@@ -97,7 +97,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
         [HarmonyPatch(typeof(StartOfRound), "OpenShipDoors")]
         public static void MetalSwitchSweep()
         {
-            if (!Events.MetalSwitch.Active) return;
+            if (!Events.MetalSwitch.Instance.Active) return;
             GrabbableObject[] allItems = Object.FindObjectsOfType<GrabbableObject>();
             foreach (var item in allItems)
             {

@@ -12,8 +12,6 @@ namespace BrutalCompanyMinus.Minus.Events
 
         public static ManualCameraFailure Instance;
 
-        public static bool Active = false;
-
         public override void Initalize()
         {
             Instance = this;
@@ -26,9 +24,15 @@ namespace BrutalCompanyMinus.Minus.Events
 
         public override void Execute()
         {
-            Active = true;
+            Net.Instance.SetEventActiveServerRPC(Name(), true);
             GameObject netObject = new GameObject("ManualCameraFailureEvent");
             netObject.AddComponent<ManualCameraFailureNet>();
+
+            ManualCameraRenderer cameraRender = StartOfRound.Instance.mapScreen;
+
+            cameraRender.SwitchScreenOn(false);
+            cameraRender.syncingSwitchScreen = true;
+            cameraRender.SwitchScreenOnServerRpc(false);
         }
         public override void OnShipLeave()
         {

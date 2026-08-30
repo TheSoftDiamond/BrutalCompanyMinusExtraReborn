@@ -19,8 +19,6 @@ namespace BrutalCompanyMinus.Minus.Events
 
         public static MetalSwitch Instance;
 
-        public static bool Active = false;
-
         public override void Initalize()
         {
             Instance = this;
@@ -36,10 +34,8 @@ namespace BrutalCompanyMinus.Minus.Events
         public override void Execute()
         {
 
-
-
             // Declare the Active state to true globally
-            Net.Instance.SetMetalSwitchNetServerRpc(true);
+            Net.Instance.SetEventActiveServerRPC(Name(), true);
 
             // Bind the FlashLightFailure to an GameObject
             GameObject MetalSwitch = new GameObject("MetalSwitch");

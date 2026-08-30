@@ -39,6 +39,7 @@ namespace BrutalCompanyMinus.Minus.Events
 
         public override void Execute()
         {
+            Net.Instance.SetEventActiveServerRPC(Name(), true);
             GameObject netObject = new GameObject("TrapsFailureEvent");
             netObject.AddComponent<TrapsFailureNet>();
         }

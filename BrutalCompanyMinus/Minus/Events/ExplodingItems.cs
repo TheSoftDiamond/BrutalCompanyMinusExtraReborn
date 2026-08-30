@@ -19,9 +19,7 @@ namespace BrutalCompanyMinus.Minus.Events
         public override string Name() => nameof(ExplodingItems);
 
         public static ExplodingItems Instance;
-
-        public static bool Active = false;
-
+ 
         public static float AmountValue;
 
         public override void Initalize()
@@ -46,7 +44,7 @@ namespace BrutalCompanyMinus.Minus.Events
             GameObject netObject = new GameObject("ExplodingItemsEvent");
             netObject.AddComponent<ExplodingItemsNet>();
 
-            Net.Instance.SetExplosivePerecentServerRpc(Getf(ScaleType.Percentage));
+            Net.Instance.SetExplosivePercentServerRpc(Getf(ScaleType.Percentage));
         }
 
         public override void OnShipLeave()

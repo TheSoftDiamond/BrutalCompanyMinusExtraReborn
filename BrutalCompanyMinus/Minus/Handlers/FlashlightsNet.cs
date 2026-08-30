@@ -24,12 +24,12 @@ namespace BrutalCompanyMinus.Minus.Handlers
         {
             if (instance != null) DestroyFlashlightFailure();
             instance = this;
-            Net.Instance.SetFlashlightsServerRpc(true);
+            Net.Instance.SetEventActiveServerRPC(nameof(FlashLightsFailure), true);
         }
 
         public static void DestroyFlashlightFailure() // Delete   
         {
-            Events.FlashLightsFailure.Active = false;
+            Events.FlashLightsFailure.Instance.Active = false;
             GameObject flashlightObject = GameObject.Find("FlashlightsFailureObject");
             if (flashlightObject != null)
             {

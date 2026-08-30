@@ -16,7 +16,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
         [HarmonyPatch(typeof(RoundManager), "AssignRandomEnemyToVent")]
         private static void OnAssignRandomEnemyToVent(ref RoundManager __instance)
         {
-            if (!Events.Hell.Active) return;
+            if (!Events.Hell.Instance.Active) return;
             __instance.currentMaxInsidePower = 0;
             __instance.currentMaxOutsidePower = 0;
         }
@@ -25,7 +25,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
         [HarmonyPatch(typeof(RoundManager), "RefreshEnemiesList")]
         private static void OnRefreshEnemiesList()
         {
-            if (!Events.Hell.Active || !Events.Hell.SpawnCycle) return;
+            if (!Events.Hell.Instance.Active || !Events.Hell.SpawnCycle) return;
 
             EnemySpawnCycle.Instance.spawnCycles.Add(Events.Hell.insideHellSpawnCycle);
             RoundManager.Instance.StartCoroutine(AddOutsideSpawnCycleAfterDelay());

@@ -33,7 +33,7 @@ namespace BrutalCompanyMinus.Minus.Handlers.Modded
 
         public static bool InterruptCruiserXL()
         {
-            if (Events.CruiserFailure.Active)
+            if (Events.CruiserFailure.Instance.Active)
             {
                 int randomResponse = UnityEngine.Random.Range(0, 3);
                 switch (randomResponse)

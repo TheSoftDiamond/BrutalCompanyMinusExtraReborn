@@ -42,7 +42,7 @@ namespace BrutalCompanyMinus.Minus.Events
         public override void Execute()
         {
             // Declare the event active
-            Active = true;
+            Net.Instance.SetEventActiveServerRPC(Name(), true);
             // Get the time multiplier from the scale
             timeMultiplier = Getf(ScaleType.TimeSettings);
             // Create the Time Chaos Event
