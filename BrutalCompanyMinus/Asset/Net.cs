@@ -5,6 +5,7 @@ using BrutalCompanyMinus.Minus.Handlers.Modded;
 using BrutalCompanyMinus.Minus.MonoBehaviours;
 using GameNetcodeStuff;
 using HarmonyLib;
+using Steamworks.Ugc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Rendering.HighDefinition;
 using AllWeather = BrutalCompanyMinus.Minus.Handlers.AllWeather;
+using Random = UnityEngine.Random;
 
 namespace BrutalCompanyMinus
 {
@@ -304,26 +306,14 @@ namespace BrutalCompanyMinus
         public void SetRecievedClientRpc(bool state) => receivedSyncedValues = state;
 
         [ServerRpc(RequireOwnership = false)]
-        public void SetRealityShiftActiveServerRpc(bool state) => SetRealityShiftActiveClientRpc(state);
-
-        [ClientRpc]
-        public void SetRealityShiftActiveClientRpc(bool state) => Minus.Events.RealityShift.Active = state;
-
-        [ServerRpc(RequireOwnership = false)]
-        public void SetAllWeatherActiveServerRpc(bool state) => SetAllWeatherActiveClientRpc(state);
-
-        [ClientRpc]
-        public void SetAllWeatherActiveClientRpc(bool state) => Minus.Events.AllWeather.Active = state;
-
-
-
-        [ServerRpc(RequireOwnership = false)]
         public void SetEventActiveServerRPC(string eventName, bool state) => SetEventActiveClientRPC(eventName, state);
 
         [ClientRpc]
         public void SetEventActiveClientRPC(string eventName, bool state)
         {
             MEvent mEvent = MEvent.GetEvent(eventName);
+            Log.LogInfo($"Changing active state for event name {eventName} to {state}");
+            Log.LogInfo($"Found event: {mEvent}");
             if (mEvent != null)
             {
                 mEvent.Active = state;
@@ -658,43 +648,6 @@ namespace BrutalCompanyMinus
             }
         }
 
-        [ServerRpc(RequireOwnership = false)]
-        public void SetPhonesOutServerRpc(bool active)
-        {
-            SetPhonesOutClientRpc(active);
-        }
-
-        [ClientRpc]
-        public void SetPhonesOutClientRpc(bool active)
-        {
-            PhonesOut.Active = active;
-        }
-
-
-        [ServerRpc(RequireOwnership = false)]
-        public void SetFlashlightsServerRpc(bool active)
-        {
-            SetFlashlightsClientRpc(active);
-        }
-
-        [ClientRpc]
-        public void SetFlashlightsClientRpc(bool active)
-        {
-            FlashLightsFailure.Active = active;
-        }
-
-        [ServerRpc(RequireOwnership = false)]
-        public void SetSlimeServerRpc(bool active)
-        {
-            SetSlimeClientRpc(active);
-        }
-
-        [ClientRpc]
-        public void SetSlimeClientRpc(bool active)
-        {
-            SlimeInside.Active = active;
-        }
-
         
         [ServerRpc(RequireOwnership = false)]
         public void SetSlimeSlipperyServerRpc(float slipperyness)
@@ -709,7 +662,31 @@ namespace BrutalCompanyMinus
         }
 
         [ServerRpc(RequireOwnership = false)]
-        public void SetExplosivePerecentServerRpc(float val)
+        public void SetDrunkServerRpc(float[] drunk)
+        {
+            SetDrunkClientRpc(drunk);
+        }
+
+        [ClientRpc]
+        public void SetDrunkClientRpc(float[] drunk)
+        {
+            TZPCrazy.DrunkValues = drunk;
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void SetSlimeSlipperyOutServerRpc(float slipperyness)
+        {
+            SetSlimeSlipperyOutClientRpc(slipperyness);
+        }
+
+        [ClientRpc]
+        public void SetSlimeSlipperyOutClientRpc(float slipperyness)
+        {
+            SlimeOutside.SlippinessValue = slipperyness;
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void SetExplosivePercentServerRpc(float val)
         {
             SetExplosivePerecentClientRpc(val);
         }
@@ -718,48 +695,6 @@ namespace BrutalCompanyMinus
         public void SetExplosivePerecentClientRpc(float val)
         {
             ExplodingItems.AmountValue = val;
-        }
-
-        [ServerRpc(RequireOwnership = false)]
-        public void SetEntranceServerRpc(bool active)
-        {
-            SetEntranceClientRpc(active);
-        }
-
-        [ServerRpc(RequireOwnership = false)]
-        public void SetMetalOffNetServerRpc(bool active)
-        {
-            SetMetalOffNetClientRpc(active);
-        }
-
-        [ClientRpc]
-        public void SetMetalOffNetClientRpc(bool active)
-        {
-            NotMetal.Active = active;
-        }
-
-        [ServerRpc(RequireOwnership = false)]
-        public void SetMetalOnNetServerRpc(bool active)
-        {
-            SetMetalOnNetClientRpc(active);
-        }
-
-        [ClientRpc]
-        public void SetMetalOnNetClientRpc(bool active)
-        {
-            IsMetal.Active = active;
-        }
-
-        [ServerRpc(RequireOwnership = false)]
-        public void CruiserFailureServerRpc(bool active)
-        {
-            CruiserFailureClientRpc(active);
-        }
-
-        [ClientRpc]
-        public void CruiserFailureClientRpc(bool active)
-        {
-            CruiserFailure.Active = active;
         }
 
         [ServerRpc(RequireOwnership = false)]
@@ -832,36 +767,6 @@ namespace BrutalCompanyMinus
                 Manager.heatDifficulty.Add(keys[i], values[i]);
             }
             Log.LogInfo("Got data from the host");
-        }
-
-        [ServerRpc(RequireOwnership = false)]
-        public void SetMetalSwitchNetServerRpc(bool active)
-        {
-            SetMetalSwitchNetClientRpc(active);
-        }
-
-        [ClientRpc]
-        public void SetMetalSwitchNetClientRpc(bool active)
-        {
-            MetalSwitch.Active = active;
-        }
-
-        [ServerRpc(RequireOwnership = false)]
-        public void SetKidnapperFoxNetServerRpc(bool active)
-        {
-            SetKidnapperFoxNetClientRpc(active);
-        }
-
-        [ClientRpc]
-        public void SetKidnapperFoxNetClientRpc(bool active)
-        {
-            KidnapperFox.Active = active;
-        }
-
-        [ClientRpc]
-        public void SetEntranceClientRpc(bool active)
-        {
-            LockedEntrance.Active = active;
         }
 
         [ServerRpc(RequireOwnership = false)]
