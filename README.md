@@ -1,7 +1,8 @@
 # Brutal Company Minus Extra Reborn
 ![Screenshot](https://softdiamond.net/BCMERAssets/icon.png)
 
-BCMER has a website! You can find it at [https://bcmer.softdiamond.net/](https://bcmer.softdiamond.net/)
+- BCMER has a website! You can find it at [https://bcmer.softdiamond.net/](https://bcmer.softdiamond.net/)
+- BCMER has a API! You can find it at [https://bcmerapi.softdiamond.net/](https://bcmerapi.softdiamond.net/)
 
 Note: I recommend the usage of several of the good bug fix mods and quality of life mods when using Brutal, including [StarLancerEnemyEscape](https://thunderstore.io/c/lethal-company/p/AudioKnight/StarlancerEnemyEscape/). It will help make Brutal both more enjoyable and a fun experience. Of course, feel free to play BCMER with any mod! It can make for a fun experience!
 
@@ -14,16 +15,18 @@ Note: I recommend the usage of several of the good bug fix mods and quality of l
   - Zehs, for their contributions and major code optimizations.
   - Jayce, for testing and pointing out some feature ideas and optimizations.
   - mr.hat, for helping me find several bugs in the code.
+  - PikaWarrior, for pointing out some oversights and helping clean up some of the config.
+  - Xu Xiaolan, for putting up with me when it comes to Dawnlib stuff and helping with Dawnlib Compatibility.
 
 </details>
 
 - This mod is required on all clients
 - This mod will make the game harder. Download if you want to suffer.
-- Configs are fully generated when loading moons.
+- Configs are fully generated when loading moons (Lever Pull).
 - Highly customizable! Nearly everything can be configured.
 - Modded event support when said mods installed.
 - Supports custom events that can be created as json files
-- (Planned) Supports external event injection and features
+- (Planned) Supports external event injection and features.
 
 ## Mod Compatibility and Recommended Mods
 <details>
@@ -53,7 +56,7 @@ The levels of compatibility are color coded to represent the level of compatibil
 | [Lobby Control](https://thunderstore.io/c/lethal-company/p/mattymatty/LobbyControl/) | 🟢 (Compatible) | Works perfectly fine. At worst, potentially not recieving event UI until ship lever is pulled. |
 | [WeatherRegistry](https://thunderstore.io/c/lethal-company/p/mrov/WeatherRegistry/) | 🟢 (Compatible) | Custom Weathers can be used inside Custom Events. |
 | [Combined Weathers Toolkit](https://thunderstore.io/c/lethal-company/p/Zigzag/Combined_Weathers_Toolkit/) | 🟢 (Compatible) | Registered via WeatherRegistry for weathers, and these themselves can be used in Custom Events. |
-| [DawnLib](https://thunderstore.io/c/lethal-company/p/TeamXiaolan/DawnLib/) | 🟣 (Planned) | Support for Hazards is to be done sometime in the future. Anything from Dawnlib may or may not work at the current moment. |
+| [DawnLib](https://thunderstore.io/c/lethal-company/p/TeamXiaolan/DawnLib/) | 🟠 (Compatible) | At minimum, support for Hazards should work. Some hazards may not work |
 | [LunarConfig](https://thunderstore.io/c/lethal-company/p/Crafty/LunarConfig/) | 🟠 (Partial) | Some variables set may conflict or outright overwrite Brutal settings |
 
 </details>
@@ -509,10 +512,6 @@ Location: BrutalCompanyMinusExtraReborn\CoreProperties.cfg`
 
 #### Events Features
 
-`Enable Hell Time Adjustment` : Adjust whether or not Hell Event uses regular Lethal Company time scale, or an adjusted one for the event. Defaults to True (adjusted scale for event).
-
-`Enable VeryLateShip Time Adjustment` : Adjust whether or not VeryLateShip Event uses regular Lethal Company time scale, or an adjusted one for the event. Defaults to True (adjusted scale for event).
-
 `Disable all events` : Disable all events ingame?
 
 `Enable Special Events` : Should Special Events be loaded? These are special events made for the game that may not be desirable in regular sessions (Such as very unfair mechanics).
@@ -521,7 +520,13 @@ Location: BrutalCompanyMinusExtraReborn\CoreProperties.cfg`
 
 `Transmutation Blacklist` : Specify a list of items to not transmute. This is only useful if you run scrap transmutation events from Brutal or any custom events with them. Uses itemProperties.itemName Component Name.
 
-`Enable Speedrun Mode`  : Force speedrun mode on? Targets certain settings that may be considered cheating in a speedrun enviroment.
+`Enable Speedrun Mode` : Force speedrun mode on? Targets certain settings that may be considered cheating in a speedrun enviroment.
+
+`Chance of Events Occurring` : Chance of events occurring per day. Scalable by difficulty settings.
+
+`Initial Time PopUp` : Time of initial popup of tips.
+
+`Time between tips` : Time in between tips messages in seconds..
 
 #### Debugging
 
@@ -539,11 +544,27 @@ Location: BrutalCompanyMinusExtraReborn\CoreProperties.cfg`
 
 `Experimental dont handle spawn chance`: Makes it so Brutal does not handle spawn curves, save for a few settings the user may want that interact with spawn curves.
 
+`Let Brutal handle properties outside of events?`: Disable this if you wish to let Brutal not handle any properties outside of events.
+
 `Defer weather to weather toolkit mod`: Let's Weather Toolkit handle the setting of the weathers for Brutal's vanilla weather events. This has no effect on custom events.
 
 `Enforce Escape Mod Checks`: Should Brutal perform its checks if any enemy escape mod is installed. This feature is used with Vanilla events to prevent improper spawning locations for enemies if they do not have the mod. (For example, no outside CoilHeads). Disable this feature if you wish to not use this safety check feature.
 
-`Let Brutal handle the SCAN command?`: Let's Brutal handle the scan command so that events can display the correct scrap values with respect to scrap value modifiers.
+`Let Brutal handle the SCAN command?`: Lets Brutal handle the scan command so that events can display the correct scrap values with respect to scrap value modifiers.
+
+#### Randomizer
+
+`Enable Randomizer` : Enable the randomizer?
+
+`When to Randomize` : What triggers the randomizer to occur. Can be multiple.
+
+`Randomize Event Weights` : Randomize the event weight? Requires custom weights enabled.
+
+`Randomize event Weights min`: The lowest the randomizer will go for weights.
+
+`Randomize event Weights max`: The highest the randomizer will go for weights.
+
+**...**
 
 ## Difficulty Config 
 Location: `BrutalCompanyMinusExtraReborn\Difficulty_Settings.cfg`
@@ -555,8 +576,6 @@ Location: `BrutalCompanyMinusExtraReborn\Difficulty_Settings.cfg`
 `Event scale amount`: A **scale** that describes the base amount of events.
 
 `Weights for bonus events`: Extra chances for bonus events added on top of the base events.
-
-`Display events in chat`: Display events in chat?
 
 #### Event Type Scrap Multipliers
 
@@ -652,8 +671,6 @@ Location: `BrutalCompanyMinusExtraReborn\Difficulty_Settings.cfg`
 
 `Heat affects what properties`: The properties that can be affected by the heat mechanic.
 
-
-
 `None weather difficulty?`: Difficulty added if none weather.
 
 **...**
@@ -729,20 +746,101 @@ Location: `BrutalCompanyMinusExtraReborn\Weather_Settings.cfg`
 
 `Amount Multiplier`: Multiply scrap amount by.
 
+## Enemy Scrap Weights Settings
+Location: `BrutalCompanyMinusExtraReborn\Enemy_Scrap_Weights_Settings.cfg`
+
+#### Grabbable Landmine
+
+`Min value`: The minimum value worth.
+
+`Max value` The max value worth
+
+#### Grabbable Turret
+
+`Min value`: The minimum value worth.
+
+`Max value` The max value worth
+
+#### Nutslayer
+
+`Lives`: The amount of lives that the nutslayer has.
+
+`Hp`: How much hp does the nutslayer have.
+
+`Speed`: How fast is the nutslayer.
+
+`Immortal`: Is the nutslayer immortal.
+
+`Only players can attack Nutslayer`: Do only players attack nutslayers?
+
+## Language
+Location: `BrutalCompanyMinusExtraReborn\Language.cfg`
+
+#### UI text (Difficulty)
+
+`Difficulty title text`: The text that appears on the UI.
+
+`Difficulty amount text` The text that appears on the UI.
+
+`Day text`: The text that appears on the UI.
+
+`Quota text`: the text that appears on the UI.
+
+`Ship scrap text`: the text that appears on the UI.
+
+`Moon risk text`: The text that appears on the UI.
+
+`Weather text`: the text that appears on the UI.
+
+`Heat text`: The text that appears on the UI.
+
+#### UI text (Event Type)
+
+`Event type chances text`: The event type chances text
+
+`Insane text`: The event name in the UI.
+
+`Very bad text`: The event name in the UI.
+
+`Bad text`: The event name in the UI.
+
+`Neutral text`: The event name in the UI.
+
+`Good text`: The event name in the UI.
+
+`Very Good text`: The event name in the UI.
+
+`Rare text`: The event name in the UI.
+
+`Remove text`: The event name in the UI.
+
+#### Ui text (General)
+
+`Event title text`: The event title text.
+
+#### Ui text (Other)
+
+`Other text`: The text in the UI.
+
+`Scrap value text`: The text in the UI.
+
+`Scrap amount text`: The text in the UI.
+
+`Factory size text`: The text in the UI.
+
+`Spawn chance text`: The text in the UI.
+
+`Spawn cap text`: the text in the ui.
+
+`Bonus enemy hp text`: the text in the UI.
+
+
 ## UI config
 Location: `BrutalCompanyMinusExtraReborn\UI_Settings.cfg`
 
+#### UI Options
+
 `Toggle UI Key`: They key used to toggle the UI.
-
-`UI Color Hex`: The color Brutal will use when the menu is active.
-
-`UI Color Reduction Factor`: The reduction factor used on the color when the menu is inactive.
-
-`UI Arrow Color Hex`: The color Brutal will use for the up and down arrows when inactive.
-
-`UI Arrow Color Amplification`: When the scroll arrows are used, multiply by this color the active direction.
-
-`UI Text Color Hex`: The color all text will use. Text that changes color with difficulty will not change.
 
 `Normalize Scrap Value Display`: In game default scrap value multiplier is 0.4, having this enabled will multiply the display value by 2.5 to make it look normal.
 
@@ -763,3 +861,51 @@ Location: `BrutalCompanyMinusExtraReborn\UI_Settings.cfg`
 `Display extra properties on UI after ship leaves?`: Display extra properties such as eventType chances and difficulty after ship leaves?
 
 `Display events`: Display events? or keep them hidden...
+
+`Display events in chat`: Display events in chat?
+
+`UI scale x`: The UI scale in the x direction.
+
+`Ui scale y`: the UI scale in the y direction.
+
+`UI scale z`: the UI scale in the z direction.
+
+`UI position x offset`: X offset
+
+`Ui position y offset`: y offset
+
+`UI position z offset`: z offset
+
+`UI rotation x`: x rotation.
+
+`UI rotation y`: y rotation.
+
+`UI rotation z`: z rotation.
+
+#### UI Options (Color)
+
+`UI Color Hex`: The color Brutal will use when the menu is active.
+
+`UI Color Reduction Factor`: The reduction factor used on the color when the menu is inactive.
+
+`UI Arrow Color Hex`: The color Brutal will use for the up and down arrows when inactive.
+
+`UI Arrow Color Amplification`: When the scroll arrows are used, multiply by this color the active direction.
+
+`UI Text Color Hex`: The color all text will use. Text that changes color with difficulty will not change.
+
+`Insane event ui color hex`: Color hex for insane event type. This only affects the category name color, not events itself.
+
+`Very bad event ui color hex`: Color hex for very bad event type. This only affects the category name color, not events itself.
+
+`Bad event ui color hex`: Color hex for bad event type. This only affects the category name color, not events itself.
+
+`Neutral event ui color hex`: Color hex for neutral event type. This only affects the category name color, not events itself.
+
+`Good event ui color hex`: Color hex for good event type. This only affects the category name color, not events itself.
+
+`Very Good event ui color hex`: Color hex for very good event type. This only affects the category name color, not events itself.
+
+`Rare event ui color hex`: Color hex for rare event type. This only affects the category name color, not events itself.
+
+`Remove event ui color hex`: Color hex for Remove event type. This only affects the category name color, not events itself.
