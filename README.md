@@ -17,6 +17,7 @@ Note: I recommend the usage of several of the good bug fix mods and quality of l
   - mr.hat, for helping me find several bugs in the code.
   - PikaWarrior, for pointing out some oversights and helping clean up some of the config.
   - Xu Xiaolan, for putting up with me when it comes to Dawnlib stuff and helping with Dawnlib Compatibility.
+  - T-Rizzle, for their hours of work with the code, helping me fix bugs, introducing new events and more.
 
 </details>
 
@@ -32,17 +33,21 @@ Note: I recommend the usage of several of the good bug fix mods and quality of l
 <details>
   <summary>Compatibility</summary>
 
-This section shows a list of mods and how compatible they are with BCMER. I will not be listing any mods from the Modded Events, as you can find them [here](https://bcmer.softdiamond.net/events/) or in the readme under list of modded events. Please note that this list is subject to potential changes as features/changes to BCMER/the mod itself could break compatibility.
+This section shows a list of mods and how compatible they are with BCMER. This list is not an extensive list of mods that are supported by Brutal, as in the case of modded events, as you can find them [here](https://bcmer.softdiamond.net/events/) or in the readme under list of modded events. Please note that this list is subject to potential changes as features/changes to BCMER/other mods could break compatibility at any given moment.
 
 The levels of compatibility are color coded to represent the level of compatibility:
 
-🟢 (Compatible) - No known issues. Very minor bugs, if any present at all.
+🟢 (Compatible) - No known issues. Very minor bugs, if any present at all and will not affect gameplay
 
-🟠 (Partial) - Partial compatiblity. Bugs, or issues may be present. For most part should work normally.
+🟡 (Mostly Compatible) - Bugs or Issues when present are minor, and, depending on the situation, issues can likely be bypassed or prevented in one way or another via config options.
 
-🔴 (Incompatible) - Not compatible for one reason or another. Most likely will result in conflicts, bugs, softlocks or crashes.
+🟠 (Partial) - Partial compatiblity. Bugs, or issues are present. Some features should work, but things are not fully guaranteed and could potentially cause conflict. 
+
+🔴 (Incompatible) - Not compatible for one reason or another. Most likely will result in heavy conflicts, bugs, softlocks or crashes.
 
 🟣 (Planned) - Planned compatibility. Parts of, or completely all of BCMER or/and mod may not work as expected. Potentially no documented behavior on interaction between said mods. Refer to notes for more information.
+
+🔵 (Untested/Unknown) - No data reported between the compatibility level, or at very minimum, surface level testing done, Not all cases are considered. Refer to notes for more information.
 
 | Mod Name | Status | Notes | 
 |------------|-------------|--------------|
@@ -51,13 +56,15 @@ The levels of compatibility are color coded to represent the level of compatibil
 | [Brutal Company Minus](https://thunderstore.io/c/lethal-company/p/DrinkableWater/Brutal_Company_Minus/) | 🔴 (Incompatible) | BCMER is built off of BCME, which itself is built off of BCM. Will cause conflicts. |
 | [Brutal Comapny Minus Extra](https://thunderstore.io/c/lethal-company/p/UnloadedHangar/Brutal_Company_Minus_Extra/) | 🔴 (Incompatible) | BCMER is built off of BCME  Will cause conflicts. |
 | [SuperEclipse](https://thunderstore.io/c/lethal-company/p/MillieTheSilly/SuperEclipse/) | 🟢 (Compatible) | Provided ShipCoreFailure or LeverFailure is never rolled. BCMER 0.21.9+ prevents these two events from being ran if SuperEclipse is present. |
-| [GeneralImprovements](https://thunderstore.io/c/lethal-company/p/ShaosilGaming/GeneralImprovements/) | 🟠 (Partial) | Intro skip feature from GeneralImprovements causes issues with BCMER |
+| [GeneralImprovements](https://thunderstore.io/c/lethal-company/p/ShaosilGaming/GeneralImprovements/) | 🟡 (Mostly Compatible) | Intro skip feature from GeneralImprovements causes issues with BCMER |
 | [VeryLateCompany](https://thunderstore.io/c/lethal-company/p/McBowie/VeryLateCompany/) | 🟠 (Partial) | Some events may not work as expected. Expect potential desyncs. |
 | [Lobby Control](https://thunderstore.io/c/lethal-company/p/mattymatty/LobbyControl/) | 🟢 (Compatible) | Works perfectly fine. At worst, potentially not recieving event UI until ship lever is pulled. |
 | [WeatherRegistry](https://thunderstore.io/c/lethal-company/p/mrov/WeatherRegistry/) | 🟢 (Compatible) | Custom Weathers can be used inside Custom Events. |
 | [Combined Weathers Toolkit](https://thunderstore.io/c/lethal-company/p/Zigzag/Combined_Weathers_Toolkit/) | 🟢 (Compatible) | Registered via WeatherRegistry for weathers, and these themselves can be used in Custom Events. |
-| [DawnLib](https://thunderstore.io/c/lethal-company/p/TeamXiaolan/DawnLib/) | 🟠 (Compatible) | At minimum, support for Hazards should work. Some hazards may not work |
+| [DawnLib](https://thunderstore.io/c/lethal-company/p/TeamXiaolan/DawnLib/) | 🟡 (Mostly Compatible) | At minimum, support for Hazards should work. Some hazards may not work |
 | [LunarConfig](https://thunderstore.io/c/lethal-company/p/Crafty/LunarConfig/) | 🟠 (Partial) | Some variables set may conflict or outright overwrite Brutal settings |
+| [LethalBots](https://thunderstore.io/c/lethal-company/p/TRizzle/LethalBots/) | 🟢 (Compatible) | Gameplay-wise works perfectly. Bots may not be fully aware of how dangerous events are. |
+| [Imperium](https://thunderstore.io/c/lethal-company/p/giosuel/Imperium/) | 🔵 (Untested/Unknown) | Some features may break events depending on what is used. Outside of the box, should work fine though. |
 
 </details>
 <details>
