@@ -647,20 +647,30 @@ namespace BrutalCompanyMinus.Minus.Handlers
 
                         int itemCount = 0;
                         int totalWorth = 0;
-                        GrabbableObject[] allItemsOutsideShip = GameObject.FindObjectsOfType<GrabbableObject>();
-                        foreach(GrabbableObject item in allItemsOutsideShip)
+                        GrabbableObject[] allItemInOrOut = GameObject.FindObjectsOfType<GrabbableObject>();
+                        foreach(GrabbableObject item in allItemInOrOut)
                         {
                             if (item != null)
                             {
-                                if (item.itemProperties.isScrap && !item.isInElevator &&  !item.isInShipRoom)
+                                if (!StartOfRound.Instance.inShipPhase)
                                 {
-                                    itemCount++;
-                                    totalWorth += item.scrapValue;
+                                    if (item.itemProperties.isScrap && !item.isInElevator && !item.isInShipRoom)
+                                    {
+                                        itemCount++;
+                                        totalWorth += item.scrapValue;
+                                    }
+                                }
+                                else
+                                {   if (item.itemProperties.isScrap)
+                                    {
+                                        itemCount++;
+                                        totalWorth += item.scrapValue;
+                                    }
                                 }
                             }
                         }
 
-                        text += $"There are {itemCount} items outside the ship, totaling a total of {totalWorth} altogether.";
+                        text += $"There are {itemCount} items {(StartOfRound.Instance.inShipPhase ? "inside" : "outside")} the ship, totaling a total of {totalWorth} altogether.";
 
                         Respond(text);
                     }
