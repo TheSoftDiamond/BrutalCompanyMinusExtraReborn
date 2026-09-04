@@ -32,9 +32,9 @@ namespace BrutalCompanyMinus
     [BepInPlugin(GUID, NAME, VERSION)]
     internal class Plugin : BaseUnityPlugin
     {
-        private const string GUID = "SoftDiamond.BrutalCompanyMinusExtraReborn";
-        private const string NAME = "BrutalCompanyMinusExtraReborn";
-        private const string VERSION = "1.80.0";
+        public const string GUID = "SoftDiamond.BrutalCompanyMinusExtraReborn";
+        public const string NAME = "BrutalCompanyMinusExtraReborn";
+        public const string VERSION = "2.0.0";
 
         internal static Plugin Instance { get; private set; }
 
