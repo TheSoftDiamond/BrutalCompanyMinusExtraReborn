@@ -35,7 +35,7 @@ namespace BrutalCompanyMinus.Minus.Events
             TipMessages = new List<string>() { "UNAUTHORIZED SHIPS DETECTED", "DETECTING RADIO WAVES", "WHO ARE THEY...?", "UNAUTHORIZED SHIPS IN ORBIT" };
 
             ScaleList.Add(ScaleType.MinIntervalTime, new Scale(20.0f, -0.015f, 10.0f, 20.0f));
-            ScaleList.Add(ScaleType.MaXIntervalTime, new Scale(40.0f, -0.035f, 20.0f, 40.0f));
+            ScaleList.Add(ScaleType.MaxIntervalTime, new Scale(40.0f, -0.035f, 20.0f, 40.0f));
             ScaleList.Add(ScaleType.Percentage, new Scale(70.0f, 3.55f, 70.0f, 100.0f));
             ScaleList.Add(ScaleType.SpeedMin, new Scale(30.0f, 0.015f, 30.0f, 40.0f));
             ScaleList.Add(ScaleType.SpeedMax, new Scale(50.0f, 0.035f, 50.0f, 70.0f));

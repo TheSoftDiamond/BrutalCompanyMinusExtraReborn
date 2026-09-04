@@ -139,7 +139,7 @@ namespace BrutalCompanyMinus.Minus
             ScrapValue, ScrapAmount, FactorySize, MinDensity, MaxDensity, MinCash, MaxCash, MinItemAmount, MaxItemAmount, MinValue, MaxValue, Rarity, MinRarity, MaxRarity,
             MinCut, MaxCut, MinHp, MaxHp, SpawnMultiplier, MaxInsideEnemyCount, MaxOutsideEnemyCount, SpawnCapMultiplier, MinPercentageCut, MaxPercentageCut, MinAmount, MaxAmount, 
             Percentage, TimeSettings, TimeMin, TimeMax, MinPercentSelected, MaxPercentSelected, ObjectWidth, minMold, maxMold, Slipperyness, SpawnChance, DrunknessMin, DrunknessMax,
-            MinIntervalTime, MaXIntervalTime, SpeedMin, SpeedMax, DistanceMin, DistanceMax, MaxSpawned, MinSpawned, TimeWaitMinDespawn, TimeWaitMaxDespawn, timeStart, timeEnd
+            MinIntervalTime, MaxIntervalTime, SpeedMin, SpeedMax, DistanceMin, DistanceMax, MaxSpawned, MinSpawned, TimeWaitMinDespawn, TimeWaitMaxDespawn, timeStart, timeEnd
         }
 
         /// <summary>
@@ -193,7 +193,7 @@ namespace BrutalCompanyMinus.Minus
             { ScaleType.DrunknessMin, "How drunk the player is at minimum." },
             { ScaleType.DrunknessMax, "How drunk the player is at maximum." },
             { ScaleType.MinIntervalTime, "The minimum time between an interval" },
-            { ScaleType.MaXIntervalTime, "The maximum time between an interval" },
+            { ScaleType.MaxIntervalTime, "The maximum time between an interval" },
             { ScaleType.SpeedMin, "The minimum speed of something" },
             { ScaleType.SpeedMax, "The maximum speed of something" },
             { ScaleType.DistanceMin, "The minimum distance of something" },

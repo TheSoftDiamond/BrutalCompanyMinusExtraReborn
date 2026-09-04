@@ -34,7 +34,7 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
             {
                 currentTime = 0f;
 
-                nextDropTime = UnityEngine.Random.Range(MaskDrop.Instance.Getf(ScaleType.MinIntervalTime), MaskDrop.Instance.Getf(ScaleType.MaXIntervalTime));
+                nextDropTime = UnityEngine.Random.Range(MaskDrop.Instance.Getf(ScaleType.MinIntervalTime), MaskDrop.Instance.Getf(ScaleType.MaxIntervalTime));
                 //Log.LogInfo($"[MaskDrop] Next drop time: {nextDropTime}");
             }
 
@@ -72,7 +72,7 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
                 //Log.LogInfo($"[MaskDrop] Current time: {currentTime}, Next drop time: {nextDropTime}");
                 if (currentTime > nextDropTime)
                 {
-                    nextDropTime = UnityEngine.Random.Range(MaskDrop.Instance.Getf(ScaleType.MinIntervalTime), MaskDrop.Instance.Getf(ScaleType.MaXIntervalTime));
+                    nextDropTime = UnityEngine.Random.Range(MaskDrop.Instance.Getf(ScaleType.MinIntervalTime), MaskDrop.Instance.Getf(ScaleType.MaxIntervalTime));
                     currentTime = 0f;
 
                     float chance = UnityEngine.Random.Range(0f, MaskDrop.Instance.Getf(ScaleType.Percentage));
