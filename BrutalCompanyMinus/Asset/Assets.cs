@@ -17,13 +17,17 @@ namespace BrutalCompanyMinus
     [HarmonyPatch]
     public class Assets
     {
-        internal static AssetBundle bundle, customAssetBundle;
+        internal static AssetBundle bundle, customAssetBundle, bcmerBundle;
 
         // Exploding Items
         public static AudioClip mineTickSound = null!;
         public static AudioClip mineDetonateSound = null!;
         public static AudioClip mineTriggerSound = null!;
         public static AudioClip minePressSound = null!;
+
+        public static EnemyType maskedPlayerPrefab = null!;
+
+        public static GameObject shipPrefab = null!;
 
         public enum EnemyName
         {
@@ -205,6 +209,9 @@ namespace BrutalCompanyMinus
             teleportAudio = (GameObject)customAssetBundle.LoadAsset("TeleportAudioSource");
             bloodRain = (GameObject)customAssetBundle.LoadAsset("BloodRainParticleContainer");
 
+            shipPrefab = Assets.bcmerBundle.LoadAsset<GameObject>("ship");
+            shipPrefab.GetComponent<AudioSource>().maxDistance *= 2;
+
             // HACKHACK: Grab the assets from the other prefabs
             GrabbableLandmine temp = grabbableLandmine.spawnPrefab.GetComponent<GrabbableLandmine>();
             KamikazieBugAI temp2 = kamikazieBug.enemyPrefab.GetComponent<KamikazieBugAI>();
@@ -251,6 +258,7 @@ namespace BrutalCompanyMinus
         {
             bundle = LoadAssetBundle("bcm_assets");
             customAssetBundle = LoadAssetBundle("bcm_customassets");
+            bcmerBundle = LoadAssetBundle("bcmer_assets");
 
             //Ensure Configuration is loaded
             //Configuration.CreateConfig();
@@ -298,6 +306,14 @@ namespace BrutalCompanyMinus
 
             for (int i = 0; i < AllEnemies.Length; i++)
             {
+                if (AllEnemies[i].enemyPrefab != null)
+                {
+                    if (AllEnemies[i].enemyPrefab.TryGetComponent<MaskedPlayerEnemy>(out _))
+                    {
+                        maskedPlayerPrefab = AllEnemies[i];
+                    }
+                }
+
                 if (ReadSettingEarly(Paths.ConfigPath + "\\BrutalCompanyMinusExtraReborn\\CoreProperties.cfg", "Silence Prefab Warnings?") == false)
                 {
                     if (AllEnemies[i].enemyPrefab == null) Log.LogWarning(string.Format("Enemy:{0}, prefab is null, this may cause issues...", AllEnemies[i].name));
