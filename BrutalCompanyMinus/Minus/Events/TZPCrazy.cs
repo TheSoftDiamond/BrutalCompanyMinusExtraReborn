@@ -82,9 +82,9 @@ namespace BrutalCompanyMinus.Minus.Events
 
             if (__instance == null) return;
 
-            if (!__instance.isPlayerDead && __instance.isPlayerControlled && __instance.IsOwner)
+            if (!__instance.isPlayerDead && __instance.isPlayerControlled)
             {
-                __instance.drunkness = DrunkValues[__instance.playerClientId];
+                __instance.drunkness = Mathf.Max(DrunkValues[__instance.playerClientId], __instance.drunkness);
                 __instance.increasingDrunknessThisFrame = true;
             }
         }
