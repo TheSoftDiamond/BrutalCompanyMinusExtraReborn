@@ -7,6 +7,7 @@ using GameNetcodeStuff;
 using HarmonyLib;
 using Steamworks.Ugc;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Collections;
@@ -14,6 +15,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Rendering.HighDefinition;
+using static BrutalCompanyMinus.Minus.MEvent;
 using AllWeather = BrutalCompanyMinus.Minus.Handlers.AllWeather;
 using Random = UnityEngine.Random;
 
@@ -884,6 +886,68 @@ namespace BrutalCompanyMinus
             if (areaLight9 != null)
             {
                 areaLight9.SetActive(true);
+            }
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void SpawnMaskShipServerRpc(int seed, int height, float speed, float rotx, float roty, float rotz, float time)
+        {
+            SpawnMaskShipClientRpc(seed, height, speed, rotx, roty, rotz, time);
+        }
+
+        [ClientRpc]
+        public void SpawnMaskShipClientRpc(int seed, int height, float speed, float rotx, float roty, float rotz, float time = 5)
+        {
+            System.Random rng = new System.Random(seed);
+
+            // Get a random ai node from the list of outside ai nodes
+            GameObject[] outsideAINodes = RoundManager.Instance.outsideAINodes;
+
+            //Choose the ai node to spawn the ship at
+            Vector3 pos = outsideAINodes[rng.Next(outsideAINodes.Length)].transform.position;
+            //Log.LogInfo($"[MaskDrop] Chose an ai node of {pos.x}, {pos.y}, {pos.z}");
+
+            // Spawn the ship at a random position above the ai node
+            Vector3 startPos = pos + new Vector3(rng.Next(-10, 10), height, rng.Next(-10, 10));
+            //Log.LogInfo($"[MaskDrop] Spawning ship at {startPos.x}, {startPos.y}, {startPos.z}");
+
+            GameObject ship = GameObject.Instantiate(Assets.shipPrefab, startPos, Quaternion.Euler(rotx, roty, rotz));
+
+            StartCoroutine(changeShipPosToEnd(ship, startPos, pos, speed, time));
+        }
+        private IEnumerator changeShipPosToEnd(GameObject ship, Vector3 startPos, Vector3 endPos, float speed = 1, float time = 5f)
+        {
+            while (ship.transform.position != endPos)
+            {
+                ship.transform.position = Vector3.MoveTowards(ship.transform.position, endPos, speed * Time.deltaTime);
+                yield return null;
+            }
+
+            ship.GetComponent<AudioSource>().Stop();
+
+            Landmine.SpawnExplosion(endPos, spawnExplosionEffect: true, 5.7f, 6f);
+            //Log.LogInfo($"[MaskDrop] Ship reached end position at {endPos.x}, {endPos.y}, {endPos.z}");
+
+            yield return new WaitForSeconds(0.5f);
+
+            if (RoundManager.Instance.IsServer)
+            {
+                int maskAmount = UnityEngine.Random.Range(MaskDrop.Instance.Get(ScaleType.MinSpawned), MaskDrop.Instance.Get(ScaleType.MaxSpawned));
+                //Log.LogInfo($"[MaskDrop] Spawning {maskAmount} of masks");
+
+                for (int i = 0; i < maskAmount; i++)
+                {
+                    Vector3 spawnPos = RoundManager.Instance.GetRandomNavMeshPositionInRadius(endPos, MaskDrop.Instance.Getf(ScaleType.DistanceMax));
+
+                    RoundManager.Instance.SpawnEnemyGameObject(spawnPos, 0, -1, Assets.maskedPlayerPrefab);
+                    //Log.LogInfo($"[MaskDrop] Spawning mask at {spawnPos.x}, {spawnPos.y}, {spawnPos.z}");
+                }
+            }
+
+            yield return new WaitForSeconds(time);
+            if (ship != null)
+            {
+                GameObject.Destroy(ship);
             }
         }
 
