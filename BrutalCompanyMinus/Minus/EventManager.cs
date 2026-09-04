@@ -167,6 +167,7 @@ namespace BrutalCompanyMinus.Minus
             new Events.NutSlayersMore(),
             new Events.SlimeInside(),
             new Events.SlimeOutside(),
+            new Events.MaskDrop(),
             // No Enemy
             new Events.NoBaboons(),
             new Events.NoBracken(),
