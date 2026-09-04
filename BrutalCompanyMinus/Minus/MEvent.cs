@@ -138,7 +138,8 @@ namespace BrutalCompanyMinus.Minus
             InsideEnemyRarity, OutsideEnemyRarity, DaytimeEnemyRarity, MinOutsideEnemy, MinInsideEnemy, MaxOutsideEnemy, MaxInsideEnemy,
             ScrapValue, ScrapAmount, FactorySize, MinDensity, MaxDensity, MinCash, MaxCash, MinItemAmount, MaxItemAmount, MinValue, MaxValue, Rarity, MinRarity, MaxRarity,
             MinCut, MaxCut, MinHp, MaxHp, SpawnMultiplier, MaxInsideEnemyCount, MaxOutsideEnemyCount, SpawnCapMultiplier, MinPercentageCut, MaxPercentageCut, MinAmount, MaxAmount, 
-            Percentage, TimeSettings, TimeMin, TimeMax, MinPercentSelected, MaxPercentSelected, ObjectWidth, minMold, maxMold, Slipperyness, SpawnChance, DrunknessMin, DrunknessMax
+            Percentage, TimeSettings, TimeMin, TimeMax, MinPercentSelected, MaxPercentSelected, ObjectWidth, minMold, maxMold, Slipperyness, SpawnChance, DrunknessMin, DrunknessMax,
+            MinIntervalTime, MaXIntervalTime, SpeedMin, SpeedMax, DistanceMin, DistanceMax, MaxSpawned, MinSpawned, TimeWaitMinDespawn, TimeWaitMaxDespawn, timeStart, timeEnd
         }
 
         /// <summary>
@@ -190,7 +191,19 @@ namespace BrutalCompanyMinus.Minus
             { ScaleType.Slipperyness, "How slippery is the floor is" },
             { ScaleType.SpawnChance, "The chance of something spawning." },
             { ScaleType.DrunknessMin, "How drunk the player is at minimum." },
-            { ScaleType.DrunknessMax, "How drunk the player is at maximum."   }
+            { ScaleType.DrunknessMax, "How drunk the player is at maximum." },
+            { ScaleType.MinIntervalTime, "The minimum time between an interval" },
+            { ScaleType.MaXIntervalTime, "The maximum time between an interval" },
+            { ScaleType.SpeedMin, "The minimum speed of something" },
+            { ScaleType.SpeedMax, "The maximum speed of something" },
+            { ScaleType.DistanceMin, "The minimum distance of something" },
+            { ScaleType.DistanceMax, "The maximum distance of something" },
+            { ScaleType.MinSpawned, "The minimum amount of something spawned" },
+            { ScaleType.MaxSpawned, "The maximum amount of something spawned" },
+            { ScaleType.TimeWaitMinDespawn, "The minimum time to wait for something to despawn." },
+            { ScaleType.TimeWaitMaxDespawn, "The maximum time to wait for something to despawn." },
+            { ScaleType.timeStart, "The time of day to start something (Normalized from 0 to 1)." },
+            { ScaleType.timeEnd, "The time of day to end something (Normalized from 0 to 1)." }
         };
 
         /// <summary>
