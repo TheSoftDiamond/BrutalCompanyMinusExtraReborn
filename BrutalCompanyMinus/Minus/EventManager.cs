@@ -161,6 +161,7 @@ namespace BrutalCompanyMinus.Minus
             new Events.Dweller(),
             new Events.BerserkTurrets(),
             new Events.ExplodingItems(),
+            new Events.DropEnemy(),
             //Insane
             new Events.Hell(),
             new Events.TimeChaos(),// Requires Special Events
@@ -234,7 +235,6 @@ namespace BrutalCompanyMinus.Minus
             new Events.Seamine(),
             new Events.YeetBomb(),
             new Events.ManStalker(),
-            new Events.Foxy(),
             new Events.HotBarHassle(),
             new Events.Bellcrab(),
             new Events.LightEaterEnemy(),
