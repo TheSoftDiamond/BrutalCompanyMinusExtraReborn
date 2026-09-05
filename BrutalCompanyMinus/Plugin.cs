@@ -19,7 +19,6 @@ namespace BrutalCompanyMinus
     [BepInDependency("FlipMods.HotbarPlus", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("mrov.WeatherRegistry", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("voxx.LethalElementsPlugin", BepInDependency.DependencyFlags.SoftDependency)]
-    [BepInDependency("uk.1a3.yesfox", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("zigzag.SelfSortingStorage", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("LethalPhones", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.github.zehsteam.ToilHead", BepInDependency.DependencyFlags.SoftDependency)]
