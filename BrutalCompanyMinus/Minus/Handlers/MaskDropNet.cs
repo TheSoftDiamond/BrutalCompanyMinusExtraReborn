@@ -75,7 +75,7 @@ namespace BrutalCompanyMinus.Minus.MonoBehaviours
                     nextDropTime = UnityEngine.Random.Range(MaskDrop.Instance.Getf(ScaleType.MinIntervalTime), MaskDrop.Instance.Getf(ScaleType.MaxIntervalTime));
                     currentTime = 0f;
 
-                    float chance = UnityEngine.Random.Range(0f, MaskDrop.Instance.Getf(ScaleType.Percentage));
+                    float chance = UnityEngine.Random.Range(0f, 100f);
                     //Log.LogInfo($"[MaskDrop] Chance: {chance}, Percentage: {MaskDrop.Instance.Getf(ScaleType.Percentage)}");
 
                     if (chance <= MaskDrop.Instance.Getf(ScaleType.Percentage))
