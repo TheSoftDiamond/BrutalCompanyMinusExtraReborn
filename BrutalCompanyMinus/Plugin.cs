@@ -17,7 +17,6 @@ namespace BrutalCompanyMinus
 {
     [BepInDependency("org.lethalcompanymodding.shipinventoryupdated", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("FlipMods.HotbarPlus", BepInDependency.DependencyFlags.SoftDependency)]
-    [BepInDependency("mrov.WeatherRegistry", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("voxx.LethalElementsPlugin", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("zigzag.SelfSortingStorage", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("LethalPhones", BepInDependency.DependencyFlags.SoftDependency)]
@@ -33,7 +32,7 @@ namespace BrutalCompanyMinus
     {
         public const string GUID = "SoftDiamond.BrutalCompanyMinusExtraReborn";
         public const string NAME = "BrutalCompanyMinusExtraReborn";
-        public const string VERSION = "2.0.1";
+        public const string VERSION = "2.1.0";
 
         internal static Plugin Instance { get; private set; }
 
@@ -85,6 +84,7 @@ namespace BrutalCompanyMinus
             if (Compatibility.IsModPresent("LethalPhones")) PhonesOutPatching.PatchAllPhone(harmony);
             if (Compatibility.IsModPresent("Scandal.CruiserXL")) ScanVanPatching.PatchAllCruiserXL(harmony);
             if (!Compatibility.IsModPresent("AudioKnight.StarlancerAIFix")) _EnemyAI.PatchEnemyStart(harmony); // Apply our patch if the mod is not present
+            if (Compatibility.IsModPresent("mrov.WeatherRegistry")) CustomWeatherConfigCompat.PatchAll(harmony);
 
             Log.LogInfo(NAME + " " + VERSION + " " + "is done patching.");
 
