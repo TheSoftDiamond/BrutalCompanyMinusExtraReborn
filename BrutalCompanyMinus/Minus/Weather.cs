@@ -4,6 +4,7 @@ using HarmonyLib;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using BrutalCompanyMinus.Minus.Handlers.Modded;
+using UnityEngine;
 
 namespace BrutalCompanyMinus.Minus
 {
@@ -14,17 +15,19 @@ namespace BrutalCompanyMinus.Minus
 
         public float scrapValueMultiplier;
         public float scrapAmountMultiplier;
+        public float weatherAdditive;
 
-        public Weather(LevelWeatherType weatherType, float scrapValueMultiplier, float scrapAmountMultiplier)
+        public Weather(LevelWeatherType weatherType, float scrapValueMultiplier, float scrapAmountMultiplier, float weatherAdditive)
         {
             this.weatherType = weatherType;
             this.scrapValueMultiplier = scrapValueMultiplier;
             this.scrapAmountMultiplier = scrapAmountMultiplier;
+            this.weatherAdditive = weatherAdditive;
         }
 
         public static Weather operator *(Weather left, Weather right)
         {
-            return new Weather(left.weatherType, left.scrapValueMultiplier * right.scrapValueMultiplier, left.scrapAmountMultiplier * right.scrapAmountMultiplier);
+            return new Weather(left.weatherType, left.scrapValueMultiplier * right.scrapValueMultiplier, left.scrapAmountMultiplier * right.scrapAmountMultiplier, Mathf.Max(left.weatherAdditive, right.weatherAdditive));
         }
 
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
@@ -35,6 +38,7 @@ namespace BrutalCompanyMinus.Minus
                 reader.ReadValueSafe(out weatherType);
                 reader.ReadValueSafe(out scrapValueMultiplier);
                 reader.ReadValueSafe(out scrapAmountMultiplier);
+                reader.ReadValueSafe(out weatherAdditive);
             }
             else
             {
@@ -42,6 +46,7 @@ namespace BrutalCompanyMinus.Minus
                 writer.WriteValueSafe(weatherType);
                 writer.WriteValueSafe(scrapValueMultiplier);
                 writer.WriteValueSafe(scrapAmountMultiplier);
+                writer.WriteValueSafe(weatherAdditive);
             }
         }
 
@@ -78,7 +83,7 @@ namespace BrutalCompanyMinus.Minus
             {
                 float minInclusive = Configuration.weatherRandomRandomMinInclusive.Value, maxInclusive = Configuration.weatherRandomRandomMaxInclusive.Value;
 
-                Weather multipliers = new Weather(currentWeatherMultipliers[i].weatherType, UnityEngine.Random.Range(minInclusive, maxInclusive), UnityEngine.Random.Range(minInclusive, maxInclusive));
+                Weather multipliers = new Weather(currentWeatherMultipliers[i].weatherType, UnityEngine.Random.Range(minInclusive, maxInclusive), UnityEngine.Random.Range(minInclusive, maxInclusive), currentWeatherMultipliers[i].weatherAdditive);
 
                 switch (currentWeatherMultipliers[i].weatherType)
                 {
