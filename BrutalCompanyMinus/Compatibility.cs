@@ -252,7 +252,7 @@ namespace BrutalCompanyMinus
             BiodiversityPresent = IsModPresent("com.github.biodiversitylc.Biodiversity", "Biodiversity Detected");
             furniturePackPresent = IsModPresent("MelanieMelicious.furniturePack0", "Furniture Pack Detected");
             OoblterraPresent = IsModPresent("SkullCrusher.WTO", "Ooblterra Detected");
-            lighteaterPresent = IsModPresent("Lega.LightEater", "Light Eater Detected");
+            lighteaterPresent = IsModPresent("Legcoa.LightEater", "Light Eater Detected");
             LethalPhonesPresent = IsModPresent("LethalPhones", "Lethal Phones Detected");
             SelfSortingStorage = IsModPresent("zigzag.SelfSortingStorage", "Self Sorting Storage Detected");
             LethalElementsPresent = IsModPresent("voxx.LethalElementsPlugin", "Lethal Elements Detected");

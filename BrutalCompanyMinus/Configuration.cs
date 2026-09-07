@@ -76,7 +76,7 @@ namespace BrutalCompanyMinus
         public static ConfigEntry<bool>? ignoreMaxCap, ignoreMaxCapOther, scaleByDaysPassed, scaleByScrapInShip, scaleByMoonGrade, scaleByWeather, scaleByQuota, scaleHeat;
         public static ConfigEntry<float>? daysPassedDifficultyMultiplier, daysPassedDifficultyCap, scrapInShipDifficultyMultiplier, scrapInShipDifficultyCap, quotaDifficultyMultiplier, quotaDifficultyCap;
         public static Dictionary<string, float> gradeAdditives = new Dictionary<string, float>();
-        public static Dictionary<LevelWeatherType, float> weatherAdditives = new Dictionary<LevelWeatherType, float>();
+        public static Dictionary<LevelWeatherType, Weather> weatherAdditives = new Dictionary<LevelWeatherType, Weather>();
         public static ConfigEntry<bool>? enableCustomTimeAdjustments;
         public static Scale timeScaling = new Scale();
         public static Scale startingTime = new Scale();
@@ -340,17 +340,6 @@ namespace BrutalCompanyMinus
             heatForceEventAtMax = difficultyConfig.Bind("Difficulty Scaling", "Force event at max heat?", false, "If true, when the heat reaches the max value, spawn the events you wrote below in the list.");
             heatEventsToForce = difficultyConfig.Bind("Difficulty Scaling", "Events to force at max heat", "", "When heat reaches max value, these events will be forced to spawn. Seperate by comma for each event name. Event names are case sensitive and must be exact to their entry name. Trailing white spaces are stripped from every name.");
             heatSettingsToAffect = difficultyConfig.Bind("Difficulty Scaling", "Heat Affects What Properties", HeatSettingsFlags.Difficulty, "Cchoose what additional properties you wish it to affect.");
-
-            weatherAdditives = new Dictionary<LevelWeatherType, float>()
-            {
-                { LevelWeatherType.None, difficultyConfig.Bind("Difficulty Scaling", "None weather difficulty", 0.0f, "Difficulty added for playing on None weather").Value },
-                { LevelWeatherType.Rainy, difficultyConfig.Bind("Difficulty Scaling", "Rainy weather difficulty", 2.0f, "Difficulty added for playing on Rainy weather").Value },
-                { LevelWeatherType.DustClouds, difficultyConfig.Bind("Difficulty Scaling", "DustClouds weather difficulty", 2.0f, "Difficulty added for playing on DustClouds weather").Value },
-                { LevelWeatherType.Flooded, difficultyConfig.Bind("Difficulty Scaling", "Flooded weather difficulty", 4.0f, "Difficulty added for playing on Flooded weather").Value },
-                { LevelWeatherType.Foggy, difficultyConfig.Bind("Difficulty Scaling", "Foggy weather difficulty", 4.0f, "Difficulty added for playing on Foggy weather").Value },
-                { LevelWeatherType.Stormy, difficultyConfig.Bind("Difficulty Scaling", "Stormy weather difficulty", 7.0f, "Difficulty added for playing on Stormy weather").Value },
-                { LevelWeatherType.Eclipsed, difficultyConfig.Bind("Difficulty Scaling", "Eclipsed weather difficulty", 7.0f, "Difficulty added for playing on Eclipsed weather").Value },
-            };
             scrapValueMax = difficultyConfig.Bind("Difficulty Scaling", "Scrap value max cap", 2147483647.0f, "The scrap value multipliers when added together wont go beyond this.");
             scrapAmountMax = difficultyConfig.Bind("Difficulty Scaling", "Scrap amount max cap", 2147483647.0f, "The scrap amount multipliers when added together wont go beyond this.");
             FactorySizeMax = difficultyConfig.Bind("Difficulty Scaling", "Factory size max cap", 2147483647.0f, "The factory size multipliers when added together wont go beyond this. Use at own risk");
@@ -415,17 +404,40 @@ namespace BrutalCompanyMinus
 
                 float valueMultiplierSetting = weatherConfig.Bind(configHeader, "Scrap Value Multiplier", weather.scrapValueMultiplier, "Multiply Scrap value for " + weather.weatherType.ToString()).Value;
                 float amountMultiplierSetting = weatherConfig.Bind(configHeader, "Scrap Amount Multiplier", weather.scrapAmountMultiplier, "Multiply Scrap amount for " + weather.weatherType.ToString()).Value;
+                float weatherAdditives = weatherConfig.Bind(configHeader, "Difficulty Additive", weather.weatherAdditive, "Difficulty additive for " + weather.weatherType.ToString()).Value;
 
-                return new Weather(weather.weatherType, valueMultiplierSetting, amountMultiplierSetting);
+                return new Weather(weather.weatherType, valueMultiplierSetting, amountMultiplierSetting, weatherAdditives);
             }
 
-            noneMultiplier = createWeatherSettings(new Weather(LevelWeatherType.None, 1.00f, 1.00f));
-            dustCloudMultiplier = createWeatherSettings(new Weather(LevelWeatherType.DustClouds, 1.05f, 1.00f));
-            rainyMultiplier = createWeatherSettings(new Weather(LevelWeatherType.Rainy, 1.05f, 1.00f));
-            stormyMultiplier = createWeatherSettings(new Weather(LevelWeatherType.Stormy, 1.35f, 1.20f));
-            foggyMultiplier = createWeatherSettings(new Weather(LevelWeatherType.Foggy, 1.15f, 1.10f));
-            floodedMultiplier = createWeatherSettings(new Weather(LevelWeatherType.Flooded, 1.25f, 1.15f));
-            eclipsedMultiplier = createWeatherSettings(new Weather(LevelWeatherType.Eclipsed, 1.35f, 1.20f));
+            noneMultiplier = createWeatherSettings(new Weather(LevelWeatherType.None, 1.00f, 1.00f, 0.0f));
+            dustCloudMultiplier = createWeatherSettings(new Weather(LevelWeatherType.DustClouds, 1.05f, 1.00f, 2.0f));
+            rainyMultiplier = createWeatherSettings(new Weather(LevelWeatherType.Rainy, 1.05f, 1.00f, 2.0f));
+            stormyMultiplier = createWeatherSettings(new Weather(LevelWeatherType.Stormy, 1.35f, 1.20f, 4.0f));
+            foggyMultiplier = createWeatherSettings(new Weather(LevelWeatherType.Foggy, 1.15f, 1.10f, 4.0f));
+            floodedMultiplier = createWeatherSettings(new Weather(LevelWeatherType.Flooded, 1.25f, 1.15f, 7.0f));
+            eclipsedMultiplier = createWeatherSettings(new Weather(LevelWeatherType.Eclipsed, 1.35f, 1.20f, 7.0f));
+            weatherAdditives = new Dictionary<LevelWeatherType, Weather>
+            {
+                { LevelWeatherType.None, noneMultiplier },
+                { LevelWeatherType.Rainy, rainyMultiplier },
+                { LevelWeatherType.DustClouds, dustCloudMultiplier },
+                { LevelWeatherType.Flooded, floodedMultiplier },
+                { LevelWeatherType.Foggy, foggyMultiplier },
+                { LevelWeatherType.Stormy, stormyMultiplier },
+                { LevelWeatherType.Eclipsed, eclipsedMultiplier }
+            };
+
+            /*
+            weatherAdditives = new Dictionary<LevelWeatherType, float>()
+            {
+                { LevelWeatherType.None, difficultyConfig.Bind("Difficulty Scaling", "None weather difficulty", 0.0f, "Difficulty added for playing on None weather").Value },
+                { LevelWeatherType.Rainy, difficultyConfig.Bind("Difficulty Scaling", "Rainy weather difficulty", 2.0f, "Difficulty added for playing on Rainy weather").Value },
+                { LevelWeatherType.DustClouds, difficultyConfig.Bind("Difficulty Scaling", "DustClouds weather difficulty", 2.0f, "Difficulty added for playing on DustClouds weather").Value },
+                { LevelWeatherType.Flooded, difficultyConfig.Bind("Difficulty Scaling", "Flooded weather difficulty", 4.0f, "Difficulty added for playing on Flooded weather").Value },
+                { LevelWeatherType.Foggy, difficultyConfig.Bind("Difficulty Scaling", "Foggy weather difficulty", 4.0f, "Difficulty added for playing on Foggy weather").Value },
+                { LevelWeatherType.Stormy, difficultyConfig.Bind("Difficulty Scaling", "Stormy weather difficulty", 7.0f, "Difficulty added for playing on Stormy weather").Value },
+                { LevelWeatherType.Eclipsed, difficultyConfig.Bind("Difficulty Scaling", "Eclipsed weather difficulty", 7.0f, "Difficulty added for playing on Eclipsed weather").Value },
+            };*/
 
             // UI Settings
             UIKey = uiConfig.Bind("UI Options (Color)", "Toggle UI Key", "K");

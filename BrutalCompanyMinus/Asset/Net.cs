@@ -289,7 +289,7 @@ namespace BrutalCompanyMinus
         }
 
         [ServerRpc(RequireOwnership = false)]
-        private void InitalizeCurrentWeatherMultipliersServerRpc()
+        public void InitalizeCurrentWeatherMultipliersServerRpc()
         {
             currentWeatherMultipliers = Weather.InitalizeWeatherMultipliers(ref currentWeatherMultipliers);
             UpdateCurrentWeatherMultipliersServerRpc();

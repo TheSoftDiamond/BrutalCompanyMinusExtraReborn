@@ -593,7 +593,13 @@ namespace BrutalCompanyMinus.Minus
             }
             if (Configuration.scaleByWeather.Value)
             {
-                weatherDifficulty = Configuration.weatherAdditives.GetValueOrDefault(StartOfRound.Instance.currentLevel.currentWeather, 0.0f);
+                weatherDifficulty = Configuration.weatherAdditives.GetValueOrDefault(StartOfRound.Instance.currentLevel.currentWeather).weatherAdditive;
+                if (Compatibility.WeatherRegistryPresent)
+                {
+                    float? difficulty = CustomWeatherConfigCompat.GetCustomWeatherAdditive();
+                    if (difficulty.HasValue)
+                        weatherDifficulty = difficulty.Value;
+                }
 
                 difficulty += weatherDifficulty;
             }

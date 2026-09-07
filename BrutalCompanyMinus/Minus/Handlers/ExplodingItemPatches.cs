@@ -42,7 +42,8 @@ namespace BrutalCompanyMinus.Minus.Handlers
         /// </summary>
         public static void ApplyExplosiveStates(GrabbableObject item)
         {
-            if (!ExplodingItems.Instance.Active || item == null)
+            var instanceEI = ExplodingItems.Instance;
+            if (instanceEI == null || !instanceEI.Active || item == null)
             {
 
                     Log.LogDebug("Exploding Item skipped for " + (item != null ? item.name : "null") + " with ID " + (item != null ? item.NetworkObject.NetworkObjectId.ToString() : "null") + " because ExplodingItems is not active or item is null.");

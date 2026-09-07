@@ -5,6 +5,7 @@ using System.Text;
 using System.Xml.Linq;
 using com.github.zehsteam.TakeyPlush;
 using UnityEngine;
+using BrutalCompanyMinus.Minus.Handlers.Modded;
 using static UnityEngine.Rendering.HighDefinition.ScalableSettingLevelParameter;
 
 namespace BrutalCompanyMinus.Minus
@@ -155,7 +156,14 @@ namespace BrutalCompanyMinus.Minus
         {
             try
             {
-                return Configuration.weatherAdditives.GetValueOrDefault(StartOfRound.Instance.currentLevel.currentWeather, 0.0f);
+                if (Compatibility.WeatherRegistryPresent)
+                {
+                    float? difficulty = CustomWeatherConfigCompat.GetCustomWeatherAdditive();
+                    if (difficulty.HasValue)
+                        return difficulty.Value;
+                }
+
+                return Configuration.weatherAdditives.GetValueOrDefault(StartOfRound.Instance.currentLevel.currentWeather).weatherAdditive;
             }
             catch (Exception e)
             {
