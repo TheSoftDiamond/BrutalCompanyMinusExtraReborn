@@ -442,6 +442,12 @@ namespace BrutalCompanyMinus.Minus.Handlers
                         }
                     }
                     Respond(text);
+
+                    foreach (Item item in StartOfRound.Instance.allItemsList.itemsList)
+                    {
+                        string itemInfo = $"Name: {item.itemName} with ID: {item.itemId}";
+                        Log.LogInfo(itemInfo);
+                    }
                 })
             },
             #endregion
