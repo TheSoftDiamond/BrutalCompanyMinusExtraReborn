@@ -319,7 +319,7 @@ namespace BrutalCompanyMinus.Minus.Events
             insideHellSpawnCycle.nothingWeight = 100 / Getf(ScaleType.SpawnMultiplier);
             outsideHellSpawnCycle.nothingWeight = 100 / Getf(ScaleType.SpawnMultiplier);
 
-            currentIngameWeather = StartOfRound.Instance.currentLevel.currentWeather.ToString();
+            //currentIngameWeather = StartOfRound.Instance.currentLevel.currentWeather.ToString();
             if (currentIngameWeather != "Majora Moon")
             {
                     // For slower moving time
