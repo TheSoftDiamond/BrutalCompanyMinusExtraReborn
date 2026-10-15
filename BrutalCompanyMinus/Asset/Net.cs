@@ -846,7 +846,7 @@ namespace BrutalCompanyMinus
             }
 
             // Find a gameobject called ShipElectricLights, which is a child of hangarShip
-            GameObject shipElectricLights = hangarShip.transform.Find("ShipElectricLights").gameObject;
+            GameObject shipElectricLights = hangarShip.transform.Find("ShipElectricLights")?.gameObject;
             if (shipElectricLights == null)
             {
                 return;
