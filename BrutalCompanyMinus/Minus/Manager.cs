@@ -610,31 +610,29 @@ namespace BrutalCompanyMinus.Minus
                 int PlayersOnline = StartOfRound.Instance.allPlayerScripts.Where(x => x.isPlayerDead || x.isPlayerControlled).Count(); //It just works
                 int playerDelta = (PlayersOnline - BasePlayerAmount);
 
-                if (Configuration.playerScalingType.Value.ToLower() == "linear")
+                switch (Configuration.playerScalingType.Value)
                 {
-                    difficulty *= 1 + (playerDelta * (scalingFactor - 1));
-                }
-                else if (Configuration.playerScalingType.Value.ToLower() == "exponential")
-                {
-                    difficulty *= Mathf.Pow(scalingFactor, playerDelta);
-                }
-                else if (Configuration.playerScalingType.Value.ToLower() == "logarithmic")
-                {
-                    // We use Max to avoid negative values which would be undefined.
-                    // Scaling factors (both negative and positive) closer to 0 will have less impact, while those further from 0 will have more impact.
-                    // The higher the number gets from the base, the faster it slows down the impact. But below the cap it's constant.
-                    difficulty *= 1 + (Mathf.Log(Mathf.Max(playerDelta, 1)) * scalingFactor);
-                }
-                else if (Configuration.playerScalingType.Value.ToLower() == "cubic")
-                {
-                    // Steeper curves as the number goes away from the base player amount.
-                    // Values closer to 0 are recommended for more gradual changes.
-                    difficulty *= 1 + (Mathf.Pow(playerDelta, 3) * scalingFactor);
-                }
-                else
-                {
-                    //Fallback to linear
-                    difficulty *= 1 + (playerDelta * (scalingFactor - 1));
+                    case Configuration.PlayerScalingFlags.Linear:
+                        difficulty *= 1 + (playerDelta * (scalingFactor - 1));
+                        break;
+                    case Configuration.PlayerScalingFlags.Exponential:
+                        difficulty *= Mathf.Pow(scalingFactor, playerDelta);
+                        break;
+                    case Configuration.PlayerScalingFlags.Logarithmic:
+                        // We use Max to avoid negative values which would be undefined.
+                        // Scaling factors (both negative and positive) closer to 0 will have less impact, while those further from 0 will have more impact.
+                        // The higher the number gets from the base, the faster it slows down the impact. But below the cap it's constant.
+                        difficulty *= 1 + (Mathf.Log(Mathf.Max(playerDelta, 1)) * scalingFactor);
+                        break;
+                    case Configuration.PlayerScalingFlags.Cubic:
+                        // Steeper curves as the number goes away from the base player amount.
+                        // Values closer to 0 are recommended for more gradual changes.
+                        difficulty *= 1 + (Mathf.Pow(playerDelta, 3) * scalingFactor);
+                        break;
+                    default:
+                        //Fallback to linear
+                        difficulty *= 1 + (playerDelta * (scalingFactor - 1));
+                        break;
                 }
             }
 
@@ -708,12 +706,12 @@ namespace BrutalCompanyMinus.Minus
                 count += ShipInventoryCompat.GetShipInventoryScrapValue();
             }
 
-            /*
+            
             if (Compatibility.SelfSortingStorage)
             {
                 count += SelfSortingStorageCompat.GetSelfSortingStorageScrapValue();
             }
-            */
+            
 
             return count;
         }
