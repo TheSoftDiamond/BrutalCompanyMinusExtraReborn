@@ -97,11 +97,25 @@ namespace BrutalCompanyMinus
 
         public static ConfigEntry<HeatSettingsFlags>? heatSettingsToAffect;
 
+
+
         // Player Scaling Settings
         public static ConfigEntry<bool>? enablePlayerScaling;
-        public static ConfigEntry<string>? playerScalingType;
+        //public static ConfigEntry<string>? playerScalingType;
         public static ConfigEntry<float>? playerScalingMultiplier;
         public static ConfigEntry<int>? basePlayerAmount;
+
+        //[Flags]
+        //Linear, Exponential, Logarithmic, Cubic
+        public enum PlayerScalingFlags
+        {
+            Linear,
+            Exponential,
+            Logarithmic,
+            Cubic
+        }
+
+        public static ConfigEntry<PlayerScalingFlags>? playerScalingType;
 
         // Weather settings
         public static ConfigEntry<bool>? useWeatherMultipliers, randomizeWeatherMultipliers, enableTerminalText;
@@ -340,9 +354,9 @@ namespace BrutalCompanyMinus
             heatForceEventAtMax = difficultyConfig.Bind("Difficulty Scaling", "Force event at max heat?", false, "If true, when the heat reaches the max value, spawn the events you wrote below in the list.");
             heatEventsToForce = difficultyConfig.Bind("Difficulty Scaling", "Events to force at max heat", "", "When heat reaches max value, these events will be forced to spawn. Seperate by comma for each event name. Event names are case sensitive and must be exact to their entry name. Trailing white spaces are stripped from every name.");
             heatSettingsToAffect = difficultyConfig.Bind("Difficulty Scaling", "Heat Affects What Properties", HeatSettingsFlags.Difficulty, "Cchoose what additional properties you wish it to affect.");
-            scrapValueMax = difficultyConfig.Bind("Difficulty Scaling", "Scrap value max cap", 2147483647.0f, "The scrap value multipliers when added together wont go beyond this.");
-            scrapAmountMax = difficultyConfig.Bind("Difficulty Scaling", "Scrap amount max cap", 2147483647.0f, "The scrap amount multipliers when added together wont go beyond this.");
-            FactorySizeMax = difficultyConfig.Bind("Difficulty Scaling", "Factory size max cap", 2147483647.0f, "The factory size multipliers when added together wont go beyond this. Use at own risk");
+            scrapValueMax = difficultyConfig.Bind("Difficulty Scaling", "Scrap value max cap", float.MaxValue, "The scrap value multipliers when added together wont go beyond this.");
+            scrapAmountMax = difficultyConfig.Bind("Difficulty Scaling", "Scrap amount max cap", float.MaxValue, "The scrap amount multipliers when added together wont go beyond this.");
+            FactorySizeMax = difficultyConfig.Bind("Difficulty Scaling", "Factory size max cap", float.MaxValue, "The factory size multipliers when added together wont go beyond this. Use at own risk");
             FactorySizeMin = difficultyConfig.Bind("Difficulty Scaling", "Factory size min cap", 0.01f, "The factory size multipliers when added together wont go below this. Use at own risk.");
             enableCustomTimeAdjustments = difficultyConfig.Bind("Difficulty Scaling", "Enable Time Adjustments?", false, "Enable custom time adjustments globally for difficulty scaling.");
             timeScaling = getScale(difficultyConfig.Bind("Difficulty Scaling", "Time Scaling", "1, 0.0, 1, 1", "Time scaling multiplier with respect to difficulty scaling" + scaleDescription).Value);
@@ -360,7 +374,7 @@ namespace BrutalCompanyMinus
             factorySizeMultiplier = getScale(difficultyConfig.Bind("Difficulty", "Factory Size multiplier scale", "1.0, 0, 1.0, 1.0", "Factory size multiplier. Use at your own risk. May not load at all or will take a very long time to generate." + scaleDescription).Value);
 
             enablePlayerScaling = difficultyConfig.Bind("Player Scaling", "Enable player scaling?", false, "Enable player scaling");
-            playerScalingType = difficultyConfig.Bind("Player Scaling", "Player scaling type", "Linear", "Type of scaling for player amount. Options: Linear, Exponential, Logarithmic, Cubic");
+            playerScalingType = difficultyConfig.Bind("Player Scaling", "Player scaling type", PlayerScalingFlags.Linear, "Type of scaling for player amount. Options: Linear, Exponential, Logarithmic, Cubic");
             playerScalingMultiplier = difficultyConfig.Bind("Player Scaling", "Player scaling multiplier", 1.0f, "Multiplier for player scaling");
             basePlayerAmount = difficultyConfig.Bind("Player Scaling", "Base player amount", 4, "Base player amount");
 
