@@ -1430,7 +1430,6 @@ namespace BrutalCompanyMinus.Minus
             }
             SaveRandomizerData();
         }
-        
 
         internal static void SaveRandomizerData()
         {
