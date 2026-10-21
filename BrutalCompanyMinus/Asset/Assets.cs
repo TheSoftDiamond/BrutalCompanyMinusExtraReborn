@@ -283,7 +283,7 @@ namespace BrutalCompanyMinus
         }
 
         private static bool generatedList = false;
-        private static void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        public static void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
             if(StartOfRound.Instance == null) return;
 
