@@ -20,7 +20,7 @@ namespace BrutalCompanyMinus.Minus
 
         #region VanillaEvents
 
-        internal static List<MEvent> vanillaEvents = new List<MEvent>() {
+        public static List<MEvent> vanillaEvents = new List<MEvent>() {
             //Rare
             new Events.SID(), // Requires Beta Events
             new Events.SafeEverywhere(),
@@ -301,23 +301,25 @@ namespace BrutalCompanyMinus.Minus
 
         internal static List<MEvent> customEvents = new List<MEvent>();
 
-        internal static List<MEvent> events = new List<MEvent>();
+        public static List<MEvent> events = new List<MEvent>();
 
-        internal static List<MEvent> disabledEvents = new List<MEvent>();
+        public static List<MEvent> forcableEvents = new List<MEvent>(); //Not to be confused with forced events list
 
-        internal static List<MEvent> currentEvents = new List<MEvent>();
+        public static List<MEvent> disabledEvents = new List<MEvent>();
 
-        internal static List<MEvent> forcedEvents = new List<MEvent>();
+        public static List<MEvent> currentEvents = new List<MEvent>();
 
-        internal static List<MEvent> allVeryGood = new List<MEvent>(), allGood = new List<MEvent>(), allNeutral = new List<MEvent>(), allBad = new List<MEvent>(), allVeryBad = new List<MEvent>(), allRemove = new List<MEvent>(), allInsane = new List<MEvent>(), allRare = new List<MEvent>(), allSpecial = new List<MEvent>(), allBeta = new List<MEvent>();
+        public static List<MEvent> forcedEvents = new List<MEvent>();
 
-        internal static List<MEvent> sideEvents = new List<MEvent>();
+        public static List<MEvent> allVeryGood = new List<MEvent>(), allGood = new List<MEvent>(), allNeutral = new List<MEvent>(), allBad = new List<MEvent>(), allVeryBad = new List<MEvent>(), allRemove = new List<MEvent>(), allInsane = new List<MEvent>(), allRare = new List<MEvent>(), allSpecial = new List<MEvent>(), allBeta = new List<MEvent>();
 
-        private static List<MEvent> tipEventsToDo = new List<MEvent>();
+        public static List<MEvent> sideEvents = new List<MEvent>();
 
-        //internal static List<CustomEvents> customEventsList = new List<CustomEvents>();
+        public static List<MEvent> tipEventsToDo = new List<MEvent>();
 
-        internal static List<string> currentEventDescriptions = new List<string>();
+        //public static List<CustomEvents> customEventsList = new List<CustomEvents>();
+
+        public static List<string> currentEventDescriptions = new List<string>();
 
         internal static float eventTypeSum = 0;
         internal static float[] eventTypeCount = new float[] { };
@@ -407,6 +409,30 @@ namespace BrutalCompanyMinus.Minus
 
                     forcedEvents.AddRange(GetEventsByName(eventNames));
                 }
+            }
+
+            try
+            {
+                forcableEvents = EventManager.events;
+                forcableEvents.RemoveAll(x => !x.AlwaysForced);
+                if (forcableEvents.Count > 0)
+                {
+                    foreach (MEvent forcable in forcableEvents)
+                    {
+                        bool eventValid = forcable.MoonMode
+                            ? IsEventOnMoonWhitelist(forcable)
+                            : !IsIgnoredEventByMoonBlacklist(forcable);
+
+                        if (eventValid)
+                        {
+                            forcedEvents.Add(forcable);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.LogError($"Failed to force Forcable events: {ex.Message}");
             }
 
             //Forced events
