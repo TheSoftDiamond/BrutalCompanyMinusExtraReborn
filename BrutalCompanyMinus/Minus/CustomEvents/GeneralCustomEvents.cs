@@ -41,6 +41,7 @@ namespace BrutalCompanyMinus.Minus.CustomEvents
                 showTip = eventData.showTip;
                 isWarning = eventData.isWarning;
                 MoonMode = eventData.MoonMode;
+                AlwaysForced = eventData.AlwaysForced;
                 isSpecialEvent = eventData.isSpecialEvent;
                 isBetaEvent = eventData.isBetaEvent;
 
