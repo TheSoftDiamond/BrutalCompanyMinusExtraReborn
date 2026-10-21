@@ -50,6 +50,42 @@ namespace BrutalCompanyMinus.Minus
             }
         }
 
+        public static void ForceEvents(string eventNames)
+        {
+            try
+            {
+                EventManager.forcedEvents.AddRange(EventManager.GetEventsByName (eventNames));
+            }
+            catch (Exception e)
+            {
+                Log.LogError($"Error occurred while forcing event(s) {eventNames}: {e}");
+            }
+        }
+
+        public static void ForceEvents(MEvent events)
+        {
+            try
+            {
+                EventManager.forcedEvents.Add(events);
+            }
+            catch (Exception e)
+            {
+                Log.LogError($"Error occurred while forcing event {events}: {e}");
+            }
+        }
+
+        public static void ForceEvents(List<MEvent> events)
+        {
+            try
+            {
+                EventManager.forcedEvents.AddRange(events);
+            }
+            catch (Exception e)
+            {
+                Log.LogError($"Error occurred while forcing event(s) {events}: {e}");
+            }
+        }
+
         public static bool DoesEventExist(string name)
         {
             try
