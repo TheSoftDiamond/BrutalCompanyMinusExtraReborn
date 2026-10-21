@@ -108,6 +108,8 @@ namespace BrutalCompanyMinus.Minus
 
         internal static FixedString4096Bytes textUI;
         internal static int seed;
+        internal static int randomSeed = 0;
+
 
         public static Dictionary<string, (bool, int)> originalMoonMoldData = new Dictionary<string, (bool, int)>();
 
@@ -1003,6 +1005,13 @@ namespace BrutalCompanyMinus.Minus
 
             bool isPositive = (amount >= 0);
             HUDManager.Instance.AddTextToChatOnServer(string.Format("<color={0}>{1}{2}■</color>", isPositive ? "#008000" : "#FF0000", isPositive ? "+" : "", amount));
+        }
+
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(StartOfRound), nameof(StartOfRound.Start))]
+        private static void currentLevelFix(StartOfRound __instance)
+        {
+            Manager.currentLevel = __instance.currentLevel;
         }
 
         [HarmonyPostfix]
