@@ -44,6 +44,7 @@ namespace BrutalCompanyMinus
         public static List<List<string>> moonBlacklist = new List<List<string>>();
         public static List<List<string>> moonWhitelist = new List<List<string>>();
         public static List<ConfigEntry<bool>> moonMode = new List<ConfigEntry<bool>>();
+        public static List<ConfigEntry<bool>> alwaysForced = new List<ConfigEntry<bool>>();
         public static List<ConfigEntry<bool>> eventSpecial = new List<ConfigEntry<bool>>();
         public static List<ConfigEntry<bool>> eventBeta = new List<ConfigEntry<bool>>();
         public static List<List<MonsterEvent>> monsterEvents = new List<List<MonsterEvent>>();
@@ -228,6 +229,7 @@ namespace BrutalCompanyMinus
         }
 
         public static ConfigEntry<bool>? EnableRandomizer;
+        public static ConfigEntry<int>? RandomSeed;
 
         public static ConfigEntry<bool>? RandomizeWeight;
         public static Scale RandomizeWeightMin = new Scale();
@@ -520,6 +522,8 @@ namespace BrutalCompanyMinus
             //Randomizer
             
             EnableRandomizer = CorePropertiesConfig.Bind("Randomizer", "Enable Randomizer?", false, "Should the randomizer be enabled?");
+            RandomSeed = CorePropertiesConfig.Bind("Randomizer", "Random Seed", 0, "Seed for the randomizer. If the value is set to 0, it will always randomize. Otherwise, will use any seed you choose.");
+
             WhenRandomize = CorePropertiesConfig.Bind("Randomizer", "When to Randomize?", RandomizeFlags.QuotaFulfill, "When should the randomizer be triggered?");
             
             RandomizeWeight = CorePropertiesConfig.Bind("Randomizer", "Randomize Event Weights?", false, "If enabled, event weights will be randomized every time depending on the settings of the randomizer.");
@@ -615,6 +619,7 @@ namespace BrutalCompanyMinus
                     eventsToSpawnWith.Add(ListToStrings(toConfig.Bind(e.Name(), "Events To Spawn With", StringsToList(e.EventsToSpawnWith, ", "), "Will spawn said events(s).").Value));
                     eventAliases.Add(ListToStrings(toConfig.Bind(e.Name(), "Event Aliases", StringsToList(e.Aliases, ", "), "Seperate by comma for each alias. Aliases are another name that can be used when forcing events. Aliases are case-insensitive. To prevent potential errors, do not use the same alias on multiple events.").Value));
                     moonMode.Add(toConfig.Bind(e.Name(), "Whitelist Mode?", e.MoonMode, "Which list should be used? Please note that if you are using the Whitelist mode, it must have at least one entry."));
+                    alwaysForced.Add(toConfig.Bind(e.Name(), "Always Force?", e.AlwaysForced, "Forces the moon on every moon that its blacklist or whitelist allows it to spawn on."));
                     eventSpecial.Add(toConfig.Bind(e.Name(), "Special Event?", e.isSpecialEvent, "Special events require Enable Special Events to be enabled."));
                     eventBeta.Add(toConfig.Bind(e.Name(), "Beta Event?", e.isBetaEvent, "Beta events require Enable Beta Events to be enabled."));
 
@@ -773,6 +778,7 @@ namespace BrutalCompanyMinus
                 EventManager.events[i].MoonMode = moonMode[i].Value;
                 EventManager.events[i].Blacklist = moonBlacklist[i];
                 EventManager.events[i].Whitelist = moonWhitelist[i];
+                EventManager.events[i].AlwaysForced = alwaysForced[i].Value;
                 EventManager.events[i].isSpecialEvent = eventSpecial[i].Value;
                 EventManager.events[i].isBetaEvent = eventBeta[i].Value;
                 EventManager.events[i].monstersToSpawn = monsterEvents[i];
