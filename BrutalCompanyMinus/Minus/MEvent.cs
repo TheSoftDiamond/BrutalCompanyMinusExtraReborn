@@ -88,6 +88,11 @@ namespace BrutalCompanyMinus.Minus
         public List<string> Whitelist = new List<string>();
 
         /// <summary>
+        /// Set this in Initalize() to specify if this event should always occur. Will force its eventstospawnwith.
+        /// </summary>
+        public bool AlwaysForced = false;
+
+        /// <summary>
         /// Set this in Initalize() to specify events to spawn with, these wont be shown in the UI.
         /// </summary>
         public List<string> EventsToSpawnWith = new List<string>();
