@@ -200,6 +200,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
                                 text += $"[IsSpecialEvent]: {mEvent.isSpecialEvent.ToString()}\n\n";
                                 text += $"[IsBetaEvent]: {mEvent.isBetaEvent.ToString()}\n\n";
                                 text += $"[WhitelistMode]: {mEvent.MoonMode.ToString()}\n\n";
+                                text += $"[Always Forced]: {mEvent.AlwaysForced.ToString()}\n\n";
                                 text += $"[MoonsToNotSpawnOn]: {Helper.StringsToList(mEvent.Blacklist, ", ")}\n\n";
                                 text += $"[MoonsToSpawnOn]: {Helper.StringsToList(mEvent.Whitelist, ", ")}\n\n";
                                 text += $"[SpeedRunSafe]: {mEvent.SpeedRunSafe.ToString()}\n\n";
