@@ -2,7 +2,6 @@
 using BepInEx.Configuration;
 using BrutalCompanyMinus.Minus.Handlers;
 using Dawn.Utils;
-using Discord;
 using HarmonyLib;
 using System;
 using System.Collections;
@@ -1714,12 +1713,32 @@ namespace BrutalCompanyMinus.Minus
             float maxAmount = MEvent.Scale.Compute(Configuration.RandomizeWeightMax);
             Log.LogInfo("Randomizing event weights between " + minAmount + " and " + maxAmount);
 
-            foreach (MEvent e in events)
-            {
-                int newWeight = Mathf.Clamp(Mathf.RoundToInt(UnityEngine.Random.Range(minAmount, Mathf.Ceil(maxAmount) + 1)), 1, 2147483647);
+            int setSeed = Configuration.RandomSeed?.Value ?? 0;
 
-                Log.LogInfo($"Randomized weight for {e.Name()} from {e.Weight} to {newWeight}");
-                e.Weight = newWeight;
+            System.Random rng = new System.Random(setSeed);
+
+            if (setSeed == 0)
+            {
+                foreach (MEvent e in events)
+                {
+                    int newWeight = Mathf.Clamp(Mathf.RoundToInt(UnityEngine.Random.Range(minAmount, Mathf.Ceil(maxAmount) + 1)), 1, 2147483647);
+
+                    Log.LogInfo($"Randomized weight for {e.Name()} from {e.Weight} to {newWeight}");
+                    e.Weight = newWeight;
+                }
+            }
+            else
+            {
+                //Copy the event list
+                List <MEvent> sortedEvents = EventManager.events.OrderBy(e => e.Name()).ToList();
+
+                foreach (MEvent e in sortedEvents)
+                {
+                    int newWeight = Mathf.Clamp(Mathf.RoundToInt(rng.Next((int)minAmount, (int)(Mathf.Ceil(maxAmount) + 1))), 1, 2147483647);
+
+                    Log.LogInfo($"Randomized weight for {e.Name()} from {e.Weight} to {newWeight}");
+                    e.Weight = newWeight;
+                }
             }
         }
 
@@ -1728,8 +1747,20 @@ namespace BrutalCompanyMinus.Minus
             Log.LogInfo("Randomizing all event weights");
             float minAmount = MEvent.Scale.Compute(Configuration.RandomizeFactoryMin);
             float maxAmount = MEvent.Scale.Compute(Configuration.RandomizeFactoryMax);
-            Log.LogInfo("Randomizing factory size multiplier between " + minAmount + " and " + maxAmount);
-            Manager.randomizerfactory = UnityEngine.Random.Range(minAmount, maxAmount);
+
+            int setSeed = Configuration.RandomSeed?.Value ?? 0;
+
+            System.Random rng = new System.Random(setSeed);
+
+            if (setSeed == 0)
+            {
+                Log.LogInfo("Randomizing factory size multiplier between " + minAmount + " and " + maxAmount);
+                Manager.randomizerfactory = UnityEngine.Random.Range(minAmount, maxAmount);
+            }
+            else
+            {
+                Manager.randomizerfactory = (float)((rng.NextDouble() * (maxAmount - minAmount)) + minAmount);
+            }
         }
 
         public static void RandomizeScrapValue()
@@ -1737,8 +1768,21 @@ namespace BrutalCompanyMinus.Minus
             Log.LogInfo("Randomizing scrap value multiplier");
             float minAmount = MEvent.Scale.Compute(Configuration.RandomizeScrapValueMin);
             float maxAmount = MEvent.Scale.Compute(Configuration.RandomizeScrapValueMax);
-            Log.LogInfo("Randomizing scrap value multiplier between " + minAmount + " and " + maxAmount);
-            Manager.randomizerscrapvalue = UnityEngine.Random.Range(minAmount, maxAmount);
+
+            int setSeed = Configuration.RandomSeed?.Value ?? 0;
+
+            System.Random rng = new System.Random(setSeed);
+
+            if (setSeed == 0)
+            {
+                Log.LogInfo("Randomizing scrap value multiplier between " + minAmount + " and " + maxAmount);
+                Manager.randomizerscrapvalue = UnityEngine.Random.Range(minAmount, maxAmount);
+            }
+            else
+            {
+                Manager.randomizerscrapvalue = (float)((rng.NextDouble() * (maxAmount - minAmount)) + minAmount);
+                
+            }
         }
 
         public static void RandomizeScrapAmount()
@@ -1746,8 +1790,20 @@ namespace BrutalCompanyMinus.Minus
             Log.LogInfo("Randomizing scrap amount multiplier");
             float minAmount = MEvent.Scale.Compute(Configuration.RandomizeScrapAmountMin);
             float maxAmount = MEvent.Scale.Compute(Configuration.RandomizeScrapAmountMax);
-            Log.LogInfo("Randomizing scrap amount multiplier between " + minAmount + " and " + maxAmount);
-            Manager.randomizerscrapamount = UnityEngine.Random.Range(minAmount, maxAmount);
+
+            int setSeed = Configuration.RandomSeed?.Value ?? 0;
+
+            System.Random rng = new System.Random(setSeed);
+
+            if (setSeed == 0)
+            {
+                Log.LogInfo("Randomizing scrap amount multiplier between " + minAmount + " and " + maxAmount);
+                Manager.randomizerscrapamount = UnityEngine.Random.Range(minAmount, maxAmount);
+            }
+            else
+            {
+                Manager.randomizerscrapamount = (float)((rng.NextDouble() * (maxAmount - minAmount)) + minAmount);
+            }
         }
 
         public static void RandomizeSpawnChanceInside()
@@ -1755,8 +1811,20 @@ namespace BrutalCompanyMinus.Minus
             Log.LogInfo("Randomizing inside spawn chance");
             float minAmount = MEvent.Scale.Compute(Configuration.RandomizeSpawnChanceInsideMin);
             float maxAmount = MEvent.Scale.Compute(Configuration.RandomizeSpawnChanceInsideMax);
-            Log.LogInfo("Randomizing inside spawn chance between " + minAmount + " and " + maxAmount);
-            Manager.randomizerspawnchanceinside = UnityEngine.Random.Range(minAmount, maxAmount);
+
+            int setSeed = Configuration.RandomSeed?.Value ?? 0;
+
+            System.Random rng = new System.Random(setSeed);
+
+            if (setSeed == 0)
+            {
+                Log.LogInfo("Randomizing inside spawn chance between " + minAmount + " and " + maxAmount);
+                Manager.randomizerspawnchanceinside = UnityEngine.Random.Range(minAmount, maxAmount);
+            }
+            else
+            {
+                Manager.randomizerspawnchanceinside = (float)((rng.NextDouble() * (maxAmount - minAmount)) + minAmount);
+            }
         }
 
         public static void RandomizeSpawnChanceOutside()
@@ -1764,8 +1832,20 @@ namespace BrutalCompanyMinus.Minus
             Log.LogInfo("Randomizing outside spawn chance");
             float minAmount = MEvent.Scale.Compute(Configuration.RandomizeSpawnChanceOutsideMin);
             float maxAmount = MEvent.Scale.Compute(Configuration.RandomizeSpawnChanceOutsideMax);
-            Log.LogInfo("Randomizing outside spawn chance between " + minAmount + " and " + maxAmount);
-            Manager.randomizerspawnchanceoutside = UnityEngine.Random.Range(minAmount, maxAmount);
+
+            int setSeed = Configuration.RandomSeed?.Value ?? 0;
+
+            System.Random rng = new System.Random(setSeed);
+
+            if (setSeed == 0)
+            {
+                Log.LogInfo("Randomizing outside spawn chance between " + minAmount + " and " + maxAmount);
+                Manager.randomizerspawnchanceoutside = UnityEngine.Random.Range(minAmount, maxAmount);
+            }
+            else
+            {
+                Manager.randomizerspawnchanceoutside = (float)((rng.NextDouble() * (maxAmount - minAmount)) + minAmount);
+            }
         }
 
         public static void RandomizeSpawnCap()
@@ -1773,8 +1853,21 @@ namespace BrutalCompanyMinus.Minus
             Log.LogInfo("Randomizing spawn cap");
             float minAmount = MEvent.Scale.Compute(Configuration.RandomizeSpawnCapMin);
             float maxAmount = MEvent.Scale.Compute(Configuration.RandomizeSpawnCapMax);
-            Log.LogInfo("Randomizing spawn cap between " + minAmount + " and " + maxAmount);
-            Manager.randomizerspawncap = UnityEngine.Random.Range(minAmount, maxAmount);
+
+            int setSeed = Configuration.RandomSeed?.Value ?? 0;
+
+            System.Random rng = new System.Random(setSeed);
+
+
+            if (setSeed == 0)
+            {
+                Log.LogInfo("Randomizing spawn cap between " + minAmount + " and " + maxAmount);
+                Manager.randomizerspawncap = UnityEngine.Random.Range(minAmount, maxAmount);
+            }
+            else
+            {
+                Manager.randomizerspawncap = (float)((rng.NextDouble() * (maxAmount - minAmount)) + minAmount);
+            }
         }
 
         public static void RandomizeSpawnChance()
@@ -1782,8 +1875,21 @@ namespace BrutalCompanyMinus.Minus
             Log.LogInfo("Randomizing spawn chance");
             float minAmount = MEvent.Scale.Compute(Configuration.RandomizeSpawnChanceMin);
             float maxAmount = MEvent.Scale.Compute(Configuration.RandomizeSpawnChanceMax);
-            Log.LogInfo("Randomizing spawn chance between " + minAmount + " and " + maxAmount);
-            Manager.randomizerspawnchance = UnityEngine.Random.Range(minAmount, maxAmount);
+
+            int setSeed = Configuration.RandomSeed?.Value ?? 0;
+
+            System.Random rng = new System.Random(setSeed);
+
+
+            if (setSeed == 0)
+            {
+                Log.LogInfo("Randomizing spawn chance between " + minAmount + " and " + maxAmount);
+                Manager.randomizerspawnchance = UnityEngine.Random.Range(minAmount, maxAmount);
+            }
+            else 
+            {
+                Manager.randomizerspawnchance = (float)((rng.NextDouble() * (maxAmount - minAmount)) + minAmount);
+            }
         }
 
         public static void RandomizeBonusEnemyHP()
@@ -1791,8 +1897,21 @@ namespace BrutalCompanyMinus.Minus
             Log.LogInfo("Randomizing bonus enemy HP");
             float minAmount = MEvent.Scale.Compute(Configuration.RandomizeEnemyHPMin);
             float maxAmount = MEvent.Scale.Compute(Configuration.RandomizeEnemyHPMax);
-            Log.LogInfo("Randomizing bonus enemy HP between " + minAmount + " and " + maxAmount);
-            Manager.randomizerbonusenemyhp = Mathf.RoundToInt(UnityEngine.Random.Range(minAmount, maxAmount));
+
+            int setSeed = Configuration.RandomSeed?.Value ?? 0;
+
+            System.Random rng = new System.Random(setSeed);
+
+
+            if (setSeed == 0)
+            {
+                Log.LogInfo("Randomizing bonus enemy HP between " + minAmount + " and " + maxAmount);
+                Manager.randomizerbonusenemyhp = Mathf.RoundToInt(UnityEngine.Random.Range(minAmount, maxAmount));
+            }
+            else
+            {
+                Manager.randomizerbonusenemyhp = (int)((rng.NextDouble() * (maxAmount - minAmount)) + minAmount);
+            }
         }
 
         public static void RandomizeInsidePower()
@@ -1800,8 +1919,19 @@ namespace BrutalCompanyMinus.Minus
             Log.LogInfo("Randomizing inside power");
             float minAmount = MEvent.Scale.Compute(Configuration.RandomizeInsidePowerMin);
             float maxAmount = MEvent.Scale.Compute(Configuration.RandomizeInsidePowerMax);
-            Log.LogInfo("Randomizing inside power between " + minAmount + " and " + maxAmount);
-            Manager.randomizerinsidepower = Mathf.RoundToInt(UnityEngine.Random.Range(minAmount, maxAmount));
+
+            int setSeed = Configuration.RandomSeed?.Value ?? 0;
+
+            System.Random rng = new System.Random(setSeed);
+            if (setSeed == 0)
+            {
+                Log.LogInfo("Randomizing inside power between " + minAmount + " and " + maxAmount);
+                Manager.randomizerinsidepower = Mathf.RoundToInt(UnityEngine.Random.Range(minAmount, maxAmount));
+            }
+            else
+            { 
+                Manager.randomizerinsidepower = (int)((rng.NextDouble() * (maxAmount - minAmount)) + minAmount);
+            }
         }
 
         public static void RandomizeOutsidePower()
@@ -1809,8 +1939,19 @@ namespace BrutalCompanyMinus.Minus
             Log.LogInfo("Randomizing outside power");
             float minAmount = MEvent.Scale.Compute(Configuration.RandomizeOutsidePowerMin);
             float maxAmount = MEvent.Scale.Compute(Configuration.RandomizeOutsidePowerMax);
-            Log.LogInfo("Randomizing outside power between " + minAmount + " and " + maxAmount);
-            Manager.randomizeroutsidepower = Mathf.RoundToInt(UnityEngine.Random.Range(minAmount, maxAmount));
+
+            int setSeed = Configuration.RandomSeed?.Value ?? 0;
+
+            System.Random rng = new System.Random(setSeed);
+            if (setSeed == 0)
+            {
+                Log.LogInfo("Randomizing outside power between " + minAmount + " and " + maxAmount);
+                Manager.randomizeroutsidepower = Mathf.RoundToInt(UnityEngine.Random.Range(minAmount, maxAmount));
+            }
+            else
+            {
+                Manager.randomizeroutsidepower = (int)((rng.NextDouble() * (maxAmount - minAmount)) + minAmount);
+            }
         }
     
 
