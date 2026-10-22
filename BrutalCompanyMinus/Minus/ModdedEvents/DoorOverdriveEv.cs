@@ -23,6 +23,19 @@ namespace BrutalCompanyMinus.Minus.Events
             EventsToRemove = new List<string>() { nameof(DoorFailure), nameof(ShipCoreFailure) };
         }
 
+        public override bool AddEventIfOnly()
+        {
+            if (Compatibility.crowdControlPresent == true)
+            {
+                return false;
+            }
+            else if (Compatibility.crowdControlPresent != true)
+            {
+                return true;
+            }
+            return false;
+        }
+
         public override void Execute()
         {
             Net.Instance.SetEventActiveServerRPC(Name(), true);
