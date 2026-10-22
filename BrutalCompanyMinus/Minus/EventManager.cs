@@ -410,9 +410,10 @@ namespace BrutalCompanyMinus.Minus
                 }
             }
 
+            
             try
             {
-                forcableEvents = EventManager.events;
+                forcableEvents = new List<MEvent>(EventManager.events);
                 forcableEvents.RemoveAll(x => !x.AlwaysForced);
                 if (forcableEvents.Count > 0)
                 {
