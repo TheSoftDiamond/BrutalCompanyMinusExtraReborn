@@ -239,7 +239,7 @@ namespace BrutalCompanyMinus.Minus.Handlers
             },
             #endregion
 
-            #region MEvents
+            #region MRANDOM
             new MCommand()
             {
                 command = "MRANDOM",
@@ -256,6 +256,11 @@ namespace BrutalCompanyMinus.Minus.Handlers
                         if(Configuration.EnableRandomizer.Value)
                         {
                             string text = $"[Randomizer Run]:\n\n";
+
+                            if (Configuration.RandomSeed?.Value != 0)
+                            {
+                                text += $"[Seed]: {Configuration.RandomSeed?.Value}\n\n";
+                            }
 
                             if(Configuration.RandomizeWeight.Value)
                             {
@@ -358,6 +363,86 @@ namespace BrutalCompanyMinus.Minus.Handlers
                     //}
                 })
             },
+            #endregion
+
+            #region MRANDOMWEIGHT
+            new MCommand()
+            {
+                command = "MRANDOMWEIGHT",
+                tag = "SERVER",
+                shortinfo = "Displays details about your run.",
+                info = "MRANDOM\n   Will display data about the randomizer and your current run.",
+                execute = new Action<string[]>((arguments) =>
+                {
+                    if (Configuration.EnableRandomizer.Value)
+                    {
+                        if (Configuration.RandomizeWeight.Value)
+                        {
+                            if (EventManager.events.Count == 0) return;
+
+                            if(arguments.Length == 0)
+                            {
+                                string text = $"[Randomizer Weights]:\n\n";
+
+                                List <MEvent> sortedEvents = EventManager.events.OrderByDescending(e => e.Weight).ToList();
+
+                                if (sortedEvents.Count > 0)
+                                {
+                                    text += $"Highest Event: {sortedEvents.First().Name()} -  {sortedEvents.First().Weight}\n";
+
+                                    text += $"Lowest Event: {sortedEvents.Last().Name()} -  {sortedEvents.Last().Weight}\n\n";
+
+                                    foreach (MEvent e in sortedEvents)
+                                    {
+                                        text += $"{e.Name()} - {e.Weight}\n";
+                                    }
+
+                                    Respond(text);
+                                    Console.WriteLine(text);
+                                }
+                            }
+                            else
+                            {
+                                if (arguments[0].IsNullOrWhiteSpace()) return;
+
+                                List <MEvent> sortedEvents = EventManager.events.OrderByDescending(e => e.Weight).ToList();
+
+                                bool found = false;
+                                foreach(MEvent mEvent in sortedEvents)
+                                {
+                                    if(mEvent.Name().ToUpper() == arguments[0].ToUpper())
+                                    {
+                                        found = true;
+
+                                        string text = $"[{mEvent.Name()}]:\n\n";
+                                        int position = sortedEvents.IndexOf(mEvent) + 1;
+
+                                        text += $"Weight: {mEvent.Weight}\n";
+                                        text += $"Position: {position} out of {sortedEvents.Count()}\n";
+
+                                        Respond(text);
+                                        break;
+                                    }
+                                }
+                                if(!found)
+                                {
+                                    Respond($"Failed to find event {arguments[0]} in events list.");
+                                }
+                            }
+                        }
+                        else
+                        {
+                            Respond("No applicable settings were found");
+                        }
+                    }
+                    else
+                    {
+                        Respond("Randomizer is not enabled.");
+                    }
+                })
+            },
+
+
             #endregion
 
             #region MPay
